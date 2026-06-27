@@ -15,3 +15,16 @@ void Defend::applyEffect(Player* player, Enemy* targetEnemy)
     if(player != nullptr)
         player->addBlock(5);
 }
+
+Limit_Break::Limit_Break(QString path, QGraphicsItem *parent)
+    :SkillCard("Limit_Break", 1, path, true, parent) {}
+
+void Limit_Break::applyEffect(Player* player, Enemy* targetEnemy)
+{
+    Q_UNUSED(targetEnemy);
+
+    if(player != nullptr)
+    {
+        player->addStrength(player->strength());
+    }
+}

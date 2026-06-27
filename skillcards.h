@@ -18,4 +18,12 @@ public:
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
 };
 
+class Limit_Break : public SkillCard
+{
+public:
+    explicit Limit_Break(QString path, QGraphicsItem *parent = nullptr);
+
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+};
+
 #endif // SKILLCARDS_H
