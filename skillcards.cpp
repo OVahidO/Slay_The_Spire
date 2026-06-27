@@ -56,3 +56,18 @@ void Impervious::applyEffect(Player* player, Enemy* targetEnemy)
         player->addBlock(30);
     }
 }
+
+Power_Through::Power_Through(QString path, QGraphicsItem *parent)
+    :SkillCard("Power_Through", 1, path, false, parent) {}
+
+void Power_Through::applyEffect(Player* player, Enemy* targetEnemy)
+{
+    Q_UNUSED(targetEnemy);
+
+    if(player != nullptr)
+    {
+        player->addBlock(15);
+        player->addStatus(Wound());
+        player->addStatus(Wound());
+    }
+}
