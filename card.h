@@ -5,6 +5,9 @@
 #include <QObject>
 #include <QString>
 
+class Enemy;
+class Player;
+
 enum class CardType {Attack, Skill, Power, Status, Curse};
 
 class Card : public QGraphicsObject
@@ -17,7 +20,7 @@ public:
     virtual QRectF boundingRect() const override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
-    virtual void applyEffect() = 0;
+    virtual void applyEffect(Enemy* target, Player* player) = 0;
 
 signals:
 

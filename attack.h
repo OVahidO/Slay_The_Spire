@@ -3,9 +3,6 @@
 
 #include "card.h"
 
-class Enemy;
-class Player;
-
 class Attack : public Card {
 protected:
     int m_damage;
@@ -18,9 +15,8 @@ public:
 
 class Strike : public Attack {
 public:
-    Strike();
+    explicit Strike(QGraphicsItem *parent = nullptr);
     void applyEffect(Enemy* target, Player* player) override;
 };
 
 #endif // ATTACK_H
-
