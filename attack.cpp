@@ -4,6 +4,8 @@ Attack::Attack(QString name, CardType type, int energyCost, QString path, int da
     : Card(name, type, energyCost, path, isRare, requiresTarget, parent), m_damage(damage) {
 }
 
+//////////////////////////////////////
+
 Strike::Strike(QGraphicsItem *parent)
     : Attack("Strike",
              CardType::Attack,
@@ -16,6 +18,26 @@ Strike::Strike(QGraphicsItem *parent)
 {}
 
 void Strike::applyEffect(Enemy* target, Player* player) {
+    Q_UNUSED(player);
+
+    if (target)
+        target->takeDamage(this->m_damage);
+}
+
+////////////////////////////
+
+Bludgeon::Bludgeon(QGraphicsItem *parent)
+    : Attack("Bludgeon",
+             CardType::Attack,
+             3,
+             ":/cards/bludgeon.png",
+             32,
+             true,
+             true,
+             parent)
+{}
+
+void Bludgeon::applyEffect(Enemy* target, Player* player) {
     Q_UNUSED(player);
 
     if (target)

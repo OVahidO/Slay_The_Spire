@@ -19,4 +19,10 @@ public:
     void applyEffect(Enemy* target, Player* player) override;
 };
 
+class Bludgeon : public Attack {
+public:
+    explicit Bludgeon(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
 #endif // ATTACK_H
