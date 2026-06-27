@@ -1,0 +1,34 @@
+#ifndef CARD_H
+#define CARD_H
+
+#include <QGraphicsObject>
+#include <QObject>
+#include <QString>
+
+enum class CardType {Attack, Skill, Power, Status, Curse};
+
+class Card : public QGraphicsObject
+{
+    Q_OBJECT
+public:
+    explicit Card(QString name, CardType type, int energyCost, QString path, bool isRare = false, QGraphicsItem *parent = nullptr);
+    virtual ~Card();
+
+    virtual QRectF boundingRect() const override;
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+
+    virtual void applyEffect() = 0;
+
+signals:
+
+private:
+    int m_ID;
+    QString m_name;
+    int m_energyCost;
+    CardType m_type;
+    QString m_sourcePath;
+    bool m_isRare;
+
+};
+
+#endif // CARD_H
