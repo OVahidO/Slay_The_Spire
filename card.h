@@ -11,7 +11,7 @@ class Card : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    explicit Card(QString name, CardType type, int energyCost, QString path, bool isRare = false, QGraphicsItem *parent = nullptr);
+    explicit Card(QString name, CardType type, int energyCost, QString path, bool isRare = false, bool requiresTarget = true, QGraphicsItem *parent = nullptr);
     virtual ~Card();
 
     virtual QRectF boundingRect() const override;
@@ -28,6 +28,7 @@ private:
     CardType m_type;
     QString m_sourcePath;
     bool m_isRare;
+    bool m_needTarget;
 
 };
 

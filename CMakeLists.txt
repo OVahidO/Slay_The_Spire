@@ -12,6 +12,9 @@ qt_add_executable(Slay_The_Spire
     mainwindow.h
     mainwindow.ui
     card.h card.cpp
+    attack.h attack.cpp
+
+
 )
 
 target_link_libraries(Slay_The_Spire
