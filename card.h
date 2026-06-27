@@ -21,7 +21,7 @@ public:
 
 signals:
 
-private:
+protected:
     int m_ID;
     QString m_name;
     int m_energyCost;
