@@ -50,4 +50,12 @@ public:
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
 };
 
+class Bloodletting : public SkillCard
+{
+public:
+    explicit Bloodletting(QString path, QGraphicsItem *parent = nullptr);
+
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+};
+
 #endif // SKILLCARDS_H

@@ -71,3 +71,17 @@ void Power_Through::applyEffect(Player* player, Enemy* targetEnemy)
         player->addStatus(Wound());
     }
 }
+
+Bloodletting::Bloodletting(QString path, QGraphicsItem *parent)
+    :SkillCard("Bloodletting", 0, path, false, parent) {}
+
+void Bloodletting::applyEffect(Player* player, Enemy* targetEnemy)
+{
+    Q_UNUSED(targetEnemy);
+
+    if(player != nullptr)
+    {
+        player->loseHp(3);
+        player->addEnergy(2);
+    }
+}
