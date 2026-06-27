@@ -18,6 +18,13 @@ public:
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
 };
 
+class Exhume : public SkillCard
+{
+    explicit Exhume(QString path, QGraphicsItem *parent = nullptr);
+
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+};
+
 class Limit_Break : public SkillCard
 {
 public:

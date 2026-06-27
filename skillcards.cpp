@@ -16,6 +16,15 @@ void Defend::applyEffect(Player* player, Enemy* targetEnemy)
         player->addBlock(5);
 }
 
+Exhume::Exhume(QString path, QGraphicsItem *parent)
+    :SkillCard("Exhume", 1, path, true, parent) {}
+
+void Exhume::applyEffect(Player* player, Enemy* targetEnemy)
+{
+    Q_UNUSED(targetEnemy);
+    Q_UNUSED(player);
+}
+
 Limit_Break::Limit_Break(QString path, QGraphicsItem *parent)
     :SkillCard("Limit_Break", 1, path, true, parent) {}
 
