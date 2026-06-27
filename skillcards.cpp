@@ -43,3 +43,16 @@ void Offering::applyEffect(Player* player, Enemy* targetEnemy)
         player->drawCards(3);
     }
 }
+
+Impervious::Impervious(QString path, QGraphicsItem *parent)
+    :SkillCard("Impervious", 2, path, true, parent) {}
+
+void Impervious::applyEffect(Player* player, Enemy* targetEnemy)
+{
+    Q_UNUSED(targetEnemy);
+
+    if(player != nullptr)
+    {
+        player->addBlock(30);
+    }
+}
