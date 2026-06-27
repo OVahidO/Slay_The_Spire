@@ -28,3 +28,18 @@ void Limit_Break::applyEffect(Player* player, Enemy* targetEnemy)
         player->addStrength(player->strength());
     }
 }
+
+Offering::Offering(QString path, QGraphicsItem *parent)
+    :SkillCard("Offering", 0, path, true, parent) {}
+
+void Offering::applyEffect(Player* player, Enemy* targetEnemy)
+{
+    Q_UNUSED(targetEnemy);
+
+    if(player != nullptr)
+    {
+        player->loseHp(6);
+        player->addEnergy(2);
+        player->drawCards(3);
+    }
+}
