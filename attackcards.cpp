@@ -1,12 +1,12 @@
 #include "attackcards.h"
 
-Attack::Attack(QString name, CardType type, int energyCost, QString path, int damage, bool requiresTarget, bool isRare, QGraphicsItem *parent, QString description)
+AttackCard::AttackCard(QString name, CardType type, int energyCost, QString path, int damage, bool requiresTarget, bool isRare, QGraphicsItem *parent, QString description)
     : Card(name, type, energyCost, path, isRare, requiresTarget, parent, description), m_damage(damage) {}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Strike::Strike(QGraphicsItem *parent)
-    : Attack("Strike",
+    : AttackCard("Strike",
              CardType::Attack,
              1,
              ":/cards/strike.png",
@@ -27,7 +27,7 @@ void Strike::applyEffect(Enemy* target, Player* player) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Bludgeon::Bludgeon(QGraphicsItem *parent)
-    : Attack("Bludgeon",
+    : AttackCard("Bludgeon",
              CardType::Attack,
              3,
              ":/cards/bludgeon.png",
@@ -48,7 +48,7 @@ void Bludgeon::applyEffect(Enemy* target, Player* player) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Reaper::Reaper(QGraphicsItem *parent)
-    : Attack("Reaper",
+    : AttackCard("Reaper",
              CardType::Attack,
              2,
              ":/cards/reaper.png",
@@ -79,7 +79,7 @@ Reaper::Reaper(QGraphicsItem *parent)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Feed::Feed(QGraphicsItem *parent)
-    : Attack("Feed",
+    : AttackCard("Feed",
              CardType::Attack,
              1,
              ":/cards/feed.png",
@@ -105,7 +105,7 @@ Feed::Feed(QGraphicsItem *parent)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Immolate::Immolate(QGraphicsItem *parent)
-    : Attack("Immolate",
+    : AttackCard("Immolate",
              CardType::Attack,
              2,
              ":/cards/immolate.png",
@@ -133,7 +133,7 @@ Immolate::Immolate(QGraphicsItem *parent)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Bash::Bash(QGraphicsItem *parent)
-    : Attack("Bash",
+    : AttackCard("Bash",
              CardType::Attack,
              2,
              ":/cards/bash.png",
@@ -157,7 +157,7 @@ void Bash::applyEffect(Enemy* target, Player* player) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Clash::Clash(QGraphicsItem *parent)
-    : Attack("Clash",
+    : AttackCard("Clash",
              CardType::Attack,
              0,
              ":/cards/clash.png",
@@ -190,7 +190,7 @@ void Clash::applyEffect(Enemy* target, Player* player) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Hemokinesis::Hemokinesis(QGraphicsItem *parent)
-    : Attack("Hemokinesis",
+    : AttackCard("Hemokinesis",
              CardType::Attack,
              1,
              ":/cards/hemokinesis.png",

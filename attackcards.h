@@ -3,51 +3,51 @@
 
 #include "card.h"
 
-class Attack : public Card {
+class AttackCard : public Card {
 protected:
     int m_damage;
 
 public:
-    Attack(QString name, CardType type, int energyCost, QString path, int damage, bool requiresTarget, bool isRare, QGraphicsItem *parent, QString description);
+    AttackCard(QString name, CardType type, int energyCost, QString path, int damage, bool requiresTarget, bool isRare, QGraphicsItem *parent, QString description);
 };
 
-class Strike : public Attack {
+class Strike : public AttackCard {
 public:
     explicit Strike(QGraphicsItem *parent = nullptr);
     void applyEffect(Enemy* target, Player* player) override;
 };
 
-class Bludgeon : public Attack {
+class Bludgeon : public AttackCard {
 public:
     explicit Bludgeon(QGraphicsItem *parent = nullptr);
     void applyEffect(Enemy* target, Player* player) override;
 };
 
-class Reaper : public Attack {
+class Reaper : public AttackCard {
 public:
     explicit Reaper(QGraphicsItem *parent = nullptr);
     void applyEffect(Enemy* target, Player* player) override;
 };
 
-class Feed : public Attack {
+class Feed : public AttackCard {
 public:
     explicit Feed(QGraphicsItem *parent = nullptr);
     void applyEffect(Enemy* target, Player* player) override;
 };
 
-class Immolate : public Attack {
+class Immolate : public AttackCard {
 public:
     explicit Immolate(QGraphicsItem *parent = nullptr);
     void applyEffect(Enemy* target, Player* player) override;
 };
 
-class Bash : public Attack {
+class Bash : public AttackCard {
 public:
     explicit Bash(QGraphicsItem *parent = nullptr);
     void applyEffect(Enemy* target, Player* player) override;
 };
 
-class Clash : public Attack {
+class Clash : public AttackCard {
 public:
     explicit Clash(QGraphicsItem *parent = nullptr);
     void applyEffect(Enemy* target, Player* player) override;
@@ -55,7 +55,7 @@ public:
     //bool canPlay(Player* player) const;
 };
 
-class Hemokinesis : public Attack {
+class Hemokinesis : public AttackCard {
 public:
     explicit Hemokinesis(QGraphicsItem *parent = nullptr);
     void applyEffect(Enemy* target, Player* player) override;

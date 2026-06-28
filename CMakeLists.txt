@@ -16,6 +16,7 @@ qt_add_executable(Slay_The_Spire
     statuscards.h statuscards.cpp
     cursecards.h cursecards.cpp
     attackcards.h attackcards.cpp
+    powercards.h powercards.cpp
 )
 
 target_link_libraries(Slay_The_Spire
