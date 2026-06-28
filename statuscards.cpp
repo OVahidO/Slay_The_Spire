@@ -19,3 +19,8 @@ WOUND::WOUND(QString path, QGraphicsItem *parent)
     :StatusCard("WOUND", 0, path, false, parent) {}
 
 void WOUND::applyEffect(Player* player, Enemy* targetEnemy) {Q_UNUSED(player); Q_UNUSED(targetEnemy);}
+
+BURN::BURN(QString path, QGraphicsItem *parent)
+    :StatusCard("BURN", 0, path, false, parent) {}
+
+void BURN::applyEffect(Player* player, Enemy* targetEnemy) {Q_UNUSED(player); Q_UNUSED(targetEnemy);}

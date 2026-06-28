@@ -34,4 +34,12 @@ public:
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
 };
 
+class BURN : public StatusCard
+{
+public:
+    explicit BURN(QString path, QGraphicsItem *parent = nullptr);
+
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+};
+
 #endif // STATUSCARDS_H
