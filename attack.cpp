@@ -4,7 +4,7 @@ Attack::Attack(QString name, CardType type, int energyCost, QString path, int da
     : Card(name, type, energyCost, path, isRare, requiresTarget, parent), m_damage(damage) {
 }
 
-//////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Strike::Strike(QGraphicsItem *parent)
     : Attack("Strike",
@@ -24,7 +24,7 @@ void Strike::applyEffect(Enemy* target, Player* player) {
         target->takeDamage(this->m_damage);
 }
 
-////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Bludgeon::Bludgeon(QGraphicsItem *parent)
     : Attack("Bludgeon",
@@ -43,3 +43,36 @@ void Bludgeon::applyEffect(Enemy* target, Player* player) {
     if (target)
         target->takeDamage(this->m_damage);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Reaper::Reaper(QGraphicsItem *parent)
+    : Attack("Reaper",
+             CardType::Attack,
+             2,
+             ":/cards/reaper.png",
+             4,
+             false,
+             true,
+             parent)
+{}
+
+// void Reaper::applyEffect(Enemy* target, Player* player) {
+//     Q_UNUSED(target);
+
+//     int totalDamageDealt = 0;
+
+//     QList<Enemy*> allEnemies = CombatManager::getInstance()->getEnemies();
+
+//     for (Enemy* enemy : allEnemies)
+//         if (enemy)
+//             totalDamageDealt += enemy->takeDamage(this->m_damage);
+
+//     if (player)
+//         player->heal(totalDamageDealt);
+
+//     player->exhaustCard(this);
+// }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
