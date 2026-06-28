@@ -15,14 +15,14 @@ class Defend : public SkillCard
 public:
     explicit Defend(QString path, QGraphicsItem *parent = nullptr);
 
-    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
 };
 
 class Exhume : public SkillCard
 {
     explicit Exhume(QString path, QGraphicsItem *parent = nullptr);
 
-    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
 };
 
 class Limit_Break : public SkillCard
@@ -30,7 +30,7 @@ class Limit_Break : public SkillCard
 public:
     explicit Limit_Break(QString path, QGraphicsItem *parent = nullptr);
 
-    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
 };
 
 class Offering : public SkillCard
@@ -38,7 +38,7 @@ class Offering : public SkillCard
 public:
     explicit Offering(QString path, QGraphicsItem *parent = nullptr);
 
-    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
 };
 
 class Impervious : public SkillCard
@@ -46,7 +46,7 @@ class Impervious : public SkillCard
 public:
     explicit Impervious(QString path, QGraphicsItem *parent = nullptr);
 
-    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
 };
 
 class Power_Through : public SkillCard
@@ -54,7 +54,7 @@ class Power_Through : public SkillCard
 public:
     explicit Power_Through(QString path, QGraphicsItem *parent = nullptr);
 
-    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
 };
 
 class Bloodletting : public SkillCard
@@ -62,7 +62,7 @@ class Bloodletting : public SkillCard
 public:
     explicit Bloodletting(QString path, QGraphicsItem *parent = nullptr);
 
-    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
 };
 
 #endif // SKILLCARDS_H
