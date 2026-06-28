@@ -153,3 +153,58 @@ void Bash::applyEffect(Enemy* target, Player* player) {
         target->applyVulnerable(2);
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Clash::Clash(QGraphicsItem *parent)
+    : Attack("Clash",
+             CardType::Attack,
+             0,
+             ":/cards/clash.png",
+             14,
+             true,
+             false,
+             parent,
+             "Deal 14 damage\nCan only be played if every card in hand is an attack")
+{}
+
+void Clash::applyEffect(Enemy* target, Player* player) {
+    Q_UNUSED(player);
+
+    if (target)
+        target->takeDamage(this->m_damage);
+}
+
+// bool Clash::canPlay(Player* player) const {
+//     if (!player) return false;
+
+//     QList<Card*> hand = player->getHand();
+
+//     for (Card* card : hand)
+//         if (card && card->getType() != CardType::Attack)
+//             return false;
+
+//     return true;
+// }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Hemokinesis::Hemokinesis(QGraphicsItem *parent)
+    : Attack("Hemokinesis",
+             CardType::Attack,
+             1,
+             ":/cards/hemokinesis.png",
+             15,
+             true,
+             false,
+             parent,
+             "Lose 2 HP\nDeal 15 damage")
+{}
+
+void Hemokinesis::applyEffect(Enemy* target, Player* player) {
+    if (player)
+        player->loseHP(2);
+
+    if (target)
+        target->takeDamage(this->m_damage);
+}

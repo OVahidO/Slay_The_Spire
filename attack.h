@@ -47,4 +47,18 @@ public:
     void applyEffect(Enemy* target, Player* player) override;
 };
 
+class Clash : public Attack {
+public:
+    explicit Clash(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+
+    //bool canPlay(Player* player) const;
+};
+
+class Hemokinesis : public Attack {
+public:
+    explicit Hemokinesis(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
 #endif // ATTACK_H
