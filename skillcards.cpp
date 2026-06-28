@@ -1,12 +1,12 @@
 #include "skillcards.h"
 
-SkillCard::SkillCard(QString name, int energyCost, QString path, bool isRare, QGraphicsItem *parent)
-    :Card(name, CardType::Skill, energyCost, path, isRare, parent) {}
+SkillCard::SkillCard(QString name, int energyCost, QString path, QString description, bool isRare, bool requiresTarget, QGraphicsItem *parent)
+    :Card(name, CardType::Skill, energyCost, path, description, isRare, requiresTarget, parent) {}
 
 SkillCard::~SkillCard() {}
 
 Defend::Defend(QString path, QGraphicsItem *parent)
-    :SkillCard("Defend", 1, path, false, parent) {}
+    :SkillCard("Defend", 1, path, "Gain 5 block", false, true, parent) {}
 
 void Defend::applyEffect(Player* player, Enemy* targetEnemy)
 {
@@ -17,7 +17,7 @@ void Defend::applyEffect(Player* player, Enemy* targetEnemy)
 }
 
 Exhume::Exhume(QString path, QGraphicsItem *parent)
-    :SkillCard("Exhume", 1, path, true, parent) {}
+    :SkillCard("Exhume", 1, path, "Put a card from exhaust pile into hand", true, false, parent) {}
 
 void Exhume::applyEffect(Player* player, Enemy* targetEnemy)
 {
@@ -26,7 +26,7 @@ void Exhume::applyEffect(Player* player, Enemy* targetEnemy)
 }
 
 Limit_Break::Limit_Break(QString path, QGraphicsItem *parent)
-    :SkillCard("Limit_Break", 1, path, true, parent) {}
+    :SkillCard("Limit_Break", 1, path, "Double your Strength", true, true, parent) {}
 
 void Limit_Break::applyEffect(Player* player, Enemy* targetEnemy)
 {
@@ -39,7 +39,7 @@ void Limit_Break::applyEffect(Player* player, Enemy* targetEnemy)
 }
 
 Offering::Offering(QString path, QGraphicsItem *parent)
-    :SkillCard("Offering", 0, path, true, parent) {}
+    :SkillCard("Offering", 0, path, "Lose 6 HP - Gain 2 Energy - Draw 3 cards", true, true, parent) {}
 
 void Offering::applyEffect(Player* player, Enemy* targetEnemy)
 {
@@ -54,7 +54,7 @@ void Offering::applyEffect(Player* player, Enemy* targetEnemy)
 }
 
 Impervious::Impervious(QString path, QGraphicsItem *parent)
-    :SkillCard("Impervious", 2, path, true, parent) {}
+    :SkillCard("Impervious", 2, path, "Gain 30 block", true, true, parent) {}
 
 void Impervious::applyEffect(Player* player, Enemy* targetEnemy)
 {
@@ -67,7 +67,7 @@ void Impervious::applyEffect(Player* player, Enemy* targetEnemy)
 }
 
 Power_Through::Power_Through(QString path, QGraphicsItem *parent)
-    :SkillCard("Power_Through", 1, path, false, parent) {}
+    :SkillCard("Power_Through", 1, path, "Gain 15 block - Add 2 WOUNDs into hand", false, true, parent) {}
 
 void Power_Through::applyEffect(Player* player, Enemy* targetEnemy)
 {
@@ -82,7 +82,7 @@ void Power_Through::applyEffect(Player* player, Enemy* targetEnemy)
 }
 
 Bloodletting::Bloodletting(QString path, QGraphicsItem *parent)
-    :SkillCard("Bloodletting", 0, path, false, parent) {}
+    :SkillCard("Bloodletting", 0, path, "Lose 3 HP - Gain 2 Energy", false, true, parent) {}
 
 void Bloodletting::applyEffect(Player* player, Enemy* targetEnemy)
 {
