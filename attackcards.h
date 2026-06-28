@@ -1,0 +1,64 @@
+#ifndef ATTACKCARDS_H
+#define ATTACKCARDS_H
+
+#include "card.h"
+
+class Attack : public Card {
+protected:
+    int m_damage;
+
+public:
+    Attack(QString name, CardType type, int energyCost, QString path, int damage, bool requiresTarget, bool isRare, QGraphicsItem *parent, QString description);
+};
+
+class Strike : public Attack {
+public:
+    explicit Strike(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
+class Bludgeon : public Attack {
+public:
+    explicit Bludgeon(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
+class Reaper : public Attack {
+public:
+    explicit Reaper(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
+class Feed : public Attack {
+public:
+    explicit Feed(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
+class Immolate : public Attack {
+public:
+    explicit Immolate(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
+class Bash : public Attack {
+public:
+    explicit Bash(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
+class Clash : public Attack {
+public:
+    explicit Clash(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+
+    //bool canPlay(Player* player) const;
+};
+
+class Hemokinesis : public Attack {
+public:
+    explicit Hemokinesis(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
+#endif // ATTACKCARDS_H

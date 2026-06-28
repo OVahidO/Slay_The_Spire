@@ -5,30 +5,34 @@
 #include <QObject>
 #include <QString>
 
+class Enemy;
+class Player;
+
 enum class CardType {Attack, Skill, Power, Status, Curse};
 
 class Card : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    explicit Card(QString name, CardType type, int energyCost, QString path, bool isRare = false, QGraphicsItem *parent = nullptr);
+    explicit Card(QString name, CardType type, int energyCost, QString path, bool isRare = false, bool requiresTarget = true, QGraphicsItem *parent = nullptr, QString description = "Not described");
     virtual ~Card();
 
     virtual QRectF boundingRect() const override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
-    virtual void applyEffect() = 0;
+    virtual void applyEffect(Enemy* target, Player* player) = 0;
 
 signals:
 
-private:
+protected:
     int m_ID;
     QString m_name;
     int m_energyCost;
     CardType m_type;
     QString m_sourcePath;
     bool m_isRare;
-
+    bool m_needTarget;
+    QString m_description;
 };
 
 #endif // CARD_H
