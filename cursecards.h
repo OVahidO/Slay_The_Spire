@@ -18,4 +18,12 @@ public:
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
 };
 
+class CurseOfTheBell : public CurseCard
+{
+public:
+    explicit CurseOfTheBell(QString path, QGraphicsItem *parent = nullptr);
+
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+};
+
 #endif // CURSECARDS_H

@@ -17,3 +17,8 @@ void J_A_X::applyEffect(Player* player, Enemy* targetEnemy)
         player->addStrength(2);
     }
 }
+
+CurseOfTheBell::CurseOfTheBell(QString path, QGraphicsItem *parent)
+    :CurseCard("CurseOfTheBell", 0, path, false, parent) {}
+
+void CurseOfTheBell::applyEffect(Player* player, Enemy* targetEnemy) {Q_UNUSED(player); Q_UNUSED(targetEnemy);}
