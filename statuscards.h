@@ -6,7 +6,7 @@
 class StatusCard : public Card
 {
 public:
-    explicit StatusCard(QString name, int energyCost, QString path, bool isRare = false, QGraphicsItem *parent = nullptr);
+    explicit StatusCard(QString name, int energyCost, QString path, QString description, bool isRare = false, bool requiresTarget = true, QGraphicsItem *parent = nullptr);
     virtual ~StatusCard();
 };
 
