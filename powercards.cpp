@@ -82,3 +82,23 @@ void Metallicize::applyEffect(Enemy* target, Player* player) {
     // if (player)
     //     player->applyBuff("Metallicize", 3);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Berserk::Berserk(QGraphicsItem *parent)
+    : PowerCard("Berserk",
+                CardType::Power,
+                0,
+                ":/cards/berserk.png",
+                false,
+                true,
+                parent,
+                "Gain 2 Vulnerable\nAt the start of your turn get 1 extra Energy")
+{}
+void Berserk::applyEffect(Enemy* target, Player* player) {
+    Q_UNUSED(target);
+    // if (player) {
+    //     player->applyVulnerable(2);
+    //     player->applyBuff("Berserk", 1);
+    // }
+}

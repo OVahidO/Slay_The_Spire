@@ -34,4 +34,10 @@ public:
     void applyEffect(Enemy* target, Player* player) override;
 };
 
+class Berserk : public PowerCard {
+public:
+    explicit Berserk(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
 #endif // POWERCARDS_H
