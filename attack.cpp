@@ -99,3 +99,31 @@ Feed::Feed(QGraphicsItem *parent)
 // }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Immolate::Immolate(QGraphicsItem *parent)
+    : Attack("Immolate",
+             CardType::Attack,
+             2,
+             ":/cards/immolate.png",
+             21,
+             false,
+             true,
+             parent)
+{}
+
+// void Immolate::applyEffect(Enemy* target, Player* player) {
+
+//     QList<Enemy*> allEnemies = CombatManager::getInstance()->getEnemies();
+
+//     for (Enemy* enemy : allEnemies)
+//         if (enemy && enemy->getCurrentHP() > 0)
+//             enemy->takeDamage(this->m_damage);
+
+//     if (player) {
+//         player->addCardToDiscard(new Burn());
+//         player->addCardToDiscard(new Burn());
+//     }
+// }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+

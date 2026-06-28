@@ -35,5 +35,10 @@ public:
     void applyEffect(Enemy* target, Player* player) override;
 };
 
+class Immolate : public Attack {
+public:
+    explicit Immolate(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
 
 #endif // ATTACK_H
