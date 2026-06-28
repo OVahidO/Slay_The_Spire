@@ -127,3 +127,23 @@ Immolate::Immolate(QGraphicsItem *parent)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+Bash::Bash(QGraphicsItem *parent)
+    : Attack("Bash",
+             CardType::Attack,
+             2,
+             ":/cards/bash.png",
+             8,
+             true,
+             false,
+             parent)
+{}
+
+void Bash::applyEffect(Enemy* target, Player* player) {
+    Q_UNUSED(player);
+
+    if (target) {
+        target->takeDamage(this->m_damage);
+
+        target->applyVulnerable(2);
+    }
+}

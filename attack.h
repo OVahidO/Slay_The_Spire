@@ -41,4 +41,10 @@ public:
     void applyEffect(Enemy* target, Player* player) override;
 };
 
+class Bash : public Attack {
+public:
+    explicit Bash(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
 #endif // ATTACK_H
