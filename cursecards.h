@@ -10,4 +10,12 @@ public:
     virtual ~CurseCard();
 };
 
+class J_A_X : public CurseCard
+{
+public:
+    explicit J_A_X(QString path, QGraphicsItem *parent = nullptr);
+
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+};
+
 #endif // CURSECARDS_H
