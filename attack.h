@@ -28,4 +28,12 @@ public:
     explicit Reaper(QGraphicsItem *parent = nullptr);
     void applyEffect(Enemy* target, Player* player) override;
 };
+
+class Feed : public Attack {
+public:
+    explicit Feed(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
+
 #endif // ATTACK_H
