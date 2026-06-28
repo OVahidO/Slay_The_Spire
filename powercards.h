@@ -22,4 +22,10 @@ public:
     void applyEffect(Enemy* target, Player* player) override;
 };
 
+class DemonForm : public PowerCard {
+public:
+    explicit DemonForm(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
 #endif // POWERCARDS_H

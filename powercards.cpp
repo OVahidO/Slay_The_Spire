@@ -42,3 +42,23 @@ void Brutality::applyEffect(Enemy* target, Player* player) {
     // if (player)
     //     player->applyPower("Brutality", 1);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DemonForm::DemonForm(QGraphicsItem *parent)
+    : PowerCard("Demon Form",
+                CardType::Power,
+                3,
+                ":/cards/demon_form.png",
+                false,
+                true,
+                parent,
+                "At the start of your turn gain 3 Strength")
+{}
+
+void DemonForm::applyEffect(Enemy* target, Player* player) {
+    Q_UNUSED(target);
+
+    // if (player)
+    //     player->applyBuff("Demon Form", 3);
+}
