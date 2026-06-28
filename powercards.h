@@ -28,4 +28,10 @@ public:
     void applyEffect(Enemy* target, Player* player) override;
 };
 
+class Metallicize : public PowerCard {
+public:
+    explicit Metallicize(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
 #endif // POWERCARDS_H

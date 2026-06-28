@@ -62,3 +62,23 @@ void DemonForm::applyEffect(Enemy* target, Player* player) {
     // if (player)
     //     player->applyBuff("Demon Form", 3);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Metallicize::Metallicize(QGraphicsItem *parent)
+    : PowerCard("Metallicize",
+                CardType::Power,
+                1,
+                ":/cards/metallicize.png",
+                false,
+                false,
+                parent,
+                "At the end of your turn get 3 block")
+{}
+
+void Metallicize::applyEffect(Enemy* target, Player* player) {
+    Q_UNUSED(target);
+
+    // if (player)
+    //     player->applyBuff("Metallicize", 3);
+}
