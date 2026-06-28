@@ -20,8 +20,8 @@ Strike::Strike(QGraphicsItem *parent)
 void Strike::applyEffect(Enemy* target, Player* player) {
     Q_UNUSED(player);
 
-    if (target)
-        target->takeDamage(this->m_damage);
+    // if (target)
+    //     target->takeDamage(this->m_damage);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,8 +41,8 @@ Bludgeon::Bludgeon(QGraphicsItem *parent)
 void Bludgeon::applyEffect(Enemy* target, Player* player) {
     Q_UNUSED(player);
 
-    if (target)
-        target->takeDamage(this->m_damage);
+    // if (target)
+    //     target->takeDamage(this->m_damage);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,11 +147,11 @@ Bash::Bash(QGraphicsItem *parent)
 void Bash::applyEffect(Enemy* target, Player* player) {
     Q_UNUSED(player);
 
-    if (target) {
-        target->takeDamage(this->m_damage);
+    // if (target) {
+    //     target->takeDamage(this->m_damage);
 
-        target->applyVulnerable(2);
-    }
+    //     target->applyVulnerable(2);
+    // }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,8 +171,8 @@ Clash::Clash(QGraphicsItem *parent)
 void Clash::applyEffect(Enemy* target, Player* player) {
     Q_UNUSED(player);
 
-    if (target)
-        target->takeDamage(this->m_damage);
+    // if (target)
+    //     target->takeDamage(this->m_damage);
 }
 
 // bool Clash::canPlay(Player* player) const {
@@ -202,9 +202,9 @@ Hemokinesis::Hemokinesis(QGraphicsItem *parent)
 {}
 
 void Hemokinesis::applyEffect(Enemy* target, Player* player) {
-    if (player)
-        player->loseHP(2);
+    // if (player)
+    //     player->loseHP(2);
 
-    if (target)
-        target->takeDamage(this->m_damage);
+    // if (target)
+    //     target->takeDamage(this->m_damage);
 }

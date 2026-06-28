@@ -1,3 +1,44 @@
 #include "powercards.h"
 
-PowerCard::PowerCard() {}
+PowerCard::PowerCard(QString name, CardType type, int energyCost, QString path, bool requiresTarget, bool isRare, QGraphicsItem *parent, QString description)
+    : Card(name, type, energyCost, path, isRare, requiresTarget, parent, description) {}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Inflame::Inflame(QGraphicsItem *parent)
+    : PowerCard("Inflame",
+                CardType::Power,
+                1,
+                ":/cards/inflame.png",
+                false,
+                false,
+                parent,
+                "Gain 2 Strength")
+{}
+
+void Inflame::applyEffect(Enemy* target, Player* player) {
+    Q_UNUSED(target);
+
+    // if (player)
+    //     player->applyStrength(2);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Brutality::Brutality(QGraphicsItem *parent)
+    : PowerCard("Brutality",
+                CardType::Power,
+                0,
+                ":/cards/brutality.png",
+                false,
+                true,
+                parent,
+                "At the start of your turn, lose 1 HP and draw 1 card.")
+{}
+
+void Brutality::applyEffect(Enemy* target, Player* player) {
+    Q_UNUSED(target);
+
+    // if (player)
+    //     player->applyPower("Brutality", 1);
+}
