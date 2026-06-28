@@ -40,4 +40,10 @@ public:
     void applyEffect(Enemy* target, Player* player) override;
 };
 
+class DarkEmbrace : public PowerCard {
+public:
+    explicit DarkEmbrace(QGraphicsItem *parent = nullptr);
+    void applyEffect(Enemy* target, Player* player) override;
+};
+
 #endif // POWERCARDS_H

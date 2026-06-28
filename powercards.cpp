@@ -102,3 +102,22 @@ void Berserk::applyEffect(Enemy* target, Player* player) {
     //     player->applyBuff("Berserk", 1);
     // }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DarkEmbrace::DarkEmbrace(QGraphicsItem *parent)
+    : PowerCard("Dark Embrace",
+                CardType::Power,
+                2,
+                ":/cards/dark_embrace.png",
+                false,
+                false,
+                parent,
+                "Every time a card is Exhausted, draw a card")
+{}
+
+void DarkEmbrace::applyEffect(Enemy* target, Player* player) {
+    Q_UNUSED(target);
+    // if (player)
+    //     player->applyBuff("Dark Embrace", 1);
+}
