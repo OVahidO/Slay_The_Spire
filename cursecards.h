@@ -6,7 +6,7 @@
 class CurseCard : public Card
 {
 public:
-    explicit CurseCard(QString name, int energyCost, QString path, bool isRare = false, QGraphicsItem *parent = nullptr);
+    explicit CurseCard(QString name, int energyCost, QString path, QString description, bool isRare = false, bool requiresTarget = true, QGraphicsItem *parent = nullptr);
     virtual ~CurseCard();
 };
 
