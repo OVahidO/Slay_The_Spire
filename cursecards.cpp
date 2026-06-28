@@ -22,3 +22,8 @@ CurseOfTheBell::CurseOfTheBell(QString path, QGraphicsItem *parent)
     :CurseCard("CurseOfTheBell", 0, path, false, parent) {}
 
 void CurseOfTheBell::applyEffect(Player* player, Enemy* targetEnemy) {Q_UNUSED(player); Q_UNUSED(targetEnemy);}
+
+Regret::Regret(QString path, QGraphicsItem *parent)
+    :CurseCard("Regret", 0, path, false, parent) {}
+
+void Regret::applyEffect(Player* player, Enemy* targetEnemy) {Q_UNUSED(player); Q_UNUSED(targetEnemy);}
