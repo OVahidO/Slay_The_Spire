@@ -8,7 +8,7 @@ protected:
     int m_damage;
 
 public:
-    Attack(QString name, CardType type, int energyCost, QString path, int damage, bool requiresTarget, bool isRare, QGraphicsItem *parent);
+    Attack(QString name, CardType type, int energyCost, QString path, int damage, bool requiresTarget, bool isRare, QGraphicsItem *parent, QString description);
 };
 
 class Strike : public Attack {

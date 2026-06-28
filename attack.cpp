@@ -1,7 +1,7 @@
 #include "attack.h"
 
-Attack::Attack(QString name, CardType type, int energyCost, QString path, int damage, bool requiresTarget, bool isRare, QGraphicsItem *parent)
-    : Card(name, type, energyCost, path, isRare, requiresTarget, parent), m_damage(damage) {}
+Attack::Attack(QString name, CardType type, int energyCost, QString path, int damage, bool requiresTarget, bool isRare, QGraphicsItem *parent, QString description)
+    : Card(name, type, energyCost, path, isRare, requiresTarget, parent, description), m_damage(damage) {}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,7 +13,8 @@ Strike::Strike(QGraphicsItem *parent)
              6,
              true,
              false,
-             parent)
+             parent,
+             "Deal 6 damage")
 {}
 
 void Strike::applyEffect(Enemy* target, Player* player) {
@@ -33,7 +34,8 @@ Bludgeon::Bludgeon(QGraphicsItem *parent)
              32,
              true,
              true,
-             parent)
+             parent,
+             "Deal 32 damage")
 {}
 
 void Bludgeon::applyEffect(Enemy* target, Player* player) {
@@ -53,7 +55,8 @@ Reaper::Reaper(QGraphicsItem *parent)
              4,
              false,
              true,
-             parent)
+             parent,
+             "Deal 4 damage to all enemies\nHeal HP equal to unblocked damage\nExhaust")
 {}
 
 // void Reaper::applyEffect(Enemy* target, Player* player) {
@@ -83,7 +86,8 @@ Feed::Feed(QGraphicsItem *parent)
              10,
              true,
              true,
-             parent)
+             parent,
+             "Deal 10 damage\nIf fatal, raise max HP by 3\nExhaust")
 {}
 
 // void Feed::Feed::applyEffect(Enemy* target, Player* player) {
@@ -108,7 +112,8 @@ Immolate::Immolate(QGraphicsItem *parent)
              21,
              false,
              true,
-             parent)
+             parent,
+             "Deal 21 damage to all enemies\nAdd 2 BURN into discard pile")
 {}
 
 // void Immolate::applyEffect(Enemy* target, Player* player) {
@@ -135,7 +140,8 @@ Bash::Bash(QGraphicsItem *parent)
              8,
              true,
              false,
-             parent)
+             parent,
+             "Deal 8 damage\nApply 2 Vulnerable")
 {}
 
 void Bash::applyEffect(Enemy* target, Player* player) {
