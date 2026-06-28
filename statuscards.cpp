@@ -14,3 +14,8 @@ SLIME::SLIME(QString path, QGraphicsItem *parent)
     :StatusCard("SLIME", 1, path, false, parent) {}
 
 void SLIME::applyEffect(Player* player, Enemy* targetEnemy) {Q_UNUSED(player); Q_UNUSED(targetEnemy);}
+
+WOUND::WOUND(QString path, QGraphicsItem *parent)
+    :StatusCard("WOUND", 0, path, false, parent) {}
+
+void WOUND::applyEffect(Player* player, Enemy* targetEnemy) {Q_UNUSED(player); Q_UNUSED(targetEnemy);}

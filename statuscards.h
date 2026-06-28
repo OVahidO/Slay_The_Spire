@@ -26,4 +26,12 @@ public:
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
 };
 
+class WOUND : public StatusCard
+{
+public:
+    explicit WOUND(QString path, QGraphicsItem *parent = nullptr);
+
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+};
+
 #endif // STATUSCARDS_H
