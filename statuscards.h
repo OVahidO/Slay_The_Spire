@@ -10,4 +10,12 @@ public:
     virtual ~StatusCard();
 };
 
+class DAZE : public StatusCard
+{
+public:
+    explicit DAZE(QString path, QGraphicsItem *parent = nullptr);
+
+    void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr);
+};
+
 #endif // STATUSCARDS_H
