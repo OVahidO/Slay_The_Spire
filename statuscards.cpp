@@ -9,3 +9,8 @@ DAZE::DAZE(QString path, QGraphicsItem *parent)
     :StatusCard("DAZE", 0, path, false, parent) {}
 
 void DAZE::applyEffect(Player* player, Enemy* targetEnemy) {Q_UNUSED(player); Q_UNUSED(targetEnemy);}
+
+SLIME::SLIME(QString path, QGraphicsItem *parent)
+    :StatusCard("SLIME", 1, path, false, parent) {}
+
+void SLIME::applyEffect(Player* player, Enemy* targetEnemy) {Q_UNUSED(player); Q_UNUSED(targetEnemy);}
