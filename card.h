@@ -20,7 +20,7 @@ public:
     virtual QRectF boundingRect() const override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
-    virtual void applyEffect(Enemy* target, Player* player) = 0;
+    virtual void applyEffect(Player* player, Enemy* target) = 0;
 
 signals:
 

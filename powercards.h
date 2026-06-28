@@ -7,43 +7,43 @@
 
 class PowerCard : public Card {
 public:
-    PowerCard(QString name, CardType type, int energyCost, QString path, bool requiresTarget, bool isRare, QGraphicsItem *parent, QString description);
+    PowerCard(QString name, int energyCost, QString path, QString description, bool requiresTarget, bool isRare, QGraphicsItem *parent);
 };
 
 class Inflame : public PowerCard {
 public:
-    explicit Inflame(QGraphicsItem *parent = nullptr);
-    void applyEffect(Enemy* target, Player* player) override;
+    explicit Inflame(QString path, QGraphicsItem *parent = nullptr);
+    void applyEffect(Player* player, Enemy* target) override;
 };
 
 class Brutality : public PowerCard {
 public:
-    explicit Brutality(QGraphicsItem *parent = nullptr);
-    void applyEffect(Enemy* target, Player* player) override;
+    explicit Brutality(QString path, QGraphicsItem *parent = nullptr);
+    void applyEffect(Player* player, Enemy* target) override;
 };
 
 class DemonForm : public PowerCard {
 public:
-    explicit DemonForm(QGraphicsItem *parent = nullptr);
-    void applyEffect(Enemy* target, Player* player) override;
+    explicit DemonForm(QString path, QGraphicsItem *parent = nullptr);
+    void applyEffect(Player* player, Enemy* target) override;
 };
 
 class Metallicize : public PowerCard {
 public:
-    explicit Metallicize(QGraphicsItem *parent = nullptr);
-    void applyEffect(Enemy* target, Player* player) override;
+    explicit Metallicize(QString path, QGraphicsItem *parent = nullptr);
+    void applyEffect(Player* player, Enemy* target) override;
 };
 
 class Berserk : public PowerCard {
 public:
-    explicit Berserk(QGraphicsItem *parent = nullptr);
-    void applyEffect(Enemy* target, Player* player) override;
+    explicit Berserk(QString path, QGraphicsItem *parent = nullptr);
+    void applyEffect(Player* player, Enemy* target) override;
 };
 
 class DarkEmbrace : public PowerCard {
 public:
-    explicit DarkEmbrace(QGraphicsItem *parent = nullptr);
-    void applyEffect(Enemy* target, Player* player) override;
+    explicit DarkEmbrace(QString path, QGraphicsItem *parent = nullptr);
+    void applyEffect(Player* player, Enemy* target) override;
 };
 
 #endif // POWERCARDS_H

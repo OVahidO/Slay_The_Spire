@@ -1,23 +1,23 @@
 #include "attackcards.h"
 
-AttackCard::AttackCard(QString name, CardType type, int energyCost, QString path, int damage, bool requiresTarget, bool isRare, QGraphicsItem *parent, QString description)
-    : Card(name, type, energyCost, path, isRare, requiresTarget, parent, description), m_damage(damage) {}
+AttackCard::AttackCard(QString name, int energyCost, QString path, QString description, int damage, bool requiresTarget, bool isRare, QGraphicsItem *parent)
+    : Card(name, CardType::Attack, energyCost, path, isRare, requiresTarget, parent, description), m_damage(damage) {}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Strike::Strike(QGraphicsItem *parent)
+Strike::Strike(QString path, QGraphicsItem *parent)
     : AttackCard("Strike",
-             CardType::Attack,
              1,
-             ":/cards/strike.png",
+             path,
+             "Deal 6 damage",
              6,
              true,
              false,
-             parent,
-             "Deal 6 damage")
+             parent
+             )
 {}
 
-void Strike::applyEffect(Enemy* target, Player* player) {
+void Strike::applyEffect(Player* player, Enemy* target) {
     Q_UNUSED(player);
 
     // if (target)
@@ -26,19 +26,19 @@ void Strike::applyEffect(Enemy* target, Player* player) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Bludgeon::Bludgeon(QGraphicsItem *parent)
+Bludgeon::Bludgeon(QString path, QGraphicsItem *parent)
     : AttackCard("Bludgeon",
-             CardType::Attack,
              3,
-             ":/cards/bludgeon.png",
+             path,
+             "Deal 32 damage",
              32,
              true,
              true,
-             parent,
-             "Deal 32 damage")
+             parent
+             )
 {}
 
-void Bludgeon::applyEffect(Enemy* target, Player* player) {
+void Bludgeon::applyEffect(Player* player, Enemy* target) {
     Q_UNUSED(player);
 
     // if (target)
@@ -47,19 +47,19 @@ void Bludgeon::applyEffect(Enemy* target, Player* player) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Reaper::Reaper(QGraphicsItem *parent)
+Reaper::Reaper(QString path, QGraphicsItem *parent)
     : AttackCard("Reaper",
-             CardType::Attack,
              2,
-             ":/cards/reaper.png",
+             path,
+             "Deal 4 damage to all enemies\nHeal HP equal to unblocked damage\nExhaust",
              4,
              false,
              true,
-             parent,
-             "Deal 4 damage to all enemies\nHeal HP equal to unblocked damage\nExhaust")
+             parent
+             )
 {}
 
-// void Reaper::applyEffect(Enemy* target, Player* player) {
+// void Reaper::applyEffect(Player* player, Enemy* target) {
 //     Q_UNUSED(target);
 
 //     int totalDamageDealt = 0;
@@ -78,19 +78,19 @@ Reaper::Reaper(QGraphicsItem *parent)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Feed::Feed(QGraphicsItem *parent)
+Feed::Feed(QString path, QGraphicsItem *parent)
     : AttackCard("Feed",
-             CardType::Attack,
              1,
-             ":/cards/feed.png",
+             path,
+             "Deal 10 damage\nIf fatal, raise max HP by 3\nExhaust",
              10,
              true,
              true,
-             parent,
-             "Deal 10 damage\nIf fatal, raise max HP by 3\nExhaust")
+             parent
+             )
 {}
 
-// void Feed::Feed::applyEffect(Enemy* target, Player* player) {
+// void Feed::Feed::applyEffect(Player* player, Enemy* target) {
 //     if (target && player) {
 //         int damageDealt = target->takeDamage(this->m_damage);
 
@@ -104,19 +104,19 @@ Feed::Feed(QGraphicsItem *parent)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Immolate::Immolate(QGraphicsItem *parent)
+Immolate::Immolate(QString path, QGraphicsItem *parent)
     : AttackCard("Immolate",
-             CardType::Attack,
              2,
-             ":/cards/immolate.png",
+             path,
+             "Deal 21 damage to all enemies\nAdd 2 BURN into discard pile",
              21,
              false,
              true,
-             parent,
-             "Deal 21 damage to all enemies\nAdd 2 BURN into discard pile")
+             parent
+             )
 {}
 
-// void Immolate::applyEffect(Enemy* target, Player* player) {
+// void Immolate::applyEffect(Player* player, Enemy* target) {
 
 //     QList<Enemy*> allEnemies = CombatManager::getInstance()->getEnemies();
 
@@ -132,19 +132,19 @@ Immolate::Immolate(QGraphicsItem *parent)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Bash::Bash(QGraphicsItem *parent)
+Bash::Bash(QString path, QGraphicsItem *parent)
     : AttackCard("Bash",
-             CardType::Attack,
              2,
-             ":/cards/bash.png",
+             path,
+                 "Deal 8 damage\nApply 2 Vulnerable",
              8,
              true,
              false,
-             parent,
-             "Deal 8 damage\nApply 2 Vulnerable")
+             parent
+             )
 {}
 
-void Bash::applyEffect(Enemy* target, Player* player) {
+void Bash::applyEffect(Player* player, Enemy* target) {
     Q_UNUSED(player);
 
     // if (target) {
@@ -156,19 +156,19 @@ void Bash::applyEffect(Enemy* target, Player* player) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Clash::Clash(QGraphicsItem *parent)
+Clash::Clash(QString path, QGraphicsItem *parent)
     : AttackCard("Clash",
-             CardType::Attack,
              0,
-             ":/cards/clash.png",
+             path,
+             "Deal 14 damage\nCan only be played if every card in hand is an attack",
              14,
              true,
              false,
-             parent,
-             "Deal 14 damage\nCan only be played if every card in hand is an attack")
+             parent
+             )
 {}
 
-void Clash::applyEffect(Enemy* target, Player* player) {
+void Clash::applyEffect(Player* player, Enemy* target) {
     Q_UNUSED(player);
 
     // if (target)
@@ -189,19 +189,19 @@ void Clash::applyEffect(Enemy* target, Player* player) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Hemokinesis::Hemokinesis(QGraphicsItem *parent)
+Hemokinesis::Hemokinesis(QString path, QGraphicsItem *parent)
     : AttackCard("Hemokinesis",
-             CardType::Attack,
              1,
-             ":/cards/hemokinesis.png",
+             path,
+             "Lose 2 HP\nDeal 15 damage",
              15,
              true,
              false,
-             parent,
-             "Lose 2 HP\nDeal 15 damage")
+             parent
+             )
 {}
 
-void Hemokinesis::applyEffect(Enemy* target, Player* player) {
+void Hemokinesis::applyEffect(Player* player, Enemy* target) {
     // if (player)
     //     player->loseHP(2);
 
