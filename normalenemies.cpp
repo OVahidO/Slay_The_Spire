@@ -81,3 +81,92 @@ int Louse::takeDamage(int incomingDamage) {
 
     return damage;
 }
+
+Slime::Slime(QString name, int minHP, int maxHP, bool isMultiplayer, QGraphicsItem* parent)
+    : Enemy(name, minHP, maxHP, isMultiplayer, parent) {}
+
+bool Slime::shouldSplit() const {
+    return false;
+}
+
+AcidSlimeS::AcidSlimeS(bool isMultiplayer, QGraphicsItem* parent)
+    : Slime("Small Slime",
+          8,
+          12,
+          isMultiplayer,
+          parent
+          ) {
+    calculateNextIntent();
+}
+
+void AcidSlimeS::calculateNextIntent() {
+    m_turnCount++;
+
+    QList<QPair<int, EnemyIntent>> options =
+        {
+            { 50, EnemyIntent{ IntentType::Attack, 3, 0, false } },
+            { 50, EnemyIntent{ IntentType::Debuff, 1, 0, false } }
+        };
+
+    m_currentIntent = pickIntent(options);
+}
+
+AcidSlimeM::AcidSlimeM(bool isMultiplayer, QGraphicsItem* parent)
+    : Slime(
+          "Medium Slime",
+          28,
+          32,
+          isMultiplayer,
+          parent
+          ) {
+    calculateNextIntent();
+}
+
+void AcidSlimeM::calculateNextIntent()
+{
+    m_turnCount++;
+
+    QList<QPair<int, EnemyIntent>> options =
+        {
+            { 30, EnemyIntent{ IntentType::AttackDebuff, 7, 1, false } },
+            { 40, EnemyIntent{ IntentType::Attack, 10, 0, false } },
+            { 30, EnemyIntent{ IntentType::Debuff, 1, 0, false } }
+        };
+
+    m_currentIntent = pickIntent(options);
+}
+
+AcidSlimeL::AcidSlimeL(bool isMultiplayer, QGraphicsItem* parent)
+    : Slime(
+          "Large Slime",
+          68,
+          72,
+          isMultiplayer,
+          parent
+          ) {
+    calculateNextIntent();
+}
+
+void AcidSlimeL::calculateNextIntent()
+{
+    m_turnCount++;
+
+    if (!m_hasSplit && m_currentHP <= m_maxHP / 2) {
+        m_currentIntent = { IntentType::Unknown, 0, 0, false };
+
+        return;
+    }
+
+    QList<QPair<int, EnemyIntent>> options =
+        {
+            { 30, EnemyIntent{ IntentType::AttackDebuff, 7, 1, false } },
+            { 40, EnemyIntent{ IntentType::Attack, 10, 0, false } },
+            { 30, EnemyIntent{ IntentType::Debuff, 1, 0, false } }
+        };
+
+    m_currentIntent = pickIntent(options);
+}
+
+bool AcidSlimeL::shouldSplit() const {
+    return !m_hasSplit && m_currentHP <= m_maxHP / 2;
+}

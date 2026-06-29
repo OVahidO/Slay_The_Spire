@@ -35,4 +35,37 @@ private:
     int randomBiteDamage() const;
 };
 
+class Slime : public Enemy {
+public:
+    Slime(QString name, int minHP, int maxHP, bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+
+protected:
+    bool m_hasSplit = false;
+    virtual bool shouldSplit() const;
+};
+
+class AcidSlimeS : public Slime {
+public:
+    explicit AcidSlimeS(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+
+    void calculateNextIntent() override;
+};
+
+class AcidSlimeM : public Slime {
+public:
+    explicit AcidSlimeM(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+
+    void calculateNextIntent() override;
+};
+
+class AcidSlimeL : public Slime {
+public:
+    explicit AcidSlimeL(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+
+    void calculateNextIntent() override;
+
+    bool shouldSplit() const override;
+};
+
+
 #endif // NORMALENEMIES_H
