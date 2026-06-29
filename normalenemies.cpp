@@ -170,3 +170,59 @@ void AcidSlimeL::calculateNextIntent()
 bool AcidSlimeL::shouldSplit() const {
     return !m_hasSplit && m_currentHP <= m_maxHP / 2;
 }
+
+Thief::Thief(QString name, int minHP, int maxHP, int mugDamage, bool isMultiplayer, QGraphicsItem* parent)
+    : Enemy(name, minHP, maxHP, isMultiplayer, parent), m_mugDamage( mugDamage) {
+    calculateNextIntent();
+}
+
+bool Thief::hasEscaped() const {
+    return m_hasEscaped;
+}
+
+int Thief::stolenGold() const {
+    return m_stolenGold;
+}
+
+void Thief::calculateNextIntent() {
+    m_turnCount++;
+
+    if (m_turnCount <= 2) {
+        m_currentIntent =
+            { IntentType::AttackDebuff, m_mugDamage, 15, false };
+
+        return;
+    }
+
+    if (m_turnCount == 3) {
+        m_currentIntent =
+            { IntentType::Defend, 6, 0, false };
+
+        return;
+    }
+
+    m_currentIntent =
+        { IntentType::Unknown, 0, 0, true };
+
+    m_hasEscaped = true;
+}
+
+Looter::Looter(bool isMultiplayer, QGraphicsItem* parent)
+    : Thief(
+          "Looter",
+          44,
+          48,
+          10,
+          isMultiplayer,
+          parent
+          ) {}
+
+Mugger::Mugger(bool isMultiplayer, QGraphicsItem* parent)
+    : Thief(
+          "Mugger",
+          52,
+          56,
+          14,
+          isMultiplayer,
+          parent
+          ) {}

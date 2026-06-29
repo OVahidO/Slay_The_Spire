@@ -67,5 +67,29 @@ public:
     bool shouldSplit() const override;
 };
 
+class Thief : public Enemy
+{
+public:
+    Thief(
+        QString name,
+        int minHP,
+        int maxHP,
+        int mugDamage,
+        bool isMultiplayer = false,
+        QGraphicsItem* parent = nullptr
+        );
+
+    void calculateNextIntent() override;
+
+    bool hasEscaped() const;
+    int stolenGold() const;
+
+protected:
+    int m_mugDamage;
+    int m_stolenGold = 0;
+    bool m_hasEscaped = false;
+};
+
+
 
 #endif // NORMALENEMIES_H
