@@ -99,4 +99,16 @@ public:
     void calculateNextIntent() override;
 };
 
+
+class RedSlaver : public Enemy {
+public:
+    explicit RedSlaver(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+
+    void calculateNextIntent() override;
+
+private:
+    bool m_usedEntangle = false;
+};
+
+
 #endif // NORMALENEMIES_H

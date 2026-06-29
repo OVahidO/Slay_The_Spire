@@ -250,3 +250,40 @@ void BlueSlaver::calculateNextIntent() {
 
     m_currentIntent = pickIntent(options);
 }
+
+
+RedSlaver::RedSlaver(bool isMultiplayer, QGraphicsItem* parent)
+    : Enemy(
+          "Red Slaver",
+          46,
+          50,
+          isMultiplayer,
+          parent
+          ) {
+    calculateNextIntent();
+}
+
+void RedSlaver::calculateNextIntent() {
+    m_turnCount++;
+
+    if (m_turnCount == 1) {
+        m_currentIntent = { IntentType::Attack, 13, 0, false };
+
+        return;
+    }
+
+    QList<QPair<int, EnemyIntent>> options;
+
+    if (!m_usedEntangle)
+        options.append({ 25, EnemyIntent{ IntentType::Debuff, 1, 0, false }});
+
+    options.append({ 50, EnemyIntent{ IntentType::Attack, 13, 0, false } });
+
+    options.append({ 50, EnemyIntent{ IntentType::AttackDebuff, 8, 1, false } });
+
+
+    m_currentIntent = pickIntent(options);
+
+    if (m_currentIntent.type == IntentType::Debuff)
+        m_usedEntangle = true;
+}
