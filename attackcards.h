@@ -9,7 +9,7 @@ protected:
 
 public:
     AttackCard(QString name, int energyCost, QString path, QString description, int damage, bool requiresTarget, bool isRare, QGraphicsItem *parent);
-    virtual ~AttackCard() = 0;
+    virtual ~AttackCard() = default;
 };
 
 class Strike : public AttackCard {

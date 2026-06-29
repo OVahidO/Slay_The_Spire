@@ -8,7 +8,7 @@
 class PowerCard : public Card {
 public:
     PowerCard(QString name, int energyCost, QString path, QString description, bool requiresTarget, bool isRare, QGraphicsItem *parent);
-    virtual ~PowerCard() = 0;
+    virtual ~PowerCard() = default;
 };
 
 class Inflame : public PowerCard {
