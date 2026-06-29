@@ -226,3 +226,27 @@ Mugger::Mugger(bool isMultiplayer, QGraphicsItem* parent)
           isMultiplayer,
           parent
           ) {}
+
+
+BlueSlaver::BlueSlaver(bool isMultiplayer, QGraphicsItem* parent)
+    : Enemy(
+          "Blue Slaver",
+          46,
+          50,
+          isMultiplayer,
+          parent
+          ) {
+    calculateNextIntent();
+}
+
+void BlueSlaver::calculateNextIntent() {
+    m_turnCount++;
+
+    QList<QPair<int, EnemyIntent>> options =
+        {
+            { 60, EnemyIntent{ IntentType::Attack, 12, 0, false } },
+            { 40, EnemyIntent{ IntentType::AttackDebuff, 7, 1, false } }
+        };
+
+    m_currentIntent = pickIntent(options);
+}

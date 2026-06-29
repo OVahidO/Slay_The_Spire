@@ -67,17 +67,9 @@ public:
     bool shouldSplit() const override;
 };
 
-class Thief : public Enemy
-{
+class Thief : public Enemy {
 public:
-    Thief(
-        QString name,
-        int minHP,
-        int maxHP,
-        int mugDamage,
-        bool isMultiplayer = false,
-        QGraphicsItem* parent = nullptr
-        );
+    Thief(QString name, int minHP, int maxHP, int mugDamage, bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
 
     void calculateNextIntent() override;
 
@@ -90,6 +82,21 @@ protected:
     bool m_hasEscaped = false;
 };
 
+class Looter : public Thief {
+public:
+    explicit Looter(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+};
 
+class Mugger : public Thief {
+public:
+    explicit Mugger(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+};
+
+class BlueSlaver : public Enemy {
+public:
+    explicit BlueSlaver(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+
+    void calculateNextIntent() override;
+};
 
 #endif // NORMALENEMIES_H
