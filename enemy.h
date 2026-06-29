@@ -11,14 +11,14 @@ class Player {};
 
 class BuffDebuff;
 
-enum class IntentType { Attack, Defend, Buff, Debuff, AttackDebuff, DefendBuff, Unknown };
+enum class IntentType { Attack, Defend, Buff, Debuff, AttackDebuff, DefendBuff, AttackDefend, Unknown };
 
 struct EnemyIntent {
     IntentType type = IntentType::Unknown;
     int value = 0;
+    int secondaryValue = 0;
     bool isHidden = false;
 };
-
 class Enemy : public QGraphicsObject
 {
     Q_OBJECT
