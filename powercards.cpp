@@ -1,7 +1,9 @@
 #include "powercards.h"
 
 PowerCard::PowerCard(QString name, int energyCost, QString path, QString description, bool requiresTarget, bool isRare, QGraphicsItem *parent)
-    : Card(name, CardType::Power, energyCost, path, isRare, requiresTarget, parent, description) {}
+    : Card(name, CardType::Power, energyCost, path, description, isRare, requiresTarget, parent) {}
+
+PowerCard::~PowerCard(){}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
