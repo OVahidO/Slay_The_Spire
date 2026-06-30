@@ -24,4 +24,15 @@ private:
     bool m_startsWithBeam;
 };
 
+class BookOfStabbing : public Enemy
+{
+public:
+    explicit BookOfStabbing(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
+
+    void calculateNextIntent() override;
+
+private:
+    int m_multiStabUsedCount = 0;
+};
+
 #endif // ELITEENEMIES_H

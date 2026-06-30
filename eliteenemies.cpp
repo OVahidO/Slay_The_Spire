@@ -50,3 +50,23 @@ void Sentry::calculateNextIntent() {
     //     player->shuffleIntoDiscard(new DAZE());
     // }
 }
+
+BookOfStabbing::BookOfStabbing(bool isMultiplayer, QGraphicsItem *parent)
+    : Enemy("Book of Stabbing", 160, 162, isMultiplayer, parent) {
+    calculateNextIntent();
+}
+
+void BookOfStabbing::calculateNextIntent() {
+    m_turnCount++;
+
+    QList<QPair<int, EnemyIntent>> options =
+        {
+            { 85, EnemyIntent{ IntentType::Attack, 6, m_multiStabUsedCount + 2, true } },
+            { 15, EnemyIntent{ IntentType::Attack, 21, 1, false } }
+        };
+
+    m_currentIntent = pickIntent(options);
+
+    if (m_currentIntent.secondaryValue != 1 || m_currentIntent.value != 21)
+        m_multiStabUsedCount++;
+}
