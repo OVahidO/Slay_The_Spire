@@ -19,12 +19,12 @@ struct EnemyIntent {
     int secondaryValue = 0;
     bool isHidden = false;
 };
-class Enemy : public QGraphicsObject
-{
+
+class Enemy : public QGraphicsObject {
     Q_OBJECT
 public:
     explicit Enemy(QString name, int minHP, int maxHP, bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
-    virtual ~Enemy() = 0;
+    virtual ~Enemy() = default;
 
     int takeDamage(int incomingDamage);
     void gainBlock(int amount);

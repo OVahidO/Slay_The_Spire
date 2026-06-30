@@ -9,8 +9,6 @@ Enemy::Enemy(QString name, int minHP, int maxHP, bool isMultiplayer, QGraphicsIt
     // }
 }
 
-Enemy::~Enemy() {}
-
 int Enemy::takeDamage(int incomingDamage) {
     int finalDamage = incomingDamage;
 
@@ -66,7 +64,7 @@ void Enemy::removeEffect(BuffDebuff* effect) { m_activeEffects.removeOne(effect)
 
 QList<BuffDebuff*> Enemy::getActiveEffects() const { return m_activeEffects; }
 
-//QRectF Enemy::boundingRect() const { return QRectF(0, 0, 150, 150); }
+//QRectF Enemy::boundingRect() const { return QRectF(0, 0, 0, 0); }
 
 // void Enemy::paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
 //     Q_UNUSED(painter);
@@ -74,8 +72,7 @@ QList<BuffDebuff*> Enemy::getActiveEffects() const { return m_activeEffects; }
 //     Q_UNUSED(widget);
 // }
 
-EnemyIntent Enemy::pickIntent(const QList<QPair<int, EnemyIntent>>& options) const
-{
+EnemyIntent Enemy::pickIntent(const QList<QPair<int, EnemyIntent>>& options) const {
     int totalWeight = 0;
     for (const auto& option : options)
         totalWeight += option.first;

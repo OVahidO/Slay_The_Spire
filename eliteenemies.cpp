@@ -29,11 +29,10 @@ void GremlinKnob::onPlayerSkillPlayed() {
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Sentry::Sentry(bool startsWithBeam, bool isMultiplayer, QGraphicsItem *parent)
-    : Enemy("Sentry", 38, 42, isMultiplayer, parent), m_startsWithBeam(startsWithBeam) {
-    calculateNextIntent();
-}
+    : Enemy("Sentry", 38, 42, isMultiplayer, parent), m_startsWithBeam(startsWithBeam) { calculateNextIntent(); }
 
 void Sentry::calculateNextIntent() {
     m_turnCount++;
@@ -51,10 +50,10 @@ void Sentry::calculateNextIntent() {
     // }
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BookOfStabbing::BookOfStabbing(bool isMultiplayer, QGraphicsItem *parent)
-    : Enemy("Book of Stabbing", 160, 162, isMultiplayer, parent) {
-    calculateNextIntent();
-}
+    : Enemy("Book of Stabbing", 160, 162, isMultiplayer, parent) { calculateNextIntent(); }
 
 void BookOfStabbing::calculateNextIntent() {
     m_turnCount++;
@@ -71,10 +70,10 @@ void BookOfStabbing::calculateNextIntent() {
         m_multiStabUsedCount++;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 Taskmaster::Taskmaster(bool isMultiplayer, QGraphicsItem *parent)
-    : Enemy("Taskmaster", 54, 60, isMultiplayer, parent) {
-    calculateNextIntent();
-}
+    : Enemy("Taskmaster", 54, 60, isMultiplayer, parent) { calculateNextIntent(); }
 
 void Taskmaster::calculateNextIntent() {
     m_turnCount++;
