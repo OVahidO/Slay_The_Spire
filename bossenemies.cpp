@@ -33,6 +33,8 @@ void KingSlime::calculateNextIntent() {
 
 bool KingSlime::shouldSplit() const { return !m_hasSplit && m_currentHP <= m_maxHP / 2; }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HexaGhost::HexaGhost(bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("HexaGhost", 250, 250, isMultiplayer, parent) { calculateNextIntent(); }
 
