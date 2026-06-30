@@ -28,3 +28,25 @@ void GremlinKnob::onPlayerSkillPlayed() {
         // addEffect(strength);
     }
 }
+
+
+Sentry::Sentry(bool startsWithBeam, bool isMultiplayer, QGraphicsItem *parent)
+    : Enemy("Sentry", 38, 42, isMultiplayer, parent), m_startsWithBeam(startsWithBeam) {
+    calculateNextIntent();
+}
+
+void Sentry::calculateNextIntent() {
+    m_turnCount++;
+
+    bool useBeam = m_startsWithBeam ? (m_turnCount % 2 == 1) : (m_turnCount % 2 == 0);
+
+    if (useBeam)
+        m_currentIntent = EnemyIntent{ IntentType::Attack, 9, 0, false };
+    else
+        m_currentIntent = EnemyIntent{ IntentType::Debuff, 2, 0, false };
+
+    // if (!useBeam) {
+    //     player->shuffleIntoDiscard(new DAZE());
+    //     player->shuffleIntoDiscard(new DAZE());
+    // }
+}
