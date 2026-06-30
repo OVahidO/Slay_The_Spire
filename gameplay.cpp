@@ -6,6 +6,10 @@ GamePlay::GamePlay(QWidget *parent)
     , ui(new Ui::GamePlay)
 {
     ui->setupUi(this);
+    //setup attributes
+    //////////////////
+    connect(this, &GamePlay::playerTurnEnded, this, &GamePlay::enemiesTurn);
+    connect(this, &GamePlay::enemiesTurnEnded, this, &GamePlay::playerTurn);
 }
 
 GamePlay::~GamePlay()
@@ -24,10 +28,12 @@ void GamePlay::playerReviveEnergy()
 
 void GamePlay::draw()
 {
-    /*for(int i=0 ; i<m_player->HandSize || m_drawPile.empty() ; i++)
+    /*for(int i=0 ; i<m_player->HandSize && !m_drawPile.empty() ; i++)
     {
-        m_player->m_HandsCards[i] = m_drawPile[m_drawPile.size() - 1];
+        m_player->m_HandsCards.push_back(m_drawPile[m_drawPile.size() - 1]);
         m_drawPile.pop_back();
+        connect(m_player->m_HandsCards[i], &Card::targetedCard, this, &GamePlay::targetCardsHandler);
+        connect(m_player->m_HandsCards[i], &Card::noTargetedCard, this, &GamePlay::noTargetCardsHandler);
     }*/
 }
 
