@@ -35,4 +35,12 @@ private:
     int m_multiStabUsedCount = 0;
 };
 
+class Taskmaster : public Enemy
+{
+public:
+    explicit Taskmaster(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
+
+    void calculateNextIntent() override;
+};
+
 #endif // ELITEENEMIES_H

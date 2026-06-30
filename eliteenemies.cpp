@@ -70,3 +70,15 @@ void BookOfStabbing::calculateNextIntent() {
     if (m_currentIntent.secondaryValue != 1 || m_currentIntent.value != 21)
         m_multiStabUsedCount++;
 }
+
+Taskmaster::Taskmaster(bool isMultiplayer, QGraphicsItem *parent)
+    : Enemy("Taskmaster", 54, 60, isMultiplayer, parent) {
+    calculateNextIntent();
+}
+
+void Taskmaster::calculateNextIntent() {
+    m_turnCount++;
+    m_currentIntent = EnemyIntent{ IntentType::Attack, 7, 1, false };
+
+    // player->addCardToDiscard(new WOUND());
+}
