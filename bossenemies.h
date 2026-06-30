@@ -11,4 +11,11 @@ public:
     bool shouldSplit() const override;
 };
 
+class HexaGhost : public Enemy {
+public:
+    explicit HexaGhost(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
+
+    void calculateNextIntent() override;
+};
+
 #endif // BOSSENEMIES_H
