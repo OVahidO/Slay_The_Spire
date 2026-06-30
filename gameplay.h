@@ -23,14 +23,14 @@ public:
 
 private:
     Ui::GamePlay *ui;
-    Player* player;
-    std::vector<Enemy*> enemys;
-    int turn;
+    Player* m_player;
+    std::vector<Enemy*> m_enemys;
+    int m_turn;
 
     // Temporary data structure(piles)
-    std::vector<Card*> drawPile;
-    std::vector<Card*> discardPile;
-    std::vector<Card*> ExhaustPile;
+    std::vector<Card*> m_drawPile;
+    std::vector<Card*> m_discardPile;
+    std::vector<Card*> m_ExhaustPile;
     //////////////////////////////////
 };
 
