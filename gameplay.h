@@ -32,6 +32,22 @@ public:
     void fillingDrawPile();
     bool isEnoughEnergy(int cardEnergyCost);
 
+signals:
+    void enemiesTurnEnded();
+    void playerTurnEnded();
+    void playerDead();
+    void cardPlayed(Card*);
+
+public slots:
+    void playerTurn();
+
+    void enemiesTurn();
+
+    void targetCardsHandler(Card* card, Player* player, Enemy* targetEnemy);
+
+    void noTargetCardsHandler(Card* card);
+
+    void playedCardHandler(Card* card);
 
 private:
     Ui::GamePlay *ui;

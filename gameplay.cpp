@@ -53,3 +53,47 @@ bool GamePlay::isEnoughEnergy(int cardEnergyCost)
     }*/
     return false;
 }
+
+void GamePlay::playerTurn()
+{
+    //ui->Enable
+    addTurn();
+    playerReviveEnergy();
+    if(m_drawPile.empty())
+        fillingDrawPile();
+    draw();
+    //ui->Update;
+}
+
+void GamePlay::enemiesTurn()
+{
+    // ui->Disable
+    // Ahoora->addEnemiesAi...
+    // if(m_player->Hp <= 0)
+    // {
+    //     emit playerDead();
+    //     return;
+    // }
+    // emit enemiesTurnEnded();
+}
+
+void GamePlay::targetCardsHandler(Card* card, Player* player, Enemy* targetEnemy)
+{
+    // if(isEnoughEnergy(card->energyCost))
+    // {
+    //     card->applyEffect(player, targetEnemy);
+    //     emit cardPlayed(card);
+    //     return;
+    // }
+}
+
+void GamePlay::noTargetCardsHandler(Card* card)
+{
+    //switch case for handle card effects//
+}
+
+void GamePlay::playedCardHandler(Card* card)
+{
+    m_discardPile.push_back(card);
+    //m_player->m_HandsCards.erase(std::find(m_HandsCards.begin(), m_HandsCards.end(), card));
+}
