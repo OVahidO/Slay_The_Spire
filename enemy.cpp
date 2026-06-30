@@ -2,11 +2,10 @@
 
 Enemy::Enemy(QString name, int minHP, int maxHP, bool isMultiplayer, QGraphicsItem *parent)
     : QGraphicsObject(parent), m_name(name), m_maxHP(minHP + rand() % (maxHP - minHP + 1)), m_currentHP(m_maxHP), m_block(0), m_turnCount(0) {
-    // if (isMultiplayer)
-    // {
-    //     m_maxHP *= 2;
-    //     m_currentHP = m_maxHP;
-    // }
+    if (isMultiplayer) {
+        m_maxHP *= 2;
+        m_currentHP = m_maxHP;
+    }
 }
 
 int Enemy::takeDamage(int incomingDamage) {
