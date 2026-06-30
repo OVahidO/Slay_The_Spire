@@ -2,6 +2,8 @@
 #define GAMEPLAY_H
 
 #include <QWidget>
+#include <algorithm>
+#include <random>
 
 // Temporary player and Enemy;
 class Player{};
@@ -20,6 +22,16 @@ class GamePlay : public QWidget
 public:
     explicit GamePlay(QWidget *parent = nullptr);
     ~GamePlay();
+
+    int turn() const;
+    void setTurn(int turn);
+    void addTurn(int n = 1);
+
+    void playerReviveEnergy();
+    void draw();
+    void fillingDrawPile();
+    bool isEnoughEnergy(int cardEnergyCost);
+
 
 private:
     Ui::GamePlay *ui;
