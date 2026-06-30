@@ -6,7 +6,14 @@
 class GremlinKnob : public Enemy
 {
 public:
-    GremlinKnob();
+    explicit GremlinKnob(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
+
+    void calculateNextIntent() override;
+    void onPlayerSkillPlayed();
+
+private:
+    int m_enrageStacks = 0;
 };
+
 
 #endif // ELITEENEMIES_H
