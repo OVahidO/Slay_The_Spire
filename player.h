@@ -19,17 +19,21 @@ public:
     int energy() const;
     int block() const;
     int maxHp() const;
+    int handSize() const;
+    //std::vector<Card*>& HandsCards();//
 
     void setHp(int hp);
     void setCoin(int coin);
     void setEnergy(int energy);
     void setBlock(int block);
     void setMaxHp(int maxHp);
+    void setHandSize(int handSize);
 
     void addMaxHp(int n = 1);
     void addBlock(int n = 1);
     void addEnergy(int n = 1);
     void loseHp(int n = 1);
+    void takeDamage(int damage);
 
 
 signals:
@@ -40,6 +44,11 @@ private:
     int m_energy = 3;
     int m_block = 0;
     int m_maxHp = 100;
+    int m_handSize = 5;
+
+    ///
+    //std::vector<Card*> m_HandsCards;
+    ///
 };
 
 #endif // PLAYER_H
