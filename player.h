@@ -10,7 +10,6 @@ class Player : public QGraphicsObject
     Q_OBJECT
 public:
     explicit Player(QGraphicsItem *parent = nullptr);
-    virtual ~Player();
 
     virtual QRectF boundingRect() const override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
@@ -36,11 +35,11 @@ public:
 signals:
 
 private:
-    int m_Hp;
-    int m_coin;
-    int m_energy;
-    int m_block;
-    int m_maxHp;
+    int m_Hp = 100;
+    int m_coin = 0;
+    int m_energy = 3;
+    int m_block = 0;
+    int m_maxHp = 100;
 };
 
 #endif // PLAYER_H

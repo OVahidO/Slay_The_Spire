@@ -4,8 +4,6 @@ Player::Player(QGraphicsItem *parent)
     : QGraphicsObject{parent}
 {}
 
-Player::~Player(){}
-
 QRectF Player::boundingRect() const
 {
     return QRectF(0, 0, 100, 100);
