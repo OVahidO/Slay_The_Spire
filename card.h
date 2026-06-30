@@ -10,8 +10,7 @@ class Player {};
 
 enum class CardType {Attack, Skill, Power, Status, Curse};
 
-class Card : public QGraphicsObject
-{
+class Card : public QGraphicsObject {
     Q_OBJECT
 public:
     explicit Card(QString name, CardType type, int energyCost, QString path, QString description, bool isRare = false, bool requiresTarget = true, QGraphicsItem *parent = nullptr);

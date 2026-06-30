@@ -19,6 +19,10 @@ qt_add_executable(Slay_The_Spire
     powercards.h powercards.cpp
     player.h player.cpp
     gameplay.h gameplay.cpp gameplay.ui
+    enemy.h enemy.cpp
+    normalenemies.h normalenemies.cpp
+    eliteenemies.h eliteenemies.cpp
+    bossenemies.h bossenemies.cpp
 )
 
 target_link_libraries(Slay_The_Spire
