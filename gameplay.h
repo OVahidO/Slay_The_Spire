@@ -3,6 +3,12 @@
 
 #include <QWidget>
 
+// Temporary player and Enemy;
+class Player{};
+class Enemy{};
+class Card{};
+//////////////////////////////
+
 namespace Ui {
 class GamePlay;
 }
@@ -17,6 +23,15 @@ public:
 
 private:
     Ui::GamePlay *ui;
+    Player* player;
+    std::vector<Enemy*> enemys;
+    int turn;
+
+    // Temporary data structure(piles)
+    std::vector<Card*> drawPile;
+    std::vector<Card*> discardPile;
+    std::vector<Card*> ExhaustPile;
+    //////////////////////////////////
 };
 
 #endif // GAMEPLAY_H
