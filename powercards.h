@@ -7,7 +7,7 @@
 
 class PowerCard : public Card {
 public:
-    PowerCard(QString name, int energyCost, QString path, QString description, bool requiresTarget, bool isRare, QGraphicsItem *parent);
+    PowerCard(QString name, int energyCost, QString path, QString description, bool requiresTarget, bool isExhaust, bool isRare, QGraphicsItem *parent);
     virtual ~PowerCard() = default;
 };
 

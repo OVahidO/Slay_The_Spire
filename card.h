@@ -13,7 +13,7 @@ enum class CardType {Attack, Skill, Power, Status, Curse};
 class Card : public QGraphicsObject {
     Q_OBJECT
 public:
-    explicit Card(QString name, CardType type, int energyCost, QString path, QString description, bool isRare = false, bool requiresTarget = true, QGraphicsItem *parent = nullptr);
+    explicit Card(QString name, CardType type, int energyCost, QString path, QString description, bool isRare = false, bool isExhaust = false, bool requiresTarget = true, QGraphicsItem *parent = nullptr);
     virtual ~Card();
 
     virtual QRectF boundingRect() const override;
@@ -32,6 +32,7 @@ protected:
     QString m_description;
     bool m_isRare;
     bool m_needTarget;
+    bool m_isExhaust;
 };
 
 #endif // CARD_H

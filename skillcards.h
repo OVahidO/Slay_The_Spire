@@ -6,7 +6,7 @@
 class SkillCard : public Card
 {
 public:
-    explicit SkillCard(QString name, int energyCost, QString path, QString description, bool isRare = false, bool requiresTarget = true, QGraphicsItem *parent = nullptr);
+    explicit SkillCard(QString name, int energyCost, QString path, QString description, bool isRare = false, bool isExhaust = false, bool requiresTarget = true, QGraphicsItem *parent = nullptr);
     virtual ~SkillCard();
 };
 
