@@ -5,8 +5,8 @@
 #include <QObject>
 #include <QString>
 
-class Enemy {};
-class Player {};
+class Enemy;
+class Player;
 
 enum class CardType {Attack, Skill, Power, Status, Curse};
 

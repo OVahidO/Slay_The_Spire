@@ -1,4 +1,6 @@
 #include "powercards.h"
+#include "enemy.h"
+#include "player.h"
 
 PowerCard::PowerCard(QString name, int energyCost, QString path, QString description, bool requiresTarget, bool isRare, QGraphicsItem *parent)
     : Card(name, CardType::Power, energyCost, path, description, isRare, requiresTarget, parent) {}

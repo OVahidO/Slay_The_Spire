@@ -7,7 +7,7 @@
 #include <QList>
 #include <QPair>
 
-class Player {};
+class Player;
 
 class BuffDebuff;
 

@@ -1,4 +1,5 @@
 #include "skillcards.h"
+#include "player.h"
 
 SkillCard::SkillCard(QString name, int energyCost, QString path, QString description, bool isRare, bool requiresTarget, QGraphicsItem *parent)
     :Card(name, CardType::Skill, energyCost, path, description, isRare, requiresTarget, parent) {}

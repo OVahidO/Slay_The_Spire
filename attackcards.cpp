@@ -1,4 +1,6 @@
 #include "attackcards.h"
+#include "enemy.h"
+#include "player.h"
 
 AttackCard::AttackCard(QString name, int energyCost, QString path, QString description, int damage, bool requiresTarget, bool isRare, QGraphicsItem *parent)
     : Card(name, CardType::Attack, energyCost, path, description, isRare, requiresTarget, parent), m_damage(damage) {}
