@@ -3,7 +3,8 @@
 
 #include "enemy.h"
 
-class Cultist : public Enemy {
+class Cultist : public Enemy
+{
 public:
     explicit Cultist(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
 
@@ -13,16 +14,18 @@ private:
     bool m_hasIncantation = false;
 };
 
-class JawWorm : public Enemy {
+class JawWorm : public Enemy
+{
 public:
     explicit JawWorm(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
 
     void calculateNextIntent() override;
 };
 
-class Louse : public Enemy {
+class Louse : public Enemy
+{
 public:
-    explicit Louse(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+    explicit Louse(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
 
     void calculateNextIntent() override;
 
@@ -35,41 +38,55 @@ private:
     int randomBiteDamage() const;
 };
 
-class Slime : public Enemy {
+class Slime : public Enemy
+{
 public:
-    Slime(QString name, int minHP, int maxHP, bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+    Slime(QString name,
+          int minHP,
+          int maxHP,
+          bool isMultiplayer = false,
+          QGraphicsItem *parent = nullptr);
 
 protected:
     bool m_hasSplit = false;
     virtual bool shouldSplit() const;
 };
 
-class AcidSlimeS : public Slime {
+class AcidSlimeS : public Slime
+{
 public:
-    explicit AcidSlimeS(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+    explicit AcidSlimeS(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
 
     void calculateNextIntent() override;
 };
 
-class AcidSlimeM : public Slime {
+class AcidSlimeM : public Slime
+{
 public:
-    explicit AcidSlimeM(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+    explicit AcidSlimeM(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
 
     void calculateNextIntent() override;
 };
 
-class AcidSlimeL : public Slime {
+class AcidSlimeL : public Slime
+{
 public:
-    explicit AcidSlimeL(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+    explicit AcidSlimeL(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
 
     void calculateNextIntent() override;
 
     bool shouldSplit() const override;
 };
 
-class Thief : public Enemy {
+class Thief : public Enemy
+{
 public:
-    Thief(QString name, int minHP, int maxHP, int mugDamage, bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+    Thief(QString name,
+          int minHP,
+          int maxHP,
+          int mugDamage,
+          bool isMultiplayer = false,
+          QGraphicsItem *parent = nullptr);
 
     void calculateNextIntent() override;
 
@@ -82,33 +99,35 @@ protected:
     bool m_hasEscaped = false;
 };
 
-class Looter : public Thief {
+class Looter : public Thief
+{
 public:
-    explicit Looter(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+    explicit Looter(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
 };
 
-class Mugger : public Thief {
+class Mugger : public Thief
+{
 public:
-    explicit Mugger(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+    explicit Mugger(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
 };
 
-class BlueSlaver : public Enemy {
+class BlueSlaver : public Enemy
+{
 public:
-    explicit BlueSlaver(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+    explicit BlueSlaver(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
 
     void calculateNextIntent() override;
 };
 
-
-class RedSlaver : public Enemy {
+class RedSlaver : public Enemy
+{
 public:
-    explicit RedSlaver(bool isMultiplayer = false, QGraphicsItem* parent = nullptr);
+    explicit RedSlaver(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
 
     void calculateNextIntent() override;
 
 private:
     bool m_usedEntangle = false;
 };
-
 
 #endif // NORMALENEMIES_H

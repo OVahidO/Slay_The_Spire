@@ -3,7 +3,8 @@
 
 #include "enemy.h"
 
-class GremlinKnob : public Enemy {
+class GremlinKnob : public Enemy
+{
 public:
     explicit GremlinKnob(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
 
@@ -14,9 +15,12 @@ private:
     int m_enrageStacks = 0;
 };
 
-class Sentry : public Enemy {
+class Sentry : public Enemy
+{
 public:
-    explicit Sentry(bool startsWithBeam, bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
+    explicit Sentry(bool startsWithBeam,
+                    bool isMultiplayer = false,
+                    QGraphicsItem *parent = nullptr);
 
     void calculateNextIntent() override;
 

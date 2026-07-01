@@ -8,8 +8,8 @@
 #include <QPair>
 
 class Player;
-
 class BuffDebuff;
+class GamePlay;
 
 enum class IntentType { Attack, Defend, Buff, Debuff, AttackDebuff, DefendBuff, AttackDefend, Unknown };
 
@@ -31,6 +31,7 @@ public:
     void resetBlock();
     void executeIntent(Player* player);
     bool isDead() const;
+    void applyEnemyIntent(GamePlay* game);
 
     QString getName() const;
     int getCurrentHP() const;

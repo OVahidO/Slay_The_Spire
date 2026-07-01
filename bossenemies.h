@@ -3,7 +3,8 @@
 
 #include "normalenemies.h"
 
-class KingSlime : public Slime {
+class KingSlime : public Slime
+{
 public:
     explicit KingSlime(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
 
@@ -11,7 +12,8 @@ public:
     bool shouldSplit() const override;
 };
 
-class HexaGhost : public Enemy {
+class HexaGhost : public Enemy
+{
 public:
     explicit HexaGhost(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
 
