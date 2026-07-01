@@ -1,7 +1,7 @@
 #include "gameplay.h"
-#include "ui_gameplay.h"
-#include "player.h"
 #include "enemy.h"
+#include "player.h"
+#include "ui_gameplay.h"
 
 GamePlay::GamePlay(QWidget *parent)
     : QWidget(parent)
@@ -19,10 +19,22 @@ GamePlay::~GamePlay()
     delete ui;
 }
 
-int GamePlay::turn() const {return m_turn;}
-void GamePlay::setTurn(int turn) {m_turn = (turn < 0)? 0 : turn;}
-void GamePlay::addTurn(int n) {m_turn += (n < 0)? 0 : n;}
-Player*& GamePlay::player() {return m_player;}
+int GamePlay::turn() const
+{
+    return m_turn;
+}
+void GamePlay::setTurn(int turn)
+{
+    m_turn = (turn < 0) ? 0 : turn;
+}
+void GamePlay::addTurn(int n)
+{
+    m_turn += (n < 0) ? 0 : n;
+}
+Player *&GamePlay::player()
+{
+    return m_player;
+}
 
 void GamePlay::playerReviveEnergy()
 {
@@ -42,7 +54,7 @@ void GamePlay::draw()
 
 void GamePlay::fillingDrawPile()
 {
-    if(m_discardPile.empty())
+    if (m_discardPile.empty())
         return;
     std::random_device rand;
     std::mt19937 g(rand());
@@ -67,13 +79,13 @@ int GamePlay::takeDamageToAllEnemies(int damage)
 {
     int totalDamageDealt = 0;
 
-    for (Enemy* enemy : m_enemys)
+    for (Enemy *enemy : m_enemys)
         totalDamageDealt += enemy->takeDamage(damage);
 
     return totalDamageDealt;
 }
 
-void GamePlay::addCardToDiscardPile(Card* card)
+void GamePlay::addCardToDiscardPile(Card *card)
 {
     m_discardPile.push_back(card);
 }
@@ -83,7 +95,7 @@ void GamePlay::playerTurn()
     //ui->Enable
     addTurn();
     playerReviveEnergy();
-    if(m_drawPile.empty())
+    if (m_drawPile.empty())
         fillingDrawPile();
     draw();
     //ui->Update;
@@ -101,7 +113,7 @@ void GamePlay::enemiesTurn()
     // emit enemiesTurnEnded();
 }
 
-void GamePlay::targetCardsHandler(Card* card, Player* player, Enemy* targetEnemy)
+void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy)
 {
     // if(isEnoughEnergy(card->energyCost))
     // {
@@ -111,12 +123,12 @@ void GamePlay::targetCardsHandler(Card* card, Player* player, Enemy* targetEnemy
     // }
 }
 
-void GamePlay::noTargetCardsHandler(Card* card)
+void GamePlay::noTargetCardsHandler(Card *card)
 {
     //switch case for handle card effects//
 }
 
-void GamePlay::playedCardHandler(Card* card)
+void GamePlay::playedCardHandler(Card *card)
 {
     m_discardPile.push_back(card);
     //m_player->m_HandsCards.erase(std::find(m_HandsCards.begin(), m_HandsCards.end(), card));

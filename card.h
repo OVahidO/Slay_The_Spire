@@ -9,16 +9,27 @@ class Enemy;
 class Player;
 class GamePlay;
 
-enum class CardType {Attack, Skill, Power, Status, Curse};
+enum class CardType { Attack, Skill, Power, Status, Curse };
 
-class Card : public QGraphicsObject {
+class Card : public QGraphicsObject
+{
     Q_OBJECT
 public:
-    explicit Card(QString name, CardType type, int energyCost, QString path, QString description, bool isRare = false, bool isExhaust = false, bool requiresTarget = true, QGraphicsItem *parent = nullptr);
+    explicit Card(QString name,
+                  CardType type,
+                  int energyCost,
+                  QString path,
+                  QString description,
+                  bool isRare = false,
+                  bool isExhaust = false,
+                  bool requiresTarget = true,
+                  QGraphicsItem *parent = nullptr);
     virtual ~Card();
 
     virtual QRectF boundingRect() const override;
-    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    virtual void paint(QPainter *painter,
+                       const QStyleOptionGraphicsItem *option,
+                       QWidget *widget) override;
 
     int ID() const;
     QString name() const;
@@ -30,9 +41,8 @@ public:
     bool needTarget() const;
     bool isExhaust() const;
 
-
-    virtual void applyEffect(Player* player, Enemy* targetEnemy) = 0;
-    virtual bool applyEffect(GamePlay* gameplay);
+    virtual void applyEffect(Player *player, Enemy *targetEnemy) = 0;
+    virtual bool applyEffect(GamePlay *gameplay);
 
 signals:
 
