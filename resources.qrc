@@ -1,1 +1,32 @@
-<RCC/>
+<RCC>
+    <qresource prefix="/cards">
+        <file>Pics/Cards/Attack/Bash.png</file>
+        <file>Pics/Cards/Attack/Bludgeon.png</file>
+        <file>Pics/Cards/Attack/Clash.png</file>
+        <file>Pics/Cards/Attack/Feed.png</file>
+        <file>Pics/Cards/Attack/Hemokinesis.png</file>
+        <file>Pics/Cards/Attack/Immolate.png</file>
+        <file>Pics/Cards/Attack/Reaper.png</file>
+        <file>Pics/Cards/Attack/Strike_R.png</file>
+        <file>Pics/Cards/Curse/CurseoftheBell.png</file>
+        <file>Pics/Cards/Curse/Regret.png</file>
+        <file>Pics/Cards/Power/Berserk.png</file>
+        <file>Pics/Cards/Power/Brutality.png</file>
+        <file>Pics/Cards/Power/DarkEmbrace.png</file>
+        <file>Pics/Cards/Power/DemonForm.png</file>
+        <file>Pics/Cards/Power/Inflame.png</file>
+        <file>Pics/Cards/Power/Metallicize.png</file>
+        <file>Pics/Cards/Skill/Bloodletting.png</file>
+        <file>Pics/Cards/Skill/Defend_R.png</file>
+        <file>Pics/Cards/Skill/Exhume.png</file>
+        <file>Pics/Cards/Skill/Impervious.png</file>
+        <file>Pics/Cards/Skill/J.A.X.png</file>
+        <file>Pics/Cards/Skill/LimitBreak.png</file>
+        <file>Pics/Cards/Skill/Offering.png</file>
+        <file>Pics/Cards/Skill/PowerThrough.png</file>
+        <file>Pics/Cards/Status/Burn.png</file>
+        <file>Pics/Cards/Status/Dazed.png</file>
+        <file>Pics/Cards/Status/Slimed.png</file>
+        <file>Pics/Cards/Status/Wound.png</file>
+    </qresource>
+</RCC>
