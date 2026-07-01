@@ -13,3 +13,15 @@ QRectF Card::boundingRect() const
 
 void Card::paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {}
+
+int Card::ID() const {return m_ID;}
+QString Card::name() const {return m_name;}
+int Card::energyCost() const {return m_energyCost;}
+CardType Card::cardType() const {return m_type;}
+QString Card::sourcePath() const {return m_sourcePath;}
+QString Card::description() const {return m_description;}
+bool Card::isRare() const {return m_isRare;}
+bool Card::needTarget() const {return m_needTarget;}
+bool Card::isExhaust() const {return m_isExhaust;}
+
+bool Card::applyEffect(GamePlay* gameplay) {return false;}

@@ -7,6 +7,7 @@
 
 class Enemy;
 class Player;
+class GamePlay;
 
 enum class CardType {Attack, Skill, Power, Status, Curse};
 
@@ -19,7 +20,19 @@ public:
     virtual QRectF boundingRect() const override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
+    int ID() const;
+    QString name() const;
+    int energyCost() const;
+    CardType cardType() const;
+    QString sourcePath() const;
+    QString description() const;
+    bool isRare() const;
+    bool needTarget() const;
+    bool isExhaust() const;
+
+
     virtual void applyEffect(Player* player, Enemy* targetEnemy) = 0;
+    virtual bool applyEffect(GamePlay* gameplay);
 
 signals:
 
