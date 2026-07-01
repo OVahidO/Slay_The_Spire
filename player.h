@@ -4,8 +4,18 @@
 #include <QGraphicsObject>
 #include <QObject>
 #include <QString>
+#include <QVector>
 
 class Card;
+class Player;
+
+enum class PowerUseTime {StartTurn, EndTurn, Exhausted};
+
+struct PowerEffect{
+    int value;
+    void (*func)(Player* player, int value);
+    PowerUseTime useTime;
+};
 
 class Player : public QGraphicsObject
 {
@@ -23,6 +33,7 @@ public:
     int maxHp() const;
     int handSize() const;
     std::vector<Card*>& HandsCards();
+    QVector<PowerEffect>& powerEffects();
 
     void setHp(int hp);
     void setCoin(int coin);
@@ -48,6 +59,7 @@ private:
     int m_block = 0;
     int m_maxHp = 100;
     int m_handSize = 5;
+    QVector<PowerEffect> m_powerEffects;
 
     ///
     std::vector<Card*> m_HandsCards;

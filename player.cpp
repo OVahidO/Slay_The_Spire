@@ -20,6 +20,7 @@ int Player::block() const {return m_block;}
 int Player::maxHp() const {return m_maxHp;}
 int Player::handSize() const {return m_handSize;}
 std::vector<Card*>& Player::HandsCards() {return m_HandsCards;}
+QVector<PowerEffect>& Player::powerEffects() {return m_powerEffects;}
 
 void Player::setHp(int hp) {m_Hp = (hp < 0)? 0 : hp ;}
 void Player::setCoin(int coin) {m_coin = (coin < 0)? 0 : coin;}

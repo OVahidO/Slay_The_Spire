@@ -25,8 +25,9 @@ Brutality::Brutality(QString path, QGraphicsItem *parent)
 void Brutality::applyEffect(Player* player, Enemy* target) {
     Q_UNUSED(target);
 
-    // if (player)
-    //     player->applyPower("Brutality", 1);
+    if(player)
+        player->powerEffects().append(PowerEffect{1, [](Player* player, int value){player->loseHp(value);}, PowerUseTime::StartTurn});
+    //drawCard ?? نمی دونم اینجاشا
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,8 +50,8 @@ Metallicize::Metallicize(QString path, QGraphicsItem *parent)
 void Metallicize::applyEffect(Player* player, Enemy* target) {
     Q_UNUSED(target);
 
-    // if (player)
-    //     player->applyBuff("Metallicize", 3);
+    if(player)
+        player->powerEffects().append(PowerEffect{3, [](Player* player, int value){player->addBlock(value);}, PowerUseTime::EndTurn});
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,10 +61,9 @@ Berserk::Berserk(QString path, QGraphicsItem *parent)
 
 void Berserk::applyEffect(Player* player, Enemy* target) {
     Q_UNUSED(target);
-    // if (player) {
-    //     player->applyVulnerable(2);
-    //     player->applyBuff("Berserk", 1);
-    // }
+
+    if (player)
+        player->powerEffects().append(PowerEffect{1, [](Player* player, int value){player->addEnergy(value);}, PowerUseTime::StartTurn});
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
