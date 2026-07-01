@@ -10,7 +10,6 @@ class PowerCard : public Card
 public:
     PowerCard(QString name,
               int energyCost,
-              QString path,
               QString description,
               bool requiresTarget,
               bool isExhaust,
@@ -22,42 +21,42 @@ public:
 class Inflame : public PowerCard
 {
 public:
-    explicit Inflame(QString path, QGraphicsItem *parent = nullptr);
+    explicit Inflame(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
 };
 
 class Brutality : public PowerCard
 {
 public:
-    explicit Brutality(QString path, QGraphicsItem *parent = nullptr);
+    explicit Brutality(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
 };
 
 class DemonForm : public PowerCard
 {
 public:
-    explicit DemonForm(QString path, QGraphicsItem *parent = nullptr);
+    explicit DemonForm(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
 };
 
 class Metallicize : public PowerCard
 {
 public:
-    explicit Metallicize(QString path, QGraphicsItem *parent = nullptr);
+    explicit Metallicize(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
 };
 
 class Berserk : public PowerCard
 {
 public:
-    explicit Berserk(QString path, QGraphicsItem *parent = nullptr);
+    explicit Berserk(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
 };
 
 class DarkEmbrace : public PowerCard
 {
 public:
-    explicit DarkEmbrace(QString path, QGraphicsItem *parent = nullptr);
+    explicit DarkEmbrace(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
 };
 

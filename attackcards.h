@@ -11,7 +11,6 @@ protected:
 public:
     AttackCard(QString name,
                int energyCost,
-               QString path,
                QString description,
                int damage,
                bool requiresTarget,
@@ -24,21 +23,21 @@ public:
 class Strike : public AttackCard
 {
 public:
-    explicit Strike(QString path, QGraphicsItem *parent = nullptr);
+    explicit Strike(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
 };
 
 class Bludgeon : public AttackCard
 {
 public:
-    explicit Bludgeon(QString path, QGraphicsItem *parent = nullptr);
+    explicit Bludgeon(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
 };
 
 class Reaper : public AttackCard
 {
 public:
-    explicit Reaper(QString path, QGraphicsItem *parent = nullptr);
+    explicit Reaper(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
     bool applyEffect(GamePlay *gameplay) override;
 };
@@ -46,14 +45,14 @@ public:
 class Feed : public AttackCard
 {
 public:
-    explicit Feed(QString path, QGraphicsItem *parent = nullptr);
+    explicit Feed(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
 };
 
 class Immolate : public AttackCard
 {
 public:
-    explicit Immolate(QString path, QGraphicsItem *parent = nullptr);
+    explicit Immolate(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
     bool applyEffect(GamePlay *gameplay) override;
 };
@@ -61,14 +60,14 @@ public:
 class Bash : public AttackCard
 {
 public:
-    explicit Bash(QString path, QGraphicsItem *parent = nullptr);
+    explicit Bash(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
 };
 
 class Clash : public AttackCard
 {
 public:
-    explicit Clash(QString path, QGraphicsItem *parent = nullptr);
+    explicit Clash(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
     bool applyEffect(GamePlay *gameplay) override;
 };
@@ -76,7 +75,7 @@ public:
 class Hemokinesis : public AttackCard
 {
 public:
-    explicit Hemokinesis(QString path, QGraphicsItem *parent = nullptr);
+    explicit Hemokinesis(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
 };
 

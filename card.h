@@ -3,6 +3,8 @@
 
 #include <QGraphicsObject>
 #include <QObject>
+#include <QPainter>
+#include <QPixmap>
 #include <QString>
 
 class Enemy;
@@ -47,6 +49,9 @@ public:
 signals:
 
 protected:
+    QPixmap m_cardPixmap;
+    void loadPixmap();
+
     int m_ID;
     QString m_name;
     int m_energyCost;

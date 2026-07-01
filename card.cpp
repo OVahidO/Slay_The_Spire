@@ -16,16 +16,34 @@ Card::Card(QString name,
     , m_energyCost(energyCost)
     , m_sourcePath(path)
     , m_isRare(isRare)
+    , m_isExhaust(isExhaust)
     , m_needTarget(requiresTarget)
     , m_description(description)
 {}
 
 QRectF Card::boundingRect() const
 {
-    return QRectF(0, 0, 100, 100);
+    return QRectF(0, 0, 250, 322);
 }
 
-void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {}
+void Card::loadPixmap()
+{
+    if (!m_sourcePath.isEmpty()) {
+        m_cardPixmap = QPixmap(m_sourcePath);
+    }
+}
+
+void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
+
+    if (!m_cardPixmap.isNull())
+        painter->drawPixmap(boundingRect(), m_cardPixmap, m_cardPixmap.rect());
+}
 
 int Card::ID() const
 {

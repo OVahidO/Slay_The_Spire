@@ -6,22 +6,25 @@
 
 AttackCard::AttackCard(QString name,
                        int energyCost,
-                       QString path,
                        QString description,
                        int damage,
                        bool requiresTarget,
                        bool isExhaust,
                        bool isRare,
                        QGraphicsItem *parent)
-    : Card(name, CardType::Attack, energyCost, path, description, isRare, requiresTarget, parent)
+    : Card(name, CardType::Attack, energyCost, description, isRare, isExhaust, requiresTarget, parent)
     , m_damage(damage)
 {}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Strike::Strike(QString path, QGraphicsItem *parent)
-    : AttackCard("Strike", 1, path, "Deal 6 damage", 6, true, false, false, parent)
-{}
+Strike::Strike(QGraphicsItem *parent)
+    : AttackCard("Strike", 1, "Deal 6 damage", 6, true, false, false, parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Attack/Strike_R.png";
+
+    loadPixmap();
+}
 
 void Strike::applyEffect(Player *player, Enemy *target)
 {
@@ -33,9 +36,13 @@ void Strike::applyEffect(Player *player, Enemy *target)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Bludgeon::Bludgeon(QString path, QGraphicsItem *parent)
-    : AttackCard("Bludgeon", 3, path, "Deal 32 damage", 32, true, false, true, parent)
-{}
+Bludgeon::Bludgeon(QGraphicsItem *parent)
+    : AttackCard("Bludgeon", 3, "Deal 32 damage", 32, true, false, true, parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Attack/Bludgeon.png";
+
+    loadPixmap();
+}
 
 void Bludgeon::applyEffect(Player *player, Enemy *target)
 {
@@ -47,17 +54,20 @@ void Bludgeon::applyEffect(Player *player, Enemy *target)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Reaper::Reaper(QString path, QGraphicsItem *parent)
+Reaper::Reaper(QGraphicsItem *parent)
     : AttackCard("Reaper",
                  2,
-                 path,
                  "Deal 4 damage to all enemies\nHeal HP equal to unblocked damage\nExhaust",
                  4,
                  false,
                  true,
                  true,
                  parent)
-{}
+{
+    m_sourcePath = ":/cards/Pics/Cards/Attack/Reaper.png";
+
+    loadPixmap();
+}
 
 void Reaper::applyEffect(Player *player, Enemy *target)
 {
@@ -72,17 +82,20 @@ bool Reaper::applyEffect(GamePlay *gameplay)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Feed::Feed(QString path, QGraphicsItem *parent)
+Feed::Feed(QGraphicsItem *parent)
     : AttackCard("Feed",
                  1,
-                 path,
                  "Deal 10 damage\nIf fatal, raise max HP by 3\nExhaust",
                  10,
                  true,
                  true,
                  true,
                  parent)
-{}
+{
+    m_sourcePath = ":/cards/Pics/Cards/Attack/Feed.png";
+
+    loadPixmap();
+}
 
 void Feed::applyEffect(Player *player, Enemy *target)
 {
@@ -97,17 +110,20 @@ void Feed::applyEffect(Player *player, Enemy *target)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Immolate::Immolate(QString path, QGraphicsItem *parent)
+Immolate::Immolate(QGraphicsItem *parent)
     : AttackCard("Immolate",
                  2,
-                 path,
                  "Deal 21 damage to all enemies\nAdd 2 BURN into discard pile",
                  21,
                  false,
                  false,
                  true,
                  parent)
-{}
+{
+    m_sourcePath = ":/cards/Pics/Cards/Attack/Immolate.png";
+
+    loadPixmap();
+}
 
 void Immolate::applyEffect(Player *player, Enemy *target)
 {
@@ -124,9 +140,13 @@ bool Immolate::applyEffect(GamePlay *gameplay)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Bash::Bash(QString path, QGraphicsItem *parent)
-    : AttackCard("Bash", 2, path, "Deal 8 damage\nApply 2 Vulnerable", 8, true, false, false, parent)
-{}
+Bash::Bash(QGraphicsItem *parent)
+    : AttackCard("Bash", 2, "Deal 8 damage\nApply 2 Vulnerable", 8, true, false, false, parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Attack/Bash.png";
+
+    loadPixmap();
+}
 
 void Bash::applyEffect(Player *player, Enemy *target)
 {
@@ -141,17 +161,20 @@ void Bash::applyEffect(Player *player, Enemy *target)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Clash::Clash(QString path, QGraphicsItem *parent)
+Clash::Clash(QGraphicsItem *parent)
     : AttackCard("Clash",
                  0,
-                 path,
                  "Deal 14 damage\nCan only be played if every card in hand is an attack",
                  14,
                  true,
                  false,
                  false,
                  parent)
-{}
+{
+    m_sourcePath = ":/cards/Pics/Cards/Attack/Clash.png";
+
+    loadPixmap();
+}
 
 void Clash::applyEffect(Player *player, Enemy *target)
 {
@@ -172,9 +195,13 @@ void Clash::applyEffect(Player *player, Enemy *target)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Hemokinesis::Hemokinesis(QString path, QGraphicsItem *parent)
-    : AttackCard("Hemokinesis", 1, path, "Lose 2 HP\nDeal 15 damage", 15, true, false, false, parent)
-{}
+Hemokinesis::Hemokinesis(QGraphicsItem *parent)
+    : AttackCard("Hemokinesis", 1, "Lose 2 HP\nDeal 15 damage", 15, true, false, false, parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Attack/Hemokinesis.png";
+
+    loadPixmap();
+}
 
 void Hemokinesis::applyEffect(Player *player, Enemy *target)
 {

@@ -2,20 +2,22 @@
 
 CurseCard::CurseCard(QString name,
                      int energyCost,
-                     QString path,
                      QString description,
                      bool isRare,
                      bool isExhaust,
                      bool requiresTarget,
                      QGraphicsItem *parent)
-    : Card(name, CardType::Curse, energyCost, path, description, isRare, requiresTarget, parent)
+    : Card(name, CardType::Curse, energyCost, description, isRare, isExhaust, requiresTarget, parent)
 {}
 
 CurseCard::~CurseCard() {}
 
-J_A_X::J_A_X(QString path, QGraphicsItem *parent)
-    : CurseCard("J_A_X", 0, path, "Lose 3 HP - Gain 2 Strength", false, false, true, parent)
-{}
+J_A_X::J_A_X(QGraphicsItem *parent)
+    : CurseCard("J_A_X", 0, "Lose 3 HP - Gain 2 Strength", false, false, true, parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Skill/J.A.X.png";
+    loadPixmap();
+}
 
 void J_A_X::applyEffect(Player *player, Enemy *targetEnemy)
 {
@@ -26,16 +28,18 @@ void J_A_X::applyEffect(Player *player, Enemy *targetEnemy)
     }
 }
 
-CurseOfTheBell::CurseOfTheBell(QString path, QGraphicsItem *parent)
+CurseOfTheBell::CurseOfTheBell(QGraphicsItem *parent)
     : CurseCard("CurseOfTheBell",
                 0,
-                path,
                 "You cannot remove this card from your deck",
                 false,
                 false,
                 false,
                 parent)
-{}
+{
+    m_sourcePath = ":/cards/Pics/Cards/Curse/CurseoftheBell.png";
+    loadPixmap();
+}
 
 void CurseOfTheBell::applyEffect(Player *player, Enemy *targetEnemy)
 {
@@ -43,16 +47,18 @@ void CurseOfTheBell::applyEffect(Player *player, Enemy *targetEnemy)
     Q_UNUSED(targetEnemy);
 }
 
-Regret::Regret(QString path, QGraphicsItem *parent)
+Regret::Regret(QGraphicsItem *parent)
     : CurseCard("Regret",
                 0,
-                path,
                 "Take 1 damage for every card in hand after your turn ends",
                 false,
                 false,
                 false,
                 parent)
-{}
+{
+    m_sourcePath = ":/cards/Pics/Cards/Curse/Regret.png";
+    loadPixmap();
+}
 
 void Regret::applyEffect(Player *player, Enemy *targetEnemy)
 {

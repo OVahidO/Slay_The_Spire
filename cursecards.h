@@ -20,7 +20,7 @@ public:
 class J_A_X : public CurseCard
 {
 public:
-    explicit J_A_X(QString path, QGraphicsItem *parent = nullptr);
+    explicit J_A_X(QGraphicsItem *parent = nullptr);
 
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };
@@ -28,7 +28,7 @@ public:
 class CurseOfTheBell : public CurseCard
 {
 public:
-    explicit CurseOfTheBell(QString path, QGraphicsItem *parent = nullptr);
+    explicit CurseOfTheBell(QGraphicsItem *parent = nullptr);
 
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };
@@ -36,7 +36,7 @@ public:
 class Regret : public CurseCard
 {
 public:
-    explicit Regret(QString path, QGraphicsItem *parent = nullptr);
+    explicit Regret(QGraphicsItem *parent = nullptr);
 
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };

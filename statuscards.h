@@ -8,7 +8,6 @@ class StatusCard : public Card
 public:
     explicit StatusCard(QString name,
                         int energyCost,
-                        QString path,
                         QString description,
                         bool isRare = false,
                         bool isExhaust = false,
@@ -20,7 +19,7 @@ public:
 class DAZE : public StatusCard
 {
 public:
-    explicit DAZE(QString path, QGraphicsItem *parent = nullptr);
+    explicit DAZE(QGraphicsItem *parent = nullptr);
 
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };
@@ -28,7 +27,7 @@ public:
 class SLIME : public StatusCard
 {
 public:
-    explicit SLIME(QString path, QGraphicsItem *parent = nullptr);
+    explicit SLIME(QGraphicsItem *parent = nullptr);
 
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };
@@ -36,7 +35,7 @@ public:
 class WOUND : public StatusCard
 {
 public:
-    explicit WOUND(QString path, QGraphicsItem *parent = nullptr);
+    explicit WOUND(QGraphicsItem *parent = nullptr);
 
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };
@@ -44,7 +43,7 @@ public:
 class BURN : public StatusCard
 {
 public:
-    explicit BURN(QString path, QGraphicsItem *parent = nullptr);
+    explicit BURN(QGraphicsItem *parent = nullptr);
 
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };

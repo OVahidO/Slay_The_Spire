@@ -4,20 +4,22 @@
 
 PowerCard::PowerCard(QString name,
                      int energyCost,
-                     QString path,
                      QString description,
                      bool requiresTarget,
                      bool isExhaust,
                      bool isRare,
                      QGraphicsItem *parent)
-    : Card(name, CardType::Power, energyCost, path, description, isRare, requiresTarget, parent)
+    : Card(name, CardType::Power, energyCost, description, isRare, isExhaust, requiresTarget, parent)
 {}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Inflame::Inflame(QString path, QGraphicsItem *parent)
-    : PowerCard("Inflame", 1, path, "Gain 2 Strength", false, false, false, parent)
-{}
+Inflame::Inflame(QGraphicsItem *parent)
+    : PowerCard("Inflame", 1, "Gain 2 Strength", false, false, false, parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Power/Inflame.png";
+    loadPixmap();
+}
 
 void Inflame::applyEffect(Player *player, Enemy *target)
 {
@@ -29,16 +31,18 @@ void Inflame::applyEffect(Player *player, Enemy *target)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Brutality::Brutality(QString path, QGraphicsItem *parent)
+Brutality::Brutality(QGraphicsItem *parent)
     : PowerCard("Brutality",
                 0,
-                path,
                 "At the start of your turn, lose 1 HP and draw 1 card.",
                 false,
                 false,
                 true,
                 parent)
-{}
+{
+    m_sourcePath = ":/cards/Pics/Cards/Power/Brutality.png";
+    loadPixmap();
+}
 
 void Brutality::applyEffect(Player *player, Enemy *target)
 {
@@ -50,16 +54,18 @@ void Brutality::applyEffect(Player *player, Enemy *target)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-DemonForm::DemonForm(QString path, QGraphicsItem *parent)
+DemonForm::DemonForm(QGraphicsItem *parent)
     : PowerCard("Demon Form",
                 3,
-                path,
                 "At the start of your turn gain 3 Strength",
                 false,
                 false,
                 true,
                 parent)
-{}
+{
+    m_sourcePath = ":/cards/Pics/Cards/Power/DemonForm.png";
+    loadPixmap();
+}
 
 void DemonForm::applyEffect(Player *player, Enemy *target)
 {
@@ -71,16 +77,12 @@ void DemonForm::applyEffect(Player *player, Enemy *target)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Metallicize::Metallicize(QString path, QGraphicsItem *parent)
-    : PowerCard("Metallicize",
-                1,
-                path,
-                "At the end of your turn get 3 block",
-                false,
-                false,
-                false,
-                parent)
-{}
+Metallicize::Metallicize(QGraphicsItem *parent)
+    : PowerCard("Metallicize", 1, "At the end of your turn get 3 block", false, false, false, parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Power/Metallicize.png";
+    loadPixmap();
+}
 
 void Metallicize::applyEffect(Player *player, Enemy *target)
 {
@@ -92,16 +94,18 @@ void Metallicize::applyEffect(Player *player, Enemy *target)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Berserk::Berserk(QString path, QGraphicsItem *parent)
+Berserk::Berserk(QGraphicsItem *parent)
     : PowerCard("Berserk",
                 0,
-                path,
                 "Gain 2 Vulnerable\nAt the start of your turn get 1 extra Energy",
                 false,
                 false,
                 true,
                 parent)
-{}
+{
+    m_sourcePath = ":/cards/Pics/Cards/Power/Berserk.png";
+    loadPixmap();
+}
 
 void Berserk::applyEffect(Player *player, Enemy *target)
 {
@@ -114,16 +118,18 @@ void Berserk::applyEffect(Player *player, Enemy *target)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-DarkEmbrace::DarkEmbrace(QString path, QGraphicsItem *parent)
+DarkEmbrace::DarkEmbrace(QGraphicsItem *parent)
     : PowerCard("Dark Embrace",
                 2,
-                path,
                 "Every time a card is Exhausted, draw a card",
                 false,
                 false,
                 false,
                 parent)
-{}
+{
+    m_sourcePath = ":/cards/Pics/Cards/Power/DarkEmbrace.png";
+    loadPixmap();
+}
 
 void DarkEmbrace::applyEffect(Player *player, Enemy *target)
 {
