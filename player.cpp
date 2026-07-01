@@ -1,4 +1,5 @@
 #include "player.h"
+#include "card.h"
 
 Player::Player(QGraphicsItem *parent)
     : QGraphicsObject{parent}
@@ -18,7 +19,7 @@ int Player::energy() const {return m_energy;}
 int Player::block() const {return m_block;}
 int Player::maxHp() const {return m_maxHp;}
 int Player::handSize() const {return m_handSize;}
-//std::vector<Card*>& Player::HandsCards() {return m_HandsCards;}//
+std::vector<Card*>& Player::HandsCards() {return m_HandsCards;}
 
 void Player::setHp(int hp) {m_Hp = (hp < 0)? 0 : hp ;}
 void Player::setCoin(int coin) {m_coin = (coin < 0)? 0 : coin;}
@@ -31,6 +32,7 @@ void Player::addMaxHp(int n) {m_maxHp += (n < 0)? 0 : n;}
 void Player::addBlock(int n) {m_block += (n < 0)? 0 : n;}
 void Player::addEnergy(int n) {m_energy += (n < 0)? 0 : n;}
 void Player::loseHp(int n) {m_Hp -= (n < 0)? 0 : n; if(m_Hp < 0) {m_Hp = 0;} }
+void Player::heal(int n) {m_Hp += (n < 0)? 0 : n;}
 void Player::takeDamage(int damage)
 {
     //buff or debuff

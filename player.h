@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QString>
 
+class Card;
+
 class Player : public QGraphicsObject
 {
     Q_OBJECT
@@ -20,7 +22,7 @@ public:
     int block() const;
     int maxHp() const;
     int handSize() const;
-    //std::vector<Card*>& HandsCards();//
+    std::vector<Card*>& HandsCards();
 
     void setHp(int hp);
     void setCoin(int coin);
@@ -33,6 +35,7 @@ public:
     void addBlock(int n = 1);
     void addEnergy(int n = 1);
     void loseHp(int n = 1);
+    void heal(int n = 1);
     void takeDamage(int damage);
 
 
@@ -47,7 +50,7 @@ private:
     int m_handSize = 5;
 
     ///
-    //std::vector<Card*> m_HandsCards;
+    std::vector<Card*> m_HandsCards;
     ///
 };
 
