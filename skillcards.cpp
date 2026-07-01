@@ -1,5 +1,8 @@
 #include "skillcards.h"
+#include "enemy.h"
 #include "player.h"
+#include "gameplay.h"
+#include "statuscards.h"
 
 SkillCard::SkillCard(QString name, int energyCost, QString path, QString description, bool isRare, bool isExhaust, bool requiresTarget, QGraphicsItem *parent)
     :Card(name, CardType::Skill, energyCost, path, description, isRare, requiresTarget, parent) {}
@@ -20,10 +23,11 @@ void Defend::applyEffect(Player* player, Enemy* targetEnemy)
 Exhume::Exhume(QString path, QGraphicsItem *parent)
     :SkillCard("Exhume", 1, path, "Put a card from exhaust pile into hand", true, true, false, parent) {}
 
-void Exhume::applyEffect(Player* player, Enemy* targetEnemy)
+void Exhume::applyEffect(Player* player, Enemy* targetEnemy) {Q_UNUSED(targetEnemy); Q_UNUSED(player);}
+bool Exhume::applyEffect(GamePlay* gameplay)
 {
-    Q_UNUSED(targetEnemy);
-    Q_UNUSED(player);
+    gameplay->drawFromExhaustPile();
+    return true;
 }
 
 Limit_Break::Limit_Break(QString path, QGraphicsItem *parent)
@@ -35,7 +39,7 @@ void Limit_Break::applyEffect(Player* player, Enemy* targetEnemy)
 
     if(player != nullptr)
     {
-        player->addStrength(player->strength());
+        //player->addStrength(player->strength());
     }
 }
 
@@ -45,13 +49,17 @@ Offering::Offering(QString path, QGraphicsItem *parent)
 void Offering::applyEffect(Player* player, Enemy* targetEnemy)
 {
     Q_UNUSED(targetEnemy);
-
     if(player != nullptr)
     {
         player->loseHp(6);
         player->addEnergy(2);
-        player->drawCards(3);
     }
+}
+
+bool Offering::applyEffect(GamePlay* gameplay)
+{
+    for(int i = 0 ; i < 3 ; gameplay->drawFromDrawPile(), i++);
+    return true;
 }
 
 Impervious::Impervious(QString path, QGraphicsItem *parent)
@@ -77,9 +85,14 @@ void Power_Through::applyEffect(Player* player, Enemy* targetEnemy)
     if(player != nullptr)
     {
         player->addBlock(15);
-        player->addStatus(Wound());
-        player->addStatus(Wound());
     }
+}
+
+bool Power_Through::applyEffect(GamePlay* gameplay)
+{
+    gameplay->addCardToHand(new WOUND(""));
+    gameplay->addCardToHand(new WOUND(""));
+    return true;
 }
 
 Bloodletting::Bloodletting(QString path, QGraphicsItem *parent)

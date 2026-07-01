@@ -23,6 +23,7 @@ class Exhume : public SkillCard
     explicit Exhume(QString path, QGraphicsItem *parent = nullptr);
 
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
+    bool applyEffect(GamePlay* gameplay) override;
 };
 
 class Limit_Break : public SkillCard
@@ -39,6 +40,7 @@ public:
     explicit Offering(QString path, QGraphicsItem *parent = nullptr);
 
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
+    bool applyEffect(GamePlay* gameplay) override;
 };
 
 class Impervious : public SkillCard
@@ -55,6 +57,7 @@ public:
     explicit Power_Through(QString path, QGraphicsItem *parent = nullptr);
 
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
+    bool applyEffect(GamePlay* gameplay) override;
 };
 
 class Bloodletting : public SkillCard

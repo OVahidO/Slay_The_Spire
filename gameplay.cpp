@@ -78,6 +78,29 @@ void GamePlay::addCardToDiscardPile(Card* card)
     m_discardPile.push_back(card);
 }
 
+void GamePlay::addCardToHand(Card* card)
+{
+    m_player->HandsCards().push_back(card);
+}
+
+void GamePlay::drawFromExhaustPile()
+{
+    if(!m_ExhaustPile.empty())
+    {
+        addCardToHand(m_ExhaustPile.back());
+        m_ExhaustPile.pop_back();
+    }
+}
+
+void GamePlay::drawFromDrawPile()
+{
+    if(!m_drawPile.empty())
+    {
+        addCardToHand(m_drawPile.back());
+        m_drawPile.pop_back();
+    }
+}
+
 void GamePlay::playerTurn()
 {
     //ui->Enable
