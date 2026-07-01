@@ -24,7 +24,7 @@ public:
                   bool isExhaust = false,
                   bool requiresTarget = true,
                   QGraphicsItem *parent = nullptr);
-    virtual ~Card();
+    virtual ~Card() = default;
 
     virtual QRectF boundingRect() const override;
     virtual void paint(QPainter *painter,

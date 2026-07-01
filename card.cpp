@@ -20,8 +20,6 @@ Card::Card(QString name,
     , m_description(description)
 {}
 
-Card::~Card() {}
-
 QRectF Card::boundingRect() const
 {
     return QRectF(0, 0, 100, 100);
