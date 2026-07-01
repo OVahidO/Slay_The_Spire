@@ -6,9 +6,9 @@
 #include <random>
 
 // Temporary player and Enemy;
-class Player{};
-class Enemy{};
-class Card{};
+class Player;
+class Enemy;
+class Card;
 //////////////////////////////
 
 namespace Ui {
@@ -26,11 +26,14 @@ public:
     int turn() const;
     void setTurn(int turn);
     void addTurn(int n = 1);
+    Player*& player();
 
     void playerReviveEnergy();
     void draw();
     void fillingDrawPile();
     bool isEnoughEnergy(int cardEnergyCost);
+    int takeDamageToAllEnemies(int damage);
+    void addCardToDiscardPile(Card* card);
 
 signals:
     void enemiesTurnEnded();

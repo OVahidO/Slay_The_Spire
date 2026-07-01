@@ -1,5 +1,7 @@
 #include "gameplay.h"
 #include "ui_gameplay.h"
+#include "player.h"
+#include "enemy.h"
 
 GamePlay::GamePlay(QWidget *parent)
     : QWidget(parent)
@@ -20,6 +22,7 @@ GamePlay::~GamePlay()
 int GamePlay::turn() const {return m_turn;}
 void GamePlay::setTurn(int turn) {m_turn = (turn < 0)? 0 : turn;}
 void GamePlay::addTurn(int n) {m_turn += (n < 0)? 0 : n;}
+Player*& GamePlay::player() {return m_player;}
 
 void GamePlay::playerReviveEnergy()
 {
@@ -58,6 +61,21 @@ bool GamePlay::isEnoughEnergy(int cardEnergyCost)
         return true;
     }*/
     return false;
+}
+
+int GamePlay::takeDamageToAllEnemies(int damage)
+{
+    int totalDamageDealt = 0;
+
+    for (Enemy* enemy : m_enemys)
+        totalDamageDealt += enemy->takeDamage(damage);
+
+    return totalDamageDealt;
+}
+
+void GamePlay::addCardToDiscardPile(Card* card)
+{
+    m_discardPile.push_back(card);
 }
 
 void GamePlay::playerTurn()
