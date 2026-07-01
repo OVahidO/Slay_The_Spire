@@ -28,6 +28,7 @@ class Reaper : public AttackCard {
 public:
     explicit Reaper(QString path, QGraphicsItem *parent = nullptr);
     void applyEffect(Player* player, Enemy* target) override;
+    bool applyEffect(GamePlay* gameplay) override;
 };
 
 class Feed : public AttackCard {
@@ -40,6 +41,7 @@ class Immolate : public AttackCard {
 public:
     explicit Immolate(QString path, QGraphicsItem *parent = nullptr);
     void applyEffect(Player* player, Enemy* target) override;
+    bool applyEffect(GamePlay* gameplay) override;
 };
 
 class Bash : public AttackCard {
@@ -52,8 +54,7 @@ class Clash : public AttackCard {
 public:
     explicit Clash(QString path, QGraphicsItem *parent = nullptr);
     void applyEffect(Player* player, Enemy* target) override;
-
-    //bool canPlay(Player* player) const;
+    bool applyEffect(GamePlay* gameplay) override;
 };
 
 class Hemokinesis : public AttackCard {
