@@ -1,8 +1,15 @@
 #include "card.h"
+#include "player.h"
+#include "enemy.h"
 
 Card::Card(QString name, CardType type, int energyCost, QString path, QString description, bool isRare, bool isExhaust, bool requiresTarget, QGraphicsItem *parent)
     :QGraphicsObject(parent), m_ID(rand()%1000+1000), m_name(name), m_type(type), m_energyCost(energyCost), m_sourcePath(path), m_isRare(isRare), m_needTarget(requiresTarget), m_description(description)
-{}
+{
+    if((type == CardType::Status && name != "SLIME") || (type == CardType::Curse && name != "J_A_X"))
+        setAcceptHoverEvents(false);
+    else
+        setAcceptHoverEvents(true);
+}
 
 Card::~Card(){}
 
@@ -13,6 +20,50 @@ QRectF Card::boundingRect() const
 
 void Card::paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {}
+
+void Card::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+{
+    this->setScale(1.5);
+    setRotation(0);
+}
+
+void Card::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+{
+    this->setScale(1);
+    //setRotation(0) -> Ahoora information//
+}
+
+void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+    Player* p = nullptr;
+    Enemy* e = nullptr;
+
+    qreal maxArea = 0.0;
+
+    QRectF cardRect = this->sceneBoundingRect();
+
+    for(auto& item : collidingItems())
+    {
+        QRectF itemReact = item->sceneBoundingRect();
+        QRectF intersected = cardRect.intersected(itemReact);
+        qreal Area = intersected.width() * intersected.height();
+        if(Area > maxArea)
+        {
+            p = dynamic_cast<Player*>(item);
+            e = dynamic_cast<Enemy*>(item);
+            if(p || e)
+            {
+                maxArea = Area;
+            }
+        }
+    }
+    if(this->m_needTarget && (p || e))
+        emit this->targetCardPlayed(this,p,e);
+    else if(!this->m_needTarget)
+        emit this->noTargetCardPlayed(this);
+
+    QGraphicsItem::mouseReleaseEvent(event);
+}
 
 int Card::ID() const {return m_ID;}
 QString Card::name() const {return m_name;}

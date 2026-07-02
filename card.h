@@ -20,6 +20,10 @@ public:
     virtual QRectF boundingRect() const override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
+    void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+
     int ID() const;
     QString name() const;
     int energyCost() const;
@@ -35,6 +39,8 @@ public:
     virtual bool applyEffect(GamePlay* gameplay);
 
 signals:
+    void targetCardPlayed(Card* card, Player* player, Enemy* targetEnemy);
+    void noTargetCardPlayed(Card* card);
 
 protected:
     int m_ID;

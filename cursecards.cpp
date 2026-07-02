@@ -1,4 +1,7 @@
 #include "cursecards.h"
+#include "enemy.h"
+#include "player.h"
+#include "gameplay.h"
 
 CurseCard::CurseCard(QString name, int energyCost, QString path, QString description, bool isRare, bool isExhaust, bool requiresTarget, QGraphicsItem *parent)
     :Card(name, CardType::Curse, energyCost, path, description, isRare, requiresTarget, parent) {}
@@ -14,7 +17,7 @@ void J_A_X::applyEffect(Player* player, Enemy* targetEnemy)
     if(player != nullptr)
     {
         player->loseHp(3);
-        player->addStrength(2);
+        //player->addStrength(2);
     }
 }
 
