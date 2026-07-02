@@ -29,8 +29,8 @@ GamePlay::GamePlay(QWidget *parent)
     Strike *testCard = new Strike();
     testCard->setPos(400, 400);
 
-    // testCard->setFlag(QGraphicsItem::ItemIsSelectable);
-    // testCard->setFlag(QGraphicsItem::ItemIsMovable);
+    testCard->setFlag(QGraphicsItem::ItemIsSelectable);
+    testCard->setFlag(QGraphicsItem::ItemIsMovable);
 
     m_scene->addItem(testCard);
     connect(this, &GamePlay::playerTurnEnded, this, &GamePlay::enemiesTurn);

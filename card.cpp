@@ -24,6 +24,12 @@ Card::Card(QString name,
         setAcceptHoverEvents(false);
     else
         setAcceptHoverEvents(true);
+
+    m_hoverAnimation = new QVariantAnimation(this);
+    m_hoverAnimation->setDuration(150);
+    this->setTransformOriginPoint(50 , 75);
+
+    connect(m_hoverAnimation, &QVariantAnimation::valueChanged, this, [this](const QVariant& value){this->setScale(value.toReal());});
 }
 
 QRectF Card::boundingRect() const
@@ -46,26 +52,44 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
 
-    if (!m_cardPixmap.isNull())
-        painter->drawPixmap(boundingRect(), m_cardPixmap, m_cardPixmap.rect());
+    if (1)
+        painter->drawPixmap(boundingRect(), QPixmap(":/cards/Pics/Cards/Attack/Strike_R.png"), QPixmap(":/cards/Pics/Cards/Attack/Strike_R.png").rect());
+    else
+    {
+        painter->setBrush(Qt::blue);
+        painter->drawRect(boundingRect());
+    }
 }
 
 void Card::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
-    this->setScale(1.5);
-    setRotation(0);
+    Q_UNUSED(event);
+
+    m_oldZValue = this->zValue();
+    this->setZValue(1000);
+
+    m_hoverAnimation->stop();
+    m_hoverAnimation->setStartValue(this->scale());
+    m_hoverAnimation->setEndValue(1.2);
+    m_hoverAnimation->start();
 }
 
 void Card::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
-    this->setScale(1);
-    //setRotation(0) -> Ahoora information//
+    Q_UNUSED(event);
+
+    m_hoverAnimation->stop();
+    m_hoverAnimation->setStartValue(this->scale());
+    m_hoverAnimation->setEndValue(1.0);
+    m_hoverAnimation->start();
+
+    this->setZValue(m_oldZValue);
 }
 
 void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    Player* p = nullptr;
-    Enemy* e = nullptr;
+    Player* player = nullptr;
+    Enemy* target = nullptr;
 
     qreal maxArea = 0.0;
 
@@ -78,16 +102,18 @@ void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         qreal Area = intersected.width() * intersected.height();
         if(Area > maxArea)
         {
-            p = dynamic_cast<Player*>(item);
-            e = dynamic_cast<Enemy*>(item);
+            Player* p = dynamic_cast<Player*>(item);
+            Enemy* e = dynamic_cast<Enemy*>(item);
             if(p || e)
             {
                 maxArea = Area;
+                player = p;
+                target = e;
             }
         }
     }
-    if(this->m_needTarget && (p || e))
-        emit this->targetCardPlayed(this,p,e);
+    if(this->m_needTarget && (player || target))
+        emit this->targetCardPlayed(this, player, target);
     else if(!this->m_needTarget)
         emit this->noTargetCardPlayed(this);
 

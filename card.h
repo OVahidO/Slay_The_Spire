@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QString>
+#include <QVariantAnimation>
 
 class Enemy;
 class Player;
@@ -32,10 +33,6 @@ public:
                        const QStyleOptionGraphicsItem *option,
                        QWidget *widget) override;
 
-    void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
-
     int ID() const;
     QString name() const;
     int energyCost() const;
@@ -56,6 +53,11 @@ signals:
 protected:
     QPixmap m_cardPixmap;
     void loadPixmap();
+    QVariantAnimation* m_hoverAnimation;
+    qreal m_oldZValue;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
 
     int m_ID;
     QString m_name;
