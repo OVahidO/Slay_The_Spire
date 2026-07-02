@@ -14,7 +14,6 @@ Card::Card(QString name,
     , m_name(name)
     , m_type(type)
     , m_energyCost(energyCost)
-    , m_sourcePath(path)
     , m_isRare(isRare)
     , m_isExhaust(isExhaust)
     , m_needTarget(requiresTarget)
