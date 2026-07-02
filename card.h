@@ -20,7 +20,6 @@ public:
     explicit Card(QString name,
                   CardType type,
                   int energyCost,
-                  QString path,
                   QString description,
                   bool isRare = false,
                   bool isExhaust = false,

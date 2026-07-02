@@ -1,4 +1,5 @@
 #include "gameplay.h"
+#include "attackcards.h"
 #include "enemy.h"
 #include "player.h"
 #include "ui_gameplay.h"
@@ -10,6 +11,28 @@ GamePlay::GamePlay(QWidget *parent)
     ui->setupUi(this);
     //setup attributes
     //////////////////
+    // ahoora's
+    m_scene = new QGraphicsScene(this);
+    m_scene->setSceneRect(0, 0, 1200, 800);
+
+    m_view = new QGraphicsView(m_scene, this);
+    m_view->setRenderHint(QPainter::Antialiasing);
+    m_view->setRenderHint(QPainter::SmoothPixmapTransform);
+
+    m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->addWidget(m_view);
+    this->setLayout(layout);
+
+    Strike *testCard = new Strike();
+    testCard->setPos(400, 400);
+
+    // testCard->setFlag(QGraphicsItem::ItemIsSelectable);
+    // testCard->setFlag(QGraphicsItem::ItemIsMovable);
+
+    m_scene->addItem(testCard);
     connect(this, &GamePlay::playerTurnEnded, this, &GamePlay::enemiesTurn);
     connect(this, &GamePlay::enemiesTurnEnded, this, &GamePlay::playerTurn);
 }
