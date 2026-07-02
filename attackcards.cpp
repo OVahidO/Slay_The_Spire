@@ -128,8 +128,8 @@ void Immolate::applyEffect(Player *player, Enemy *target)
 bool Immolate::applyEffect(GamePlay *gameplay)
 {
     gameplay->takeDamageToAllEnemies(m_damage);
-    gameplay->addCardToDiscardPile(new BURN(""));
-    gameplay->addCardToDiscardPile(new BURN(""));
+    gameplay->addCardToDiscardPile(new BURN());
+    gameplay->addCardToDiscardPile(new BURN());
     return true;
 }
 

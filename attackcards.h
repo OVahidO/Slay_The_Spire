@@ -69,7 +69,6 @@ class Clash : public AttackCard
 public:
     explicit Clash(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
-    bool applyEffect(GamePlay *gameplay) override;
 };
 
 class Hemokinesis : public AttackCard
