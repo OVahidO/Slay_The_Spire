@@ -24,7 +24,9 @@ public:
     explicit Player(QGraphicsItem *parent = nullptr);
 
     virtual QRectF boundingRect() const override;
-    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    virtual void paint(QPainter *painter,
+                       const QStyleOptionGraphicsItem *option,
+                       QWidget *widget) override;
 
     int Hp() const;
     int coin() const;
@@ -49,7 +51,6 @@ public:
     void heal(int n = 1);
     void takeDamage(int damage);
 
-
 signals:
 
 private:
@@ -62,7 +63,7 @@ private:
     QVector<PowerEffect> m_powerEffects;
 
     ///
-    std::vector<Card*> m_HandsCards;
+    std::vector<Card *> m_HandsCards;
     ///
 };
 

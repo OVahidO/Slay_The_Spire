@@ -1,14 +1,23 @@
 #include "enemy.h"
+#include "gameplay.h"
+#include "player.h"
 
 Enemy::Enemy(QString name, int minHP, int maxHP, bool isMultiplayer, QGraphicsItem *parent)
-    : QGraphicsObject(parent), m_name(name), m_maxHP(minHP + rand() % (maxHP - minHP + 1)), m_currentHP(m_maxHP), m_block(0), m_turnCount(0) {
+    : QGraphicsObject(parent)
+    , m_name(name)
+    , m_maxHP(minHP + rand() % (maxHP - minHP + 1))
+    , m_currentHP(m_maxHP)
+    , m_block(0)
+    , m_turnCount(0)
+{
     if (isMultiplayer) {
         m_maxHP *= 2;
         m_currentHP = m_maxHP;
     }
 }
 
-int Enemy::takeDamage(int incomingDamage) {
+int Enemy::takeDamage(int incomingDamage)
+{
     int finalDamage = incomingDamage;
 
     // for (BuffDebuff* effect : m_activeEffects)
@@ -30,38 +39,108 @@ int Enemy::takeDamage(int incomingDamage) {
     return damageAfterBlock;
 }
 
-void Enemy::gainBlock(int amount) { m_block += amount; }
-
-void Enemy::resetBlock() { m_block = 0; }
-
-void Enemy::executeIntent(Player* player) {
-    Q_UNUSED(player);
-    // switch (m_currentIntent.type) {
-    // case IntentType::Attack:
-    //     player->takeDamage(m_currentIntent.value);
-    //     break;
-    // case IntentType::Defend:
-    //     gainBlock(m_currentIntent.value);
-    //     break;
-    // ادامشو یه کاری میکنیم زیاد به درد نمیخوره چون با سیگنال اسلاته
-    // }
+void Enemy::gainBlock(int amount)
+{
+    m_block += amount;
 }
 
-bool Enemy::isDead() const { return m_currentHP <= 0; }
+void Enemy::resetBlock()
+{
+    m_block = 0;
+}
 
-QString Enemy::getName() const { return m_name; }
+void Enemy::executeIntent(Player *player)
+{
+    if (!player)
+        return;
 
-int Enemy::getCurrentHP() const { return m_currentHP; }
+    switch (m_currentIntent.type) {
+    case IntentType::Attack:
+        player->takeDamage(m_currentIntent.value);
+        break;
 
-int Enemy::getMaxHP() const { return m_maxHP; }
+    case IntentType::Defend:
+        gainBlock(m_currentIntent.value);
+        break;
 
-EnemyIntent Enemy::getCurrentIntent() const { return m_currentIntent; }
+    case IntentType::AttackDefend:
+        player->takeDamage(m_currentIntent.value);
+        gainBlock(m_currentIntent.secondaryValue);
+        break;
 
-void Enemy::addEffect(BuffDebuff* effect) { m_activeEffects.append(effect); }
+    case IntentType::AttackDebuff:
+        player->takeDamage(m_currentIntent.value);
+        // player->addEffect(new BuffDebuff("Vulnerable", m_currentIntent.secondaryValue));
+        break;
 
-void Enemy::removeEffect(BuffDebuff* effect) { m_activeEffects.removeOne(effect); }
+    case IntentType::DefendBuff:
+        gainBlock(m_currentIntent.value);
+        // addEffect(new BuffDebuff("Strength", m_currentIntent.secondaryValue));
+        break;
 
-QList<BuffDebuff*> Enemy::getActiveEffects() const { return m_activeEffects; }
+    case IntentType::Buff:
+        // addEffect(new BuffDebuff("Strength", m_currentIntent.value));
+        break;
+
+    case IntentType::Debuff:
+        // player->addEffect(new BuffDebuff("Weak", m_currentIntent.value));
+        break;
+
+    case IntentType::Unknown:
+    default:
+        break;
+    }
+}
+
+void Enemy::applyEnemyIntent(GamePlay *game)
+{
+    if (!game)
+        return;
+
+    Player *player = game->player();
+    executeIntent(player);
+    calculateNextIntent();
+}
+
+bool Enemy::isDead() const
+{
+    return m_currentHP <= 0;
+}
+
+QString Enemy::getName() const
+{
+    return m_name;
+}
+
+int Enemy::getCurrentHP() const
+{
+    return m_currentHP;
+}
+
+int Enemy::getMaxHP() const
+{
+    return m_maxHP;
+}
+
+EnemyIntent Enemy::getCurrentIntent() const
+{
+    return m_currentIntent;
+}
+
+void Enemy::addEffect(BuffDebuff *effect)
+{
+    m_activeEffects.append(effect);
+}
+
+void Enemy::removeEffect(BuffDebuff *effect)
+{
+    m_activeEffects.removeOne(effect);
+}
+
+QList<BuffDebuff *> Enemy::getActiveEffects() const
+{
+    return m_activeEffects;
+}
 
 //QRectF Enemy::boundingRect() const { return QRectF(0, 0, 0, 0); }
 
@@ -71,14 +150,15 @@ QList<BuffDebuff*> Enemy::getActiveEffects() const { return m_activeEffects; }
 //     Q_UNUSED(widget);
 // }
 
-EnemyIntent Enemy::pickIntent(const QList<QPair<int, EnemyIntent>>& options) const {
+EnemyIntent Enemy::pickIntent(const QList<QPair<int, EnemyIntent>> &options) const
+{
     int totalWeight = 0;
-    for (const auto& option : options)
+    for (const auto &option : options)
         totalWeight += option.first;
 
     int roll = rand() % totalWeight;
     int cumulative = 0;
-    for (const auto& option : options) {
+    for (const auto &option : options) {
         cumulative += option.first;
         if (roll < cumulative)
             return option.second;
