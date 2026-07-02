@@ -5,7 +5,6 @@
 Card::Card(QString name,
            CardType type,
            int energyCost,
-           QString path,
            QString description,
            bool isRare,
            bool isExhaust,

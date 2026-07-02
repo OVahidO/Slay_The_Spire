@@ -91,3 +91,30 @@ void HexaGhost::calculateNextIntent()
     //     player->upgradeAllBurnsInDeck();
     // }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+TheChamp::TheChamp(bool isMultiplayer, QGraphicsItem *parent)
+    : Enemy("The Champ", 420, 420, isMultiplayer, parent)
+{
+    calculateNextIntent();
+}
+
+void TheChamp::calculateNextIntent()
+{
+    m_turnCount++;
+
+    if (m_turnCount % 2 == 1) {
+        m_currentIntent = EnemyIntent{IntentType::Debuff, 2, 2, false};
+        return;
+    }
+
+    QList<QPair<int, EnemyIntent>> options = {{15,
+                                               EnemyIntent{IntentType::DefendBuff, 15, 5, false}},
+                                              {15, EnemyIntent{IntentType::Buff, 2, 0, false}},
+                                              {25,
+                                               EnemyIntent{IntentType::AttackDebuff, 12, 2, false}},
+                                              {45, EnemyIntent{IntentType::Attack, 8, 2, false}}};
+
+    m_currentIntent = pickIntent(options);
+}

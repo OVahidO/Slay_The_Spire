@@ -7,7 +7,6 @@ class GremlinKnob : public Enemy
 {
 public:
     explicit GremlinKnob(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
-
     void calculateNextIntent() override;
     void onPlayerSkillPlayed();
 

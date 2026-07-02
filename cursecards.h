@@ -8,13 +8,12 @@ class CurseCard : public Card
 public:
     explicit CurseCard(QString name,
                        int energyCost,
-                       QString path,
                        QString description,
                        bool isRare = false,
                        bool isExhaust = false,
                        bool requiresTarget = true,
                        QGraphicsItem *parent = nullptr);
-    virtual ~CurseCard();
+    virtual ~CurseCard() = default;
 };
 
 class J_A_X : public CurseCard
