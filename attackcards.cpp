@@ -22,7 +22,6 @@ Strike::Strike(QGraphicsItem *parent)
     : AttackCard("Strike", 1, "Deal 6 damage", 6, true, false, false, parent)
 {
     m_sourcePath = ":/cards/Pics/Cards/Attack/Strike_R.png";
-
     loadPixmap();
 }
 
@@ -40,7 +39,6 @@ Bludgeon::Bludgeon(QGraphicsItem *parent)
     : AttackCard("Bludgeon", 3, "Deal 32 damage", 32, true, false, true, parent)
 {
     m_sourcePath = ":/cards/Pics/Cards/Attack/Bludgeon.png";
-
     loadPixmap();
 }
 
@@ -65,7 +63,6 @@ Reaper::Reaper(QGraphicsItem *parent)
                  parent)
 {
     m_sourcePath = ":/cards/Pics/Cards/Attack/Reaper.png";
-
     loadPixmap();
 }
 
@@ -93,7 +90,6 @@ Feed::Feed(QGraphicsItem *parent)
                  parent)
 {
     m_sourcePath = ":/cards/Pics/Cards/Attack/Feed.png";
-
     loadPixmap();
 }
 
@@ -121,7 +117,6 @@ Immolate::Immolate(QGraphicsItem *parent)
                  parent)
 {
     m_sourcePath = ":/cards/Pics/Cards/Attack/Immolate.png";
-
     loadPixmap();
 }
 
@@ -144,7 +139,6 @@ Bash::Bash(QGraphicsItem *parent)
     : AttackCard("Bash", 2, "Deal 8 damage\nApply 2 Vulnerable", 8, true, false, false, parent)
 {
     m_sourcePath = ":/cards/Pics/Cards/Attack/Bash.png";
-
     loadPixmap();
 }
 
@@ -172,7 +166,6 @@ Clash::Clash(QGraphicsItem *parent)
                  parent)
 {
     m_sourcePath = ":/cards/Pics/Cards/Attack/Clash.png";
-
     loadPixmap();
 }
 
@@ -199,7 +192,6 @@ Hemokinesis::Hemokinesis(QGraphicsItem *parent)
     : AttackCard("Hemokinesis", 1, "Lose 2 HP\nDeal 15 damage", 15, true, false, false, parent)
 {
     m_sourcePath = ":/cards/Pics/Cards/Attack/Hemokinesis.png";
-
     loadPixmap();
 }
 
