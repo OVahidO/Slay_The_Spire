@@ -40,7 +40,18 @@ void Card::loadPixmap()
     }
 }
 
-<<<<<<< HEAD
+void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
+
+    if (!m_cardPixmap.isNull())
+        painter->drawPixmap(boundingRect(), m_cardPixmap, m_cardPixmap.rect());
+}
+
 void Card::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
     this->setScale(1.5);
@@ -85,29 +96,6 @@ void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     QGraphicsItem::mouseReleaseEvent(event);
 }
 
-int Card::ID() const {return m_ID;}
-QString Card::name() const {return m_name;}
-int Card::energyCost() const {return m_energyCost;}
-CardType Card::cardType() const {return m_type;}
-QString Card::sourcePath() const {return m_sourcePath;}
-QString Card::description() const {return m_description;}
-bool Card::isRare() const {return m_isRare;}
-bool Card::needTarget() const {return m_needTarget;}
-bool Card::isExhaust() const {return m_isExhaust;}
-=======
-void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
->>>>>>> main
-
-    painter->setRenderHint(QPainter::Antialiasing);
-    painter->setRenderHint(QPainter::SmoothPixmapTransform);
-
-    if (!m_cardPixmap.isNull())
-        painter->drawPixmap(boundingRect(), m_cardPixmap, m_cardPixmap.rect());
-}
-
 int Card::ID() const
 {
     return m_ID;
@@ -144,7 +132,6 @@ bool Card::isExhaust() const
 {
     return m_isExhaust;
 }
-
 bool Card::applyEffect(GamePlay *gameplay)
 {
     return false;

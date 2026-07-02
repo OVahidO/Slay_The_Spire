@@ -46,12 +46,8 @@ class Offering : public SkillCard
 public:
     explicit Offering(QGraphicsItem *parent = nullptr);
 
-<<<<<<< HEAD
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
     bool applyEffect(GamePlay* gameplay) override;
-=======
-    void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
->>>>>>> main
 };
 
 class Impervious : public SkillCard
@@ -67,12 +63,8 @@ class Power_Through : public SkillCard
 public:
     explicit Power_Through(QGraphicsItem *parent = nullptr);
 
-<<<<<<< HEAD
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
     bool applyEffect(GamePlay* gameplay) override;
-=======
-    void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
->>>>>>> main
 };
 
 class Bloodletting : public SkillCard

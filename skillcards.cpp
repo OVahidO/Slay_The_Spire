@@ -125,8 +125,8 @@ void Power_Through::applyEffect(Player *player, Enemy *targetEnemy)
 }
 bool Power_Through::applyEffect(GamePlay* gameplay)
 {
-    gameplay->addCardToHand(new WOUND(""));
-    gameplay->addCardToHand(new WOUND(""));
+    gameplay->addCardToHand(new WOUND());
+    gameplay->addCardToHand(new WOUND());
     return true;
 }
 
