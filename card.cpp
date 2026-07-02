@@ -52,13 +52,8 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
 
-    if (1)
-        painter->drawPixmap(boundingRect(), QPixmap(":/cards/Pics/Cards/Attack/Strike_R.png"), QPixmap(":/cards/Pics/Cards/Attack/Strike_R.png").rect());
-    else
-    {
-        painter->setBrush(Qt::blue);
-        painter->drawRect(boundingRect());
-    }
+    if (!m_cardPixmap.isNull())
+        painter->drawPixmap(boundingRect(), m_cardPixmap, m_cardPixmap.rect());
 }
 
 void Card::hoverEnterEvent(QGraphicsSceneHoverEvent* event)

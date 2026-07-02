@@ -26,7 +26,7 @@ GamePlay::GamePlay(QWidget *parent)
     layout->addWidget(m_view);
     this->setLayout(layout);
 
-    Strike *testCard = new Strike();
+    Card *testCard = new Strike();
     testCard->setPos(400, 400);
 
     testCard->setFlag(QGraphicsItem::ItemIsSelectable);
