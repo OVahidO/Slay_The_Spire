@@ -1,6 +1,9 @@
 #ifndef GAMEPLAY_H
 #define GAMEPLAY_H
 
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QVBoxLayout>
 #include <QWidget>
 #include <algorithm>
 #include <random>
@@ -57,6 +60,9 @@ private:
     Player *m_player;
     std::vector<Enemy *> m_enemys;
     int m_turn;
+
+    QGraphicsScene *m_scene;
+    QGraphicsView *m_view;
 
     // Temporary data structure(piles)
     std::vector<Card *> m_drawPile;
