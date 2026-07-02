@@ -10,8 +10,6 @@ CurseCard::CurseCard(QString name,
     : Card(name, CardType::Curse, energyCost, description, isRare, isExhaust, requiresTarget, parent)
 {}
 
-CurseCard::~CurseCard() {}
-
 J_A_X::J_A_X(QGraphicsItem *parent)
     : CurseCard("J_A_X", 0, "Lose 3 HP - Gain 2 Strength", false, false, true, parent)
 {
