@@ -268,3 +268,26 @@ void RedSlaver::calculateNextIntent()
     if (m_currentIntent.type == IntentType::Debuff)
         m_usedEntangle = true;
 }
+
+SphericGuardian::SphericGuardian(bool isMultiplayer, QGraphicsItem *parent)
+    : Enemy("Spheric Guardian", 20, 20, isMultiplayer, parent)
+{
+    gainBlock(25);
+    calculateNextIntent();
+}
+
+void SphericGuardian::calculateNextIntent()
+{
+    m_turnCount++;
+
+    if (m_turnCount == 1) {
+        m_currentIntent = EnemyIntent{IntentType::AttackDebuff, 10, 5, false};
+        return;
+    }
+
+    QList<QPair<int, EnemyIntent>> options = {{50,
+                                               EnemyIntent{IntentType::AttackDefend, 10, 15, false}},
+                                              {50, EnemyIntent{IntentType::Attack, 10, 2, false}}};
+
+    m_currentIntent = pickIntent(options);
+}
