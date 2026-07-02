@@ -3,18 +3,25 @@
 
 #include "normalenemies.h"
 
-class KingSlime : public Slime {
+class KingSlime : public Slime
+{
 public:
     explicit KingSlime(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
-
     void calculateNextIntent() override;
     bool shouldSplit() const override;
 };
 
-class HexaGhost : public Enemy {
+class HexaGhost : public Enemy
+{
 public:
     explicit HexaGhost(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
+    void calculateNextIntent() override;
+};
 
+class TheChamp : public Enemy
+{
+public:
+    explicit TheChamp(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
 };
 
