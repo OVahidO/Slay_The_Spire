@@ -11,14 +11,13 @@ void GremlinKnob::calculateNextIntent()
     m_turnCount++;
 
     if (m_turnCount == 1) {
-        m_currentIntent = EnemyIntent{IntentType::Buff, 99, 0, false};
+        m_currentIntent = buffIntent(99);
         m_enrageStacks = 99;
         return;
     }
 
-    QList<QPair<int, EnemyIntent>> options = {{67, EnemyIntent{IntentType::Attack, 14, 0, false}},
-                                              {33,
-                                               EnemyIntent{IntentType::AttackDebuff, 6, 2, false}}};
+    QVector<QPair<int, EnemyIntent>> options = {{67, attackIntent(14)},
+                                                {33, attackDebuffIntent(6, 2)}};
     m_currentIntent = pickIntent(options);
 }
 
@@ -46,9 +45,9 @@ void Sentry::calculateNextIntent()
     bool useBeam = m_startsWithBeam ? (m_turnCount % 2 == 1) : (m_turnCount % 2 == 0);
 
     if (useBeam)
-        m_currentIntent = EnemyIntent{IntentType::Attack, 9, 0, false};
+        m_currentIntent = attackIntent(9);
     else
-        m_currentIntent = EnemyIntent{IntentType::Debuff, 2, 0, false};
+        m_currentIntent = debuffIntent(2);
 
     // if (!useBeam) {
     //     player->shuffleIntoDiscard(new DAZE());
@@ -68,7 +67,7 @@ void BookOfStabbing::calculateNextIntent()
 {
     m_turnCount++;
 
-    QList<QPair<int, EnemyIntent>> options
+    QVector<QPair<int, EnemyIntent>> options
         = {{85, EnemyIntent{IntentType::Attack, 6, m_multiStabUsedCount + 2, true}},
            {15, EnemyIntent{IntentType::Attack, 21, 1, false}}};
 

@@ -3,12 +3,7 @@
 #include "player.h"
 
 Enemy::Enemy(QString name, int minHP, int maxHP, bool isMultiplayer, QGraphicsItem *parent)
-    : QGraphicsObject(parent)
-    , m_name(name)
-    , m_maxHP(minHP + rand() % (maxHP - minHP + 1))
-    , m_currentHP(m_maxHP)
-    , m_block(0)
-    , m_turnCount(0)
+    : Combatant(name, minHP + rand() % (maxHP - minHP + 1), parent)
 {
     if (isMultiplayer) {
         m_maxHP *= 2;
@@ -16,37 +11,49 @@ Enemy::Enemy(QString name, int minHP, int maxHP, bool isMultiplayer, QGraphicsIt
     }
 }
 
-int Enemy::takeDamage(int incomingDamage)
+EnemyIntent Enemy::attackIntent(int damage) const
 {
-    int finalDamage = incomingDamage;
-
-    // for (BuffDebuff* effect : m_activeEffects)
-    //     if (effect->getName() == "Vulnerable")
-    //         finalDamage = qRound(finalDamage * 1.5);
-
-    int damageAfterBlock = finalDamage - m_block;
-    if (damageAfterBlock < 0)
-        damageAfterBlock = 0;
-
-    m_block -= finalDamage;
-    if (m_block < 0)
-        m_block = 0;
-
-    m_currentHP -= damageAfterBlock;
-    if (m_currentHP < 0)
-        m_currentHP = 0;
-
-    return damageAfterBlock;
+    return {IntentType::Attack, damage, 0, false};
 }
 
-void Enemy::gainBlock(int amount)
+EnemyIntent Enemy::defendIntent(int block) const
 {
-    m_block += amount;
+    return {IntentType::Defend, block, 0, false};
 }
 
-void Enemy::resetBlock()
+EnemyIntent Enemy::buffIntent(int value) const
 {
-    m_block = 0;
+    return {IntentType::Buff, value, 0, false};
+}
+
+EnemyIntent Enemy::debuffIntent(int value) const
+{
+    return {IntentType::Debuff, value, 0, false};
+}
+
+EnemyIntent Enemy::attackDefendIntent(int damage, int block) const
+{
+    return {IntentType::AttackDefend, damage, block, false};
+}
+
+EnemyIntent Enemy::attackDebuffIntent(int damage, int value) const
+{
+    return {IntentType::AttackDebuff, damage, value, false};
+}
+
+EnemyIntent Enemy::defendBuffIntent(int block, int value) const
+{
+    return {IntentType::DefendBuff, block, value, false};
+}
+
+EnemyIntent Enemy::escapeIntent() const
+{
+    return {IntentType::Unknown, 0, 0, true};
+}
+
+EnemyIntent Enemy::unknownIntent() const
+{
+    return {IntentType::Unknown, 0, 0, false};
 }
 
 void Enemy::executeIntent(Player *player)
@@ -60,12 +67,12 @@ void Enemy::executeIntent(Player *player)
         break;
 
     case IntentType::Defend:
-        gainBlock(m_currentIntent.value);
+        addBlock(m_currentIntent.value);
         break;
 
     case IntentType::AttackDefend:
         player->takeDamage(m_currentIntent.value);
-        gainBlock(m_currentIntent.secondaryValue);
+        addBlock(m_currentIntent.secondaryValue);
         break;
 
     case IntentType::AttackDebuff:
@@ -74,7 +81,7 @@ void Enemy::executeIntent(Player *player)
         break;
 
     case IntentType::DefendBuff:
-        gainBlock(m_currentIntent.value);
+        addBlock(m_currentIntent.value);
         // addEffect(new BuffDebuff("Strength", m_currentIntent.secondaryValue));
         break;
 
@@ -102,59 +109,19 @@ void Enemy::applyEnemyIntent(GamePlay *game)
     calculateNextIntent();
 }
 
-bool Enemy::isDead() const
-{
-    return m_currentHP <= 0;
-}
-
-QString Enemy::getName() const
-{
-    return m_name;
-}
-
-int Enemy::getCurrentHP() const
-{
-    return m_currentHP;
-}
-
-int Enemy::getMaxHP() const
-{
-    return m_maxHP;
-}
-
 EnemyIntent Enemy::getCurrentIntent() const
 {
     return m_currentIntent;
 }
 
-void Enemy::addEffect(BuffDebuff *effect)
-{
-    m_activeEffects.append(effect);
-}
-
-void Enemy::removeEffect(BuffDebuff *effect)
-{
-    m_activeEffects.removeOne(effect);
-}
-
-QList<BuffDebuff *> Enemy::getActiveEffects() const
-{
-    return m_activeEffects;
-}
-
-//QRectF Enemy::boundingRect() const { return QRectF(0, 0, 0, 0); }
-
-// void Enemy::paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-//     Q_UNUSED(painter);
-//     Q_UNUSED(option);
-//     Q_UNUSED(widget);
-// }
-
-EnemyIntent Enemy::pickIntent(const QList<QPair<int, EnemyIntent>> &options) const
+EnemyIntent Enemy::pickIntent(const QVector<QPair<int, EnemyIntent>> &options) const
 {
     int totalWeight = 0;
     for (const auto &option : options)
         totalWeight += option.first;
+
+    if (totalWeight == 0)
+        return EnemyIntent();
 
     int roll = rand() % totalWeight;
     int cumulative = 0;

@@ -11,7 +11,7 @@ void KingSlime::calculateNextIntent()
     m_turnCount++;
 
     if (!m_hasSplit && shouldSplit()) {
-        m_currentIntent = EnemyIntent{IntentType::Unknown, 0, 0, false};
+        m_currentIntent = unknownIntent();
         return;
     }
 
@@ -19,13 +19,13 @@ void KingSlime::calculateNextIntent()
 
     switch (phase) {
     case 0:
-        m_currentIntent = EnemyIntent{IntentType::Unknown, 0, 0, false};
+        m_currentIntent = unknownIntent();
         break;
     case 1:
-        m_currentIntent = EnemyIntent{IntentType::Attack, 35, 0, false};
+        m_currentIntent = attackIntent(35);
         break;
     case 2:
-        m_currentIntent = EnemyIntent{IntentType::Debuff, 3, 0, false};
+        m_currentIntent = debuffIntent(3);
         break;
     }
 
@@ -53,7 +53,7 @@ void HexaGhost::calculateNextIntent()
     m_turnCount++;
 
     if (m_turnCount == 1) {
-        m_currentIntent = EnemyIntent{IntentType::Unknown, 0, 0, false};
+        m_currentIntent = unknownIntent();
         return;
     }
 
@@ -76,7 +76,7 @@ void HexaGhost::calculateNextIntent()
         m_currentIntent = EnemyIntent{IntentType::Attack, 5, 2, false};
         break;
     case 3: // Inflame
-        m_currentIntent = EnemyIntent{IntentType::DefendBuff, 12, 2, false};
+        m_currentIntent = defendBuffIntent(12, 2);
         break;
     case 6: // Inferno
         m_currentIntent = EnemyIntent{IntentType::Attack, 2, 6, false};
@@ -109,12 +109,10 @@ void TheChamp::calculateNextIntent()
         return;
     }
 
-    QList<QPair<int, EnemyIntent>> options = {{15,
-                                               EnemyIntent{IntentType::DefendBuff, 15, 5, false}},
-                                              {15, EnemyIntent{IntentType::Buff, 2, 0, false}},
-                                              {25,
-                                               EnemyIntent{IntentType::AttackDebuff, 12, 2, false}},
-                                              {45, EnemyIntent{IntentType::Attack, 8, 2, false}}};
+    QVector<QPair<int, EnemyIntent>> options = {{15, defendBuffIntent(15, 5)},
+                                                {15, buffIntent(2)},
+                                                {25, attackDebuffIntent(12, 2)},
+                                                {45, EnemyIntent{IntentType::Attack, 8, 2, false}}};
 
     m_currentIntent = pickIntent(options);
 }

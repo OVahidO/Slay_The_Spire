@@ -11,10 +11,10 @@ void Cultist::calculateNextIntent()
     m_turnCount++;
 
     if (m_turnCount == 1) {
-        m_currentIntent = EnemyIntent{IntentType::Buff, 3, false};
+        m_currentIntent = buffIntent(3);
         m_hasIncantation = true;
     } else
-        m_currentIntent = EnemyIntent{IntentType::Attack, 6, false};
+        m_currentIntent = attackIntent(6);
 
     // if (m_hasIncantation && m_turnCount > 1) {
     //     BuffDebuff* strength = new BuffDebuff("Strength", 3);
@@ -35,15 +35,13 @@ void JawWorm::calculateNextIntent()
     m_turnCount++;
 
     if (m_turnCount == 1) {
-        m_currentIntent = EnemyIntent{IntentType::Attack, 11, 0, false};
+        m_currentIntent = attackIntent(11);
         return;
     }
 
-    QList<QPair<int, EnemyIntent>> options = {{25, EnemyIntent{IntentType::Attack, 11, 0, false}},
-                                              {30,
-                                               EnemyIntent{IntentType::AttackDefend, 7, 5, false}},
-                                              {45,
-                                               EnemyIntent{IntentType::DefendBuff, 6, 3, false}}};
+    QVector<QPair<int, EnemyIntent>> options = {{25, attackIntent(11)},
+                                                {30, attackDefendIntent(7, 5)},
+                                                {45, defendBuffIntent(6, 3)}};
 
     m_currentIntent = pickIntent(options);
 }
@@ -66,9 +64,8 @@ void Louse::calculateNextIntent()
 {
     m_turnCount++;
 
-    QList<QPair<int, EnemyIntent>> options
-        = {{75, EnemyIntent{IntentType::Attack, randomBiteDamage(), 0, false}},
-           {25, EnemyIntent{IntentType::Buff, 3, 0, false}}};
+    QVector<QPair<int, EnemyIntent>> options = {{75, attackIntent(randomBiteDamage())},
+                                                {25, buffIntent(3)}};
 
     m_currentIntent = pickIntent(options);
 }
@@ -80,7 +77,7 @@ int Louse::takeDamage(int incomingDamage)
     if (damage > 0 && !m_defensiveReactionUsed) {
         m_defensiveReactionUsed = true;
 
-        gainBlock(3 + rand() % 5);
+        addBlock(3 + rand() % 5);
     }
 
     return damage;
@@ -107,8 +104,7 @@ void AcidSlimeS::calculateNextIntent()
 {
     m_turnCount++;
 
-    QList<QPair<int, EnemyIntent>> options = {{50, EnemyIntent{IntentType::Attack, 3, 0, false}},
-                                              {50, EnemyIntent{IntentType::Debuff, 1, 0, false}}};
+    QVector<QPair<int, EnemyIntent>> options = {{50, attackIntent(3)}, {50, debuffIntent(1)}};
 
     m_currentIntent = pickIntent(options);
 }
@@ -125,10 +121,9 @@ void AcidSlimeM::calculateNextIntent()
 {
     m_turnCount++;
 
-    QList<QPair<int, EnemyIntent>> options = {{30,
-                                               EnemyIntent{IntentType::AttackDebuff, 7, 1, false}},
-                                              {40, EnemyIntent{IntentType::Attack, 10, 0, false}},
-                                              {30, EnemyIntent{IntentType::Debuff, 1, 0, false}}};
+    QVector<QPair<int, EnemyIntent>> options = {{30, attackDebuffIntent(7, 1)},
+                                                {40, attackIntent(10)},
+                                                {30, debuffIntent(1)}};
 
     m_currentIntent = pickIntent(options);
 }
@@ -151,10 +146,9 @@ void AcidSlimeL::calculateNextIntent()
         return;
     }
 
-    QList<QPair<int, EnemyIntent>> options = {{30,
-                                               EnemyIntent{IntentType::AttackDebuff, 7, 1, false}},
-                                              {40, EnemyIntent{IntentType::Attack, 10, 0, false}},
-                                              {30, EnemyIntent{IntentType::Debuff, 1, 0, false}}};
+    QVector<QPair<int, EnemyIntent>> options = {{30, attackDebuffIntent(7, 1)},
+                                                {40, attackIntent(10)},
+                                                {30, debuffIntent(1)}};
 
     m_currentIntent = pickIntent(options);
 }
@@ -189,18 +183,18 @@ void Thief::calculateNextIntent()
     m_turnCount++;
 
     if (m_turnCount <= 2) {
-        m_currentIntent = {IntentType::AttackDebuff, m_mugDamage, 15, false};
+        m_currentIntent = attackDebuffIntent(m_mugDamage, 15);
 
         return;
     }
 
     if (m_turnCount == 3) {
-        m_currentIntent = {IntentType::Defend, 6, 0, false};
+        m_currentIntent = defendIntent(6);
 
         return;
     }
 
-    m_currentIntent = {IntentType::Unknown, 0, 0, true};
+    m_currentIntent = escapeIntent();
 
     m_hasEscaped = true;
 }
@@ -229,9 +223,8 @@ void BlueSlaver::calculateNextIntent()
 {
     m_turnCount++;
 
-    QList<QPair<int, EnemyIntent>> options = {{60, EnemyIntent{IntentType::Attack, 12, 0, false}},
-                                              {40,
-                                               EnemyIntent{IntentType::AttackDebuff, 7, 1, false}}};
+    QVector<QPair<int, EnemyIntent>> options
+        = {{60, attackIntent(12)}, {40, EnemyIntent{IntentType::AttackDebuff, 7, 1, false}}};
 
     m_currentIntent = pickIntent(options);
 }
@@ -249,19 +242,19 @@ void RedSlaver::calculateNextIntent()
     m_turnCount++;
 
     if (m_turnCount == 1) {
-        m_currentIntent = {IntentType::Attack, 13, 0, false};
+        m_currentIntent = attackIntent(13);
 
         return;
     }
 
-    QList<QPair<int, EnemyIntent>> options;
+    QVector<QPair<int, EnemyIntent>> options;
 
     if (!m_usedEntangle)
-        options.append({25, EnemyIntent{IntentType::Debuff, 1, 0, false}});
+        options.append({25, debuffIntent(1)});
 
-    options.append({50, EnemyIntent{IntentType::Attack, 13, 0, false}});
+    options.append({50, attackIntent(13)});
 
-    options.append({50, EnemyIntent{IntentType::AttackDebuff, 8, 1, false}});
+    options.append({50, attackDebuffIntent(8, 1)});
 
     m_currentIntent = pickIntent(options);
 
@@ -269,27 +262,26 @@ void RedSlaver::calculateNextIntent()
         m_usedEntangle = true;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SphericGuardian::SphericGuardian(bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("Spheric Guardian", 20, 20, isMultiplayer, parent)
 {
-    gainBlock(25);
+    addBlock(25);
     calculateNextIntent();
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void SphericGuardian::calculateNextIntent()
 {
     m_turnCount++;
 
     if (m_turnCount == 1) {
-        m_currentIntent = EnemyIntent{IntentType::AttackDebuff, 10, 5, false};
+        m_currentIntent = attackDebuffIntent(10, 5);
         return;
     }
 
-    QList<QPair<int, EnemyIntent>> options = {{50,
-                                               EnemyIntent{IntentType::AttackDefend, 10, 15, false}},
-                                              {50, EnemyIntent{IntentType::Attack, 10, 2, false}}};
+    QVector<QPair<int, EnemyIntent>> options = {{50, attackDefendIntent(10, 15)},
+                                                {50, EnemyIntent{IntentType::Attack, 10, 2, false}}};
 
     m_currentIntent = pickIntent(options);
 }

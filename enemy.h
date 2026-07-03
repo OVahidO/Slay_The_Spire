@@ -1,14 +1,10 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include <QGraphicsObject>
-#include <QList>
-#include <QObject>
 #include <QPair>
-#include <QString>
+#include "combatant.h"
 
 class Player;
-class BuffDebuff;
 class GamePlay;
 
 enum class IntentType {
@@ -30,7 +26,7 @@ struct EnemyIntent
     bool isHidden = false;
 };
 
-class Enemy : public QGraphicsObject
+class Enemy : public Combatant
 {
     Q_OBJECT
 public:
@@ -41,37 +37,28 @@ public:
                    QGraphicsItem *parent = nullptr);
     virtual ~Enemy() = default;
 
-    int takeDamage(int incomingDamage);
-    void gainBlock(int amount);
-    void resetBlock();
     void executeIntent(Player *player);
-    bool isDead() const;
     void applyEnemyIntent(GamePlay *game);
 
-    QString getName() const;
-    int getCurrentHP() const;
-    int getMaxHP() const;
     EnemyIntent getCurrentIntent() const;
-
-    void addEffect(BuffDebuff *effect);
-    void removeEffect(BuffDebuff *effect);
-    QList<BuffDebuff *> getActiveEffects() const;
-
     virtual void calculateNextIntent() = 0;
 
-    // QRectF boundingRect() const override;
-    // void paint(QPainter* painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
 protected:
-    EnemyIntent pickIntent(const QList<QPair<int, EnemyIntent>> &options) const;
+    EnemyIntent pickIntent(const QVector<QPair<int, EnemyIntent>> &options) const;
 
-    QString m_name;
-    int m_maxHP;
-    int m_currentHP;
-    int m_block;
-    int m_turnCount;
     EnemyIntent m_currentIntent;
-    QList<BuffDebuff *> m_activeEffects;
-};
 
+    EnemyIntent attackIntent(int damage) const;
+    EnemyIntent defendIntent(int block) const;
+    EnemyIntent buffIntent(int value) const;
+    EnemyIntent debuffIntent(int value) const;
+
+    EnemyIntent attackDefendIntent(int damage, int block) const;
+    EnemyIntent attackBuffIntent(int damage, int value) const;
+    EnemyIntent attackDebuffIntent(int damage, int value) const;
+    EnemyIntent defendBuffIntent(int block, int value) const;
+
+    EnemyIntent escapeIntent() const;
+    EnemyIntent unknownIntent() const;
+};
 #endif // ENEMY_H
