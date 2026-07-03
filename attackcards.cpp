@@ -98,9 +98,9 @@ void Feed::applyEffect(Player *player, Enemy *target)
     if (target && player) {
         target->takeDamage(this->m_damage);
 
-        if (target->getCurrentHP() <= 0) {
-            player->addMaxHp(3);
-        }
+        // if (target->getCurrentHP() <= 0) {
+        //     player->addMaxHp(3);
+        // }
     }
 }
 

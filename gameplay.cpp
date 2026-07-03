@@ -14,7 +14,13 @@ GamePlay::GamePlay(QWidget *parent)
     //setup attributes
     //////////////////
 
-    m_player = new Player;
+    m_player = new Player("Vahid&Ahoora", 100);
+
+    connect(m_player, &Player::hpChanged, this, &GamePlay::updateHpLabels);
+    connect(m_player, &Player::coinChanged, this, &GamePlay::updateCoinLabel);
+    connect(m_player, &Player::valueChanged, this, &GamePlay::updatePlayerInformLabels);
+
+    ui->userNameLabel->setText(m_player->name());
     updateHpLabels();
     updateCoinLabel();
 
@@ -184,8 +190,8 @@ void GamePlay::playedCardHandler(Card *card)
 
 void GamePlay::updateHpLabels()
 {
-    ui->maxHpLabel->setText("/" + QString::number(m_player->maxHp()));
-    ui->hpLabel->setText(QString::number(m_player->maxHp()));
+    ui->maxHpLabel->setText("/" + QString::number(m_player->maxHP()));
+    ui->hpLabel->setText(QString::number(m_player->maxHP()));
 }
 
 void GamePlay::updateCoinLabel()
@@ -195,7 +201,7 @@ void GamePlay::updateCoinLabel()
 
 void GamePlay::updatePlayerInformLabels()
 {
-    ui->maxHpLabel->setText("/" + QString::number(m_player->maxHp()));
-    ui->hpLabel->setText(QString::number(m_player->maxHp()));
+    ui->maxHpLabel->setText("/" + QString::number(m_player->maxHP()));
+    ui->hpLabel->setText(QString::number(m_player->maxHP()));
     ui->coinLabel->setText(QString::number(m_player->coin()));
 }

@@ -43,6 +43,9 @@ public:
     void heal(int n = 1);
 
 signals:
+    void hpChanged();
+    void coinChanged();
+    void valueChanged();
 
 private:
     int m_coin = 0;
