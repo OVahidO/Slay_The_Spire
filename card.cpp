@@ -23,18 +23,23 @@ Card::Card(QString name,
     if((type == CardType::Status && name != "SLIME") || (type == CardType::Curse && name != "J_A_X"))
         setAcceptHoverEvents(false);
     else
+    {
         setAcceptHoverEvents(true);
+        this->setFlag(QGraphicsItem::ItemIsMovable);
+        this->setFlag(QGraphicsItem::ItemIsSelectable);
+    }
+
+    this->setTransformOriginPoint(105 , 145);
 
     m_hoverAnimation = new QVariantAnimation(this);
     m_hoverAnimation->setDuration(150);
-    this->setTransformOriginPoint(50 , 75);
 
     connect(m_hoverAnimation, &QVariantAnimation::valueChanged, this, [this](const QVariant& value){this->setScale(value.toReal());});
 }
 
 QRectF Card::boundingRect() const
 {
-    return QRectF(0, 0, 250, 322);
+    return QRectF(0, 0, 210, 290);
 }
 
 void Card::loadPixmap()
