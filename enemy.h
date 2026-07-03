@@ -41,14 +41,12 @@ public:
     void executeIntent(Player *player);
     void applyEnemyIntent(GamePlay *game);
 
-    QString getName() const;
     EnemyIntent getCurrentIntent() const;
     virtual void calculateNextIntent() = 0;
 
 protected:
     EnemyIntent pickIntent(const QList<QPair<int, EnemyIntent>> &options) const;
 
-    QString m_name;
     EnemyIntent m_currentIntent;
 };
 #endif // ENEMY_H

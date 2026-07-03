@@ -3,8 +3,7 @@
 #include "player.h"
 
 Enemy::Enemy(QString name, int minHP, int maxHP, bool isMultiplayer, QGraphicsItem *parent)
-    : Combatant(minHP + rand() % (maxHP - minHP + 1), parent)
-    , m_name(name)
+    : Combatant(name, minHP + rand() % (maxHP - minHP + 1), parent)
 {
     if (isMultiplayer) {
         m_maxHP *= 2;
@@ -63,11 +62,6 @@ void Enemy::applyEnemyIntent(GamePlay *game)
     Player *player = game->player();
     executeIntent(player);
     calculateNextIntent();
-}
-
-QString Enemy::getName() const
-{
-    return m_name;
 }
 
 EnemyIntent Enemy::getCurrentIntent() const

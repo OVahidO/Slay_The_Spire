@@ -11,7 +11,7 @@ class Combatant : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    explicit Combatant(int maxHP, QGraphicsItem *parent = nullptr);
+    Combatant(QString name, int maxHP, QGraphicsItem *parent = nullptr);
     virtual ~Combatant() = default;
 
     virtual int takeDamage(int incomingDamage);
@@ -19,6 +19,7 @@ public:
     void resetBlock();
     bool isDead() const;
 
+    const QString &name() const;
     int currentHP() const;
     int maxHP() const;
     int block() const;
@@ -30,6 +31,7 @@ public:
     QList<BuffDebuff *> getActiveEffects() const;
 
 protected:
+    QString m_name;
     int m_maxHP;
     int m_currentHP;
     int m_block;

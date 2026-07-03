@@ -1,7 +1,8 @@
 #include "combatant.h"
 
-Combatant::Combatant(int maxHP, QGraphicsItem *parent)
+Combatant::Combatant(QString name, int maxHP, QGraphicsItem *parent)
     : QGraphicsObject(parent)
+    , m_name(name)
     , m_maxHP(maxHP)
     , m_currentHP(maxHP)
     , m_block(0)
@@ -40,6 +41,11 @@ bool Combatant::isDead() const
     return m_currentHP <= 0;
 }
 
+const QString &Combatant::name() const
+{
+    return m_name;
+}
+
 int Combatant::currentHP() const
 {
     return m_currentHP;
@@ -49,6 +55,7 @@ int Combatant::maxHP() const
 {
     return m_maxHP;
 }
+
 int Combatant::block() const
 {
     return m_block;
@@ -58,6 +65,7 @@ int Combatant::turnCount() const
 {
     return m_turnCount;
 }
+
 void Combatant::nextTurn()
 {
     m_turnCount++;
@@ -67,6 +75,7 @@ void Combatant::addEffect(BuffDebuff *effect)
 {
     m_activeEffects.append(effect);
 }
+
 void Combatant::removeEffect(BuffDebuff *effect)
 {
     m_activeEffects.removeOne(effect);
