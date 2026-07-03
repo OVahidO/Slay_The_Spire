@@ -81,7 +81,7 @@ void Combatant::removeEffect(BuffDebuff *effect)
     m_activeEffects.removeOne(effect);
 }
 
-QList<BuffDebuff *> Combatant::getActiveEffects() const
+QVector<BuffDebuff *> Combatant::getActiveEffects() const
 {
     return m_activeEffects;
 }
