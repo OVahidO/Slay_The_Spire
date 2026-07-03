@@ -3,6 +3,7 @@
 #include "enemy.h"
 #include "player.h"
 #include "ui_gameplay.h"
+#include <QString>
 
 GamePlay::GamePlay(QWidget *parent)
     : QWidget(parent)
@@ -11,6 +12,12 @@ GamePlay::GamePlay(QWidget *parent)
     ui->setupUi(this);
     this->setFixedSize(1280 , 720);
     //setup attributes
+    //////////////////
+
+    m_player = new Player;
+    updateHpLabels();
+    updateCoinLabel();
+
     //////////////////
     // ahoora's
     m_scene = new QGraphicsScene(this);
@@ -173,4 +180,22 @@ void GamePlay::playedCardHandler(Card *card)
 {
     m_discardPile.push_back(card);
     //m_player->m_HandsCards.erase(std::find(m_HandsCards.begin(), m_HandsCards.end(), card));
+}
+
+void GamePlay::updateHpLabels()
+{
+    ui->maxHpLabel->setText("/" + QString::number(m_player->maxHp()));
+    ui->hpLabel->setText(QString::number(m_player->maxHp()));
+}
+
+void GamePlay::updateCoinLabel()
+{
+    ui->coinLabel->setText(QString::number(m_player->coin()));
+}
+
+void GamePlay::updatePlayerInformLabels()
+{
+    ui->maxHpLabel->setText("/" + QString::number(m_player->maxHp()));
+    ui->hpLabel->setText(QString::number(m_player->maxHp()));
+    ui->coinLabel->setText(QString::number(m_player->coin()));
 }

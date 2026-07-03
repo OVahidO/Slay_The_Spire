@@ -58,6 +58,12 @@ public slots:
 
     void playedCardHandler(Card *card);
 
+    void updateHpLabels();
+
+    void updateCoinLabel();
+
+    void updatePlayerInformLabels();
+
 private:
     Ui::GamePlay *ui;
     Player *m_player;
