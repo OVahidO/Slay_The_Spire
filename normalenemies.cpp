@@ -276,6 +276,8 @@ SphericGuardian::SphericGuardian(bool isMultiplayer, QGraphicsItem *parent)
     calculateNextIntent();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SphericGuardian::calculateNextIntent()
 {
     m_turnCount++;
