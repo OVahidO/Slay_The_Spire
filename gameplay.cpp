@@ -9,28 +9,23 @@ GamePlay::GamePlay(QWidget *parent)
     , ui(new Ui::GamePlay)
 {
     ui->setupUi(this);
+    this->setFixedSize(1280 , 720);
     //setup attributes
     //////////////////
     // ahoora's
     m_scene = new QGraphicsScene(this);
-    m_scene->setSceneRect(0, 0, 1200, 800);
+    m_scene->setSceneRect(0, 0, width(), height());
 
-    m_view = new QGraphicsView(m_scene, this);
+    m_view = ui->graphicsView;
     m_view->setRenderHint(QPainter::Antialiasing);
     m_view->setRenderHint(QPainter::SmoothPixmapTransform);
+    m_view->setScene(m_scene);
 
     m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->addWidget(m_view);
-    this->setLayout(layout);
-
     Card *testCard = new Strike();
     testCard->setPos(400, 400);
-
-    testCard->setFlag(QGraphicsItem::ItemIsSelectable);
-    testCard->setFlag(QGraphicsItem::ItemIsMovable);
 
     m_scene->addItem(testCard);
     connect(this, &GamePlay::playerTurnEnded, this, &GamePlay::enemiesTurn);
