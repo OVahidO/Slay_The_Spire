@@ -2,7 +2,6 @@
 #define ENEMY_H
 
 #include <QPair>
-#include <QString>
 #include "combatant.h"
 
 class Player;
@@ -45,8 +44,21 @@ public:
     virtual void calculateNextIntent() = 0;
 
 protected:
-    EnemyIntent pickIntent(const QList<QPair<int, EnemyIntent>> &options) const;
+    EnemyIntent pickIntent(const QVector<QPair<int, EnemyIntent>> &options) const;
 
     EnemyIntent m_currentIntent;
+
+    EnemyIntent attackIntent(int damage) const;
+    EnemyIntent defendIntent(int block) const;
+    EnemyIntent buffIntent(int value) const;
+    EnemyIntent debuffIntent(int value) const;
+
+    EnemyIntent attackDefendIntent(int damage, int block) const;
+    EnemyIntent attackBuffIntent(int damage, int value) const;
+    EnemyIntent attackDebuffIntent(int damage, int value) const;
+    EnemyIntent defendBuffIntent(int block, int value) const;
+
+    EnemyIntent escapeIntent() const;
+    EnemyIntent unknownIntent() const;
 };
 #endif // ENEMY_H

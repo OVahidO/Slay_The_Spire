@@ -25,7 +25,7 @@ class Louse : public Enemy
 public:
     explicit Louse(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
-    int takeDamage(int incomingDamage);
+    int takeDamage(int incomingDamage) override;
 
 private:
     bool m_isRed;

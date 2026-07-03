@@ -11,6 +11,51 @@ Enemy::Enemy(QString name, int minHP, int maxHP, bool isMultiplayer, QGraphicsIt
     }
 }
 
+EnemyIntent Enemy::attackIntent(int damage) const
+{
+    return {IntentType::Attack, damage, 0, false};
+}
+
+EnemyIntent Enemy::defendIntent(int block) const
+{
+    return {IntentType::Defend, block, 0, false};
+}
+
+EnemyIntent Enemy::buffIntent(int value) const
+{
+    return {IntentType::Buff, value, 0, false};
+}
+
+EnemyIntent Enemy::debuffIntent(int value) const
+{
+    return {IntentType::Debuff, value, 0, false};
+}
+
+EnemyIntent Enemy::attackDefendIntent(int damage, int block) const
+{
+    return {IntentType::AttackDefend, damage, block, false};
+}
+
+EnemyIntent Enemy::attackDebuffIntent(int damage, int value) const
+{
+    return {IntentType::AttackDebuff, damage, value, false};
+}
+
+EnemyIntent Enemy::defendBuffIntent(int block, int value) const
+{
+    return {IntentType::DefendBuff, block, value, false};
+}
+
+EnemyIntent Enemy::escapeIntent() const
+{
+    return {IntentType::Unknown, 0, 0, true};
+}
+
+EnemyIntent Enemy::unknownIntent() const
+{
+    return {IntentType::Unknown, 0, 0, false};
+}
+
 void Enemy::executeIntent(Player *player)
 {
     if (!player)
@@ -69,7 +114,7 @@ EnemyIntent Enemy::getCurrentIntent() const
     return m_currentIntent;
 }
 
-EnemyIntent Enemy::pickIntent(const QList<QPair<int, EnemyIntent>> &options) const
+EnemyIntent Enemy::pickIntent(const QVector<QPair<int, EnemyIntent>> &options) const
 {
     int totalWeight = 0;
     for (const auto &option : options)

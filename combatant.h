@@ -2,8 +2,9 @@
 #define COMBATANT_H
 
 #include <QGraphicsObject>
-#include <QList>
 #include <QObject>
+#include <QString>
+#include <QVector>
 
 class BuffDebuff;
 
@@ -28,7 +29,7 @@ public:
 
     void addEffect(BuffDebuff *effect);
     void removeEffect(BuffDebuff *effect);
-    QList<BuffDebuff *> getActiveEffects() const;
+    QVector<BuffDebuff *> getActiveEffects() const;
 
 protected:
     QString m_name;
@@ -36,7 +37,7 @@ protected:
     int m_currentHP;
     int m_block;
     int m_turnCount;
-    QList<BuffDebuff *> m_activeEffects;
+    QVector<BuffDebuff *> m_activeEffects;
 };
 
 #endif // COMBATANT_H
