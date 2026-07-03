@@ -31,7 +31,6 @@ class BookOfStabbing : public Enemy
 {
 public:
     explicit BookOfStabbing(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
-
     void calculateNextIntent() override;
 
 private:
@@ -42,7 +41,6 @@ class Taskmaster : public Enemy
 {
 public:
     explicit Taskmaster(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
-
     void calculateNextIntent() override;
 };
 

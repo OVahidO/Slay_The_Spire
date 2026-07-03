@@ -7,7 +7,6 @@ class Cultist : public Enemy
 {
 public:
     explicit Cultist(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
-
     void calculateNextIntent() override;
 
 private:
@@ -18,7 +17,6 @@ class JawWorm : public Enemy
 {
 public:
     explicit JawWorm(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
-
     void calculateNextIntent() override;
 };
 
@@ -26,9 +24,7 @@ class Louse : public Enemy
 {
 public:
     explicit Louse(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
-
     void calculateNextIntent() override;
-
     int takeDamage(int incomingDamage);
 
 private:
@@ -56,7 +52,6 @@ class AcidSlimeS : public Slime
 {
 public:
     explicit AcidSlimeS(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
-
     void calculateNextIntent() override;
 };
 
@@ -64,7 +59,6 @@ class AcidSlimeM : public Slime
 {
 public:
     explicit AcidSlimeM(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
-
     void calculateNextIntent() override;
 };
 
@@ -72,9 +66,7 @@ class AcidSlimeL : public Slime
 {
 public:
     explicit AcidSlimeL(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
-
     void calculateNextIntent() override;
-
     bool shouldSplit() const override;
 };
 
@@ -89,7 +81,6 @@ public:
           QGraphicsItem *parent = nullptr);
 
     void calculateNextIntent() override;
-
     bool hasEscaped() const;
     int stolenGold() const;
 
@@ -115,7 +106,6 @@ class BlueSlaver : public Enemy
 {
 public:
     explicit BlueSlaver(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
-
     void calculateNextIntent() override;
 };
 
@@ -123,11 +113,17 @@ class RedSlaver : public Enemy
 {
 public:
     explicit RedSlaver(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
-
     void calculateNextIntent() override;
 
 private:
     bool m_usedEntangle = false;
+};
+
+class SphericGuardian : public Enemy
+{
+public:
+    explicit SphericGuardian(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
+    void calculateNextIntent() override;
 };
 
 #endif // NORMALENEMIES_H
