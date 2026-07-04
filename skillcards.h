@@ -20,7 +20,6 @@ class Defend : public SkillCard
 {
 public:
     explicit Defend(QGraphicsItem *parent = nullptr);
-
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };
 
@@ -28,7 +27,6 @@ class Exhume : public SkillCard
 {
 public:
     explicit Exhume(QGraphicsItem *parent = nullptr);
-
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
     bool applyEffect(GamePlay* gameplay) override;
 };
@@ -37,7 +35,6 @@ class Limit_Break : public SkillCard
 {
 public:
     explicit Limit_Break(QGraphicsItem *parent = nullptr);
-
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };
 
@@ -45,7 +42,6 @@ class Offering : public SkillCard
 {
 public:
     explicit Offering(QGraphicsItem *parent = nullptr);
-
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
     bool applyEffect(GamePlay* gameplay) override;
 };
@@ -54,7 +50,6 @@ class Impervious : public SkillCard
 {
 public:
     explicit Impervious(QGraphicsItem *parent = nullptr);
-
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };
 
@@ -62,7 +57,6 @@ class Power_Through : public SkillCard
 {
 public:
     explicit Power_Through(QGraphicsItem *parent = nullptr);
-
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
     bool applyEffect(GamePlay* gameplay) override;
 };
@@ -71,7 +65,6 @@ class Bloodletting : public SkillCard
 {
 public:
     explicit Bloodletting(QGraphicsItem *parent = nullptr);
-
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };
 
