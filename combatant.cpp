@@ -1,4 +1,6 @@
 #include "combatant.h"
+#include <QtAlgorithms>
+#include <QtGlobal>
 
 Combatant::Combatant(QString name, int maxHP, QGraphicsItem *parent)
     : QGraphicsObject(parent)
@@ -9,13 +11,23 @@ Combatant::Combatant(QString name, int maxHP, QGraphicsItem *parent)
     , m_turnCount(0)
 {}
 
+Combatant::~Combatant()
+{
+    qDeleteAll(m_activeEffects);
+}
+
 int Combatant::takeDamage(int incomingDamage)
 {
-    int damageAfterBlock = incomingDamage - m_block;
+    int modified = incomingDamage;
+
+    if (effectStacks(BuffDebuffType::Vulnerable) > 0)
+        modified = static_cast<int>(modified * 1.5);
+
+    int damageAfterBlock = modified - m_block;
     if (damageAfterBlock < 0)
         damageAfterBlock = 0;
 
-    m_block -= incomingDamage;
+    m_block -= modified;
     if (m_block < 0)
         m_block = 0;
 
@@ -29,6 +41,19 @@ int Combatant::takeDamage(int incomingDamage)
 void Combatant::addBlock(int amount)
 {
     m_block += amount;
+}
+
+void Combatant::addBlockFromCard(int amount)
+{
+    int modified = amount + effectStacks(BuffDebuffType::Dexterity);
+
+    if (effectStacks(BuffDebuffType::Frail) > 0)
+        modified = static_cast<int>(modified * 0.75);
+
+    if (modified < 0)
+        modified = 0;
+
+    addBlock(modified);
 }
 
 void Combatant::resetBlock()
@@ -71,17 +96,53 @@ void Combatant::nextTurn()
     m_turnCount++;
 }
 
-void Combatant::addEffect(BuffDebuff *effect)
+int Combatant::effectStacks(BuffDebuffType type) const
 {
-    m_activeEffects.append(effect);
-}
+    for (BuffDebuff *effect : m_activeEffects)
+        if (effect->type() == type)
+            return effect->stacks();
 
-void Combatant::removeEffect(BuffDebuff *effect)
-{
-    m_activeEffects.removeOne(effect);
+    return 0;
 }
 
 QVector<BuffDebuff *> Combatant::getActiveEffects() const
 {
     return m_activeEffects;
+}
+
+void Combatant::applyBuffDebuff(BuffDebuffType type, int stacks)
+{
+    for (BuffDebuff *effect : m_activeEffects) {
+        if (effect->type() == type) {
+            effect->addStacks(stacks);
+            return;
+        }
+    }
+
+    m_activeEffects.append(new BuffDebuff(type, stacks));
+}
+
+void Combatant::tickDecayingBuffDebuff()
+{
+    for (int i = m_activeEffects.size() - 1; i >= 0; --i) {
+        m_activeEffects[i]->decayOneStack();
+
+        if (m_activeEffects[i]->isDepleted()) {
+            delete m_activeEffects[i];
+            m_activeEffects.removeAt(i);
+        }
+    }
+}
+
+int Combatant::calculateOutgoingDamage(int baseDamage) const
+{
+    int modified = baseDamage + effectStacks(BuffDebuffType::Strength);
+
+    if (effectStacks(BuffDebuffType::Weak) > 0)
+        modified = static_cast<int>(modified * 0.75); // floor طبق ویکی
+
+    if (modified < 0)
+        modified = 0;
+
+    return modified;
 }

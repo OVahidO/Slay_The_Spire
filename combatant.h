@@ -6,17 +6,18 @@
 #include <QString>
 #include <QVector>
 
-class BuffDebuff;
+#include "buffdebuff.h"
 
 class Combatant : public QGraphicsObject
 {
     Q_OBJECT
 public:
     Combatant(QString name, int maxHP, QGraphicsItem *parent = nullptr);
-    virtual ~Combatant() = default;
+    virtual ~Combatant();
 
     virtual int takeDamage(int incomingDamage);
     void addBlock(int amount);
+    void addBlockFromCard(int amount);
     void resetBlock();
     bool isDead() const;
 
@@ -27,9 +28,12 @@ public:
     int turnCount() const;
     void nextTurn();
 
-    void addEffect(BuffDebuff *effect);
-    void removeEffect(BuffDebuff *effect);
+    int effectStacks(BuffDebuffType type) const;
     QVector<BuffDebuff *> getActiveEffects() const;
+    void applyBuffDebuff(BuffDebuffType type, int stacks);
+    void tickDecayingBuffDebuff();
+
+    int calculateOutgoingDamage(int baseDamage) const;
 
 protected:
     QString m_name;
