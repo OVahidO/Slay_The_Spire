@@ -43,6 +43,9 @@ public:
     bool needTarget() const;
     bool isExhaust() const;
 
+    bool isUpgraded() const;
+    virtual void upgrade();
+
     virtual void applyEffect(Player *player, Enemy *targetEnemy) = 0;
     virtual bool applyEffect(GamePlay *gameplay);
 
@@ -68,6 +71,7 @@ protected:
     bool m_isRare;
     bool m_needTarget;
     bool m_isExhaust;
+    bool m_isUpgraded = false;
 };
 
 #endif // CARD_H

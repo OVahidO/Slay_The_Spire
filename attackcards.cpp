@@ -33,6 +33,16 @@ void Strike::applyEffect(Player *player, Enemy *target)
         target->takeDamage(this->m_damage);
 }
 
+void Strike::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_damage += 3;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Bludgeon::Bludgeon(QGraphicsItem *parent)
@@ -48,6 +58,16 @@ void Bludgeon::applyEffect(Player *player, Enemy *target)
 
     if (target)
         target->takeDamage(this->m_damage);
+}
+
+void Bludgeon::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_damage += 10;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,10 +91,21 @@ void Reaper::applyEffect(Player *player, Enemy *target)
     Q_UNUSED(player);
     Q_UNUSED(target);
 }
+
 bool Reaper::applyEffect(GamePlay *gameplay)
 {
     gameplay->player()->heal(gameplay->takeDamageToAllEnemies(m_damage));
     return true;
+}
+
+void Reaper::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_damage += 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,9 +130,20 @@ void Feed::applyEffect(Player *player, Enemy *target)
         target->takeDamage(this->m_damage);
 
         if (target->getCurrentHP() <= 0) {
-            player->addMaxHp(3);
+            player->addMaxHp(m_increaseMaxHp);
         }
     }
+}
+
+void Feed::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_damage += 2;
+    m_increaseMaxHp += 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,12 +167,23 @@ void Immolate::applyEffect(Player *player, Enemy *target)
     Q_UNUSED(player);
     Q_UNUSED(target);
 }
+
 bool Immolate::applyEffect(GamePlay *gameplay)
 {
     gameplay->takeDamageToAllEnemies(m_damage);
     gameplay->addCardToDiscardPile(new BURN());
     gameplay->addCardToDiscardPile(new BURN());
     return true;
+}
+
+void Immolate::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_damage += 7;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,13 +197,21 @@ Bash::Bash(QGraphicsItem *parent)
 
 void Bash::applyEffect(Player *player, Enemy *target)
 {
-    Q_UNUSED(player);
-
-    if (target) {
-        target->takeDamage(this->m_damage);
-
-        //target->applyVulnerable(2);
+    if (target && player) {
+        target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
+        target->applyBuffDebuff(BuffDebuffType::Vulnerable, m_vulnerableValue);
     }
+}
+
+void Bash::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_damage += 2;
+    m_vulnerableValue += 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -186,6 +247,16 @@ void Clash::applyEffect(Player *player, Enemy *target)
     }
 }
 
+void Clash::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_damage += 4;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Hemokinesis::Hemokinesis(QGraphicsItem *parent)
@@ -202,4 +273,14 @@ void Hemokinesis::applyEffect(Player *player, Enemy *target)
 
     if (target)
         target->takeDamage(this->m_damage);
+}
+
+void Hemokinesis::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_damage += 5;
 }
