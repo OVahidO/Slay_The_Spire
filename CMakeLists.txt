@@ -26,7 +26,8 @@ qt_add_executable(Slay_The_Spire
     eliteenemies.h eliteenemies.cpp
     bossenemies.h bossenemies.cpp
     ${RESOURCES}
-    combatant.h combatant.cpp #
+    combatant.h combatant.cpp
+    buffdebuff.h buffdebuff.cpp #
 )
 
 target_link_libraries(Slay_The_Spire
