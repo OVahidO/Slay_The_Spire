@@ -63,7 +63,7 @@ void Enemy::executeIntent(Player *player)
 
     switch (m_currentIntent.type) {
     case IntentType::Attack:
-        player->takeDamage(m_currentIntent.value);
+        player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
         break;
 
     case IntentType::Defend:
@@ -71,26 +71,26 @@ void Enemy::executeIntent(Player *player)
         break;
 
     case IntentType::AttackDefend:
-        player->takeDamage(m_currentIntent.value);
+        player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
         addBlock(m_currentIntent.secondaryValue);
         break;
 
     case IntentType::AttackDebuff:
-        player->takeDamage(m_currentIntent.value);
-        // player->addEffect(new BuffDebuff("Vulnerable", m_currentIntent.secondaryValue));
+        player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
+        player->applyBuffDebuff(BuffDebuffType::Vulnerable, m_currentIntent.secondaryValue);
         break;
 
     case IntentType::DefendBuff:
         addBlock(m_currentIntent.value);
-        // addEffect(new BuffDebuff("Strength", m_currentIntent.secondaryValue));
+        applyBuffDebuff(BuffDebuffType::Strength, m_currentIntent.secondaryValue);
         break;
 
     case IntentType::Buff:
-        // addEffect(new BuffDebuff("Strength", m_currentIntent.value));
+        applyBuffDebuff(BuffDebuffType::Strength, m_currentIntent.value);
         break;
 
     case IntentType::Debuff:
-        // player->addEffect(new BuffDebuff("Weak", m_currentIntent.value));
+        player->applyBuffDebuff(BuffDebuffType::Weak, m_currentIntent.value);
         break;
 
     case IntentType::Unknown:
