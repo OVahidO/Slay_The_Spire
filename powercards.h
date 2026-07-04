@@ -24,6 +24,9 @@ public:
     explicit Inflame(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
     void upgrade() override;
+
+private:
+    int m_strengthValue = 2;
 };
 
 class Brutality : public PowerCard
