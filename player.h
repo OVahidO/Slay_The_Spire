@@ -6,15 +6,6 @@
 class Card;
 class Player;
 
-enum class PowerUseTime { StartTurn, EndTurn, Exhausted };
-
-struct PowerEffect
-{
-    int value;
-    void (*func)(Player *player, int value);
-    PowerUseTime useTime;
-};
-
 class Player : public Combatant
 {
     Q_OBJECT
@@ -31,7 +22,6 @@ public:
     int handSize() const;
 
     QVector<Card *> &HandsCards();
-    QVector<PowerEffect> &powerEffects();
 
     void setCoin(int coin);
     void setEnergy(int energy);
@@ -48,7 +38,6 @@ private:
     int m_coin = 0;
     int m_energy = 3;
     int m_handSize = 5;
-    QVector<PowerEffect> m_powerEffects;
 
     QVector<Card *> m_HandsCards;
 };

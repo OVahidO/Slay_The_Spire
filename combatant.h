@@ -8,6 +8,18 @@
 
 #include "buffdebuff.h"
 
+class Combatant;
+class GamePlay;
+
+enum class PowerUseTime { StartTurn, EndTurn, OnExhaust };
+
+struct PowerEffect
+{
+    int value;
+    void (*func)(Combatant *self, int value, GamePlay *game);
+    PowerUseTime useTime;
+};
+
 class Combatant : public QGraphicsObject
 {
     Q_OBJECT
@@ -35,6 +47,9 @@ public:
 
     int calculateOutgoingDamage(int baseDamage) const;
 
+    QVector<PowerEffect> &powerEffects();
+    void triggerPowerEffects(PowerUseTime time, GamePlay *game = nullptr);
+
 protected:
     QString m_name;
     int m_maxHP;
@@ -42,6 +57,7 @@ protected:
     int m_block;
     int m_turnCount;
     QVector<BuffDebuff *> m_activeEffects;
+    QVector<PowerEffect> m_powerEffects;
 };
 
 #endif // COMBATANT_H

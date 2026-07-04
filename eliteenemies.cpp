@@ -23,10 +23,8 @@ void GremlinKnob::calculateNextIntent()
 
 void GremlinKnob::onPlayerSkillPlayed()
 {
-    if (m_enrageStacks > 0) {
-        // BuffDebuff* strength = new BuffDebuff("Strength", 2);
-        // addEffect(strength);
-    }
+    if (m_enrageStacks > 0)
+        applyBuffDebuff(BuffDebuffType::Strength, 2);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -12,14 +12,20 @@ void Cultist::calculateNextIntent()
 
     if (m_turnCount == 1) {
         m_currentIntent = buffIntent(3);
-        m_hasIncantation = true;
-    } else
+    } else {
         m_currentIntent = attackIntent(6);
 
-    // if (m_hasIncantation && m_turnCount > 1) {
-    //     BuffDebuff* strength = new BuffDebuff("Strength", 3);
-    //     addEffect(strength);
-    // }
+        if (!m_hasIncantation) {
+            m_hasIncantation = true;
+
+            powerEffects().append(PowerEffect{3,
+                                              [](Combatant *self, int value, GamePlay *) {
+                                                  self->applyBuffDebuff(BuffDebuffType::Strength,
+                                                                        value);
+                                              },
+                                              PowerUseTime::StartTurn});
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////

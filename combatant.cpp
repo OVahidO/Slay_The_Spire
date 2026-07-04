@@ -153,3 +153,15 @@ int Combatant::calculateOutgoingDamage(int baseDamage) const
 
     return modified;
 }
+
+QVector<PowerEffect> &Combatant::powerEffects()
+{
+    return m_powerEffects;
+}
+
+void Combatant::triggerPowerEffects(PowerUseTime time, GamePlay *game)
+{
+    for (const PowerEffect &effect : m_powerEffects)
+        if (effect.useTime == time)
+            effect.func(this, effect.value, game);
+}

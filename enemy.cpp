@@ -105,8 +105,11 @@ void Enemy::applyEnemyIntent(GamePlay *game)
         return;
 
     Player *player = game->player();
+
+    triggerPowerEffects(PowerUseTime::StartTurn, game);
     executeIntent(player);
     calculateNextIntent();
+    triggerPowerEffects(PowerUseTime::EndTurn, game);
 }
 
 EnemyIntent Enemy::getCurrentIntent() const

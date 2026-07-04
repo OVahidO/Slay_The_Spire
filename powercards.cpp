@@ -1,5 +1,6 @@
 #include "powercards.h"
 #include "enemy.h"
+#include "gameplay.h"
 #include "player.h"
 
 PowerCard::PowerCard(QString name,
@@ -25,8 +26,8 @@ void Inflame::applyEffect(Player *player, Enemy *target)
 {
     Q_UNUSED(target);
 
-    // if (player)
-    //     player->applyStrength(2);
+    if (player)
+        player->applyBuffDebuff(BuffDebuffType::Strength, 2);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,9 +49,18 @@ void Brutality::applyEffect(Player *player, Enemy *target)
 {
     Q_UNUSED(target);
 
-    if(player)
-        player->powerEffects().append(PowerEffect{1, [](Player* player, int value){player->loseHp(value);}, PowerUseTime::StartTurn});
-    //drawCard ?? نمی دونم اینجاشا
+    if (player) {
+        player->powerEffects().append(PowerEffect{1,
+                                                  [](Combatant *self, int value, GamePlay *game) {
+                                                      Player *p = dynamic_cast<Player *>(self);
+                                                      if (p)
+                                                          p->loseHp(value);
+
+                                                      if (game)
+                                                          game->drawFromDrawPile();
+                                                  },
+                                                  PowerUseTime::StartTurn});
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,8 +82,14 @@ void DemonForm::applyEffect(Player *player, Enemy *target)
 {
     Q_UNUSED(target);
 
-    // if (player)
-    //     player->applyBuff("Demon Form", 3);
+    if (player) {
+        player->powerEffects().append(
+            PowerEffect{3,
+                        [](Combatant *self, int value, GamePlay *) {
+                            self->applyBuffDebuff(BuffDebuffType::Strength, value);
+                        },
+                        PowerUseTime::StartTurn});
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,8 +105,12 @@ void Metallicize::applyEffect(Player *player, Enemy *target)
 {
     Q_UNUSED(target);
 
-    if(player)
-        player->powerEffects().append(PowerEffect{3, [](Player* player, int value){player->addBlock(value);}, PowerUseTime::EndTurn});
+    if (player) {
+        player->powerEffects().append(
+            PowerEffect{3,
+                        [](Combatant *self, int value, GamePlay *) { self->addBlock(value); },
+                        PowerUseTime::EndTurn});
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,8 +132,17 @@ void Berserk::applyEffect(Player *player, Enemy *target)
 {
     Q_UNUSED(target);
 
-    if (player)
-        player->powerEffects().append(PowerEffect{1, [](Player* player, int value){player->addEnergy(value);}, PowerUseTime::StartTurn});
+    if (player) {
+        player->applyBuffDebuff(BuffDebuffType::Vulnerable, 2);
+
+        player->powerEffects().append(PowerEffect{1,
+                                                  [](Combatant *self, int value, GamePlay *) {
+                                                      Player *p = dynamic_cast<Player *>(self);
+                                                      if (p)
+                                                          p->addEnergy(value);
+                                                  },
+                                                  PowerUseTime::StartTurn});
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,6 +163,16 @@ DarkEmbrace::DarkEmbrace(QGraphicsItem *parent)
 void DarkEmbrace::applyEffect(Player *player, Enemy *target)
 {
     Q_UNUSED(target);
-    // if (player)
-    //     player->applyBuff("Dark Embrace", 1);
+
+    if (player) {
+        player->powerEffects().append(PowerEffect{0,
+                                                  [](Combatant *self, int value, GamePlay *game) {
+                                                      Q_UNUSED(self);
+                                                      Q_UNUSED(value);
+
+                                                      if (game)
+                                                          game->drawFromDrawPile();
+                                                  },
+                                                  PowerUseTime::OnExhaust});
+    }
 }

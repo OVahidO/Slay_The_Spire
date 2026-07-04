@@ -37,7 +37,10 @@ public:
     bool isEnoughEnergy(int cardEnergyCost);
     int takeDamageToAllEnemies(int damage);
     void addCardToDiscardPile(Card* card);
-    void addCardToHand(Card* card);
+    ///
+    void addCardToExhaustPile(Card *card);
+    ///
+    void addCardToHand(Card *card);
     void drawFromExhaustPile();
     void drawFromDrawPile();
 

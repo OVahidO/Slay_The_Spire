@@ -113,6 +113,14 @@ void GamePlay::addCardToDiscardPile(Card *card)
     m_discardPile.push_back(card);
 }
 
+///
+void GamePlay::addCardToExhaustPile(Card *card)
+{
+    m_ExhaustPile.push_back(card);
+    m_player->triggerPowerEffects(PowerUseTime::OnExhaust, this);
+}
+///
+
 void GamePlay::addCardToHand(Card* card)
 {
     m_player->HandsCards().push_back(card);
