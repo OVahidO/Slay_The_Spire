@@ -27,10 +27,8 @@ Strike::Strike(QGraphicsItem *parent)
 
 void Strike::applyEffect(Player *player, Enemy *target)
 {
-    Q_UNUSED(player);
-
-    if (target)
-        target->takeDamage(this->m_damage);
+    if (target && player)
+        target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,10 +42,8 @@ Bludgeon::Bludgeon(QGraphicsItem *parent)
 
 void Bludgeon::applyEffect(Player *player, Enemy *target)
 {
-    Q_UNUSED(player);
-
-    if (target)
-        target->takeDamage(this->m_damage);
+    if (target && player)
+        target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,11 +92,10 @@ Feed::Feed(QGraphicsItem *parent)
 void Feed::applyEffect(Player *player, Enemy *target)
 {
     if (target && player) {
-        target->takeDamage(this->m_damage);
+        target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
 
-        if (target->currentHP() <= 0) {
+        if (target->currentHP() <= 0)
             player->addMaxHp(3);
-        }
     }
 }
 
@@ -144,12 +139,9 @@ Bash::Bash(QGraphicsItem *parent)
 
 void Bash::applyEffect(Player *player, Enemy *target)
 {
-    Q_UNUSED(player);
-
-    if (target) {
-        target->takeDamage(this->m_damage);
-
-        //target->applyVulnerable(2);
+    if (target && player) {
+        target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
+        target->applyBuffDebuff(BuffDebuffType::Vulnerable, 2);
     }
 }
 
@@ -173,16 +165,15 @@ void Clash::applyEffect(Player *player, Enemy *target)
 {
     bool isAllHandsCardsAttack = true;
 
-    for (Card *card : player->HandsCards()) {
+    for (Card *card : player->HandsCards())
         if (card->cardType() != (CardType::Attack)) {
             isAllHandsCardsAttack = false;
             break;
         }
-    }
 
     if (isAllHandsCardsAttack) {
-        if (target)
-            target->takeDamage(this->m_damage);
+        if (target && player)
+            target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
     }
 }
 
@@ -200,6 +191,6 @@ void Hemokinesis::applyEffect(Player *player, Enemy *target)
     if (player)
         player->loseHp(2);
 
-    if (target)
-        target->takeDamage(this->m_damage);
+    if (target && player)
+        target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
 }

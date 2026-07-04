@@ -1,7 +1,7 @@
 #include "skillcards.h"
 #include "enemy.h"
-#include "player.h"
 #include "gameplay.h"
+#include "player.h"
 #include "statuscards.h"
 
 SkillCard::SkillCard(QString name,
@@ -28,7 +28,7 @@ void Defend::applyEffect(Player *player, Enemy *targetEnemy)
     Q_UNUSED(targetEnemy);
 
     if (player != nullptr)
-        player->addBlock(5);
+        player->addBlockFromCard(5);
 }
 
 Exhume::Exhume(QGraphicsItem *parent)
@@ -38,8 +38,12 @@ Exhume::Exhume(QGraphicsItem *parent)
     loadPixmap();
 }
 
-void Exhume::applyEffect(Player* player, Enemy* targetEnemy) {Q_UNUSED(targetEnemy); Q_UNUSED(player);}
-bool Exhume::applyEffect(GamePlay* gameplay)
+void Exhume::applyEffect(Player *player, Enemy *targetEnemy)
+{
+    Q_UNUSED(targetEnemy);
+    Q_UNUSED(player);
+}
+bool Exhume::applyEffect(GamePlay *gameplay)
 {
     gameplay->drawFromExhaustPile();
     return true;
@@ -56,9 +60,9 @@ void Limit_Break::applyEffect(Player *player, Enemy *targetEnemy)
 {
     Q_UNUSED(targetEnemy);
 
-    if(player != nullptr)
-    {
-        //player->addStrength(player->strength());
+    if (player != nullptr) {
+        int currentStrength = player->effectStacks(BuffDebuffType::Strength);
+        player->applyBuffDebuff(BuffDebuffType::Strength, currentStrength);
     }
 }
 
@@ -73,16 +77,16 @@ void Offering::applyEffect(Player *player, Enemy *targetEnemy)
 {
     Q_UNUSED(targetEnemy);
 
-    if(player != nullptr)
-    {
+    if (player != nullptr) {
         player->loseHp(6);
         player->addEnergy(2);
     }
 }
 
-bool Offering::applyEffect(GamePlay* gameplay)
+bool Offering::applyEffect(GamePlay *gameplay)
 {
-    for(int i = 0 ; i < 3 ; gameplay->drawFromDrawPile(), i++);
+    for (int i = 0; i < 3; gameplay->drawFromDrawPile(), i++)
+        ;
     return true;
 }
 
@@ -97,9 +101,8 @@ void Impervious::applyEffect(Player *player, Enemy *targetEnemy)
 {
     Q_UNUSED(targetEnemy);
 
-    if (player != nullptr) {
-        player->addBlock(30);
-    }
+    if (player != nullptr)
+        player->addBlockFromCard(30);
 }
 
 Power_Through::Power_Through(QGraphicsItem *parent)
@@ -119,11 +122,10 @@ void Power_Through::applyEffect(Player *player, Enemy *targetEnemy)
 {
     Q_UNUSED(targetEnemy);
 
-    if (player != nullptr) {
-        player->addBlock(15);
-    }
+    if (player != nullptr)
+        player->addBlockFromCard(15);
 }
-bool Power_Through::applyEffect(GamePlay* gameplay)
+bool Power_Through::applyEffect(GamePlay *gameplay)
 {
     gameplay->addCardToHand(new WOUND());
     gameplay->addCardToHand(new WOUND());

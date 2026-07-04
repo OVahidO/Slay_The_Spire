@@ -112,14 +112,21 @@ QVector<BuffDebuff *> Combatant::getActiveEffects() const
 
 void Combatant::applyBuffDebuff(BuffDebuffType type, int stacks)
 {
-    for (BuffDebuff *effect : m_activeEffects) {
-        if (effect->type() == type) {
-            effect->addStacks(stacks);
+    for (int i = 0; i < m_activeEffects.size(); ++i) {
+        if (m_activeEffects[i]->type() == type) {
+            m_activeEffects[i]->addStacks(stacks);
+
+            if (m_activeEffects[i]->stacks() == 0) {
+                delete m_activeEffects[i];
+                m_activeEffects.removeAt(i);
+            }
+
             return;
         }
     }
 
-    m_activeEffects.append(new BuffDebuff(type, stacks));
+    if (stacks != 0)
+        m_activeEffects.append(new BuffDebuff(type, stacks));
 }
 
 void Combatant::tickDecayingBuffDebuff()
