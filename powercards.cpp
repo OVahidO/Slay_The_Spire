@@ -103,7 +103,7 @@ void DemonForm::applyEffect(Player *player, Enemy *target)
 
     if (player) {
         player->powerEffects().append(
-            PowerEffect{3,
+            PowerEffect{m_strengthPerTurn,
                         [](Combatant *self, int value, GamePlay *) {
                             self->applyBuffDebuff(BuffDebuffType::Strength, value);
                         },
@@ -117,8 +117,7 @@ void DemonForm::upgrade()
         return;
 
     Card::upgrade();
-
-    // will be implemented
+    m_strengthPerTurn += 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +135,7 @@ void Metallicize::applyEffect(Player *player, Enemy *target)
 
     if (player) {
         player->powerEffects().append(
-            PowerEffect{3,
+            PowerEffect{m_blockPerTurn,
                         [](Combatant *self, int value, GamePlay *) { self->addBlock(value); },
                         PowerUseTime::EndTurn});
     }
@@ -149,7 +148,7 @@ void Metallicize::upgrade()
 
     Card::upgrade();
 
-    // will be implemented
+    m_blockPerTurn += 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -172,7 +171,7 @@ void Berserk::applyEffect(Player *player, Enemy *target)
     Q_UNUSED(target);
 
     if (player) {
-        player->applyBuffDebuff(BuffDebuffType::Vulnerable, 2);
+        player->applyBuffDebuff(BuffDebuffType::Vulnerable, m_vulnerableAmount);
 
         player->powerEffects().append(PowerEffect{1,
                                                   [](Combatant *self, int value, GamePlay *) {
@@ -191,7 +190,7 @@ void Berserk::upgrade()
 
     Card::upgrade();
 
-    // will be implemented
+    m_vulnerableAmount -= 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -233,5 +232,5 @@ void DarkEmbrace::upgrade()
 
     Card::upgrade();
 
-    // will be implemented
+    m_energyCost -= 1;
 }

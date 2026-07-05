@@ -27,10 +27,8 @@ Strike::Strike(QGraphicsItem *parent)
 
 void Strike::applyEffect(Player *player, Enemy *target)
 {
-    Q_UNUSED(player);
-
-    if (target)
-        target->takeDamage(this->m_damage);
+    if (target && player)
+        target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
 }
 
 void Strike::upgrade()
@@ -54,10 +52,8 @@ Bludgeon::Bludgeon(QGraphicsItem *parent)
 
 void Bludgeon::applyEffect(Player *player, Enemy *target)
 {
-    Q_UNUSED(player);
-
-    if (target)
-        target->takeDamage(this->m_damage);
+    if (target && player)
+        target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
 }
 
 void Bludgeon::upgrade()
@@ -127,11 +123,10 @@ Feed::Feed(QGraphicsItem *parent)
 void Feed::applyEffect(Player *player, Enemy *target)
 {
     if (target && player) {
-        target->takeDamage(this->m_damage);
+        target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
 
-        if (target->getCurrentHP() <= 0) {
+        if (target->currentHP() <= 0)
             player->addMaxHp(m_increaseMaxHp);
-        }
     }
 }
 
@@ -242,8 +237,8 @@ void Clash::applyEffect(Player *player, Enemy *target)
     }
 
     if (isAllHandsCardsAttack) {
-        if (target)
-            target->takeDamage(this->m_damage);
+        if (target && player)
+            target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
     }
 }
 
@@ -271,8 +266,8 @@ void Hemokinesis::applyEffect(Player *player, Enemy *target)
     if (player)
         player->loseHp(2);
 
-    if (target)
-        target->takeDamage(this->m_damage);
+    if (target && player)
+        target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
 }
 
 void Hemokinesis::upgrade()
