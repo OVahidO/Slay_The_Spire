@@ -90,4 +90,12 @@ private:
     int m_energyGain = 2;
 };
 
+class Entrench : public SkillCard
+{
+public:
+    explicit Entrench(QGraphicsItem *parent = nullptr);
+    void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
+    void upgrade() override;
+};
+
 #endif // SKILLCARDS_H

@@ -234,3 +234,33 @@ void Bloodletting::upgrade()
     m_sourcePath = "";
     loadPixmap();
 }
+
+Entrench::Entrench(QGraphicsItem *parent)
+    : SkillCard("Entrench", 2, "Double your Block", false, false, false, parent)
+{
+    m_sourcePath = "";
+    loadPixmap();
+}
+
+void Entrench::applyEffect(Player *player, Enemy *targetEnemy)
+{
+    Q_UNUSED(targetEnemy);
+
+    if (player != nullptr) {
+        int currentBlock = player->block();
+        player->addBlockFromCard(currentBlock);
+    }
+}
+
+void Entrench::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_energyCost -= 1;
+
+    m_sourcePath = "";
+    loadPixmap();
+}
