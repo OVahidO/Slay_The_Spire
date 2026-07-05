@@ -23,12 +23,12 @@ J_A_X::J_A_X(QGraphicsItem *parent)
 void J_A_X::applyEffect(Player *player, Enemy *targetEnemy)
 {
     Q_UNUSED(targetEnemy);
+
     if (player != nullptr) {
         player->loseHp(3);
-        //player->addStrength(2);
+        player->applyBuffDebuff(BuffDebuffType::Strength, 2);
     }
 }
-
 CurseOfTheBell::CurseOfTheBell(QGraphicsItem *parent)
     : CurseCard("CurseOfTheBell",
                 0,

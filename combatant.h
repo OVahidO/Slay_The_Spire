@@ -27,7 +27,7 @@ public:
     Combatant(QString name, int maxHP, QGraphicsItem *parent = nullptr);
     virtual ~Combatant();
 
-    virtual int takeDamage(int incomingDamage);
+    virtual int takeDamage(int incomingDamage, bool isAttackDamage = true);
     void addBlock(int amount);
     void addBlockFromCard(int amount);
     void resetBlock();

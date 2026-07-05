@@ -16,11 +16,11 @@ Combatant::~Combatant()
     qDeleteAll(m_activeEffects);
 }
 
-int Combatant::takeDamage(int incomingDamage)
+int Combatant::takeDamage(int incomingDamage, bool isAttackDamage)
 {
     int modified = incomingDamage;
 
-    if (effectStacks(BuffDebuffType::Vulnerable) > 0)
+    if (isAttackDamage && effectStacks(BuffDebuffType::Vulnerable) > 0)
         modified = static_cast<int>(modified * 1.5);
 
     int damageAfterBlock = modified - m_block;
