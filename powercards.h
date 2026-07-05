@@ -78,4 +78,12 @@ public:
     void upgrade() override;
 };
 
+class Barricade : public PowerCard
+{
+public:
+    explicit Barricade(QGraphicsItem *parent = nullptr);
+    void applyEffect(Player *player, Enemy *target) override;
+    void upgrade() override;
+};
+
 #endif // POWERCARDS_H

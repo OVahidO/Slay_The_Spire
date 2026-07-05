@@ -234,3 +234,37 @@ void DarkEmbrace::upgrade()
 
     m_energyCost -= 1;
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Barricade::Barricade(QGraphicsItem *parent)
+    : PowerCard("Barricade",
+                3,
+                "Block is not removed at the start of your turn",
+                false,
+                false,
+                true,
+                parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Power/Barricade.png";
+    loadPixmap();
+}
+
+void Barricade::applyEffect(Player *player, Enemy *target)
+{
+    Q_UNUSED(target);
+
+    if (player)
+        player->setBarricade(true);
+}
+
+void Barricade::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+    m_energyCost -= 1;
+    // m_sourcePath = "";
+    // loadPixmap();
+}
