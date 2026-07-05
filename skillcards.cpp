@@ -28,7 +28,19 @@ void Defend::applyEffect(Player *player, Enemy *targetEnemy)
     Q_UNUSED(targetEnemy);
 
     if (player != nullptr)
-        player->addBlock(5);
+        player->addBlockFromCard(m_blockAmount);
+}
+
+void Defend::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+    m_blockAmount += 3;
+
+    m_sourcePath = "";
+    loadPixmap();
 }
 
 Exhume::Exhume(QGraphicsItem *parent)
@@ -43,6 +55,18 @@ bool Exhume::applyEffect(GamePlay* gameplay)
 {
     gameplay->drawFromExhaustPile();
     return true;
+}
+
+void Exhume::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+    m_energyCost -= 1;
+
+    m_sourcePath = "";
+    loadPixmap();
 }
 
 Limit_Break::Limit_Break(QGraphicsItem *parent)
@@ -60,6 +84,18 @@ void Limit_Break::applyEffect(Player *player, Enemy *targetEnemy)
     {
         //player->addStrength(player->strength());
     }
+}
+
+void Limit_Break::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+    m_isExhaust = false;
+
+    m_sourcePath = "";
+    loadPixmap();
 }
 
 Offering::Offering(QGraphicsItem *parent)
@@ -80,10 +116,24 @@ void Offering::applyEffect(Player *player, Enemy *targetEnemy)
     }
 }
 
-bool Offering::applyEffect(GamePlay* gameplay)
+bool Offering::applyEffect(GamePlay *gameplay)
 {
-    for(int i = 0 ; i < 3 ; gameplay->drawFromDrawPile(), i++);
+    for (int i = 0; i < m_drawCount; i++)
+        gameplay->drawFromDrawPile();
+
     return true;
+}
+
+void Offering::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+    m_drawCount += 2;
+
+    m_sourcePath = "";
+    loadPixmap();
 }
 
 Impervious::Impervious(QGraphicsItem *parent)
@@ -97,9 +147,20 @@ void Impervious::applyEffect(Player *player, Enemy *targetEnemy)
 {
     Q_UNUSED(targetEnemy);
 
-    if (player != nullptr) {
-        player->addBlock(30);
-    }
+    if (player != nullptr)
+        player->addBlockFromCard(m_blockAmount);
+}
+
+void Impervious::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+    m_blockAmount += 10;
+
+    m_sourcePath = "";
+    loadPixmap();
 }
 
 Power_Through::Power_Through(QGraphicsItem *parent)
@@ -119,15 +180,27 @@ void Power_Through::applyEffect(Player *player, Enemy *targetEnemy)
 {
     Q_UNUSED(targetEnemy);
 
-    if (player != nullptr) {
-        player->addBlock(15);
-    }
+    if (player != nullptr)
+        player->addBlockFromCard(m_blockAmount);
 }
+
 bool Power_Through::applyEffect(GamePlay* gameplay)
 {
     gameplay->addCardToHand(new WOUND());
     gameplay->addCardToHand(new WOUND());
     return true;
+}
+
+void Power_Through::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+    m_blockAmount += 5;
+
+    m_sourcePath = "";
+    loadPixmap();
 }
 
 Bloodletting::Bloodletting(QGraphicsItem *parent)
@@ -143,6 +216,18 @@ void Bloodletting::applyEffect(Player *player, Enemy *targetEnemy)
 
     if (player != nullptr) {
         player->loseHp(3);
-        player->addEnergy(2);
+        player->addEnergy(m_energyGain);
     }
+}
+
+void Bloodletting::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+    m_energyGain += 1;
+
+    m_sourcePath = "";
+    loadPixmap();
 }
