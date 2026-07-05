@@ -62,9 +62,14 @@ void Enemy::executeIntent(Player *player)
         return;
 
     switch (m_currentIntent.type) {
-    case IntentType::Attack:
-        player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
+    case IntentType::Attack: {
+        int hits = m_currentIntent.secondaryValue > 0 ? m_currentIntent.secondaryValue : 1;
+
+        for (int i = 0; i < hits; ++i)
+            player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
+
         break;
+    }
 
     case IntentType::Defend:
         addBlock(m_currentIntent.value);

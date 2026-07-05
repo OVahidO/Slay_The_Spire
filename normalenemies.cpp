@@ -76,13 +76,12 @@ void Louse::calculateNextIntent()
     m_currentIntent = pickIntent(options);
 }
 
-int Louse::takeDamage(int incomingDamage)
+int Louse::takeDamage(int incomingDamage, bool isAttackDamage)
 {
-    int damage = Enemy::takeDamage(incomingDamage);
+    int damage = Combatant::takeDamage(incomingDamage, isAttackDamage);
 
     if (damage > 0 && !m_defensiveReactionUsed) {
         m_defensiveReactionUsed = true;
-
         addBlock(3 + rand() % 5);
     }
 
