@@ -2,6 +2,7 @@
 #include "attackcards.h"
 #include "enemy.h"
 #include "player.h"
+#include "statuscards.h"
 #include "ui_gameplay.h"
 
 GamePlay::GamePlay(QWidget *parent)
@@ -118,6 +119,13 @@ void GamePlay::addCardToExhaustPile(Card *card)
 {
     m_ExhaustPile.push_back(card);
     m_player->triggerPowerEffects(PowerUseTime::OnExhaust, this);
+}
+
+void GamePlay::applyBurnDamage()
+{
+    for (Card *card : m_player->HandsCards())
+        if (dynamic_cast<BURN *>(card))
+            m_player->takeDamage(2, false);
 }
 ///
 

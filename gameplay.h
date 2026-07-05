@@ -39,6 +39,7 @@ public:
     void addCardToDiscardPile(Card* card);
     ///
     void addCardToExhaustPile(Card *card);
+    void applyBurnDamage();
     ///
     void addCardToHand(Card *card);
     void drawFromExhaustPile();
