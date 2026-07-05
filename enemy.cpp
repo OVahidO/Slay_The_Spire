@@ -31,6 +31,11 @@ EnemyIntent Enemy::debuffIntent(int value) const
     return {IntentType::Debuff, value, 0, false};
 }
 
+EnemyIntent Enemy::entangleIntent() const
+{
+    return {IntentType::Entangle, 0, 0, false};
+}
+
 EnemyIntent Enemy::attackDefendIntent(int damage, int block) const
 {
     return {IntentType::AttackDefend, damage, block, false};
@@ -96,6 +101,10 @@ void Enemy::executeIntent(Player *player)
 
     case IntentType::Debuff:
         player->applyBuffDebuff(BuffDebuffType::Weak, m_currentIntent.value);
+        break;
+
+    case IntentType::Entangle:
+        player->setCannotPlayAttacks(true);
         break;
 
     case IntentType::Unknown:

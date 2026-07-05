@@ -73,7 +73,12 @@ void Player::heal(int n)
         m_currentHP = m_maxHP;
 }
 
-QVector<PowerEffect> &Player::powerEffects()
+bool Player::cannotPlayAttacks() const
 {
-    return m_powerEffects;
+    return m_cannotPlayAttacks;
+}
+
+void Player::setCannotPlayAttacks(bool value)
+{
+    m_cannotPlayAttacks = value;
 }

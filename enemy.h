@@ -15,6 +15,7 @@ enum class IntentType {
     AttackDebuff,
     DefendBuff,
     AttackDefend,
+    Entangle,
     Unknown
 };
 
@@ -52,7 +53,7 @@ protected:
     EnemyIntent defendIntent(int block) const;
     EnemyIntent buffIntent(int value) const;
     EnemyIntent debuffIntent(int value) const;
-
+    EnemyIntent entangleIntent() const;
     EnemyIntent attackDefendIntent(int damage, int block) const;
     EnemyIntent attackBuffIntent(int damage, int value) const;
     EnemyIntent attackDebuffIntent(int damage, int value) const;

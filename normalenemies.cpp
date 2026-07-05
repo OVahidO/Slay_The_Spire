@@ -248,22 +248,20 @@ void RedSlaver::calculateNextIntent()
 
     if (m_turnCount == 1) {
         m_currentIntent = attackIntent(13);
-
         return;
     }
 
     QVector<QPair<int, EnemyIntent>> options;
 
     if (!m_usedEntangle)
-        options.append({25, debuffIntent(1)});
+        options.append({25, entangleIntent()});
 
     options.append({50, attackIntent(13)});
-
     options.append({50, attackDebuffIntent(8, 1)});
 
     m_currentIntent = pickIntent(options);
 
-    if (m_currentIntent.type == IntentType::Debuff)
+    if (m_currentIntent.type == IntentType::Entangle)
         m_usedEntangle = true;
 }
 

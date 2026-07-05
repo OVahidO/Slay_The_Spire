@@ -165,6 +165,8 @@ void GamePlay::playerTurn()
 
 void GamePlay::enemiesTurn()
 {
+    m_player->setCannotPlayAttacks(false);
+
     // ui->Disable
     // Ahoora->addEnemiesAi...
     // if(m_player->Hp <= 0)
@@ -174,9 +176,11 @@ void GamePlay::enemiesTurn()
     // }
     // emit enemiesTurnEnded();
 }
-
 void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy)
 {
+    if (card->cardType() == CardType::Attack && player->cannotPlayAttacks())
+        return;
+
     // if(isEnoughEnergy(card->energyCost))
     // {
     //     card->applyEffect(player, targetEnemy);
@@ -187,6 +191,9 @@ void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy
 
 void GamePlay::noTargetCardsHandler(Card *card)
 {
+    if (card->cardType() == CardType::Attack && m_player->cannotPlayAttacks())
+        return;
+
     //switch case for handle card effects//
 }
 

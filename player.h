@@ -27,6 +27,9 @@ public:
     void setEnergy(int energy);
     void setHandSize(int handSize);
 
+    bool cannotPlayAttacks() const;
+    void setCannotPlayAttacks(bool value);
+
     void addMaxHp(int n = 1);
     void addEnergy(int n = 1);
     void loseHp(int n = 1);
@@ -35,6 +38,8 @@ public:
 signals:
 
 private:
+    bool m_cannotPlayAttacks = false;
+
     int m_coin = 0;
     int m_energy = 3;
     int m_handSize = 5;
