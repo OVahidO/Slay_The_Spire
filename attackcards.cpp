@@ -179,6 +179,9 @@ void Immolate::upgrade()
     Card::upgrade();
 
     m_damage += 7;
+
+    m_sourcePath = "";
+    loadPixmap();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,6 +210,9 @@ void Bash::upgrade()
 
     m_damage += 2;
     m_vulnerableValue += 1;
+
+    m_sourcePath = "";
+    loadPixmap();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -250,6 +256,9 @@ void Clash::upgrade()
     Card::upgrade();
 
     m_damage += 4;
+
+    m_sourcePath = "";
+    loadPixmap();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -278,4 +287,7 @@ void Hemokinesis::upgrade()
     Card::upgrade();
 
     m_damage += 5;
+
+    m_sourcePath = "";
+    loadPixmap();
 }

@@ -80,9 +80,9 @@ void Limit_Break::applyEffect(Player *player, Enemy *targetEnemy)
 {
     Q_UNUSED(targetEnemy);
 
-    if(player != nullptr)
-    {
-        //player->addStrength(player->strength());
+    if (player != nullptr) {
+        int currentStrength = player->effectStacks(BuffDebuffType::Strength);
+        player->applyBuffDebuff(BuffDebuffType::Strength, currentStrength);
     }
 }
 
