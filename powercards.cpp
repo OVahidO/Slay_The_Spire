@@ -2,7 +2,6 @@
 #include "enemy.h"
 #include "gameplay.h"
 #include "player.h"
-
 PowerCard::PowerCard(QString name,
                      int energyCost,
                      QString description,
@@ -27,7 +26,17 @@ void Inflame::applyEffect(Player *player, Enemy *target)
     Q_UNUSED(target);
 
     if (player)
-        player->applyBuffDebuff(BuffDebuffType::Strength, 2);
+        player->applyBuffDebuff(BuffDebuffType::Strength, m_strengthValue);
+}
+
+void Inflame::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_strengthValue += 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,6 +72,16 @@ void Brutality::applyEffect(Player *player, Enemy *target)
     }
 }
 
+void Brutality::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    // will be implemented
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 DemonForm::DemonForm(QGraphicsItem *parent)
@@ -84,12 +103,21 @@ void DemonForm::applyEffect(Player *player, Enemy *target)
 
     if (player) {
         player->powerEffects().append(
-            PowerEffect{3,
+            PowerEffect{m_strengthPerTurn,
                         [](Combatant *self, int value, GamePlay *) {
                             self->applyBuffDebuff(BuffDebuffType::Strength, value);
                         },
                         PowerUseTime::StartTurn});
     }
+}
+
+void DemonForm::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+    m_strengthPerTurn += 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,10 +135,20 @@ void Metallicize::applyEffect(Player *player, Enemy *target)
 
     if (player) {
         player->powerEffects().append(
-            PowerEffect{3,
+            PowerEffect{m_blockPerTurn,
                         [](Combatant *self, int value, GamePlay *) { self->addBlock(value); },
                         PowerUseTime::EndTurn});
     }
+}
+
+void Metallicize::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_blockPerTurn += 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,7 +171,7 @@ void Berserk::applyEffect(Player *player, Enemy *target)
     Q_UNUSED(target);
 
     if (player) {
-        player->applyBuffDebuff(BuffDebuffType::Vulnerable, 2);
+        player->applyBuffDebuff(BuffDebuffType::Vulnerable, m_vulnerableAmount);
 
         player->powerEffects().append(PowerEffect{1,
                                                   [](Combatant *self, int value, GamePlay *) {
@@ -143,6 +181,16 @@ void Berserk::applyEffect(Player *player, Enemy *target)
                                                   },
                                                   PowerUseTime::StartTurn});
     }
+}
+
+void Berserk::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_vulnerableAmount -= 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -175,4 +223,14 @@ void DarkEmbrace::applyEffect(Player *player, Enemy *target)
                                                   },
                                                   PowerUseTime::OnExhaust});
     }
+}
+
+void DarkEmbrace::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_energyCost -= 1;
 }

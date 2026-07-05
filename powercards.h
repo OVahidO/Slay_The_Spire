@@ -23,6 +23,10 @@ class Inflame : public PowerCard
 public:
     explicit Inflame(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
+    void upgrade() override;
+
+private:
+    int m_strengthValue = 2;
 };
 
 class Brutality : public PowerCard
@@ -30,6 +34,7 @@ class Brutality : public PowerCard
 public:
     explicit Brutality(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
+    void upgrade() override;
 };
 
 class DemonForm : public PowerCard
@@ -37,6 +42,10 @@ class DemonForm : public PowerCard
 public:
     explicit DemonForm(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
+    void upgrade() override;
+
+private:
+    int m_strengthPerTurn = 3;
 };
 
 class Metallicize : public PowerCard
@@ -44,6 +53,10 @@ class Metallicize : public PowerCard
 public:
     explicit Metallicize(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
+    void upgrade() override;
+
+private:
+    int m_blockPerTurn = 3;
 };
 
 class Berserk : public PowerCard
@@ -51,6 +64,10 @@ class Berserk : public PowerCard
 public:
     explicit Berserk(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
+    void upgrade() override;
+
+private:
+    int m_vulnerableAmount = 2;
 };
 
 class DarkEmbrace : public PowerCard
@@ -58,6 +75,7 @@ class DarkEmbrace : public PowerCard
 public:
     explicit DarkEmbrace(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
+    void upgrade() override;
 };
 
 #endif // POWERCARDS_H
