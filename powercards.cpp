@@ -268,3 +268,35 @@ void Barricade::upgrade()
     // m_sourcePath = "";
     // loadPixmap();
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+FeelNoPain::FeelNoPain(QGraphicsItem *parent)
+    : PowerCard("FeelNoPain",
+                1,
+                "Every time a card is Exhausted, gain 3 block",
+                false,
+                false,
+                false, // نیازی به هدف‌گیری ندارد
+                parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Power/FeelNoPain.png";
+    loadPixmap();
+}
+
+void FeelNoPain::applyEffect(Player *player, Enemy *target)
+{
+    Q_UNUSED(target);
+
+    // if (player) {
+    // }
+}
+
+void FeelNoPain::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+    // m_description = "Every time a card is Exhausted, gain 4 block";
+}

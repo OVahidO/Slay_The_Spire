@@ -86,4 +86,12 @@ public:
     void upgrade() override;
 };
 
+class FeelNoPain : public PowerCard
+{
+public:
+    explicit FeelNoPain(QGraphicsItem *parent = nullptr);
+    void applyEffect(Player *player, Enemy *target) override;
+    void upgrade() override;
+};
+
 #endif // POWERCARDS_H
