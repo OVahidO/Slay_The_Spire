@@ -83,12 +83,14 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
         QRectF targetRect(x, y, scaledSize.width(), scaledSize.height());
         painter->drawPixmap(targetRect, m_cardPixmap, m_cardPixmap.rect());
+        painter->fillRect(rect, QColor(0, 0, 0, 90));
     }
 
     QRectF fadeRect(rect.x(), rect.y() + rect.height() * 0.55, rect.width(), rect.height() * 0.45);
     QLinearGradient gradient(fadeRect.topLeft(), fadeRect.bottomLeft());
-    gradient.setColorAt(0.0, QColor(0, 0, 0, 0));
-    gradient.setColorAt(1.0, QColor(0, 0, 0, 230));
+    gradient.setColorAt(0.0, QColor(0, 0, 0, 20));
+    gradient.setColorAt(0.35, QColor(0, 0, 0, 90));
+    gradient.setColorAt(1.0, QColor(0, 0, 0, 245));
     painter->fillRect(fadeRect, gradient);
 
     QColor typeColor = colorForCardType(m_type);
@@ -127,7 +129,7 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->restore();
 
     painter->setClipping(false);
-    painter->setPen(QPen(typeColor, 3));
+    painter->setPen(QPen(typeColor.darker(130), 2.5));
     painter->setBrush(Qt::NoBrush);
     painter->drawPath(cardShape);
 }
@@ -136,15 +138,19 @@ QColor Card::colorForCardType(CardType type) const
 {
     switch (type) {
     case CardType::Attack:
-        return QColor(200, 40, 40);
+        return QColor(120, 25, 25);
+
     case CardType::Skill:
-        return QColor(40, 130, 200);
+        return QColor(35, 75, 125);
+
     case CardType::Power:
-        return QColor(150, 60, 190);
+        return QColor(105, 45, 135);
+
     case CardType::Status:
-        return QColor(120, 120, 120);
+        return QColor(90, 90, 90);
+
     case CardType::Curse:
-        return QColor(70, 20, 90);
+        return QColor(55, 20, 70);
     }
     return Qt::gray;
 }
