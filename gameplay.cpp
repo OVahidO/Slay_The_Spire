@@ -12,25 +12,22 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
 
-GamePlay::GamePlay(QWidget *parent)
+GamePlay::GamePlay(Player* player, QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::GamePlay)
 {
     ui->setupUi(this);
-    this->setFixedSize(1280 , 720);
+    this->setFixedSize(1280 , 640);
     //setup attributes
     //////////////////
 
-    m_player = new Player("Vahid&Ahoora", 100);
+    m_player = player;
 
     connect(m_player, &Player::hpChanged, this, &GamePlay::updateHpLabels);
-    connect(m_player, &Player::coinChanged, this, &GamePlay::updateCoinLabel);
     connect(m_player, &Player::energyChanged, this, &GamePlay::updateEnergyLabel);
     connect(m_player, &Player::valueChanged, this, &GamePlay::updatePlayerInformLabels);
 
-    ui->userNameLabel->setText(m_player->name());
     updateHpLabels();
-    updateCoinLabel();
 
     //////////////////
     // ahoora's
@@ -113,7 +110,7 @@ void GamePlay::draw()
         }
 
         Card* card = m_drawPile.back();
-        card->setPos(0,700);
+        card->setPos(ui->drawPileButton->pos());
         m_player->HandsCards().push_back(card);
         m_scene->addItem(card);
         connect(card, &Card::cardEnterrdMouse, this, &GamePlay::updateHandsCardsLayout);
@@ -316,13 +313,7 @@ void GamePlay::playedCardHandler(Card *card)
 
 void GamePlay::updateHpLabels()
 {
-    ui->maxHpLabel->setText("/" + QString::number(m_player->maxHP()));
-    ui->hpLabel->setText(QString::number(m_player->maxHP()));
-}
 
-void GamePlay::updateCoinLabel()
-{
-    ui->coinLabel->setText(QString::number(m_player->coin()));
 }
 
 void GamePlay::updateEnergyLabel()
@@ -332,9 +323,7 @@ void GamePlay::updateEnergyLabel()
 
 void GamePlay::updatePlayerInformLabels()
 {
-    ui->maxHpLabel->setText("/" + QString::number(m_player->maxHP()));
-    ui->hpLabel->setText(QString::number(m_player->maxHP()));
-    ui->coinLabel->setText(QString::number(m_player->coin()));
+
 }
 
 void GamePlay::updateHandsCardsLayout(Card* hoveredCard) {
@@ -360,8 +349,8 @@ void GamePlay::updateHandsCardsLayout(Card* hoveredCard) {
         totalAngle = maxSpreadAngle;
     }
 
-    double centerX = 1280 / 2.25;
-    double centerY = 650 + radius - 180.0;
+    double centerX = this->width() / 2.25;
+    double centerY = this->height() + radius - 200.0;
     double startAngle = -totalAngle / 2.0;
     double spreadOffset = 40.0;
 

@@ -21,7 +21,7 @@ AttackCard::AttackCard(QString name,
 Strike::Strike(QGraphicsItem *parent)
     : AttackCard("Strike", 1, "Deal 6 damage", 6, true, false, false, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Attack/Strike_R.png";
+    m_sourcePath = ":/Cards/Pics/Cards/Attack/strike-ironclad.png";
     loadPixmap();
 }
 
