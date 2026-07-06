@@ -290,3 +290,38 @@ void Hemokinesis::upgrade()
     m_sourcePath = "";
     loadPixmap();
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+BloodForBlood::BloodForBlood(QGraphicsItem *parent)
+    : AttackCard("Blood for Blood",
+                 4,
+                 "Deal 18 damage\nCosts 1 less for every time you take unblocked damage",
+                 18,
+                 true,
+                 false,
+                 false,
+                 parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Attack/BloodForBlood.png";
+    loadPixmap();
+}
+
+void BloodForBlood::applyEffect(Player *player, Enemy *target)
+{
+    if (target && player)
+        target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
+}
+
+void BloodForBlood::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_energyCost -= 1;
+    m_damage += 4;
+}
+
+// بقیش باید با سیگنال اسلات تو کلاس پلیر یا کمبتنت پیاده سازی بشه

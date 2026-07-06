@@ -277,7 +277,7 @@ FeelNoPain::FeelNoPain(QGraphicsItem *parent)
                 "Every time a card is Exhausted, gain 3 block",
                 false,
                 false,
-                false, // نیازی به هدف‌گیری ندارد
+                false,
                 parent)
 {
     m_sourcePath = ":/cards/Pics/Cards/Power/FeelNoPain.png";
@@ -296,7 +296,4 @@ void FeelNoPain::upgrade()
 {
     if (m_isUpgraded)
         return;
-
-    Card::upgrade();
-    // m_description = "Every time a card is Exhausted, gain 4 block";
 }

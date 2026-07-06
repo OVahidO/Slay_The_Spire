@@ -92,4 +92,12 @@ public:
     void upgrade() override;
 };
 
+class BloodForBlood : public AttackCard
+{
+public:
+    explicit BloodForBlood(QGraphicsItem *parent = nullptr);
+    void applyEffect(Player *player, Enemy *target) override;
+    void upgrade() override;
+};
+
 #endif // ATTACKCARDS_H
