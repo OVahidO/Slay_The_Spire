@@ -19,7 +19,7 @@ SkillCard::~SkillCard() {}
 Defend::Defend(QGraphicsItem *parent)
     : SkillCard("Defend", 1, "Gain 5 block", false, false, true, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Skill/Defend_R.png";
+    m_sourcePath = ":/Cards/Pics/Cards/Skill/defend-ironclad.png";
     loadPixmap();
 }
 

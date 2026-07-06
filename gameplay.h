@@ -25,7 +25,7 @@ class GamePlay : public QWidget
     Q_OBJECT
 
 public:
-    explicit GamePlay(QWidget *parent = nullptr);
+    explicit GamePlay(Player* player, QWidget *parent = nullptr);
     ~GamePlay();
 
     int turn() const;
@@ -68,8 +68,6 @@ public slots:
     void playedCardHandler(Card *card);
 
     void updateHpLabels();
-
-    void updateCoinLabel();
 
     void updateEnergyLabel();
 
