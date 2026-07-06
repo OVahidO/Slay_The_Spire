@@ -51,4 +51,18 @@
         <file>Pics/Cards/Upgraded/Skill/Red-MetallicizePlus.png</file>
         <file>Pics/Cards/Upgraded/Skill/Red-PowerThroughPlus.png</file>
     </qresource>
+    <qresource prefix="/icons"/>
+    <qresource lang=" " prefix="/icons">
+        <file>Pics/Icons/hpIcon.png</file>
+        <file>Pics/Icons/Gold.png</file>
+        <file>Pics/Icons/DrawPileIcon.png</file>
+        <file>Pics/Icons/deck.png</file>
+        <file>Pics/Icons/floor.png</file>
+        <file>Pics/Icons/map.png</file>
+        <file>Pics/Icons/settings.png</file>
+        <file>Pics/Icons/bar.png</file>
+        <file>Pics/Icons/discardPile.png</file>
+        <file>Pics/Icons/energyRedVFX.png</file>
+        <file>Pics/Icons/endTurnButton.png</file>
+    </qresource>
 </RCC>

@@ -23,18 +23,23 @@ Card::Card(QString name,
     if((type == CardType::Status && name != "SLIME") || (type == CardType::Curse && name != "J_A_X"))
         setAcceptHoverEvents(false);
     else
+    {
         setAcceptHoverEvents(true);
+        this->setFlag(QGraphicsItem::ItemIsMovable);
+        this->setFlag(QGraphicsItem::ItemIsSelectable);
+    }
+
+    this->setTransformOriginPoint(85 , 120);
 
     m_hoverAnimation = new QVariantAnimation(this);
     m_hoverAnimation->setDuration(150);
-    this->setTransformOriginPoint(50 , 75);
 
     connect(m_hoverAnimation, &QVariantAnimation::valueChanged, this, [this](const QVariant& value){this->setScale(value.toReal());});
 }
 
 QRectF Card::boundingRect() const
 {
-    return QRectF(0, 0, 250, 322);
+    return QRectF(0, 0, 170, 240);
 }
 
 void Card::loadPixmap()
@@ -67,6 +72,8 @@ void Card::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
     m_hoverAnimation->setStartValue(this->scale());
     m_hoverAnimation->setEndValue(1.2);
     m_hoverAnimation->start();
+
+    emit cardEnterrdMouse(this);
 }
 
 void Card::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
@@ -79,6 +86,8 @@ void Card::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
     m_hoverAnimation->start();
 
     this->setZValue(m_oldZValue);
+
+    emit cardLeavedMouse(nullptr);
 }
 
 void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
@@ -108,7 +117,10 @@ void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         }
     }
     if(this->m_needTarget && (player || target))
-        emit this->targetCardPlayed(this, player, target);
+    {
+        if((this->cardType() == CardType::Attack && target) || (this->cardType() != CardType::Attack && player))
+            emit this->targetCardPlayed(this, player, target);
+    }
     else if(!this->m_needTarget)
         emit this->noTargetCardPlayed(this);
 

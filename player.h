@@ -19,12 +19,14 @@ public:
 
     int coin() const;
     int energy() const;
+    int maxEnergy() const;
     int handSize() const;
 
     QVector<Card *> &HandsCards();
 
     void setCoin(int coin);
     void setEnergy(int energy);
+    void setMaxEnergy(int maxEnergy);
     void setHandSize(int handSize);
 
     bool cannotPlayAttacks() const;
@@ -33,15 +35,21 @@ public:
     void addMaxHp(int n = 1);
     void addEnergy(int n = 1);
     void loseHp(int n = 1);
+    void loseEnergy(int n = 1);
     void heal(int n = 1);
 
 signals:
+    void hpChanged();
+    void coinChanged();
+    void energyChanged();
+    void valueChanged();
 
 private:
     bool m_cannotPlayAttacks = false;
 
     int m_coin = 0;
     int m_energy = 3;
+    int m_maxEnergy = 3;
     int m_handSize = 5;
 
     QVector<Card *> m_HandsCards;
