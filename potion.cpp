@@ -8,6 +8,15 @@ Potion::Potion(int value,QString resourcePath, QWidget *parent)
     , ui(new Ui::Potion)
 {
     ui->setupUi(this);
+    setFixedSize(40, 40);
+
+    ui->potionIcon->setFixedSize(30, 30);
+    ui->potionIcon->setScaledContents(false);
+    ui->potionIcon->setAlignment(Qt::AlignCenter);
+    m_resourcePath = resourcePath;
+    QPixmap pix(m_resourcePath);
+    ui->potionIcon->setPixmap(pix.scaled(30,30,Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
     setValue(value);
 }
 
@@ -24,6 +33,14 @@ int Potion::value() const
 void Potion::setValue(int value)
 {
     m_value = (value < 0)? 0 : value;
+}
+
+void Potion::mousePressEvent(QMouseEvent* event)
+{
+
+    emit potionClicked(this);
+
+    QWidget::mousePressEvent(event);
 }
 
 BlockPotion::BlockPotion(QWidget *parent)
@@ -62,7 +79,7 @@ SwiftPotion::SwiftPotion(QWidget *parent)
 Fairy_in_a_Bottle::Fairy_in_a_Bottle(QWidget *parent)
     :Potion(0, ":/Potions/Pics/Potions/fairy_in_a_bottle.png", parent)
 {
-    this->disconnect();
+    this->setEnabled(false);
 }
 
 void Fairy_in_a_Bottle::applyEffect(Combatant* c)
@@ -72,4 +89,14 @@ void Fairy_in_a_Bottle::applyEffect(Combatant* c)
     {
         p->heal(p->maxHP()*0.3);
     }
+}
+
+emptyBottle::emptyBottle(QWidget *parent)
+    :Potion(0, ":/Potions/Pics/Potions/radiant_tincture.png", parent)
+{
+    this->setEnabled(false);
+}
+
+void emptyBottle::applyEffect(Combatant* c)
+{
 }

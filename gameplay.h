@@ -14,6 +14,7 @@
 class Player;
 class Enemy;
 class Card;
+class Potion;
 //////////////////////////////
 
 namespace Ui {
@@ -66,6 +67,8 @@ public slots:
     void noTargetCardsHandler(Card *card);
 
     void playedCardHandler(Card *card);
+
+    void usedPotionHandler(Potion* potion);
 
     void updateHpLabels();
 

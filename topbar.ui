@@ -71,7 +71,7 @@ QPushButton:pressed {
      <property name="frameShadow">
       <enum>QFrame::Shadow::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0,0,0,0,0">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0,0,0,0,0,0">
       <property name="spacing">
        <number>7</number>
       </property>
@@ -202,6 +202,9 @@ QPushButton:pressed {
          </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout"/>
       </item>
       <item>
        <spacer name="horizontalSpacer">

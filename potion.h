@@ -26,9 +26,10 @@ signals:
     void potionClicked(Potion* potion);
 
 protected:
-    //void mousePressEvent(QMouseEvent* event) override;
     int m_value;
     QString m_resourcePath;
+
+    void mousePressEvent(QMouseEvent* event) override;
 
 private:
     Ui::Potion *ui;
@@ -67,6 +68,13 @@ class Fairy_in_a_Bottle : public Potion
 {
 public:
     explicit Fairy_in_a_Bottle(QWidget *parent = nullptr);
+    void applyEffect(Combatant* c) override;
+};
+
+class emptyBottle : public Potion
+{
+public:
+    explicit emptyBottle(QWidget *parent = nullptr);
     void applyEffect(Combatant* c) override;
 };
 

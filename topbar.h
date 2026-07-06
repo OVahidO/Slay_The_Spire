@@ -4,6 +4,7 @@
 #include <QWidget>
 
 class Player;
+class Potion;
 
 namespace Ui {
 class Topbar;
@@ -20,10 +21,16 @@ public:
 public slots:
     void updateHpLabel();
     void updateCoinLabel();
+    void potionClicked(Potion* potion);
+
+signals:
+    void potionUsed(Potion* potion);
 
 private:
     Ui::Topbar *ui;
     Player* m_player;
+    bool m_isInCombat = false;
+    QVector<Potion*> m_emptyBottles;
 };
 
 #endif // TOPBAR_H

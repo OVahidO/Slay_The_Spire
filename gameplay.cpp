@@ -3,6 +3,7 @@
 #include "skillcards.h"
 #include "enemy.h"
 #include "player.h"
+#include "potion.h"
 #include "statuscards.h"
 #include "ui_gameplay.h"
 #include <QString>
@@ -309,6 +310,30 @@ void GamePlay::playedCardHandler(Card *card)
     });
 
     cardToDiscardPileAnim->start();
+}
+
+void GamePlay::usedPotionHandler(Potion* potion)
+{
+    if(dynamic_cast<FirePotion*>(potion))
+        for(Enemy* enemy : m_enemys)
+        {
+            potion->applyEffect(enemy);
+        }
+    else
+    {
+        if(m_player)
+            potion->applyEffect(m_player);
+    }
+
+    if(m_player)
+    {
+        auto it = std::find(m_player->Potions().begin(), m_player->Potions().end(), potion);
+        if(it != m_player->Potions().end())
+        {
+            m_player->Potions().erase(it);
+            delete potion;
+        }
+    }
 }
 
 void GamePlay::updateHpLabels()

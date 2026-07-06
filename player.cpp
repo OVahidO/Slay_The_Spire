@@ -37,6 +37,11 @@ QVector<Card *> &Player::HandsCards()
     return m_HandsCards;
 }
 
+QVector<Potion *> &Player::Potions()
+{
+    return m_Potions;
+}
+
 void Player::setCoin(int coin)
 {
     m_coin = (coin < 0) ? 0 : coin;

@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
     GamePlay* g = new GamePlay(player, this);
     int gamePlay_index = ui->stackedWidget->addWidget(g);
     ui->stackedWidget->setCurrentIndex(gamePlay_index);
+
+    connect(m_topbar, &Topbar::potionUsed, g, &GamePlay::usedPotionHandler);
 }
 
 MainWindow::~MainWindow()

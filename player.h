@@ -23,6 +23,7 @@ public:
     int handSize() const;
 
     QVector<Card *> &HandsCards();
+    QVector<Potion *> &Potions();
 
     void setCoin(int coin);
     void setEnergy(int energy);
