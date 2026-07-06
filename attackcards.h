@@ -100,4 +100,13 @@ public:
     void upgrade() override;
 };
 
+class Whirlwind : public AttackCard
+{
+public:
+    explicit Whirlwind(QGraphicsItem *parent = nullptr);
+    void applyEffect(Player *player, Enemy *target) override;
+    bool applyEffect(GamePlay *gameplay) override;
+    void upgrade() override;
+};
+
 #endif // ATTACKCARDS_H

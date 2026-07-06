@@ -325,3 +325,49 @@ void BloodForBlood::upgrade()
 }
 
 // بقیش باید با سیگنال اسلات تو کلاس پلیر یا کمبتنت پیاده سازی بشه
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Whirlwind::Whirlwind(QGraphicsItem *parent)
+    : AttackCard("Whirlwind",
+                 -1, //X
+                 "Deal 5 damage to all enemies X times",
+                 5,
+                 false,
+                 false,
+                 false,
+                 parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Attack/Whirlwind.png";
+    loadPixmap();
+}
+
+void Whirlwind::applyEffect(Player *player, Enemy *target)
+{
+    Q_UNUSED(player);
+    Q_UNUSED(target);
+}
+
+bool Whirlwind::applyEffect(GamePlay *gameplay)
+{
+    if (gameplay && gameplay->player()) {
+        int xCount = gameplay->player()->energy();
+
+        for (int i = 0; i < xCount; ++i)
+            gameplay->takeDamageToAllEnemies(m_damage);
+
+        gameplay->player()->setEnergy(0);
+    }
+
+    return true;
+}
+
+void Whirlwind::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_damage += 3;
+}
