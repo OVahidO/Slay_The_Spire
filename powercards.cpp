@@ -370,14 +370,22 @@ void FeelNoPain::applyEffect(Player *player, Enemy *target)
 {
     Q_UNUSED(target);
 
-    // if (player) {
-    // }
+    if (player) {
+        player->powerEffects().append(
+            PowerEffect{m_blockAmount,
+                        [](Combatant *self, int value, GamePlay *) { self->addBlock(value); },
+                        PowerUseTime::OnExhaust});
+    }
 }
 
 void FeelNoPain::upgrade()
 {
     if (m_isUpgraded)
         return;
+
+    Card::upgrade();
+
+    m_blockAmount++;
 }
 
 Card *FeelNoPain::clone() const

@@ -100,6 +100,9 @@ public:
     void applyEffect(Player *player, Enemy *target) override;
     void upgrade() override;
     Card *clone() const override;
+
+private:
+    int m_blockAmount = 3;
 };
 
 #endif // POWERCARDS_H
