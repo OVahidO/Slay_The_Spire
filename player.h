@@ -4,7 +4,7 @@
 #include "combatant.h"
 
 class Card;
-class Player;
+class Potion;
 
 class Player : public Combatant
 {
@@ -53,6 +53,7 @@ private:
     int m_handSize = 5;
 
     QVector<Card *> m_HandsCards;
+    QVector<Potion *> m_Potions;
 };
 
 #endif // PLAYER_H
