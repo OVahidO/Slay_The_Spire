@@ -39,6 +39,18 @@ void Inflame::upgrade()
     m_strengthValue += 1;
 }
 
+Card *Inflame::clone() const
+{
+    Inflame *copy = new Inflame();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Brutality::Brutality(QGraphicsItem *parent)
@@ -82,6 +94,18 @@ void Brutality::upgrade()
     // will be implemented
 }
 
+Card *Brutality::clone() const
+{
+    Brutality *copy = new Brutality();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 DemonForm::DemonForm(QGraphicsItem *parent)
@@ -120,6 +144,18 @@ void DemonForm::upgrade()
     m_strengthPerTurn += 1;
 }
 
+Card *DemonForm::clone() const
+{
+    DemonForm *copy = new DemonForm();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Metallicize::Metallicize(QGraphicsItem *parent)
@@ -149,6 +185,18 @@ void Metallicize::upgrade()
     Card::upgrade();
 
     m_blockPerTurn += 1;
+}
+
+Card *Metallicize::clone() const
+{
+    Metallicize *copy = new Metallicize();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,6 +241,18 @@ void Berserk::upgrade()
     m_vulnerableAmount -= 1;
 }
 
+Card *Berserk::clone() const
+{
+    Berserk *copy = new Berserk();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 DarkEmbrace::DarkEmbrace(QGraphicsItem *parent)
@@ -235,6 +295,18 @@ void DarkEmbrace::upgrade()
     m_energyCost -= 1;
 }
 
+Card *DarkEmbrace::clone() const
+{
+    DarkEmbrace *copy = new DarkEmbrace();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Barricade::Barricade(QGraphicsItem *parent)
@@ -265,8 +337,18 @@ void Barricade::upgrade()
 
     Card::upgrade();
     m_energyCost -= 1;
-    // m_sourcePath = "";
-    // loadPixmap();
+}
+
+Card *Barricade::clone() const
+{
+    Barricade *copy = new Barricade();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -296,4 +378,16 @@ void FeelNoPain::upgrade()
 {
     if (m_isUpgraded)
         return;
+}
+
+Card *FeelNoPain::clone() const
+{
+    FeelNoPain *copy = new FeelNoPain();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }

@@ -41,6 +41,18 @@ void Strike::upgrade()
     m_damage += 3;
 }
 
+Card *Strike::clone() const
+{
+    Strike *copy = new Strike();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Bludgeon::Bludgeon(QGraphicsItem *parent)
@@ -64,6 +76,18 @@ void Bludgeon::upgrade()
     Card::upgrade();
 
     m_damage += 10;
+}
+
+Card *Bludgeon::clone() const
+{
+    Bludgeon *copy = new Bludgeon();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,6 +128,18 @@ void Reaper::upgrade()
     m_damage += 1;
 }
 
+Card *Reaper::clone() const
+{
+    Reaper *copy = new Reaper();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Feed::Feed(QGraphicsItem *parent)
@@ -139,6 +175,18 @@ void Feed::upgrade()
 
     m_damage += 2;
     m_increaseMaxHp += 1;
+}
+
+Card *Feed::clone() const
+{
+    Feed *copy = new Feed();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,6 +232,18 @@ void Immolate::upgrade()
     loadPixmap();
 }
 
+Card *Immolate::clone() const
+{
+    Immolate *copy = new Immolate();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Bash::Bash(QGraphicsItem *parent)
@@ -213,6 +273,18 @@ void Bash::upgrade()
 
     m_sourcePath = "";
     loadPixmap();
+}
+
+Card *Bash::clone() const
+{
+    Bash *copy = new Bash();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -260,6 +332,18 @@ void Clash::upgrade()
     loadPixmap();
 }
 
+Card *Clash::clone() const
+{
+    Clash *copy = new Clash();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Hemokinesis::Hemokinesis(QGraphicsItem *parent)
@@ -289,6 +373,18 @@ void Hemokinesis::upgrade()
 
     m_sourcePath = "";
     loadPixmap();
+}
+
+Card *Hemokinesis::clone() const
+{
+    Hemokinesis *copy = new Hemokinesis();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -325,6 +421,18 @@ void BloodForBlood::upgrade()
 }
 
 // بقیش باید با سیگنال اسلات تو کلاس پلیر یا کمبتنت پیاده سازی بشه
+
+Card *BloodForBlood::clone() const
+{
+    BloodForBlood *copy = new BloodForBlood();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -370,4 +478,16 @@ void Whirlwind::upgrade()
     Card::upgrade();
 
     m_damage += 3;
+}
+
+Card *Whirlwind::clone() const
+{
+    Whirlwind *copy = new Whirlwind();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }

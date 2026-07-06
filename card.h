@@ -14,6 +14,8 @@ class GamePlay;
 
 enum class CardType { Attack, Skill, Power, Status, Curse };
 
+enum class CardLifetime { Permanent, EndOfCombat };
+
 class Card : public QGraphicsObject
 {
     Q_OBJECT
@@ -49,8 +51,13 @@ public:
     virtual void applyEffect(Player *player, Enemy *targetEnemy) = 0;
     virtual bool applyEffect(GamePlay *gameplay);
 
+    virtual Card *clone() const = 0;
+
+    CardLifetime lifetime() const;
+    void setLifetime(CardLifetime lifetime);
+
 signals:
-    void targetCardPlayed(Card* card, Player* player, Enemy* targetEnemy);
+    void targetCardPlayed(Card *card, Player *player, Enemy *targetEnemy);
     void noTargetCardPlayed(Card* card);
 
 protected:
@@ -72,6 +79,8 @@ protected:
     bool m_needTarget;
     bool m_isExhaust;
     bool m_isUpgraded = false;
+
+    CardLifetime m_lifetime = CardLifetime::Permanent;
 };
 
 #endif // CARD_H

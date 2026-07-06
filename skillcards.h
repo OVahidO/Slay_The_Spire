@@ -22,6 +22,7 @@ public:
     explicit Defend(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
     void upgrade() override;
+    Card *clone() const override;
 
 private:
     int m_blockAmount = 5;
@@ -34,6 +35,7 @@ public:
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
     bool applyEffect(GamePlay* gameplay) override;
     void upgrade() override;
+    Card *clone() const override;
 };
 
 class Limit_Break : public SkillCard
@@ -42,6 +44,7 @@ public:
     explicit Limit_Break(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
     void upgrade() override;
+    Card *clone() const override;
 };
 
 class Offering : public SkillCard
@@ -51,6 +54,7 @@ public:
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
     bool applyEffect(GamePlay* gameplay) override;
     void upgrade() override;
+    Card *clone() const override;
 
 private:
     int m_drawCount = 3;
@@ -62,6 +66,7 @@ public:
     explicit Impervious(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
     void upgrade() override;
+    Card *clone() const override;
 
 private:
     int m_blockAmount = 30;
@@ -74,6 +79,7 @@ public:
     void applyEffect(Player* player = nullptr, Enemy* targetEnemy = nullptr) override;
     bool applyEffect(GamePlay* gameplay) override;
     void upgrade() override;
+    Card *clone() const override;
 
 private:
     int m_blockAmount = 15;
@@ -85,6 +91,7 @@ public:
     explicit Bloodletting(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
     void upgrade() override;
+    Card *clone() const override;
 
 private:
     int m_energyGain = 2;
@@ -96,6 +103,17 @@ public:
     explicit Entrench(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
     void upgrade() override;
+    Card *clone() const override;
+};
+
+class Dual_Wield : public SkillCard
+{
+public:
+    explicit Dual_Wield(QGraphicsItem *parent = nullptr);
+    void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
+    bool applyEffect(GamePlay *gameplay) override;
+    void upgrade() override;
+    Card *clone() const override;
 };
 
 #endif // SKILLCARDS_H

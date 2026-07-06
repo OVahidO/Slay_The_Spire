@@ -174,3 +174,13 @@ void Card::upgrade()
 {
     m_isUpgraded = true;
 }
+
+CardLifetime Card::lifetime() const
+{
+    return m_lifetime;
+}
+
+void Card::setLifetime(CardLifetime lifetime)
+{
+    m_lifetime = lifetime;
+}
