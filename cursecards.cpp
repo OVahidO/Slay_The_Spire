@@ -16,7 +16,7 @@ CurseCard::CurseCard(QString name,
 J_A_X::J_A_X(QGraphicsItem *parent)
     : CurseCard("J_A_X", 0, "Lose 3 HP - Gain 2 Strength", false, false, true, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Skill/J.A.X.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Curse/jax.png";
     loadPixmap();
 }
 
@@ -38,7 +38,7 @@ CurseOfTheBell::CurseOfTheBell(QGraphicsItem *parent)
                 false,
                 parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Curse/CurseoftheBell.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Curse/curse_of_the_bell.png";
     loadPixmap();
 }
 
@@ -57,7 +57,7 @@ Regret::Regret(QGraphicsItem *parent)
                 false,
                 parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Curse/Regret.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Curse/regret.png";
     loadPixmap();
 }
 

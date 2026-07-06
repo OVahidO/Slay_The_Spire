@@ -1,56 +1,4 @@
 <RCC>
-    <qresource prefix="/Cards">
-        <file>Pics/Cards/Attack/bash.png</file>
-        <file>Pics/Cards/Attack/bludgeon.png</file>
-        <file>Pics/Cards/Attack/clash.png</file>
-        <file>Pics/Cards/Attack/feed.png</file>
-        <file>Pics/Cards/Attack/hemokinesis.png</file>
-        <file>Pics/Cards/Attack/Red-Immolate.png</file>
-        <file>Pics/Cards/Attack/Red-Reaper.png</file>
-        <file>Pics/Cards/Attack/strike-ironclad.png</file>
-        <file>Pics/Cards/Curse/curse-of-the-bell.png</file>
-        <file>Pics/Cards/Curse/regret.png</file>
-        <file>Pics/Cards/Power/dark-embrace.png</file>
-        <file>Pics/Cards/Power/demon-form.png</file>
-        <file>Pics/Cards/Power/inflame.png</file>
-        <file>Pics/Cards/Power/Red-Berserk.png</file>
-        <file>Pics/Cards/Power/Red-Brutality.png</file>
-        <file>Pics/Cards/Skill/bloodletting.png</file>
-        <file>Pics/Cards/Skill/Colorless-J.A.X.png</file>
-        <file>Pics/Cards/Skill/defend-ironclad.png</file>
-        <file>Pics/Cards/Skill/impervious.png</file>
-        <file>Pics/Cards/Skill/offering.png</file>
-        <file>Pics/Cards/Skill/Red-Exhume.png</file>
-        <file>Pics/Cards/Skill/Red-LimitBreak.png</file>
-        <file>Pics/Cards/Skill/Red-Metallicize.png</file>
-        <file>Pics/Cards/Skill/Red-PowerThrough.png</file>
-        <file>Pics/Cards/Status/burn.png</file>
-        <file>Pics/Cards/Status/dazed.png</file>
-        <file>Pics/Cards/Status/slimed.png</file>
-        <file>Pics/Cards/Status/wound.png</file>
-        <file>Pics/Cards/Upgraded/Attack/bash-upgraded.png</file>
-        <file>Pics/Cards/Upgraded/Attack/bludgeon-upgraded.png</file>
-        <file>Pics/Cards/Upgraded/Attack/clash-upgraded.png</file>
-        <file>Pics/Cards/Upgraded/Attack/feed-upgraded.png</file>
-        <file>Pics/Cards/Upgraded/Attack/hemokinesis-upgraded.png</file>
-        <file>Pics/Cards/Upgraded/Attack/Red-ImmolatePlus.png</file>
-        <file>Pics/Cards/Upgraded/Attack/Red-ReaperPlus.png</file>
-        <file>Pics/Cards/Upgraded/Attack/strike-ironclad-upgraded.png</file>
-        <file>Pics/Cards/Upgraded/Power/dark-embrace-upgraded.png</file>
-        <file>Pics/Cards/Upgraded/Power/demon-form-upgraded.png</file>
-        <file>Pics/Cards/Upgraded/Power/inflame-upgraded.png</file>
-        <file>Pics/Cards/Upgraded/Power/Red-BerserkPlus.png</file>
-        <file>Pics/Cards/Upgraded/Power/Red-BrutalityPlus.png</file>
-        <file>Pics/Cards/Upgraded/Skill/bloodletting-upgraded.png</file>
-        <file>Pics/Cards/Upgraded/Skill/Colorless-J.A.X.Plus.png</file>
-        <file>Pics/Cards/Upgraded/Skill/defend-ironclad-upgraded.png</file>
-        <file>Pics/Cards/Upgraded/Skill/impervious-upgraded.png</file>
-        <file>Pics/Cards/Upgraded/Skill/offering-upgraded.png</file>
-        <file>Pics/Cards/Upgraded/Skill/Red-LimitBreakPlus.png</file>
-        <file>Pics/Cards/Upgraded/Skill/Red-Metallicize.png</file>
-        <file>Pics/Cards/Upgraded/Skill/Red-MetallicizePlus.png</file>
-        <file>Pics/Cards/Upgraded/Skill/Red-PowerThroughPlus.png</file>
-    </qresource>
     <qresource prefix="/icons"/>
     <qresource lang=" " prefix="/icons">
         <file>Pics/Icons/hpIcon.png</file>
@@ -64,5 +12,41 @@
         <file>Pics/Icons/discardPile.png</file>
         <file>Pics/Icons/energyRedVFX.png</file>
         <file>Pics/Icons/endTurnButton.png</file>
+    </qresource>
+    <qresource prefix="/card-art">
+        <file>Pics/Cards/Attack/bash.png</file>
+        <file>Pics/Cards/Attack/bludgeon.png</file>
+        <file>Pics/Cards/Attack/clash.png</file>
+        <file>Pics/Cards/Attack/feed.png</file>
+        <file>Pics/Cards/Attack/hemokinesis.png</file>
+        <file>Pics/Cards/Attack/Red-BloodforBlood-Art.png</file>
+        <file>Pics/Cards/Attack/Red-Immolate-Art.png</file>
+        <file>Pics/Cards/Attack/Red-Reaper-Art.png</file>
+        <file>Pics/Cards/Attack/strike_ironclad.png</file>
+        <file>Pics/Cards/Attack/whirlwind.png</file>
+        <file>Pics/Cards/Curse/curse_of_the_bell.png</file>
+        <file>Pics/Cards/Curse/jax.png</file>
+        <file>Pics/Cards/Curse/regret.png</file>
+        <file>Pics/Cards/Power/barricade.png</file>
+        <file>Pics/Cards/Power/dark_embrace.png</file>
+        <file>Pics/Cards/Power/demon_form.png</file>
+        <file>Pics/Cards/Power/feel_no_pain.png</file>
+        <file>Pics/Cards/Power/inflame.png</file>
+        <file>Pics/Cards/Power/Red-Berserk-Art.png</file>
+        <file>Pics/Cards/Power/Red-Brutality-Art.png</file>
+        <file>Pics/Cards/Power/Red-Metallicize-Art.png</file>
+        <file>Pics/Cards/Skill/bloodletting.png</file>
+        <file>Pics/Cards/Skill/defend_ironclad.png</file>
+        <file>Pics/Cards/Skill/dual_wield.png</file>
+        <file>Pics/Cards/Skill/entrench.png</file>
+        <file>Pics/Cards/Skill/impervious.png</file>
+        <file>Pics/Cards/Skill/offering.png</file>
+        <file>Pics/Cards/Skill/Red-Exhume-Art.png</file>
+        <file>Pics/Cards/Skill/Red-LimitBreak-Art.png</file>
+        <file>Pics/Cards/Skill/Red-PowerThrough-Art.png</file>
+        <file>Pics/Cards/Status/burn.png</file>
+        <file>Pics/Cards/Status/dazed.png</file>
+        <file>Pics/Cards/Status/slimed.png</file>
+        <file>Pics/Cards/Status/wound.png</file>
     </qresource>
 </RCC>

@@ -1,11 +1,16 @@
 #ifndef CARD_H
 #define CARD_H
 
+#include <QGraphicsDropShadowEffect>
 #include <QGraphicsObject>
+#include <QLinearGradient>
 #include <QObject>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPixmap>
+#include <QRegularExpression>
 #include <QString>
+#include <QTextDocument>
 #include <QVariantAnimation>
 
 class Enemy;
@@ -75,6 +80,10 @@ protected:
     bool m_needTarget;
     bool m_isExhaust;
     bool m_isUpgraded = false;
+
+    QColor colorForCardType(CardType type) const;
+    QString highlightKeywords(const QString &text) const;
+    int m_baseEnergyCost;
 };
 
 #endif // CARD_H

@@ -17,7 +17,7 @@ PowerCard::PowerCard(QString name,
 Inflame::Inflame(QGraphicsItem *parent)
     : PowerCard("Inflame", 1, "Gain 2 Strength", false, false, false, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Power/Inflame.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Power/inflame.png";
     loadPixmap();
 }
 
@@ -50,7 +50,7 @@ Brutality::Brutality(QGraphicsItem *parent)
                 true,
                 parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Power/Brutality.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Power/Red-Brutality-Art.png";
     loadPixmap();
 }
 
@@ -93,7 +93,7 @@ DemonForm::DemonForm(QGraphicsItem *parent)
                 true,
                 parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Power/DemonForm.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Power/demon_form.png";
     loadPixmap();
 }
 
@@ -125,7 +125,7 @@ void DemonForm::upgrade()
 Metallicize::Metallicize(QGraphicsItem *parent)
     : PowerCard("Metallicize", 1, "At the end of your turn get 3 block", false, false, false, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Power/Metallicize.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Power/Red-Metallicize-Art.png";
     loadPixmap();
 }
 
@@ -162,7 +162,7 @@ Berserk::Berserk(QGraphicsItem *parent)
                 true,
                 parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Power/Berserk.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Power/Red-Berserk-Art.png";
     loadPixmap();
 }
 
@@ -204,7 +204,7 @@ DarkEmbrace::DarkEmbrace(QGraphicsItem *parent)
                 false,
                 parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Power/DarkEmbrace.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Power/dark_embrace.png";
     loadPixmap();
 }
 

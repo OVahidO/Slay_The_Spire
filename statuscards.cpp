@@ -15,7 +15,7 @@ StatusCard::~StatusCard() {}
 DAZE::DAZE(QGraphicsItem *parent)
     : StatusCard("DAZE", 0, "", false, false, false, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Status/Dazed.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Status/dazed.png";
     loadPixmap();
 }
 
@@ -28,7 +28,7 @@ void DAZE::applyEffect(Player *player, Enemy *targetEnemy)
 SLIME::SLIME(QGraphicsItem *parent)
     : StatusCard("SLIME", 1, "", false, true, false, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Status/Slimed.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Status/slimed.png";
     loadPixmap();
 }
 
@@ -41,7 +41,7 @@ void SLIME::applyEffect(Player *player, Enemy *targetEnemy)
 WOUND::WOUND(QGraphicsItem *parent)
     : StatusCard("WOUND", 0, "", false, false, false, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Status/Wound.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Status/wound.png";
     loadPixmap();
 }
 
@@ -60,7 +60,7 @@ BURN::BURN(QGraphicsItem *parent)
                  false,
                  parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Status/Burn.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Status/burn.png";
     loadPixmap();
 }
 

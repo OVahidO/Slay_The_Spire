@@ -21,7 +21,7 @@ AttackCard::AttackCard(QString name,
 Strike::Strike(QGraphicsItem *parent)
     : AttackCard("Strike", 1, "Deal 6 damage", 6, true, false, false, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Attack/Strike_R.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Attack/strike_ironclad.png";
     loadPixmap();
 }
 
@@ -46,7 +46,7 @@ void Strike::upgrade()
 Bludgeon::Bludgeon(QGraphicsItem *parent)
     : AttackCard("Bludgeon", 3, "Deal 32 damage", 32, true, false, true, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Attack/Bludgeon.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Attack/bludgeon.png";
     loadPixmap();
 }
 
@@ -78,7 +78,7 @@ Reaper::Reaper(QGraphicsItem *parent)
                  true,
                  parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Attack/Reaper.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Attack/Red-Reaper-Art.png";
     loadPixmap();
 }
 
@@ -116,7 +116,7 @@ Feed::Feed(QGraphicsItem *parent)
                  true,
                  parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Attack/Feed.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Attack/feed.png";
     loadPixmap();
 }
 
@@ -153,7 +153,7 @@ Immolate::Immolate(QGraphicsItem *parent)
                  true,
                  parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Attack/Immolate.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Attack/Red-Immolate-Art.png";
     loadPixmap();
 }
 
@@ -189,7 +189,7 @@ void Immolate::upgrade()
 Bash::Bash(QGraphicsItem *parent)
     : AttackCard("Bash", 2, "Deal 8 damage\nApply 2 Vulnerable", 8, true, false, false, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Attack/Bash.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Attack/bash.png";
     loadPixmap();
 }
 
@@ -227,7 +227,7 @@ Clash::Clash(QGraphicsItem *parent)
                  false,
                  parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Attack/Clash.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Attack/clash.png";
     loadPixmap();
 }
 
@@ -265,7 +265,7 @@ void Clash::upgrade()
 Hemokinesis::Hemokinesis(QGraphicsItem *parent)
     : AttackCard("Hemokinesis", 1, "Lose 2 HP\nDeal 15 damage", 15, true, false, false, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Attack/Hemokinesis.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Attack/hemokinesis.png";
     loadPixmap();
 }
 
