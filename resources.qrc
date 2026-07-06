@@ -39,5 +39,8 @@
         <file>Pics/Icons/map.png</file>
         <file>Pics/Icons/settings.png</file>
         <file>Pics/Icons/bar.png</file>
+        <file>Pics/Icons/discardPile.png</file>
+        <file>Pics/Icons/energyRedVFX.png</file>
+        <file>Pics/Icons/endTurnButton.png</file>
     </qresource>
 </RCC>

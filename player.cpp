@@ -22,6 +22,11 @@ int Player::energy() const
     return m_energy;
 }
 
+int Player::maxEnergy() const
+{
+    return m_maxEnergy;
+}
+
 int Player::handSize() const
 {
     return m_handSize;
@@ -40,6 +45,13 @@ void Player::setCoin(int coin)
 void Player::setEnergy(int energy)
 {
     m_energy = (energy < 0) ? 0 : energy;
+    emit energyChanged();
+}
+
+void Player::setMaxEnergy(int maxEnergy)
+{
+    m_maxEnergy = (maxEnergy < 0) ? 0 : maxEnergy;
+    emit energyChanged();
 }
 
 void Player::setHandSize(int handSize)
@@ -55,11 +67,20 @@ void Player::addMaxHp(int n)
 void Player::addEnergy(int n)
 {
     m_energy += (n < 0) ? 0 : n;
+    emit energyChanged();
 }
 
 void Player::loseHp(int n)
 {
     takeDamage(n + m_block);
+}
+
+void Player::loseEnergy(int n)
+{
+    m_energy -= (n < 0) ? 0 : n;
+    if(m_energy < 0)
+        m_energy = 0;
+    emit energyChanged();
 }
 
 void Player::heal(int n)
