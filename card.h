@@ -92,11 +92,9 @@ protected:
     bool m_isExhaust;
     bool m_isUpgraded = false;
 
-<<<<<<< HEAD
     CardLifetime m_lifetime = CardLifetime::Permanent;
 
     bool m_isInnate = false;
-=======
     QColor colorForCardType(CardType type) const;
     QString highlightKeywords(const QString &text) const;
     void drawTypeGem(QPainter *painter, const QRectF &rect) const;
@@ -104,7 +102,6 @@ protected:
     QPixmap m_typeIcon;
 
     int m_baseEnergyCost;
->>>>>>> card-design
 };
 
 #endif // CARD_H
