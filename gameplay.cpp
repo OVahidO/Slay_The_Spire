@@ -131,12 +131,14 @@ void GamePlay::fillingDrawPile()
 {
     if (m_discardPile.empty())
         return;
-    std::random_device rand;
-    std::mt19937 g(rand());
+
+    std::random_device rd;
+    std::mt19937 g(rd());
 
     std::shuffle(m_discardPile.begin(), m_discardPile.end(), g);
 
-    m_drawPile = m_discardPile;
+    m_drawPile.insert(m_drawPile.end(), m_discardPile.begin(), m_discardPile.end());
+
     m_discardPile.clear();
     emit valueChanged();
 }
@@ -179,6 +181,103 @@ void GamePlay::applyBurnDamage()
         if (dynamic_cast<BURN *>(card))
             m_player->takeDamage(2, false);
 }
+
+void GamePlay::addCardToDeck(Card *card)
+{
+    m_deck.push_back(card);
+}
+
+void GamePlay::startCombat()
+{
+    m_drawPile.clear();
+    m_discardPile.clear();
+    m_ExhaustPile.clear();
+
+    std::vector<Card *> innateCards;
+    std::vector<Card *> normalCards;
+
+    for (Card *card : m_deck) {
+        if (card->isInnate())
+            innateCards.push_back(card);
+        else
+            normalCards.push_back(card);
+    }
+
+    std::random_device rd;
+    std::mt19937 g(rd());
+
+    std::shuffle(normalCards.begin(), normalCards.end(), g);
+
+    m_drawPile = normalCards;
+
+    m_drawPile.insert(m_drawPile.end(), innateCards.begin(), innateCards.end());
+
+    playerTurn();
+}
+
+void removeTemporaryCardsFromPile(std::vector<Card *> &pile)
+{
+    pile.erase(std::remove_if(pile.begin(),
+                              pile.end(),
+                              [](Card *card) {
+                                  if (card->lifetime() == CardLifetime::EndOfCombat) {
+                                      delete card;
+                                      return true;
+                                  }
+
+                                  return false;
+                              }),
+               pile.end());
+}
+
+void GamePlay::removeTemporaryCards()
+{
+    std::vector<std::vector<Card *> *> piles = {&m_deck,
+                                                &m_drawPile,
+                                                &m_discardPile,
+                                                &m_ExhaustPile};
+
+    for (auto *pile : piles)
+        removeTemporaryCardsFromPile(*pile);
+
+    auto &hand = m_player->HandsCards();
+
+    hand.erase(std::remove_if(hand.begin(),
+                              hand.end(),
+                              [](Card *card) {
+                                  if (card->lifetime() == CardLifetime::EndOfCombat) {
+                                      delete card;
+                                      return true;
+                                  }
+
+                                  return false;
+                              }),
+               hand.end());
+}
+
+void GamePlay::endCombat()
+{
+    removeTemporaryCards();
+
+    //m_player->setBlock(0);
+
+    // for (Card *card : m_player->HandsCards())
+    // {
+    //     if (card->lifetime() == CardLifetime::Permanent)
+    //         m_discardPile.push_back(card);
+    // }
+
+    // m_drawPile.clear();
+
+    // m_effects.clear();
+
+    // m_powerEffects.clear();
+
+    // m_ExhaustPile.clear();
+
+    // m_player->HandsCards().clear();
+}
+
 ///
 
 void GamePlay::addCardToHand(Card* card)
@@ -544,4 +643,22 @@ void EndTurnButton::activeButton()
     this->setGraphicsEffect(nullptr);
     this->setButtonText("End Turn");
     this->m_plainText->setDefaultTextColor(Qt::white);
+
+    //m_discardPile.push_back(card);
+    //m_player->m_HandsCards.erase(std::find(m_HandsCards.begin(), m_HandsCards.end(), card));
 }
+
+/// for dual wield
+Card *GamePlay::selectedHandCard() const
+{
+    return m_selectedHandCard;
+}
+
+void GamePlay::setSelectedHandCard(Card *card)
+{
+    m_selectedHandCard = card;
+}
+
+// when player selected card call gameplay->setSelectedHandCard(card);
+
+///

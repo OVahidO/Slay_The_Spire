@@ -42,6 +42,17 @@ public:
     ///
     void addCardToExhaustPile(Card *card);
     void applyBurnDamage();
+
+    Card *selectedHandCard() const;
+    void setSelectedHandCard(Card *card);
+
+    void addCardToDeck(Card *card);
+
+    void startCombat();
+
+    void removeTemporaryCardsFromPile(std::vector<Card *> &pile);
+    void removeTemporaryCards();
+    void endCombat();
     ///
     void addCardToHand(Card *card);
     void drawFromExhaustPile();
@@ -84,6 +95,10 @@ private:
     int m_turn;
     QParallelAnimationGroup* m_animGroup = new QParallelAnimationGroup(this);
 
+    /// for dual wield
+    Card *m_selectedHandCard = nullptr;
+    ///
+
     QGraphicsScene *m_scene;
     QGraphicsView *m_view;
 
@@ -91,6 +106,7 @@ private:
     QGraphicsTextItem* m_energyLabel;
 
     // Temporary data structure(piles)
+    std::vector<Card *> m_deck; // added by ahoora
     std::vector<Card *> m_drawPile;
     std::vector<Card *> m_discardPile;
     std::vector<Card *> m_ExhaustPile;

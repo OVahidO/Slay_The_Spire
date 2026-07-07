@@ -186,3 +186,23 @@ void Card::upgrade()
 {
     m_isUpgraded = true;
 }
+
+CardLifetime Card::lifetime() const
+{
+    return m_lifetime;
+}
+
+void Card::setLifetime(CardLifetime lifetime)
+{
+    m_lifetime = lifetime;
+}
+
+bool Card::isInnate() const
+{
+    return m_isInnate;
+}
+
+void Card::setInnate(bool value)
+{
+    m_isInnate = value;
+}

@@ -43,6 +43,18 @@ void Defend::upgrade()
     loadPixmap();
 }
 
+Card *Defend::clone() const
+{
+    Defend *copy = new Defend();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 Exhume::Exhume(QGraphicsItem *parent)
     : SkillCard("Exhume", 1, "Put a card from exhaust pile into hand", true, true, false, parent)
 {
@@ -73,6 +85,18 @@ void Exhume::upgrade()
     loadPixmap();
 }
 
+Card *Exhume::clone() const
+{
+    Exhume *copy = new Exhume();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 Limit_Break::Limit_Break(QGraphicsItem *parent)
     : SkillCard("Limit_Break", 1, "Double your Strength", true, true, true, parent)
 {
@@ -100,6 +124,18 @@ void Limit_Break::upgrade()
 
     m_sourcePath = "";
     loadPixmap();
+}
+
+Card *Limit_Break::clone() const
+{
+    Limit_Break *copy = new Limit_Break();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }
 
 Offering::Offering(QGraphicsItem *parent)
@@ -139,6 +175,18 @@ void Offering::upgrade()
     loadPixmap();
 }
 
+Card *Offering::clone() const
+{
+    Offering *copy = new Offering();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 Impervious::Impervious(QGraphicsItem *parent)
     : SkillCard("Impervious", 2, "Gain 30 block", true, true, true, parent)
 {
@@ -164,6 +212,18 @@ void Impervious::upgrade()
 
     m_sourcePath = "";
     loadPixmap();
+}
+
+Card *Impervious::clone() const
+{
+    Impervious *copy = new Impervious();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }
 
 Power_Through::Power_Through(QGraphicsItem *parent)
@@ -206,6 +266,18 @@ void Power_Through::upgrade()
     loadPixmap();
 }
 
+Card *Power_Through::clone() const
+{
+    Power_Through *copy = new Power_Through();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 Bloodletting::Bloodletting(QGraphicsItem *parent)
     : SkillCard("Bloodletting", 0, "Lose 3 HP\nGain 2 Energy", false, false, true, parent)
 {
@@ -233,4 +305,115 @@ void Bloodletting::upgrade()
 
     m_sourcePath = "";
     loadPixmap();
+}
+
+Card *Bloodletting::clone() const
+{
+    Bloodletting *copy = new Bloodletting();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
+Entrench::Entrench(QGraphicsItem *parent)
+    : SkillCard("Entrench", 2, "Double your Block", false, false, false, parent)
+{
+    m_sourcePath = "";
+    loadPixmap();
+}
+
+void Entrench::applyEffect(Player *player, Enemy *targetEnemy)
+{
+    Q_UNUSED(targetEnemy);
+
+    if (player != nullptr) {
+        int currentBlock = player->block();
+        player->addBlockFromCard(currentBlock);
+    }
+}
+
+void Entrench::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_energyCost -= 1;
+}
+
+Card *Entrench::clone() const
+{
+    Entrench *copy = new Entrench();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
+Dual_Wield::Dual_Wield(QGraphicsItem *parent)
+    : SkillCard("Dual Wield",
+                1,
+                "Choose a card in hand\nAdd 2 copies into hand",
+                false,
+                false,
+                false,
+                parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Skill/DualWield.png";
+    loadPixmap();
+}
+
+void Dual_Wield::applyEffect(Player *player, Enemy *targetEnemy)
+{
+    Q_UNUSED(player);
+    Q_UNUSED(targetEnemy);
+}
+
+bool Dual_Wield::applyEffect(GamePlay *gameplay)
+{
+    if (!gameplay)
+        return false;
+
+    Card *selected = gameplay->selectedHandCard();
+
+    if (!selected)
+        return false;
+
+    for (int i = 0; i < m_copyCount; ++i) {
+        Card *copy = selected->clone();
+        copy->setLifetime(CardLifetime::EndOfCombat);
+        gameplay->addCardToHand(copy);
+    }
+
+    return true;
+}
+
+void Dual_Wield::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_copyCount++;
+}
+
+Card *Dual_Wield::clone() const
+{
+    Dual_Wield *copy = new Dual_Wield();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }

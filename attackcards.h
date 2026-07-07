@@ -26,6 +26,7 @@ public:
     explicit Strike(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
     void upgrade() override;
+    Card *clone() const override;
 };
 
 class Bludgeon : public AttackCard
@@ -34,6 +35,7 @@ public:
     explicit Bludgeon(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
     void upgrade() override;
+    Card *clone() const override;
 };
 
 class Reaper : public AttackCard
@@ -43,6 +45,7 @@ public:
     void applyEffect(Player *player, Enemy *target) override;
     bool applyEffect(GamePlay *gameplay) override;
     void upgrade() override;
+    Card *clone() const override;
 };
 
 class Feed : public AttackCard
@@ -51,6 +54,7 @@ public:
     explicit Feed(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
     void upgrade() override;
+    Card *clone() const override;
 
 private:
     int m_increaseMaxHp = 3;
@@ -63,6 +67,7 @@ public:
     void applyEffect(Player *player, Enemy *target) override;
     bool applyEffect(GamePlay *gameplay) override;
     void upgrade() override;
+    Card *clone() const override;
 };
 
 class Bash : public AttackCard
@@ -71,6 +76,7 @@ public:
     explicit Bash(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
     void upgrade() override;
+    Card *clone() const override;
 
 private:
     int m_vulnerableValue = 2;
@@ -82,6 +88,7 @@ public:
     explicit Clash(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
     void upgrade() override;
+    Card *clone() const override;
 };
 
 class Hemokinesis : public AttackCard
@@ -90,6 +97,26 @@ public:
     explicit Hemokinesis(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
     void upgrade() override;
+    Card *clone() const override;
+};
+
+class BloodForBlood : public AttackCard
+{
+public:
+    explicit BloodForBlood(QGraphicsItem *parent = nullptr);
+    void applyEffect(Player *player, Enemy *target) override;
+    void upgrade() override;
+    Card *clone() const override;
+};
+
+class Whirlwind : public AttackCard
+{
+public:
+    explicit Whirlwind(QGraphicsItem *parent = nullptr);
+    void applyEffect(Player *player, Enemy *target) override;
+    bool applyEffect(GamePlay *gameplay) override;
+    void upgrade() override;
+    Card *clone() const override;
 };
 
 #endif // ATTACKCARDS_H

@@ -41,6 +41,18 @@ void Strike::upgrade()
     m_damage += 3;
 }
 
+Card *Strike::clone() const
+{
+    Strike *copy = new Strike();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Bludgeon::Bludgeon(QGraphicsItem *parent)
@@ -64,6 +76,18 @@ void Bludgeon::upgrade()
     Card::upgrade();
 
     m_damage += 10;
+}
+
+Card *Bludgeon::clone() const
+{
+    Bludgeon *copy = new Bludgeon();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,6 +128,18 @@ void Reaper::upgrade()
     m_damage += 1;
 }
 
+Card *Reaper::clone() const
+{
+    Reaper *copy = new Reaper();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Feed::Feed(QGraphicsItem *parent)
@@ -139,6 +175,18 @@ void Feed::upgrade()
 
     m_damage += 2;
     m_increaseMaxHp += 1;
+}
+
+Card *Feed::clone() const
+{
+    Feed *copy = new Feed();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,6 +232,18 @@ void Immolate::upgrade()
     loadPixmap();
 }
 
+Card *Immolate::clone() const
+{
+    Immolate *copy = new Immolate();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Bash::Bash(QGraphicsItem *parent)
@@ -213,6 +273,18 @@ void Bash::upgrade()
 
     m_sourcePath = "";
     loadPixmap();
+}
+
+Card *Bash::clone() const
+{
+    Bash *copy = new Bash();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -260,6 +332,18 @@ void Clash::upgrade()
     loadPixmap();
 }
 
+Card *Clash::clone() const
+{
+    Clash *copy = new Clash();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Hemokinesis::Hemokinesis(QGraphicsItem *parent)
@@ -289,4 +373,121 @@ void Hemokinesis::upgrade()
 
     m_sourcePath = "";
     loadPixmap();
+}
+
+Card *Hemokinesis::clone() const
+{
+    Hemokinesis *copy = new Hemokinesis();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+BloodForBlood::BloodForBlood(QGraphicsItem *parent)
+    : AttackCard("Blood for Blood",
+                 4,
+                 "Deal 18 damage\nCosts 1 less for every time you take unblocked damage",
+                 18,
+                 true,
+                 false,
+                 false,
+                 parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Attack/BloodForBlood.png";
+    loadPixmap();
+}
+
+void BloodForBlood::applyEffect(Player *player, Enemy *target)
+{
+    if (target && player)
+        target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
+}
+
+void BloodForBlood::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_energyCost -= 1;
+    m_damage += 4;
+}
+
+// بقیش باید با سیگنال اسلات تو کلاس پلیر یا کمبتنت پیاده سازی بشه
+
+Card *BloodForBlood::clone() const
+{
+    BloodForBlood *copy = new BloodForBlood();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Whirlwind::Whirlwind(QGraphicsItem *parent)
+    : AttackCard("Whirlwind",
+                 -1, //X
+                 "Deal 5 damage to all enemies X times",
+                 5,
+                 false,
+                 false,
+                 false,
+                 parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Attack/Whirlwind.png";
+    loadPixmap();
+}
+
+void Whirlwind::applyEffect(Player *player, Enemy *target)
+{
+    Q_UNUSED(player);
+    Q_UNUSED(target);
+}
+
+bool Whirlwind::applyEffect(GamePlay *gameplay)
+{
+    if (gameplay && gameplay->player()) {
+        int xCount = gameplay->player()->energy();
+
+        for (int i = 0; i < xCount; ++i)
+            gameplay->takeDamageToAllEnemies(m_damage);
+
+        gameplay->player()->setEnergy(0);
+    }
+
+    return true;
+}
+
+void Whirlwind::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_damage += 3;
+}
+
+Card *Whirlwind::clone() const
+{
+    Whirlwind *copy = new Whirlwind();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }

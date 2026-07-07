@@ -39,6 +39,18 @@ void Inflame::upgrade()
     m_strengthValue += 1;
 }
 
+Card *Inflame::clone() const
+{
+    Inflame *copy = new Inflame();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Brutality::Brutality(QGraphicsItem *parent)
@@ -79,7 +91,19 @@ void Brutality::upgrade()
 
     Card::upgrade();
 
-    // will be implemented
+    setInnate(true);
+}
+
+Card *Brutality::clone() const
+{
+    Brutality *copy = new Brutality();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,6 +144,18 @@ void DemonForm::upgrade()
     m_strengthPerTurn += 1;
 }
 
+Card *DemonForm::clone() const
+{
+    DemonForm *copy = new DemonForm();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Metallicize::Metallicize(QGraphicsItem *parent)
@@ -149,6 +185,18 @@ void Metallicize::upgrade()
     Card::upgrade();
 
     m_blockPerTurn += 1;
+}
+
+Card *Metallicize::clone() const
+{
+    Metallicize *copy = new Metallicize();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,6 +241,18 @@ void Berserk::upgrade()
     m_vulnerableAmount -= 1;
 }
 
+Card *Berserk::clone() const
+{
+    Berserk *copy = new Berserk();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 DarkEmbrace::DarkEmbrace(QGraphicsItem *parent)
@@ -233,4 +293,109 @@ void DarkEmbrace::upgrade()
     Card::upgrade();
 
     m_energyCost -= 1;
+}
+
+Card *DarkEmbrace::clone() const
+{
+    DarkEmbrace *copy = new DarkEmbrace();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Barricade::Barricade(QGraphicsItem *parent)
+    : PowerCard("Barricade",
+                3,
+                "Block is not removed at the start of your turn",
+                false,
+                false,
+                true,
+                parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Power/Barricade.png";
+    loadPixmap();
+}
+
+void Barricade::applyEffect(Player *player, Enemy *target)
+{
+    Q_UNUSED(target);
+
+    if (player)
+        player->setBarricade(true);
+}
+
+void Barricade::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+    m_energyCost -= 1;
+}
+
+Card *Barricade::clone() const
+{
+    Barricade *copy = new Barricade();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+FeelNoPain::FeelNoPain(QGraphicsItem *parent)
+    : PowerCard("FeelNoPain",
+                1,
+                "Every time a card is Exhausted, gain 3 block",
+                false,
+                false,
+                false,
+                parent)
+{
+    m_sourcePath = ":/cards/Pics/Cards/Power/FeelNoPain.png";
+    loadPixmap();
+}
+
+void FeelNoPain::applyEffect(Player *player, Enemy *target)
+{
+    Q_UNUSED(target);
+
+    if (player) {
+        player->powerEffects().append(
+            PowerEffect{m_blockAmount,
+                        [](Combatant *self, int value, GamePlay *) { self->addBlock(value); },
+                        PowerUseTime::OnExhaust});
+    }
+}
+
+void FeelNoPain::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_blockAmount++;
+}
+
+Card *FeelNoPain::clone() const
+{
+    FeelNoPain *copy = new FeelNoPain();
+
+    if (m_isUpgraded)
+        copy->upgrade();
+
+    copy->setLifetime(lifetime());
+
+    return copy;
 }

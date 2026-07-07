@@ -40,6 +40,9 @@ public:
     int turnCount() const;
     void nextTurn();
 
+    void setBarricade(bool status);
+    bool hasBarricade() const;
+
     int effectStacks(BuffDebuffType type) const;
     QVector<BuffDebuff *> getActiveEffects() const;
     void applyBuffDebuff(BuffDebuffType type, int stacks);
@@ -51,6 +54,7 @@ public:
     void triggerPowerEffects(PowerUseTime time, GamePlay *game = nullptr);
 
 protected:
+    bool m_hasBarricade = false;
     QString m_name;
     int m_maxHP;
     int m_currentHP;

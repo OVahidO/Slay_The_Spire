@@ -58,7 +58,9 @@ void Combatant::addBlockFromCard(int amount)
 
 void Combatant::resetBlock()
 {
-    m_block = 0;
+    if (!m_hasBarricade) {
+        m_block = 0;
+    }
 }
 
 bool Combatant::isDead() const
@@ -94,6 +96,16 @@ int Combatant::turnCount() const
 void Combatant::nextTurn()
 {
     m_turnCount++;
+}
+
+void Combatant::setBarricade(bool status)
+{
+    m_hasBarricade = status;
+}
+
+bool Combatant::hasBarricade() const
+{
+    return m_hasBarricade;
 }
 
 int Combatant::effectStacks(BuffDebuffType type) const
