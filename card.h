@@ -1,11 +1,16 @@
 #ifndef CARD_H
 #define CARD_H
 
+#include <QGraphicsDropShadowEffect>
 #include <QGraphicsObject>
+#include <QLinearGradient>
 #include <QObject>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPixmap>
+#include <QRegularExpression>
 #include <QString>
+#include <QTextDocument>
 #include <QVariantAnimation>
 
 class Enemy;
@@ -59,6 +64,8 @@ public:
     bool isInnate() const;
     void setInnate(bool value);
 
+    void loadTypeIcon();
+
 signals:
     void targetCardPlayed(Card *card, Player *player, Enemy *targetEnemy);
     void noTargetCardPlayed(Card* card);
@@ -78,7 +85,6 @@ protected:
     int m_ID;
     QString m_name;
     int m_energyCost;
-    CardType m_type;
     QString m_sourcePath;
     QString m_description;
     bool m_isRare;
@@ -86,9 +92,19 @@ protected:
     bool m_isExhaust;
     bool m_isUpgraded = false;
 
+<<<<<<< HEAD
     CardLifetime m_lifetime = CardLifetime::Permanent;
 
     bool m_isInnate = false;
+=======
+    QColor colorForCardType(CardType type) const;
+    QString highlightKeywords(const QString &text) const;
+    void drawTypeGem(QPainter *painter, const QRectF &rect) const;
+    CardType m_type;
+    QPixmap m_typeIcon;
+
+    int m_baseEnergyCost;
+>>>>>>> card-design
 };
 
 #endif // CARD_H

@@ -19,7 +19,7 @@ SkillCard::~SkillCard() {}
 Defend::Defend(QGraphicsItem *parent)
     : SkillCard("Defend", 1, "Gain 5 block", false, false, true, parent)
 {
-    m_sourcePath = ":/Cards/Pics/Cards/Skill/defend-ironclad.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Skill/defend_ironclad.png";
     loadPixmap();
 }
 
@@ -58,7 +58,7 @@ Card *Defend::clone() const
 Exhume::Exhume(QGraphicsItem *parent)
     : SkillCard("Exhume", 1, "Put a card from exhaust pile into hand", true, true, false, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Skill/Exhume.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Skill/Red-Exhume-Art.png";
     loadPixmap();
 }
 
@@ -100,7 +100,7 @@ Card *Exhume::clone() const
 Limit_Break::Limit_Break(QGraphicsItem *parent)
     : SkillCard("Limit_Break", 1, "Double your Strength", true, true, true, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Skill/LimitBreak.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Skill/Red-LimitBreak-Art.png";
     loadPixmap();
 }
 
@@ -141,7 +141,7 @@ Card *Limit_Break::clone() const
 Offering::Offering(QGraphicsItem *parent)
     : SkillCard("Offering", 0, "Lose 6 HP\nGain 2 Energy\nDraw 3 cards", true, true, true, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Skill/Offering.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Skill/offering.png";
     loadPixmap();
 }
 
@@ -190,7 +190,7 @@ Card *Offering::clone() const
 Impervious::Impervious(QGraphicsItem *parent)
     : SkillCard("Impervious", 2, "Gain 30 block", true, true, true, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Skill/Impervious.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Skill/impervious.png";
     loadPixmap();
 }
 
@@ -235,7 +235,7 @@ Power_Through::Power_Through(QGraphicsItem *parent)
                 true,
                 parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Skill/PowerThrough.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Skill/Red-PowerThrough-Art.png";
     loadPixmap();
 }
 
@@ -249,8 +249,8 @@ void Power_Through::applyEffect(Player *player, Enemy *targetEnemy)
 
 bool Power_Through::applyEffect(GamePlay* gameplay)
 {
-    gameplay->addCardToHand(new WOUND());
-    gameplay->addCardToHand(new WOUND());
+    // gameplay->addCardToHand(new WOUND());
+    // gameplay->addCardToHand(new WOUND());
     return true;
 }
 
@@ -281,7 +281,7 @@ Card *Power_Through::clone() const
 Bloodletting::Bloodletting(QGraphicsItem *parent)
     : SkillCard("Bloodletting", 0, "Lose 3 HP\nGain 2 Energy", false, false, true, parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Skill/Bloodletting.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Skill/bloodletting.png";
     loadPixmap();
 }
 

@@ -15,6 +15,7 @@ Card::Card(QString name,
     , m_name(name)
     , m_type(type)
     , m_energyCost(energyCost)
+    , m_baseEnergyCost(energyCost)
     , m_isRare(isRare)
     , m_isExhaust(isExhaust)
     , m_needTarget(requiresTarget)
@@ -35,6 +36,15 @@ Card::Card(QString name,
     m_hoverAnimation->setDuration(150);
 
     connect(m_hoverAnimation, &QVariantAnimation::valueChanged, this, [this](const QVariant& value){this->setScale(value.toReal());});
+
+    auto *shadow = new QGraphicsDropShadowEffect;
+    shadow->setBlurRadius(20);
+    shadow->setOffset(0, 6);
+    shadow->setColor(QColor(0, 0, 0, 160));
+    setGraphicsEffect(shadow);
+
+    ///
+    loadTypeIcon();
 }
 
 QRectF Card::boundingRect() const
@@ -57,9 +67,262 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
 
-    if (!m_cardPixmap.isNull())
-        painter->drawPixmap(boundingRect(), m_cardPixmap, m_cardPixmap.rect());
+    QRectF rect = boundingRect();
+    qreal radius = 16;
+
+    QPainterPath cardShape;
+    cardShape.addRoundedRect(rect, radius, radius);
+    painter->setClipPath(cardShape);
+
+    painter->fillRect(rect, QColor(20, 20, 25));
+
+    if (!m_cardPixmap.isNull()) {
+        QSizeF pixSize = m_cardPixmap.size();
+        qreal scale = qMax(rect.width() / pixSize.width(), rect.height() / pixSize.height());
+        QSizeF scaledSize = pixSize * scale;
+
+        qreal x = rect.x() + (rect.width() - scaledSize.width()) / 2.0;
+        qreal y = rect.y() + (rect.height() - scaledSize.height()) / 2.0;
+
+        QRectF targetRect(x, y, scaledSize.width(), scaledSize.height());
+        painter->drawPixmap(targetRect, m_cardPixmap, m_cardPixmap.rect());
+        painter->fillRect(rect, QColor(0, 0, 0, 10));
+    }
+
+    QRectF fadeRect(rect.x(), rect.y() + rect.height() * 0.55, rect.width(), rect.height() * 0.45);
+    QLinearGradient gradient(fadeRect.topLeft(), fadeRect.bottomLeft());
+    gradient.setColorAt(0.0, QColor(0, 0, 0, 20));
+    gradient.setColorAt(0.35, QColor(0, 0, 0, 90));
+    gradient.setColorAt(1.0, QColor(0, 0, 0, 245));
+    painter->fillRect(fadeRect, gradient);
+
+    QColor typeColor = colorForCardType(m_type);
+
+    QRectF iconRect(rect.right() - 45, rect.top() + 10, 35, 35);
+
+    // QRectF energyBadge(rect.x() + 12, rect.y() + 12, 40, 40);
+
+    // painter->setBrush(typeColor);
+    // painter->setPen(QPen(Qt::white, 2));
+    // painter->drawEllipse(energyBadge);
+
+    // QColor energyTextColor = (m_energyCost < m_baseEnergyCost) ? QColor(90, 230, 120) : Qt::white;
+    // painter->setPen(energyTextColor);
+
+    // QFont energyFont("Oxanium", 16, QFont::Bold);
+    // painter->setFont(energyFont);
+    // painter->drawText(energyBadge, Qt::AlignCenter, QString::number(m_energyCost));
+
+    QRectF energyBadge(rect.left() + 10, rect.top() + 10, 34, 34);
+
+    //======================
+    // Glow
+    //======================
+
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(QColor(80, 150, 255, 45));
+
+    painter->drawEllipse(energyBadge.adjusted(-4, -4, 4, 4));
+
+    //======================
+    // Main Gradient
+    //======================
+
+    QRadialGradient grad(energyBadge.center(), energyBadge.width() / 2);
+
+    grad.setColorAt(0.0, QColor(120, 180, 255));
+    grad.setColorAt(0.55, QColor(65, 115, 205));
+    grad.setColorAt(1.0, QColor(28, 58, 118));
+
+    painter->setBrush(gradient);
+    painter->setPen(QPen(Qt::white, 1.5));
+
+    painter->drawEllipse(energyBadge);
+
+    //======================
+    // Highlight
+    //======================
+
+    QRectF shine(energyBadge.left() + 5,
+                 energyBadge.top() + 3,
+                 energyBadge.width() - 10,
+                 energyBadge.height() / 3.2);
+
+    QLinearGradient shineGradient(shine.topLeft(), shine.bottomLeft());
+
+    shineGradient.setColorAt(0, QColor(255, 255, 255, 180));
+    shineGradient.setColorAt(1, QColor(255, 255, 255, 0));
+
+    painter->setBrush(shineGradient);
+    painter->setPen(Qt::NoPen);
+
+    painter->drawEllipse(shine);
+
+    //======================
+    // Inner Ring
+    //======================
+
+    painter->setBrush(Qt::NoBrush);
+    painter->setPen(QPen(QColor(255, 255, 255, 70), 1));
+
+    painter->drawEllipse(energyBadge.adjusted(2, 2, -2, -2));
+
+    //======================
+    // Energy Text
+    //======================
+
+    QColor energyTextColor = (m_energyCost < m_baseEnergyCost) ? QColor(110, 255, 140) : Qt::white;
+
+    QFont font("Oxanium");
+    font.setBold(true);
+    font.setPixelSize(18);
+
+    painter->setFont(font);
+    painter->setPen(energyTextColor);
+
+    painter->drawText(energyBadge, Qt::AlignCenter, QString::number(m_energyCost));
+    // drawTypeGem(painter, rect);
+
+    QRectF textRect(rect.x() + 14, fadeRect.y() + 8, rect.width() - 28, fadeRect.height() - 16);
+
+    QColor nameColor = m_isUpgraded ? QColor(90, 230, 110) : Qt::white;
+    QFont nameFont("Cinzel", 15, QFont::Bold);
+    painter->setFont(nameFont);
+    painter->setPen(nameColor);
+    painter->drawText(textRect, Qt::AlignTop | Qt::AlignLeft, m_name);
+
+    QRectF descRect = textRect.adjusted(0, 26, 0, 0);
+
+    QTextDocument doc;
+    doc.setDefaultFont(QFont("Rajdhani", 10));
+    doc.setTextWidth(descRect.width());
+    doc.setHtml(
+        QString("<div style='color:#dcdcdc;'>%1</div>").arg(highlightKeywords(m_description)));
+    painter->save();
+    painter->translate(descRect.topLeft());
+    doc.drawContents(painter, QRectF(0, 0, descRect.width(), descRect.height()));
+    painter->restore();
+
+    // drawTypeGem(painter, rect);
+
+    painter->setPen(Qt::NoPen);
+
+    painter->setBrush(QColor(255, 255, 255, 18));
+
+    painter->drawEllipse(iconRect.adjusted(-3, -3, 3, 3));
+
+    painter->drawPixmap(iconRect, m_typeIcon, m_typeIcon.rect());
+
+    painter->drawPixmap(iconRect, m_typeIcon, m_typeIcon.rect());
+
+    painter->setClipping(false);
+    painter->setPen(QPen(typeColor.darker(130), 2.5));
+    painter->setBrush(Qt::NoBrush);
+    painter->drawPath(cardShape);
 }
+
+QColor Card::colorForCardType(CardType type) const
+{
+    switch (type) {
+    case CardType::Attack:
+        return QColor(120, 25, 25);
+
+    case CardType::Skill:
+        return QColor(35, 75, 125);
+
+    case CardType::Power:
+        return QColor(105, 45, 135);
+
+    case CardType::Status:
+        return QColor(90, 90, 90);
+
+    case CardType::Curse:
+        return QColor(55, 20, 70);
+    }
+    return Qt::gray;
+}
+
+// void Card::drawTypeGem(QPainter *painter, const QRectF &rect) const
+// {
+//     QColor gemColor = isRare() ? QColor(184, 148, 30) : colorForCardType(m_type);
+
+//     qreal gemSize = 34;
+//     QRectF gemRect(rect.right() - gemSize - 8, rect.top() + 8, gemSize, gemSize);
+
+//     painter->setBrush(gemColor.darker(115));
+//     painter->setPen(QPen(Qt::white, 1.5));
+//     painter->drawEllipse(gemRect);
+
+//     painter->setPen(QPen(Qt::white, 2.2, Qt::SolidLine, Qt::RoundCap));
+//     QPointF c = gemRect.center();
+//     qreal r = gemSize * 0.28;
+// }
+
+void Card::loadTypeIcon()
+{
+    switch (m_type) {
+    case CardType::Attack:
+        if (m_isRare)
+            m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/black crossed sword-gold.png");
+        else
+            m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/black crossed sword.png");
+        break;
+
+    case CardType::Skill:
+        if (m_isRare)
+            m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/vector shield icon-gold.png");
+        else
+            m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/vector shield icon.png");
+        break;
+
+    case CardType::Power:
+        if (m_isRare)
+            m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/power-up-gold.png");
+        else
+            m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/power-up.png");
+        break;
+
+    case CardType::Status:
+        if (m_isRare)
+            m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/influence-gold.png");
+        else
+            m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/influence.png");
+        break;
+
+    case CardType::Curse:
+        if (m_isRare)
+            m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/virus-gold.png");
+        else
+            m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/virus.png");
+        break;
+    }
+}
+
+///
+QString Card::highlightKeywords(const QString &text) const
+{
+    static const QStringList keywords = {"Strength",
+                                         "Dexterity",
+                                         "Vulnerable",
+                                         "Weak",
+                                         "Frail",
+                                         "Energy",
+                                         "Exhaust",
+                                         "Ethereal",
+                                         "Retain"};
+
+    QString escaped = text.toHtmlEscaped();
+    escaped.replace("\n", "<br>");
+
+    for (const QString &keyword : keywords) {
+        QRegularExpression pattern("\\b(" + QRegularExpression::escape(keyword) + "s?)\\b",
+                                   QRegularExpression::CaseInsensitiveOption);
+        escaped.replace(pattern, "<span style='color:#f2c94c;'>\\1</span>");
+    }
+
+    return escaped;
+}
+///
 
 void Card::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
