@@ -54,6 +54,8 @@ public:
     virtual void applyEffect(Player *player, Enemy *targetEnemy) = 0;
     virtual bool applyEffect(GamePlay *gameplay);
 
+    void loadTypeIcon();
+
 signals:
     void targetCardPlayed(Card* card, Player* player, Enemy* targetEnemy);
     void noTargetCardPlayed(Card* card);
@@ -73,7 +75,6 @@ protected:
     int m_ID;
     QString m_name;
     int m_energyCost;
-    CardType m_type;
     QString m_sourcePath;
     QString m_description;
     bool m_isRare;
@@ -83,6 +84,10 @@ protected:
 
     QColor colorForCardType(CardType type) const;
     QString highlightKeywords(const QString &text) const;
+    void drawTypeGem(QPainter *painter, const QRectF &rect) const;
+    CardType m_type;
+    QPixmap m_typeIcon;
+
     int m_baseEnergyCost;
 };
 

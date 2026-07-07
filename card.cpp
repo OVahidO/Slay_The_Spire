@@ -42,6 +42,9 @@ Card::Card(QString name,
     shadow->setOffset(0, 6);
     shadow->setColor(QColor(0, 0, 0, 160));
     setGraphicsEffect(shadow);
+
+    ///
+    loadTypeIcon();
 }
 
 QRectF Card::boundingRect() const
@@ -94,6 +97,9 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->fillRect(fadeRect, gradient);
 
     QColor typeColor = colorForCardType(m_type);
+
+    QRectF iconRect(rect.right() - 45, rect.top() + 10, 35, 35);
+
     QRectF energyBadge(rect.x() + 12, rect.y() + 12, 40, 40);
 
     painter->setBrush(typeColor);
@@ -106,6 +112,8 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     QFont energyFont("Oxanium", 16, QFont::Bold);
     painter->setFont(energyFont);
     painter->drawText(energyBadge, Qt::AlignCenter, QString::number(m_energyCost));
+
+    // drawTypeGem(painter, rect);
 
     QRectF textRect(rect.x() + 14, fadeRect.y() + 8, rect.width() - 28, fadeRect.height() - 16);
 
@@ -122,11 +130,14 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     doc.setTextWidth(descRect.width());
     doc.setHtml(
         QString("<div style='color:#dcdcdc;'>%1</div>").arg(highlightKeywords(m_description)));
-
     painter->save();
     painter->translate(descRect.topLeft());
     doc.drawContents(painter, QRectF(0, 0, descRect.width(), descRect.height()));
     painter->restore();
+
+    // drawTypeGem(painter, rect);
+
+    painter->drawPixmap(iconRect, m_typeIcon, m_typeIcon.rect());
 
     painter->setClipping(false);
     painter->setPen(QPen(typeColor.darker(130), 2.5));
@@ -153,6 +164,47 @@ QColor Card::colorForCardType(CardType type) const
         return QColor(55, 20, 70);
     }
     return Qt::gray;
+}
+
+// void Card::drawTypeGem(QPainter *painter, const QRectF &rect) const
+// {
+//     QColor gemColor = isRare() ? QColor(184, 148, 30) : colorForCardType(m_type);
+
+//     qreal gemSize = 34;
+//     QRectF gemRect(rect.right() - gemSize - 8, rect.top() + 8, gemSize, gemSize);
+
+//     painter->setBrush(gemColor.darker(115));
+//     painter->setPen(QPen(Qt::white, 1.5));
+//     painter->drawEllipse(gemRect);
+
+//     painter->setPen(QPen(Qt::white, 2.2, Qt::SolidLine, Qt::RoundCap));
+//     QPointF c = gemRect.center();
+//     qreal r = gemSize * 0.28;
+// }
+
+void Card::loadTypeIcon()
+{
+    switch (m_type) {
+    case CardType::Attack:
+        m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/black crossed sword.png");
+        break;
+
+    case CardType::Skill:
+        m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/vector shield icon.png");
+        break;
+
+    case CardType::Power:
+        m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/power-up.png");
+        break;
+
+    case CardType::Status:
+        m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/influence.png");
+        break;
+
+    case CardType::Curse:
+        m_typeIcon.load(":/icons/Pics/Icons/card-type-icon/virus.png");
+        break;
+    }
 }
 
 ///

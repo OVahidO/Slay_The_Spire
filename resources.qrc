@@ -1,5 +1,11 @@
 <RCC>
-    <qresource prefix="/icons"/>
+    <qresource prefix="/icons">
+        <file>Pics/Icons/card-type-icon/black crossed sword.png</file>
+        <file>Pics/Icons/card-type-icon/influence.png</file>
+        <file>Pics/Icons/card-type-icon/power-up.png</file>
+        <file>Pics/Icons/card-type-icon/vector shield icon.png</file>
+        <file>Pics/Icons/card-type-icon/virus.png</file>
+    </qresource>
     <qresource lang=" " prefix="/icons">
         <file>Pics/Icons/hpIcon.png</file>
         <file>Pics/Icons/Gold.png</file>
