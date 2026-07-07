@@ -91,7 +91,7 @@ void Brutality::upgrade()
 
     Card::upgrade();
 
-    // will be implemented
+    setInnate(true);
 }
 
 Card *Brutality::clone() const

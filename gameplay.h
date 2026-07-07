@@ -43,6 +43,14 @@ public:
 
     Card *selectedHandCard() const;
     void setSelectedHandCard(Card *card);
+
+    void addCardToDeck(Card *card);
+
+    void startCombat();
+
+    void removeTemporaryCardsFromPile(std::vector<Card *> &pile);
+    void removeTemporaryCards();
+    void endCombat();
     ///
     void addCardToHand(Card *card);
     void drawFromExhaustPile();
@@ -79,6 +87,7 @@ private:
     QGraphicsView *m_view;
 
     // Temporary data structure(piles)
+    std::vector<Card *> m_deck; // added by ahoora
     std::vector<Card *> m_drawPile;
     std::vector<Card *> m_discardPile;
     std::vector<Card *> m_ExhaustPile;

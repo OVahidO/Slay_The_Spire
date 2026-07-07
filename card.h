@@ -56,6 +56,9 @@ public:
     CardLifetime lifetime() const;
     void setLifetime(CardLifetime lifetime);
 
+    bool isInnate() const;
+    void setInnate(bool value);
+
 signals:
     void targetCardPlayed(Card *card, Player *player, Enemy *targetEnemy);
     void noTargetCardPlayed(Card* card);
@@ -81,6 +84,8 @@ protected:
     bool m_isUpgraded = false;
 
     CardLifetime m_lifetime = CardLifetime::Permanent;
+
+    bool m_isInnate = false;
 };
 
 #endif // CARD_H
