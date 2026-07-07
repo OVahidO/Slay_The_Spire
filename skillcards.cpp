@@ -382,16 +382,16 @@ bool Dual_Wield::applyEffect(GamePlay *gameplay)
     if (!gameplay)
         return false;
 
-    // Card *first = selectedCard->clone();
-    // Card *second = selectedCard->clone();
+    Card *selected = gameplay->selectedHandCard();
 
-    // first->setLifetime(CardLifetime::EndOfCombat);
-    // second->setLifetime(CardLifetime::EndOfCombat);
+    if (!selected)
+        return false;
 
-    // gameplay->addCardToHand(first);
-    // gameplay->addCardToHand(second);
-
-    //will be implemented
+    for (int i = 0; i < m_copyCount; ++i) {
+        Card *copy = selected->clone();
+        copy->setLifetime(CardLifetime::EndOfCombat);
+        gameplay->addCardToHand(copy);
+    }
 
     return true;
 }
@@ -400,9 +400,10 @@ void Dual_Wield::upgrade()
 {
     if (m_isUpgraded)
         return;
+
     Card::upgrade();
 
-    // will be implemented
+    m_copyCount++;
 }
 
 Card *Dual_Wield::clone() const

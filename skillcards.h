@@ -114,6 +114,9 @@ public:
     bool applyEffect(GamePlay *gameplay) override;
     void upgrade() override;
     Card *clone() const override;
+
+private:
+    int m_copyCount = 2;
 };
 
 #endif // SKILLCARDS_H

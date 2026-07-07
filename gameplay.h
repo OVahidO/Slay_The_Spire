@@ -40,6 +40,9 @@ public:
     ///
     void addCardToExhaustPile(Card *card);
     void applyBurnDamage();
+
+    Card *selectedHandCard() const;
+    void setSelectedHandCard(Card *card);
     ///
     void addCardToHand(Card *card);
     void drawFromExhaustPile();
@@ -67,6 +70,10 @@ private:
     Player *m_player;
     std::vector<Enemy *> m_enemys;
     int m_turn;
+
+    /// for dual wield
+    Card *m_selectedHandCard = nullptr;
+    ///
 
     QGraphicsScene *m_scene;
     QGraphicsView *m_view;

@@ -202,3 +202,18 @@ void GamePlay::playedCardHandler(Card *card)
     m_discardPile.push_back(card);
     //m_player->m_HandsCards.erase(std::find(m_HandsCards.begin(), m_HandsCards.end(), card));
 }
+
+/// for dual wield
+Card *GamePlay::selectedHandCard() const
+{
+    return m_selectedHandCard;
+}
+
+void GamePlay::setSelectedHandCard(Card *card)
+{
+    m_selectedHandCard = card;
+}
+
+// when player selected card call gameplay->setSelectedHandCard(card);
+
+///
