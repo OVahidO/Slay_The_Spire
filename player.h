@@ -53,6 +53,7 @@ private:
     int m_handSize = 5;
 
     QVector<Card *> m_HandsCards;
+    QVector<Card *> m_relics;
 };
 
 #endif // PLAYER_H
