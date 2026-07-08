@@ -196,6 +196,7 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     QTextDocument doc;
     doc.setDefaultFont(QFont("Rajdhani", 10));
     doc.setTextWidth(descRect.width());
+    QString dynamicText = getDynamicDescription(m_ownerPlayer, m_hoveredEnemy);
     doc.setHtml(
         QString("<div style='color:#dcdcdc;'>%1</div>").arg(highlightKeywords(m_description)));
     painter->save();
@@ -387,8 +388,46 @@ void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     else if(!this->m_needTarget)
         emit this->noTargetCardPlayed(this);
 
+    ///
+    if (this->m_needTarget && (player || target)) {
+        if ((this->cardType() == CardType::Attack && target)
+            || (this->cardType() != CardType::Attack && player))
+            emit this->targetCardPlayed(this, player, target);
+    } else if (!this->m_needTarget)
+        emit this->noTargetCardPlayed(this);
+
+    this->setHoveredEnemy(nullptr);
+    ///
+
     QGraphicsItem::mouseReleaseEvent(event);
 }
+
+///
+void Card::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mouseMoveEvent(event);
+
+    Enemy *currentHoveredEnemy = nullptr;
+    qreal maxArea = 0.0;
+    QRectF cardRect = this->sceneBoundingRect();
+
+    for (auto &item : collidingItems()) {
+        QRectF itemReact = item->sceneBoundingRect();
+        QRectF intersected = cardRect.intersected(itemReact);
+        qreal Area = intersected.width() * intersected.height();
+
+        if (Area > maxArea) {
+            Enemy *e = dynamic_cast<Enemy *>(item);
+            if (e) {
+                maxArea = Area;
+                currentHoveredEnemy = e;
+            }
+        }
+    }
+
+    this->setHoveredEnemy(currentHoveredEnemy);
+}
+///
 
 int Card::ID() const
 {
@@ -468,4 +507,14 @@ bool Card::isInnate() const
 void Card::setInnate(bool value)
 {
     m_isInnate = value;
+}
+
+QString Card::getDynamicDescription(Player *player, Enemy *target) const
+{
+    return m_description;
+}
+
+void setOwnerPlayer(Player *player)
+{
+    m_ownerPlayer = player;
 }

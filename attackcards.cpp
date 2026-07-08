@@ -16,10 +16,26 @@ AttackCard::AttackCard(QString name,
     , m_damage(damage)
 {}
 
+QString AttackCard::getDynamicDescription(Player *player, Enemy *target) const
+{
+    int finalDamage = m_damage;
+
+    if (player)
+        finalDamage = player->calculateOutgoingDamage(m_damage);
+
+    if (target) {
+        int vulnStacks = target->effectStacks(BuffDebuffType::Vulnerable);
+        if (vulnStacks > 0)
+            finalDamage = static_cast<int>(finalDamage * 1.5);
+    }
+
+    return m_description.arg(finalDamage);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Strike::Strike(QGraphicsItem *parent)
-    : AttackCard("Strike", 1, "Deal 6 damage", 6, true, false, false, parent)
+    : AttackCard("Strike", 1, "Deal %1 damage", 6, true, false, false, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Attack/strike_ironclad.png";
     loadPixmap();
@@ -39,6 +55,7 @@ void Strike::upgrade()
     Card::upgrade();
 
     m_damage += 3;
+    m_name = "Strike+";
 }
 
 Card *Strike::clone() const
@@ -56,7 +73,7 @@ Card *Strike::clone() const
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Bludgeon::Bludgeon(QGraphicsItem *parent)
-    : AttackCard("Bludgeon", 3, "Deal 32 damage", 32, true, false, true, parent)
+    : AttackCard("Bludgeon", 3, "Deal %1 damage", 32, true, false, true, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Attack/bludgeon.png";
     loadPixmap();
@@ -76,6 +93,7 @@ void Bludgeon::upgrade()
     Card::upgrade();
 
     m_damage += 10;
+    m_name = "Bludgeon+";
 }
 
 Card *Bludgeon::clone() const
@@ -95,7 +113,7 @@ Card *Bludgeon::clone() const
 Reaper::Reaper(QGraphicsItem *parent)
     : AttackCard("Reaper",
                  2,
-                 "Deal 4 damage to all enemies\nHeal HP equal to unblocked damage\nExhaust",
+                 "Deal %1 damage to all enemies\nHeal HP equal to unblocked damage\nExhaust",
                  4,
                  false,
                  true,
@@ -126,6 +144,7 @@ void Reaper::upgrade()
     Card::upgrade();
 
     m_damage += 1;
+    m_name = "Reaper+";
 }
 
 Card *Reaper::clone() const
@@ -145,7 +164,7 @@ Card *Reaper::clone() const
 Feed::Feed(QGraphicsItem *parent)
     : AttackCard("Feed",
                  1,
-                 "Deal 10 damage\nIf fatal, raise max HP by 3\nExhaust",
+                 "Deal %1 damage\nIf fatal, raise max HP by %2\nExhaust",
                  10,
                  true,
                  true,
@@ -189,12 +208,30 @@ Card *Feed::clone() const
     return copy;
 }
 
+QString Feed::getDynamicDescription(Player *player, Enemy *target) const
+{
+    int finalDamage = m_damage;
+
+    if (player)
+        finalDamage = player->calculateOutgoingDamage(m_damage);
+
+    if (target) {
+        int vulnStacks = target->effectStacks(BuffDebuffType::Vulnerable);
+        if (vulnStacks > 0)
+            finalDamage = static_cast<int>(finalDamage * 1.5);
+    }
+
+    int maxHpFinalIncrease = m_increaseMaxHp;
+
+    return m_description.arg(finalDamage, maxHpFinalIncrease);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Immolate::Immolate(QGraphicsItem *parent)
     : AttackCard("Immolate",
                  2,
-                 "Deal 21 damage to all enemies\nAdd 2 BURN into discard pile",
+                 "Deal %1 damage to all enemies\nAdd 2 BURN into discard pile",
                  21,
                  false,
                  false,
@@ -227,9 +264,7 @@ void Immolate::upgrade()
     Card::upgrade();
 
     m_damage += 7;
-
-    m_sourcePath = "";
-    loadPixmap();
+    m_name = "Immolate+";
 }
 
 Card *Immolate::clone() const
@@ -247,7 +282,7 @@ Card *Immolate::clone() const
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Bash::Bash(QGraphicsItem *parent)
-    : AttackCard("Bash", 2, "Deal 8 damage\nApply 2 Vulnerable", 8, true, false, false, parent)
+    : AttackCard("Bash", 2, "Deal %1 damage\nApply %2 Vulnerable", 8, true, false, false, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Attack/bash.png";
     loadPixmap();
@@ -271,8 +306,7 @@ void Bash::upgrade()
     m_damage += 2;
     m_vulnerableValue += 1;
 
-    m_sourcePath = "";
-    loadPixmap();
+    m_name = "Bash+";
 }
 
 Card *Bash::clone() const
@@ -287,12 +321,30 @@ Card *Bash::clone() const
     return copy;
 }
 
+QString Bash::getDynamicDescription(Player *player, Enemy *target) const
+{
+    int finalDamage = m_damage;
+
+    if (player)
+        finalDamage = player->calculateOutgoingDamage(m_damage);
+
+    if (target) {
+        int vulnStacks = target->effectStacks(BuffDebuffType::Vulnerable);
+        if (vulnStacks > 0)
+            finalDamage = static_cast<int>(finalDamage * 1.5);
+    }
+
+    int finalVulnValue = m_vulnerableValue;
+
+    return m_description.arg(finalDamage, finalVulnValue);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Clash::Clash(QGraphicsItem *parent)
     : AttackCard("Clash",
                  0,
-                 "Deal 14 damage\nCan only be played if every card in hand is an attack",
+                 "Deal %1 damage\nCan only be played if every card in hand is an attack",
                  14,
                  true,
                  false,
@@ -327,9 +379,7 @@ void Clash::upgrade()
     Card::upgrade();
 
     m_damage += 4;
-
-    m_sourcePath = "";
-    loadPixmap();
+    m_name = "Clash+";
 }
 
 Card *Clash::clone() const
@@ -347,7 +397,7 @@ Card *Clash::clone() const
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Hemokinesis::Hemokinesis(QGraphicsItem *parent)
-    : AttackCard("Hemokinesis", 1, "Lose 2 HP\nDeal 15 damage", 15, true, false, false, parent)
+    : AttackCard("Hemokinesis", 1, "Lose 2 HP\nDeal %1 damage", 15, true, false, false, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Attack/hemokinesis.png";
     loadPixmap();
@@ -370,9 +420,7 @@ void Hemokinesis::upgrade()
     Card::upgrade();
 
     m_damage += 5;
-
-    m_sourcePath = "";
-    loadPixmap();
+    m_name = "Hemokinesis+";
 }
 
 Card *Hemokinesis::clone() const
@@ -392,7 +440,7 @@ Card *Hemokinesis::clone() const
 BloodForBlood::BloodForBlood(QGraphicsItem *parent)
     : AttackCard("Blood for Blood",
                  4,
-                 "Deal 18 damage\nCosts 1 less for every time you take unblocked damage",
+                 "Deal %1 damage\nCosts 1 less for every time you take unblocked damage",
                  18,
                  true,
                  false,
@@ -418,6 +466,7 @@ void BloodForBlood::upgrade()
 
     m_energyCost -= 1;
     m_damage += 4;
+    m_name = "Blood for Blood+";
 }
 
 // بقیش باید با سیگنال اسلات تو کلاس پلیر یا کمبتنت پیاده سازی بشه
@@ -439,7 +488,7 @@ Card *BloodForBlood::clone() const
 Whirlwind::Whirlwind(QGraphicsItem *parent)
     : AttackCard("Whirlwind",
                  -1, //X
-                 "Deal 5 damage to all enemies X times",
+                 "Deal %1 damage to all enemies X times",
                  5,
                  false,
                  false,
@@ -478,6 +527,7 @@ void Whirlwind::upgrade()
     Card::upgrade();
 
     m_damage += 3;
+    m_name = "Whrilwind+";
 }
 
 Card *Whirlwind::clone() const

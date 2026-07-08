@@ -58,7 +58,6 @@ protected:
     EnemyIntent attackBuffIntent(int damage, int value) const;
     EnemyIntent attackDebuffIntent(int damage, int value) const;
     EnemyIntent defendBuffIntent(int block, int value) const;
-
     EnemyIntent escapeIntent() const;
     EnemyIntent unknownIntent() const;
 };

@@ -64,7 +64,11 @@ public:
     bool isInnate() const;
     void setInnate(bool value);
 
+    virtual QString getDynamicDescription(Player *player = nullptr, Enemy *target = nullptr) const;
+    void setHoveredEnemy(Enemy *enemy);
     void loadTypeIcon();
+
+    void setOwnerPlayer(Player *player);
 
 signals:
     void targetCardPlayed(Card *card, Player *player, Enemy *targetEnemy);
@@ -78,9 +82,15 @@ protected:
     QVariantAnimation* m_hoverAnimation;
     qreal m_oldZValue;
 
+    Player *m_ownerPlayer = nullptr;
+
+    Enemy *m_hoveredEnemy = nullptr;
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+    ///
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    ///
 
     int m_ID;
     QString m_name;

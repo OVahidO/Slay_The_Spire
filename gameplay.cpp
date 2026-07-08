@@ -185,6 +185,7 @@ void GamePlay::applyBurnDamage()
 void GamePlay::addCardToDeck(Card *card)
 {
     m_deck.push_back(card);
+    card->setOwnerPlayer(m_player);
 }
 
 void GamePlay::startCombat()
@@ -283,6 +284,7 @@ void GamePlay::endCombat()
 void GamePlay::addCardToHand(Card* card)
 {
     m_player->HandsCards().push_back(card);
+    card->setOwnerPlayer(m_player);
 }
 
 void GamePlay::drawFromExhaustPile()

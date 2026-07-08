@@ -18,6 +18,7 @@ public:
                bool isRare,
                QGraphicsItem *parent);
     virtual ~AttackCard() = default;
+    QString getDynamicDescription(Player *player, Enemy *target) const override;
 };
 
 class Strike : public AttackCard
@@ -55,6 +56,7 @@ public:
     void applyEffect(Player *player, Enemy *target) override;
     void upgrade() override;
     Card *clone() const override;
+    QString getDynamicDescription(Player *player, Enemy *target) const override;
 
 private:
     int m_increaseMaxHp = 3;
@@ -77,6 +79,7 @@ public:
     void applyEffect(Player *player, Enemy *target) override;
     void upgrade() override;
     Card *clone() const override;
+    QString getDynamicDescription(Player *player, Enemy *target) const override;
 
 private:
     int m_vulnerableValue = 2;
