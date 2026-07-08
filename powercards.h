@@ -16,6 +16,7 @@ public:
               bool isRare,
               QGraphicsItem *parent);
     virtual ~PowerCard() = default;
+    QString getDynamicDescription(Player *player, Enemy *target) const override;
 };
 
 class Inflame : public PowerCard

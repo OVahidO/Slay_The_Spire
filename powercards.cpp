@@ -12,6 +12,11 @@ PowerCard::PowerCard(QString name,
     : Card(name, CardType::Power, energyCost, description, isRare, isExhaust, requiresTarget, parent)
 {}
 
+QString PowerCard::getDynamicDescription(Player *player, Enemy *target) const
+{
+    return m_description;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Inflame::Inflame(QGraphicsItem *parent)
@@ -37,6 +42,8 @@ void Inflame::upgrade()
     Card::upgrade();
 
     m_strengthValue += 1;
+    m_description = "Gain 3 Strength";
+    m_name = "Inflame+";
 }
 
 Card *Inflame::clone() const
@@ -92,6 +99,9 @@ void Brutality::upgrade()
     Card::upgrade();
 
     setInnate(true);
+
+    m_name = "Brutality+";
+    m_description = "At the start of your turn, lose 1 HP and draw 1 card/nInnate.";
 }
 
 Card *Brutality::clone() const
@@ -141,7 +151,10 @@ void DemonForm::upgrade()
         return;
 
     Card::upgrade();
+
     m_strengthPerTurn += 1;
+    m_description = "At the start of your turn gain 4 Strength";
+    m_name = "DemonForm+";
 }
 
 Card *DemonForm::clone() const
@@ -185,6 +198,8 @@ void Metallicize::upgrade()
     Card::upgrade();
 
     m_blockPerTurn += 1;
+    m_name = "Metallicize+";
+    m_description = "At the end of your turn get 4 block";
 }
 
 Card *Metallicize::clone() const
@@ -239,6 +254,8 @@ void Berserk::upgrade()
     Card::upgrade();
 
     m_vulnerableAmount -= 1;
+    m_name = "Berserk+";
+    m_description = "Gain 2 Vulnerable\nAt the start of your turn get 1 extra Energy";
 }
 
 Card *Berserk::clone() const
@@ -293,6 +310,7 @@ void DarkEmbrace::upgrade()
     Card::upgrade();
 
     m_energyCost -= 1;
+    m_name = "DarkEmbrace+";
 }
 
 Card *DarkEmbrace::clone() const
@@ -336,7 +354,9 @@ void Barricade::upgrade()
         return;
 
     Card::upgrade();
+
     m_energyCost -= 1;
+    m_name = "Barricade+";
 }
 
 Card *Barricade::clone() const
@@ -354,7 +374,7 @@ Card *Barricade::clone() const
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 FeelNoPain::FeelNoPain(QGraphicsItem *parent)
-    : PowerCard("FeelNoPain",
+    : PowerCard("Feel No Pain",
                 1,
                 "Every time a card is Exhausted, gain 3 block",
                 false,
@@ -386,6 +406,8 @@ void FeelNoPain::upgrade()
     Card::upgrade();
 
     m_blockAmount++;
+    m_name = "Feel No Pain+";
+    m_description = "Every time a card is Exhausted, gain 4 block";
 }
 
 Card *FeelNoPain::clone() const

@@ -427,6 +427,11 @@ void Card::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     this->setHoveredEnemy(currentHoveredEnemy);
 }
+
+void Card::setHoveredEnemy(Enemy *enemy)
+{
+    m_hoveredEnemy = enemy;
+}
 ///
 
 int Card::ID() const
@@ -514,7 +519,7 @@ QString Card::getDynamicDescription(Player *player, Enemy *target) const
     return m_description;
 }
 
-void setOwnerPlayer(Player *player)
+void Card::setOwnerPlayer(Player *player)
 {
     m_ownerPlayer = player;
 }

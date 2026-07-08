@@ -82,8 +82,6 @@ protected:
     QVariantAnimation* m_hoverAnimation;
     qreal m_oldZValue;
 
-    Player *m_ownerPlayer = nullptr;
-
     Enemy *m_hoveredEnemy = nullptr;
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
@@ -112,6 +110,8 @@ protected:
     QPixmap m_typeIcon;
 
     int m_baseEnergyCost;
+
+    Player *m_ownerPlayer = nullptr;
 };
 
 #endif // CARD_H
