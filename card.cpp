@@ -181,7 +181,6 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setPen(energyTextColor);
 
     painter->drawText(energyBadge, Qt::AlignCenter, QString::number(m_energyCost));
-    // drawTypeGem(painter, rect);
 
     QRectF textRect(rect.x() + 14, fadeRect.y() + 8, rect.width() - 28, fadeRect.height() - 16);
 
@@ -197,14 +196,11 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     doc.setDefaultFont(QFont("Rajdhani", 10));
     doc.setTextWidth(descRect.width());
     QString dynamicText = getDynamicDescription(m_ownerPlayer, m_hoveredEnemy);
-    doc.setHtml(
-        QString("<div style='color:#dcdcdc;'>%1</div>").arg(highlightKeywords(m_description)));
+    doc.setHtml(QString("<div style='color:#dcdcdc;'>%1</div>").arg(highlightKeywords(dynamicText)));
     painter->save();
     painter->translate(descRect.topLeft());
     doc.drawContents(painter, QRectF(0, 0, descRect.width(), descRect.height()));
     painter->restore();
-
-    // drawTypeGem(painter, rect);
 
     painter->setPen(Qt::NoPen);
 
