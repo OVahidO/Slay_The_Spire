@@ -45,22 +45,13 @@ void Combatant::addBlock(int amount)
 
 void Combatant::addBlockFromCard(int amount)
 {
-    int modified = amount + effectStacks(BuffDebuffType::Dexterity);
-
-    if (effectStacks(BuffDebuffType::Frail) > 0)
-        modified = static_cast<int>(modified * 0.75);
-
-    if (modified < 0)
-        modified = 0;
-
-    addBlock(modified);
+    addBlock(calculateBlock(amount));
 }
 
 void Combatant::resetBlock()
 {
-    if (!m_hasBarricade) {
+    if (!m_hasBarricade)
         m_block = 0;
-    }
 }
 
 bool Combatant::isDead() const
@@ -164,6 +155,16 @@ int Combatant::calculateOutgoingDamage(int baseDamage) const
         modified = 0;
 
     return modified;
+}
+
+int Combatant::calculateBlock(int baseAmount) const
+{
+    int modified = baseAmount + effectStacks(BuffDebuffType::Dexterity);
+
+    if (effectStacks(BuffDebuffType::Frail) > 0)
+        modified = static_cast<int>(modified * 0.75);
+
+    return qMax(0, modified);
 }
 
 QVector<PowerEffect> &Combatant::powerEffects()

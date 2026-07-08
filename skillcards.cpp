@@ -16,8 +16,13 @@ SkillCard::SkillCard(QString name,
 
 SkillCard::~SkillCard() {}
 
+QString SkillCard::getDynamicDescription(Player *player, Enemy *target) const
+{
+    return m_description;
+}
+
 Defend::Defend(QGraphicsItem *parent)
-    : SkillCard("Defend", 1, "Gain 5 block", false, false, true, parent)
+    : SkillCard("Defend", 1, "Gain %1 block", false, false, true, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Skill/defend_ironclad.png";
     loadPixmap();
@@ -39,8 +44,7 @@ void Defend::upgrade()
     Card::upgrade();
     m_blockAmount += 3;
 
-    m_sourcePath = "";
-    loadPixmap();
+    m_name = "Defend+";
 }
 
 Card *Defend::clone() const
@@ -53,6 +57,16 @@ Card *Defend::clone() const
     copy->setLifetime(lifetime());
 
     return copy;
+}
+
+QString Defend::getDynamicDescription(Player *player, Enemy *target) const
+{
+    int finalBlock = m_blockAmount;
+
+    if (player)
+        finalBlock = player->calculateBlock(m_blockAmount);
+
+    return m_description.arg(finalBlock);
 }
 
 Exhume::Exhume(QGraphicsItem *parent)
@@ -79,10 +93,9 @@ void Exhume::upgrade()
         return;
 
     Card::upgrade();
-    m_energyCost -= 1;
 
-    m_sourcePath = "";
-    loadPixmap();
+    m_energyCost -= 1;
+    m_name = "Exhume+";
 }
 
 Card *Exhume::clone() const
@@ -98,7 +111,7 @@ Card *Exhume::clone() const
 }
 
 Limit_Break::Limit_Break(QGraphicsItem *parent)
-    : SkillCard("Limit_Break", 1, "Double your Strength", true, true, true, parent)
+    : SkillCard("Limit Break", 1, "Double your Strength\nExhaust", true, true, true, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Skill/Red-LimitBreak-Art.png";
     loadPixmap();
@@ -120,10 +133,10 @@ void Limit_Break::upgrade()
         return;
 
     Card::upgrade();
-    m_isExhaust = false;
 
-    m_sourcePath = "";
-    loadPixmap();
+    m_isExhaust = false;
+    m_description = "Double your Strength";
+    m_name = "Limit Break+";
 }
 
 Card *Limit_Break::clone() const
@@ -169,10 +182,10 @@ void Offering::upgrade()
         return;
 
     Card::upgrade();
-    m_drawCount += 2;
 
-    m_sourcePath = "";
-    loadPixmap();
+    m_drawCount += 2;
+    m_name = "Offering+";
+    m_description = "Lose 6 HP\nGain 2 Energy\nDraw 5 cards";
 }
 
 Card *Offering::clone() const
@@ -188,7 +201,7 @@ Card *Offering::clone() const
 }
 
 Impervious::Impervious(QGraphicsItem *parent)
-    : SkillCard("Impervious", 2, "Gain 30 block", true, true, true, parent)
+    : SkillCard("Impervious", 2, "Gain %1 block", true, true, true, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Skill/impervious.png";
     loadPixmap();
@@ -209,9 +222,7 @@ void Impervious::upgrade()
 
     Card::upgrade();
     m_blockAmount += 10;
-
-    m_sourcePath = "";
-    loadPixmap();
+    m_name = "Impervios+";
 }
 
 Card *Impervious::clone() const
@@ -226,10 +237,20 @@ Card *Impervious::clone() const
     return copy;
 }
 
+QString Impervious::getDynamicDescription(Player *player, Enemy *target) const
+{
+    int finalBlock = m_blockAmount;
+
+    if (player)
+        finalBlock = player->calculateBlock(m_blockAmount);
+
+    return m_description.arg(finalBlock);
+}
+
 Power_Through::Power_Through(QGraphicsItem *parent)
-    : SkillCard("Power_Through",
+    : SkillCard("Power Through",
                 1,
-                "Gain 15 block\nAdd 2 WOUNDs into hand",
+                "Gain %1 block\nAdd 2 WOUNDs into hand",
                 false,
                 false,
                 true,
@@ -260,10 +281,9 @@ void Power_Through::upgrade()
         return;
 
     Card::upgrade();
-    m_blockAmount += 5;
 
-    m_sourcePath = "";
-    loadPixmap();
+    m_blockAmount += 5;
+    m_name = "Power Through+";
 }
 
 Card *Power_Through::clone() const
@@ -276,6 +296,16 @@ Card *Power_Through::clone() const
     copy->setLifetime(lifetime());
 
     return copy;
+}
+
+QString Power_Through::getDynamicDescription(Player *player, Enemy *target) const
+{
+    int finalBlock = m_blockAmount;
+
+    if (player)
+        finalBlock = player->calculateBlock(m_blockAmount);
+
+    return m_description.arg(finalBlock);
 }
 
 Bloodletting::Bloodletting(QGraphicsItem *parent)
@@ -301,10 +331,10 @@ void Bloodletting::upgrade()
         return;
 
     Card::upgrade();
-    m_energyGain += 1;
 
-    m_sourcePath = "";
-    loadPixmap();
+    m_energyGain += 1;
+    m_name = "Bloodletting+";
+    m_description = "Lose 3 HP\nGain 3 Energy";
 }
 
 Card *Bloodletting::clone() const
@@ -344,6 +374,7 @@ void Entrench::upgrade()
     Card::upgrade();
 
     m_energyCost -= 1;
+    m_name = "Entrench+";
 }
 
 Card *Entrench::clone() const
@@ -404,6 +435,8 @@ void Dual_Wield::upgrade()
     Card::upgrade();
 
     m_copyCount++;
+    m_name = "Dual Wield+";
+    m_description = "Choose a card in hand\nAdd 3 copies into hand";
 }
 
 Card *Dual_Wield::clone() const

@@ -49,6 +49,7 @@ public:
     void tickDecayingBuffDebuff();
 
     int calculateOutgoingDamage(int baseDamage) const;
+    int calculateBlock(int baseAmount) const;
 
     QVector<PowerEffect> &powerEffects();
     void triggerPowerEffects(PowerUseTime time, GamePlay *game = nullptr);

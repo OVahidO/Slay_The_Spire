@@ -14,6 +14,7 @@ public:
                        bool requiresTarget = true,
                        QGraphicsItem *parent = nullptr);
     virtual ~SkillCard();
+    virtual QString getDynamicDescription(Player *player, Enemy *target) const override;
 };
 
 class Defend : public SkillCard
@@ -23,6 +24,7 @@ public:
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
     void upgrade() override;
     Card *clone() const override;
+    QString getDynamicDescription(Player *player, Enemy *target) const override;
 
 private:
     int m_blockAmount = 5;
@@ -67,6 +69,7 @@ public:
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
     void upgrade() override;
     Card *clone() const override;
+    QString getDynamicDescription(Player *player, Enemy *target) const override;
 
 private:
     int m_blockAmount = 30;
@@ -80,6 +83,7 @@ public:
     bool applyEffect(GamePlay* gameplay) override;
     void upgrade() override;
     Card *clone() const override;
+    QString getDynamicDescription(Player *player, Enemy *target) const override;
 
 private:
     int m_blockAmount = 15;
