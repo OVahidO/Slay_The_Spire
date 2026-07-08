@@ -33,7 +33,9 @@ Map::Map(QWidget *parent)
         {
             for(int j = 0; j<((rand()%2)+3); j++)
             {
-                level.append(new MapButton(MapButtonType::ENEMY, i, j));
+                MapButton* b = new MapButton(MapButtonType::ENEMY, i, j);
+                b->setEnabled(true);
+                level.append(b);
             }
         }
         else if(i < 5)
@@ -155,6 +157,12 @@ void Map::addMapButtons()
         for(int j=0; j<currentLevel.size(); j++)
         {
             auto currentMapButtons = currentLevel[j];
+            connect(currentMapButtons, &MapButton::onClick, this, [this](MapButton* mapButton)
+            {
+                auto sameLevelButtons = this->m_levels[mapButton->levelIndex()];
+                for(auto& mapButton : sameLevelButtons)
+                    mapButton->setEnabled(false);
+            });
 
             int buttonX = (currentMapButtons->levelPosIndex()+1)*250 + 50 + rand()%100 - rand()%100;
             if(currentLevel.size() == 1)
@@ -177,10 +185,10 @@ void Map::addRoads()
             auto currentBtn = m_levels[i][j];
             for (MapButton* nextBtn : currentBtn->nextButtons())
             {
-                qreal currentCenterX = currentBtn->pos().x() + 35 + (currentBtn->boundingRect().width() / 2);
-                qreal currentCenterY = currentBtn->pos().y() + 15 + (currentBtn->boundingRect().height() / 2);
-                qreal nextCenterX = nextBtn->pos().x() + 35 + (nextBtn->boundingRect().width() / 2);
-                qreal nextCenterY = nextBtn->pos().y() + 65 + (nextBtn->boundingRect().height() / 2);
+                qreal currentCenterX = currentBtn->pos().x() + (currentBtn->boundingRect().width() / 2);
+                qreal currentCenterY = currentBtn->pos().y() + (currentBtn->boundingRect().height() / 2) - 20;
+                qreal nextCenterX = nextBtn->pos().x() + (nextBtn->boundingRect().width() / 2);
+                qreal nextCenterY = nextBtn->pos().y() + (nextBtn->boundingRect().height() / 2) + 20;
 
 
                 QGraphicsLineItem* road = new QGraphicsLineItem(

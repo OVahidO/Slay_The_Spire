@@ -4,6 +4,7 @@
 #include <QGraphicsObject>
 #include <QObject>
 #include <QVector>
+#include <QVariantAnimation>
 
 enum class MapButtonType {ENEMY, EVENT, ELITE, SHOP, CAMPFIRE, TREASURE, BOSS};
 
@@ -25,6 +26,13 @@ public:
                        QWidget *widget) override;
 
 signals:
+    void onClick(MapButton* mapButton);
+
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
+    QVariantAnimation* m_hoverAnimation;
 
 private:
     int m_levelIndex;

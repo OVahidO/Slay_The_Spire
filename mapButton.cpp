@@ -1,5 +1,6 @@
 #include "mapButton.h"
 #include <QPainter>
+#include <QCursor>
 
 MapButton::MapButton(MapButtonType buttonType, int levelIndex, int levelPosIndex, QGraphicsItem *parent)
     : QGraphicsObject{parent}
@@ -30,11 +31,21 @@ MapButton::MapButton(MapButtonType buttonType, int levelIndex, int levelPosIndex
         break;
     }
     m_pixmap.load(m_resourcePath);
+
+    this->setAcceptHoverEvents(true);
+    this->setTransformOriginPoint(m_pixmap.width()/2, m_pixmap.height()/2);
+    this->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+    this->setEnabled(false);
+
+    m_hoverAnimation = new QVariantAnimation(this);
+    m_hoverAnimation->setDuration(100);
+
+    connect(m_hoverAnimation, &QVariantAnimation::valueChanged, this, [this](const QVariant& value){this->setScale(value.toReal());});
 }
 
 QRectF MapButton::boundingRect() const
 {
-    return QRectF(0, 0, 50, 50);
+    return QRectF(0, 0, m_pixmap.width(), m_pixmap.height());
 }
 
 void MapButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -42,8 +53,52 @@ void MapButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    if(!m_pixmap.isNull())
+    painter->save();
+
+    if(!m_pixmap.isNull() && isEnabled())
         painter->drawPixmap(0, 0, m_pixmap);
+    if(!isEnabled())
+    {
+        QPixmap disablePix = m_pixmap;
+        QPainter pixPainter(&disablePix);
+        pixPainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+        pixPainter.fillRect(disablePix.rect(), Qt::gray);
+        pixPainter.end();
+        painter->drawPixmap(0, 0, disablePix);
+    }
+
+    painter->restore();
+}
+
+void MapButton::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    for(auto& button : this->m_nextButtons)
+        button->setEnabled(true);
+    this->setEnabled(false);
+
+    emit onClick(this);
+
+    QGraphicsObject::mousePressEvent(event);
+}
+
+void MapButton::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+{
+    m_hoverAnimation->stop();
+    m_hoverAnimation->setStartValue(this->scale());
+    m_hoverAnimation->setEndValue(1.2);
+    m_hoverAnimation->start();
+
+    QGraphicsObject::hoverEnterEvent(event);
+}
+
+void MapButton::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+{
+    m_hoverAnimation->stop();
+    m_hoverAnimation->setStartValue(this->scale());
+    m_hoverAnimation->setEndValue(1.0);
+    m_hoverAnimation->start();
+
+    QGraphicsObject::hoverLeaveEvent(event);
 }
 
 int MapButton::levelIndex() const
