@@ -2,6 +2,8 @@
 #define MAP_H
 
 #include <QWidget>
+#include <QGraphicsView>
+#include <QGraphicsScene>
 #include <QVector>
 
 class MapButton;
@@ -23,6 +25,12 @@ signals:
 
 private:
     Ui::Map *ui;
+    QGraphicsView* m_view;
+    QGraphicsScene* m_scene;
+    void setBackground();
+    void addMapButtons();
+    void addRoads();
+
     QVector<QVector<MapButton*>> m_levels;
     void connectLevels();
 };

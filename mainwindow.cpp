@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "gameplay.h"
 #include "player.h"
+#include "map.h"
 #include "ui_mainwindow.h"
 #include "topbar.h"
 
@@ -16,6 +17,9 @@ MainWindow::MainWindow(QWidget *parent)
     GamePlay* g = new GamePlay(player, this);
     int gamePlay_index = ui->stackedWidget->addWidget(g);
     ui->stackedWidget->setCurrentIndex(gamePlay_index);
+    Map* m = new Map(this);
+    int map_Index = ui->stackedWidget->addWidget(m);
+    ui->stackedWidget->setCurrentIndex(map_Index);
 }
 
 MainWindow::~MainWindow()

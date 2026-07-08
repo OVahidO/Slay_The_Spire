@@ -65,4 +65,36 @@
         <file>Pics/Icons/energyRedVFX.png</file>
         <file>Pics/Icons/endTurnButton.png</file>
     </qresource>
+    <qresource prefix="/Map">
+        <file>Pics/Map/chest.png</file>
+        <file>Pics/Map/chestOutline.png</file>
+        <file>Pics/Map/circle1.png</file>
+        <file>Pics/Map/circle2.png</file>
+        <file>Pics/Map/circle3.png</file>
+        <file>Pics/Map/circle4.png</file>
+        <file>Pics/Map/circle5.png</file>
+        <file>Pics/Map/dot1.png</file>
+        <file>Pics/Map/elite.png</file>
+        <file>Pics/Map/eliteOutline.png</file>
+        <file>Pics/Map/event.png</file>
+        <file>Pics/Map/eventOutline.png</file>
+        <file>Pics/Map/legend2.png</file>
+        <file>Pics/Map/mapBlend.png</file>
+        <file>Pics/Map/mapBlend2.png</file>
+        <file>Pics/Map/mapBot.png</file>
+        <file>Pics/Map/mapCompleteIcon.png</file>
+        <file>Pics/Map/mapMid.png</file>
+        <file>Pics/Map/mapMid2.png</file>
+        <file>Pics/Map/mapShrineIcon.png</file>
+        <file>Pics/Map/mapTop.png</file>
+        <file>Pics/Map/monster.png</file>
+        <file>Pics/Map/monsterOutline.png</file>
+        <file>Pics/Map/purgeWellIcon.png</file>
+        <file>Pics/Map/rest.png</file>
+        <file>Pics/Map/restOutline.png</file>
+        <file>Pics/Map/selectBox.png</file>
+        <file>Pics/Map/shop.png</file>
+        <file>Pics/Map/shop_blood.png</file>
+        <file>Pics/Map/shopOutline.png</file>
+    </qresource>
 </RCC>

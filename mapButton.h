@@ -30,6 +30,8 @@ private:
     int m_levelIndex;
     int m_levelPosIndex;
     MapButtonType m_buttonType;
+    QString m_resourcePath;
+    QPixmap m_pixmap;
 
     QVector<MapButton*> m_nextButtons;
 };
