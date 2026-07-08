@@ -7,11 +7,16 @@ class GamePlay;
 class Player;
 class Card;
 
+enum class relicType { Normal, Boss, Event };
+
 class Relic : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    explicit Relic(QGraphicsItem *parent = nullptr);
+    explicit Relic(QString name,
+                   QString description,
+                   relicType type,
+                   QGraphicsItem *parent = nullptr);
     virtual ~Relic() = default;
 
     QRectF boundingRect() const override;
@@ -37,9 +42,10 @@ protected:
     QString m_description;
     QString m_soucePath;
     QPixmap m_icon;
+    relicType m_type;
     int m_counter = -1; // like for kunai
 
-    void loadIcon(const QString &path);
+    void loadIcon();
 };
 
 #endif // RELIC_H

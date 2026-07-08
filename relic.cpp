@@ -2,8 +2,11 @@
 
 #include <QPainter>
 
-Relic::Relic(QGraphicsItem *parent)
-    : QGraphicsObject(parent)
+Relic::Relic(QString name, QString description, relicType type, QGraphicsItem *parent)
+    : m_name(name)
+    , m_description(description)
+    , m_type(type)
+    , QGraphicsObject(parent)
 {}
 
 QRectF Relic::boundingRect() const
@@ -60,7 +63,7 @@ void Relic::setCounter(int value)
     m_counter = value;
 }
 
-void Relic::loadIcon(const QString &path)
+void Relic::loadIcon()
 {
-    m_icon.load(path);
+    m_icon.load(m_soucePath);
 }
