@@ -1,9 +1,12 @@
 #include "map.h"
 #include "mapButton.h"
+#include "ui_map.h"
 
-Map::Map(QGraphicsItem *parent)
-    : QGraphicsObject{parent}
+Map::Map(QWidget *parent)
+    : QWidget{parent}
+    , ui(new Ui::Map)
 {
+    ui->setupUi(this);
     for(int i=0; i<11; i++)
     {
         QVector<MapButton*> level;
@@ -51,16 +54,9 @@ Map::Map(QGraphicsItem *parent)
     connectLevels();
 }
 
-QRectF Map::boundingRect() const
+Map::~Map()
 {
-    return QRectF(0, 0, 0, 0);
-}
-
-void Map::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
-    Q_UNUSED(painter);
+    delete ui;
 }
 
 void Map::connectLevels()

@@ -30,7 +30,7 @@ qt_add_executable(Slay_The_Spire
     buffdebuff.h buffdebuff.cpp
     topbar.h topbar.cpp topbar.ui
     mapButton.h mapButton.cpp
-    map.h map.cpp
+    map.h map.cpp map.ui
     #
 )
 

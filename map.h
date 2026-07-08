@@ -1,25 +1,28 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include <QGraphicsObject>
-#include <QObject>
+#include <QWidget>
 #include <QVector>
 
 class MapButton;
 
-class Map : public QGraphicsObject
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class Map;
+}
+QT_END_NAMESPACE
+
+class Map : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Map(QGraphicsItem *parent = nullptr);
+    explicit Map(QWidget *parent = nullptr);
+    ~Map();
 
-    virtual QRectF boundingRect() const override;
-    virtual void paint(QPainter *painter,
-                       const QStyleOptionGraphicsItem *option,
-                       QWidget *widget) override;
 signals:
 
 private:
+    Ui::Map *ui;
     QVector<QVector<MapButton*>> m_levels;
     void connectLevels();
 };
