@@ -25,6 +25,8 @@ void FaceOfTheCleric::onCombatEnd(Player *player)
         player->addMaxHp(1);
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CultistHeadpiece::CultistHeadpiece(QGraphicsItem *parent)
     : Relic("Cultist Headpiece", "CAW CAWW!", relicType::Event, parent)
 {
@@ -42,6 +44,8 @@ void CultistHeadpiece::onCombatStart(GamePlay *game)
     if (m_cawSound.isLoaded())
         m_cawSound.play();
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 MutagenicStrength::MutagenicStrength(QGraphicsItem *parent)
     : Relic("Mutagenic Strength",
@@ -68,6 +72,8 @@ void MutagenicStrength::onTurnEnd(Player *player)
         m_isActive = false;
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 WarpedTongs::WarpedTongs(QGraphicsItem *parent)
     : Relic("Warped Tongs",
@@ -104,6 +110,8 @@ void WarpedTongs::onCombatStart(GamePlay *game)
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CallingBell::CallingBell(QGraphicsItem *parent)
     : Relic("Calling Bell",
             "Obtain the Curse of the Bell and 3 random normal relics.",
@@ -127,6 +135,8 @@ void CallingBell::onEquip(GamePlay *game)
         game->player()->addRelic(r);
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 MarkOfPain::MarkOfPain(QGraphicsItem *parent)
     : Relic(
@@ -154,6 +164,8 @@ void MarkOfPain::onCombatStart(GamePlay *game)
         // game->addCardToHand(new WOUND());
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 VelvetChoker::VelvetChoker(QGraphicsItem *parent)
     : Relic("Velvet Choker",
@@ -191,9 +203,130 @@ void VelvetChoker::onCardPlayed(Card *card, Player *player)
     //     player->setCannotPlayCards(true);
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BlackStar::BlackStar(QGraphicsItem *parent)
     : Relic("Black Star", "Elites now drop 2 relics when defeated.", relicType::Boss, parent)
 {
     m_soucePath = ":/icons/Pics/Icons/relic/boss/black_star.png";
     loadIcon();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Girya::Girya(QGraphicsItem *parent)
+    : Relic("Girya", "You may now lift at campsites.", relicType::Normal, parent)
+{
+    m_soucePath = ":/icons/Pics/Icons/relic/normal/girya.png";
+    loadIcon();
+    m_counter = 3;
+}
+// اگر بازیکن این رلیک را داشت و m_counter > 0 بود، گزینه Lift فعال می‌شود.
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Kunai::Kunai(QGraphicsItem *parent)
+    : Relic("Kunai",
+            "Every time you play 3 attacks in a turn gain 1 Dexterity.",
+            relicType::Normal,
+            parent)
+{
+    m_soucePath = ":/icons/Pics/Icons/relic/normal/kunai.png";
+    loadIcon();
+    m_counter = 0;
+}
+
+void Kunai::onTurnStart(Player *player)
+{
+    Q_UNUSED(player);
+    // در شروع نوبت شمارنده را صفر می‌کنیم[cite: 45].
+    m_counter = 0;
+}
+
+void Kunai::onCardPlayed(Card *card, Player *player)
+{
+    if (!card || !player)
+        return;
+
+    if (card->cardType() == CardType::Attack) {
+        m_counter++;
+
+        if (m_counter == 3) {
+            player->applyBuffDebuff(BuffDebuffType::Dexterity, 1);
+            m_counter = 0;
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Shuriken::Shuriken(QGraphicsItem *parent)
+    : Relic("Shuriken",
+            "Every time you play 3 attacks in a turn gain 1 Strength.",
+            relicType::Normal,
+            parent)
+{
+    m_soucePath = ":/icons/Pics/Icons/relic/normal/shuriken.png";
+    loadIcon();
+    m_counter = 0;
+}
+
+void Shuriken::onTurnStart(Player *player)
+{
+    Q_UNUSED(player);
+    m_counter = 0;
+}
+
+void Shuriken::onCardPlayed(Card *card, Player *player)
+{
+    if (!card || !player)
+        return;
+
+    if (card->cardType() == CardType::Attack) {
+        m_counter++;
+
+        if (m_counter == 3) {
+            player->applyBuffDebuff(BuffDebuffType::Strength, 1);
+            m_counter = 0;
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IceCream::IceCream(QGraphicsItem *parent)
+    : Relic("Ice Cream", "Energy is now conserved between turns.", relicType::Normal, parent)
+{
+    m_soucePath = ":/icons/Pics/Icons/relic/normal/ice_cream.png";
+    loadIcon();
+    m_savedEnergy = 0;
+}
+
+void IceCream::onTurnEnd(Player *player)
+{
+    if (player)
+        m_savedEnergy = player->energy();
+}
+
+void IceCream::onTurnStart(Player *player)
+{
+    if (player && m_savedEnergy > 0) {
+        player->addEnergy(m_savedEnergy);
+        m_savedEnergy = 0;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Anchor::Anchor(QGraphicsItem *parent)
+    : Relic("Anchor", "Start each combat with 10 block.", relicType::Normal, parent)
+{
+    m_soucePath = ":/icons/Pics/Icons/relic/normal/anchor.png";
+    loadIcon();
+}
+
+void Anchor::onCombatStart(GamePlay *game)
+{
+    if (game && game->player())
+        game->player()->addBlock(10);
 }

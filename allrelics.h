@@ -68,9 +68,49 @@ class BlackStar : public Relic
 public:
     explicit BlackStar(QGraphicsItem *parent = nullptr);
     void onEquip(GamePlay *game) override;
-
     // به صورت غیرفعال عمل می‌کند
     // منطق آن توسط GamePlay چک می‌شود.
+};
+
+class Girya : public Relic
+{
+public:
+    explicit Girya(QGraphicsItem *parent = nullptr);
+    // منطق اصلی این رلیک در استراحتگاه (Campfire) پیاده‌سازی می‌شود
+};
+
+class Kunai : public Relic
+{
+public:
+    explicit Kunai(QGraphicsItem *parent = nullptr);
+    void onTurnStart(Player *player) override;
+    void onCardPlayed(Card *card, Player *player) override;
+};
+
+class Shuriken : public Relic
+{
+public:
+    explicit Shuriken(QGraphicsItem *parent = nullptr);
+    void onTurnStart(Player *player) override;
+    void onCardPlayed(Card *card, Player *player) override;
+};
+
+class IceCream : public Relic
+{
+public:
+    explicit IceCream(QGraphicsItem *parent = nullptr);
+    void onTurnEnd(Player *player) override;
+    void onTurnStart(Player *player) override;
+
+private:
+    int m_savedEnergy = 0;
+};
+
+class Anchor : public Relic
+{
+public:
+    explicit Anchor(QGraphicsItem *parent = nullptr);
+    void onCombatStart(GamePlay *game) override;
 };
 
 #endif // ALLRELICS_H
