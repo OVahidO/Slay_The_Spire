@@ -155,5 +155,5 @@ EnemyIntent Enemy::pickIntent(const QVector<QPair<int, EnemyIntent>> &options) c
 
 void Enemy::loadPic()
 {
-    m_pic.load(m_soucePath);
+    m_enemyPic.load(m_soucePath);
 }

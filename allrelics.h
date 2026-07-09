@@ -67,7 +67,7 @@ class BlackStar : public Relic
 {
 public:
     explicit BlackStar(QGraphicsItem *parent = nullptr);
-    void onEquip(GamePlay *game) override;
+    // void onEquip(GamePlay *game) override;
     // به صورت غیرفعال عمل می‌کند
     // منطق آن توسط GamePlay چک می‌شود.
 };

@@ -78,6 +78,7 @@
         <file>Pics/Potions/fire_potion.png</file>
         <file>Pics/Potions/swift_potion.png</file>
         <file>Pics/Potions/radiant_tincture.png</file>
+        </qresource>
     <qresource prefix="/sounds">
         <file>Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3</file>
     </qresource>
@@ -99,18 +100,14 @@
         <file>Pics/Enemies/Act I/Cultist-pretty.webp</file>
         <file>Pics/Enemies/Act I/cultists.png</file>
         <file>Pics/Enemies/Act I/damp_cultist.png</file>
-        <file>Pics/Enemies/Act I/Gremlin-nob-pretty.webp</file>
-        <file>Pics/Enemies/Act I/Hexaghust.webp</file>
         <file>Pics/Enemies/Act I/Jaw-worm-pretty.webp</file>
         <file>Pics/Enemies/Act I/Looter-pretty.webp</file>
         <file>Pics/Enemies/Act I/louse_progenitor.png</file>
         <file>Pics/Enemies/Act I/Louse-green-pretty.webp</file>
         <file>Pics/Enemies/Act I/Louse-red-pretty.webp</file>
         <file>Pics/Enemies/Act I/Mugger.webp</file>
-        <file>Pics/Enemies/Act I/Sentry-pretty.webp</file>
         <file>Pics/Enemies/Act I/Slaver-blue-pretty.webp</file>
         <file>Pics/Enemies/Act I/Slaver-red-pretty.webp</file>
-        <file>Pics/Enemies/Act I/Slime-boss-pretty.webp</file>
         <file>Pics/Enemies/Act II/Book-of-stabbing-pretty.webp</file>
         <file>Pics/Enemies/Act II/Champ.webp</file>
         <file>Pics/Enemies/Act II/Slaver-leader-pretty.webp</file>

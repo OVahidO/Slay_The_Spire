@@ -70,7 +70,7 @@ void Relic::loadIcon()
     m_icon.load(m_soucePath);
 }
 
-Relic *createRandomNormalRelic()
+Relic *Relic::createRandomNormalRelic()
 {
     static const int normalRelicCount = 3;
     int r = QRandomGenerator::global()->bounded(normalRelicCount);
