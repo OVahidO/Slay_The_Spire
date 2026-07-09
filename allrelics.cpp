@@ -190,3 +190,10 @@ void VelvetChoker::onCardPlayed(Card *card, Player *player)
     // if (m_counter >= 6)
     //     player->setCannotPlayCards(true);
 }
+
+BlackStar::BlackStar(QGraphicsItem *parent)
+    : Relic("Black Star", "Elites now drop 2 relics when defeated.", relicType::Boss, parent)
+{
+    m_soucePath = ":/icons/Pics/Icons/relic/boss/black_star.png";
+    loadIcon();
+}

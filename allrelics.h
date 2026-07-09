@@ -63,4 +63,14 @@ public:
     void onCardPlayed(Card *card, Player *player) override;
 };
 
+class BlackStar : public Relic
+{
+public:
+    explicit BlackStar(QGraphicsItem *parent = nullptr);
+    void onEquip(GamePlay *game) override;
+
+    // به صورت غیرفعال عمل می‌کند
+    // منطق آن توسط GamePlay چک می‌شود.
+};
+
 #endif // ALLRELICS_H

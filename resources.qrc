@@ -1,5 +1,5 @@
 <RCC>
-    <qresource lang=" " prefix="/enemies">
+    <qresource lang=" " prefix="/icons">
         <file>Pics/Icons/hpIcon.png</file>
         <file>Pics/Icons/Gold.png</file>
         <file>Pics/Icons/DrawPileIcon.png</file>
