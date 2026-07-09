@@ -5,6 +5,7 @@
 
 class Card;
 class Player;
+class Relic;
 
 class Player : public Combatant
 {
@@ -38,6 +39,13 @@ public:
     void loseEnergy(int n = 1);
     void heal(int n = 1);
 
+    QVector<Relic *> &relics();
+    void addRelic(Relic *relic);
+    void triggerRelicsCombatStart(GamePlay *game);
+    void triggerRelicsCombatEnd();
+    void triggerRelicsTurnStart();
+    void triggerRelicsTurnEnd();
+
 signals:
     void hpChanged();
     void coinChanged();
@@ -53,7 +61,7 @@ private:
     int m_handSize = 5;
 
     QVector<Card *> m_HandsCards;
-    QVector<Card *> m_relics;
+    QVector<Relic *> m_relics;
 };
 
 #endif // PLAYER_H

@@ -39,4 +39,11 @@ public:
     void onCombatStart(GamePlay *game) override;
 };
 
+class CallingBell : public Relic
+{
+public:
+    explicit CallingBell(QGraphicsItem *parent = nullptr);
+    void onEquip(GamePlay *game) override;
+};
+
 #endif // ALLRELICS_H

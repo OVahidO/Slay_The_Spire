@@ -72,6 +72,6 @@
         <file>Pics/Cards/Status/wound.png</file>
     </qresource>
     <qresource prefix="/sounds">
-        <file>Sounds &amp; Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3</file>
+        <file>Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3</file>
     </qresource>
 </RCC>

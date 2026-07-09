@@ -4,6 +4,7 @@
 #include <QUrl>
 #include "buffdebuff.h"
 #include "card.h"
+#include "cursecards.h"
 #include "gameplay.h"
 #include "player.h"
 
@@ -29,7 +30,7 @@ CultistHeadpiece::CultistHeadpiece(QGraphicsItem *parent)
     m_soucePath = ":/icons/Pics/Icons/relic/event/CultistMask.png";
     loadIcon();
     m_cawSound.setSource(
-        QUrl(":/sounds/Sounds & Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3"));
+        QUrl(":/sounds/Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3"));
     m_cawSound.setVolume(0.8f);
 }
 
@@ -99,5 +100,29 @@ void WarpedTongs::onCombatStart(GamePlay *game)
         targetCard->upgrade();
 
         targetCard->setLifetime(CardLifetime::EndOfCombat);
+    }
+}
+
+CallingBell::CallingBell(QGraphicsItem *parent)
+    : Relic("Calling Bell",
+            "Obtain the Curse of the Bell and 3 random normal relics.",
+            relicType::Boss,
+            parent)
+{
+    m_soucePath = ":/icons/Pics/Icons/relic/boss/CallingBell.png";
+    loadIcon();
+}
+
+void CallingBell::onEquip(GamePlay *game)
+{
+    if (!game || !game->player())
+        return;
+
+    // game->addCardToDeck(new CurseOfTheBell());
+
+    for (int i = 0; i < 3; ++i) {
+        Relic *r = createRandomNormalRelic();
+        r->onEquip(game);
+        game->player()->addRelic(r);
     }
 }

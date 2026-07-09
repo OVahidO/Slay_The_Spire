@@ -1,4 +1,6 @@
 #include "relic.h"
+#include <QRandomGenerator>
+#include "allrelics.h"
 
 #include <QPainter>
 
@@ -66,4 +68,22 @@ void Relic::setCounter(int value)
 void Relic::loadIcon()
 {
     m_icon.load(m_soucePath);
+}
+
+Relic *createRandomNormalRelic()
+{
+    // فعلاً با relicهایی که پیاده‌سازی شدن
+    // بعداً expand کن
+    static const int normalRelicCount = 3; // ← با هر relic جدید آپدیت کن
+    int r = QRandomGenerator::global()->bounded(normalRelicCount);
+    switch (r) {
+    case 0:
+        return new FaceOfTheCleric();
+    case 1:
+        return new MutagenicStrength();
+    case 2:
+        return new WarpedTongs();
+    default:
+        return new FaceOfTheCleric();
+    }
 }

@@ -1,5 +1,6 @@
 #include "player.h"
 #include "card.h"
+#include "relic.h"
 
 Player::Player(QString name, int maxHP, QGraphicsItem *parent)
     : Combatant(name, maxHP, parent)
@@ -102,4 +103,39 @@ bool Player::cannotPlayAttacks() const
 void Player::setCannotPlayAttacks(bool value)
 {
     m_cannotPlayAttacks = value;
+}
+
+QVector<Relic *> &Player::relics()
+{
+    return m_relics;
+}
+
+void Player::addRelic(Relic *relic)
+{
+    if (relic)
+        m_relics.append(relic);
+}
+
+void Player::triggerRelicsCombatStart(GamePlay *game)
+{
+    for (Relic *r : m_relics)
+        r->onCombatStart(game);
+}
+
+void Player::triggerRelicsCombatEnd()
+{
+    for (Relic *r : m_relics)
+        r->onCombatEnd(this);
+}
+
+void Player::triggerRelicsTurnStart()
+{
+    for (Relic *r : m_relics)
+        r->onTurnStart(this);
+}
+
+void Player::triggerRelicsTurnEnd()
+{
+    for (Relic *r : m_relics)
+        r->onTurnEnd(this);
 }

@@ -28,12 +28,15 @@ public:
     virtual void onTurnEnd(Player *player) {}
     virtual void onCardPlayed(Card *card, Player *player) {}
     virtual void onTakeDamage(int &damage, Player *player) {}
+    virtual void onEquip(GamePlay *game) {}
 
     QString name() const;
     QString description() const;
     int counter() const;
 
     void setCounter(int value);
+
+    Relic *createRandomNormalRelic();
 
 signals:
 
