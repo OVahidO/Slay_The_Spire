@@ -42,26 +42,128 @@ Map::Map(QWidget *parent)
         {
             for(int j = 0; j<((rand()%4)+1); j++)
             {
-                MapButtonType t = static_cast<MapButtonType>(rand()%(i+1));
-                level.append(new MapButton(t, i, j));
+                int l = (rand()%100 + 1);
+                if(l <= 90 - ((i-1)*15))
+                {
+                    if(rand()%100 < 65)
+                        level.append(new MapButton(MapButtonType::ENEMY, i, j));
+                    else
+                        level.append(new MapButton(MapButtonType::EVENT, i, j));
+                }
+                else if(l <= 100 - ((i-1)*15))
+                {
+                    level.append(new MapButton(MapButtonType::ELITE, i, j));
+                }
+                else
+                {
+                    if(i != 4)
+                    {
+                        MapButtonType t = static_cast<MapButtonType>(rand()%2 + 3);
+                        level.append(new MapButton(t, i, j));
+                    }
+                    else
+                    {
+                        bool isReapet = false;
+                        if(rand()%100 < 75)
+                        {
+                            for(auto& mapButton : m_levels[i-1])
+                            {
+                                if(mapButton->buttonType() == MapButtonType::CAMPFIRE)
+                                {
+                                    isReapet = true;
+                                    break;
+                                }
+                            }
+
+                            if(!isReapet)
+                                level.append(new MapButton(MapButtonType::CAMPFIRE, i, j));
+                            else
+                            {
+                                MapButtonType t = static_cast<MapButtonType>(rand()%2);
+                                level.append(new MapButton(t, i, j));
+                            }
+                        }
+                        else
+                        {
+                            for(auto& mapButton : m_levels[i-1])
+                            {
+                                if(mapButton->buttonType() == MapButtonType::SHOP)
+                                {
+                                    isReapet = true;
+                                    break;
+                                }
+                            }
+
+                            if(!isReapet)
+                                level.append(new MapButton(MapButtonType::SHOP, i, j));
+                            else
+                            {
+                                MapButtonType t = static_cast<MapButtonType>(rand()%2);
+                                level.append(new MapButton(t, i, j));
+                            }
+                        }
+                    }
+                }
             }
         }
         else if(i > 5)
         {
             for(int j = 0; j<((rand()%4)+1); j++)
             {
-                int l = (rand()%100 + 1);
-                if(l <= 50)
-                    level.append(new MapButton(MapButtonType::ELITE, i ,j));
-                else if(l <= 10+(i*10))
-                {
-                    MapButtonType t = static_cast<MapButtonType>(rand()%2 + 3);
-                    level.append(new MapButton(t, i, j));
-                }
+                if(i == 9)
+                    level.append(new MapButton(MapButtonType::CAMPFIRE, i ,j));
                 else
                 {
-                    MapButtonType t = static_cast<MapButtonType>(rand()%2);
-                    level.append(new MapButton(t, i, j));
+                    int l = (rand()%100 + 1);
+                    if(l <= 50)
+                        level.append(new MapButton(MapButtonType::ELITE, i ,j));
+                    else if(l <= 10+(i*10))
+                    {
+                        bool isReapet = false;
+                        if(rand()%100 < 50)
+                        {
+                            for(auto& mapButton : m_levels[i-1])
+                            {
+                                if(mapButton->buttonType() == MapButtonType::CAMPFIRE)
+                                {
+                                    isReapet = true;
+                                    break;
+                                }
+                            }
+
+                            if(!isReapet)
+                                level.append(new MapButton(MapButtonType::CAMPFIRE, i, j));
+                            else
+                            {
+                                MapButtonType t = static_cast<MapButtonType>(rand()%2);
+                                level.append(new MapButton(t, i, j));
+                            }
+                        }
+                        else
+                        {
+                            for(auto& mapButton : m_levels[i-1])
+                            {
+                                if(mapButton->buttonType() == MapButtonType::SHOP)
+                                {
+                                    isReapet = true;
+                                    break;
+                                }
+                            }
+
+                            if(!isReapet)
+                                level.append(new MapButton(MapButtonType::SHOP, i, j));
+                            else
+                            {
+                                MapButtonType t = static_cast<MapButtonType>(rand()%2);
+                                level.append(new MapButton(t, i, j));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MapButtonType t = static_cast<MapButtonType>(rand()%2);
+                        level.append(new MapButton(t, i, j));
+                    }
                 }
             }
         }
