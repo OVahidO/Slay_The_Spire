@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "gameplay.h"
 #include "player.h"
+#include "map.h"
 #include "ui_mainwindow.h"
 #include "topbar.h"
 
@@ -19,6 +20,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->stackedWidget->setCurrentIndex(gamePlay_index);
 
     connect(m_topbar, &Topbar::potionUsed, g, &GamePlay::usedPotionHandler);
+
+    // Map* m = new Map(this);
+    // int map_Index = ui->stackedWidget->addWidget(m);
+    // ui->stackedWidget->setCurrentIndex(map_Index);
 }
 
 MainWindow::~MainWindow()

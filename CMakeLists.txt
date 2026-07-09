@@ -34,6 +34,8 @@ qt_add_executable(Slay_The_Spire
     relic.h relic.cpp
     allrelics.h allrelics.cpp
     allenemies.h allenemies.cpp
+    mapButton.h mapButton.cpp
+    map.h map.cpp map.ui
     #
 )
 
