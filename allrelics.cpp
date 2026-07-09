@@ -223,6 +223,16 @@ Girya::Girya(QGraphicsItem *parent)
 }
 // اگر بازیکن این رلیک را داشت و m_counter > 0 بود، گزینه Lift فعال می‌شود.
 
+void Girya::onCombatStart(GamePlay *game)
+{
+    if (game && game->player()) {
+        int liftedTimes = 3 - m_counter;
+
+        if (liftedTimes > 0)
+            game->player()->applyBuffDebuff(BuffDebuffType::Strength, liftedTimes);
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Kunai::Kunai(QGraphicsItem *parent)
