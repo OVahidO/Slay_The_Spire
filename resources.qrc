@@ -58,4 +58,12 @@
         <file>Pics/Cards/Status/slimed.png</file>
         <file>Pics/Cards/Status/wound.png</file>
     </qresource>
+    <qresource prefix="/Potions">
+        <file>Pics/Potions/block_potion.png</file>
+        <file>Pics/Potions/energy_potion.png</file>
+        <file>Pics/Potions/fairy_in_a_bottle.png</file>
+        <file>Pics/Potions/fire_potion.png</file>
+        <file>Pics/Potions/swift_potion.png</file>
+        <file>Pics/Potions/radiant_tincture.png</file>
+    </qresource>
 </RCC>

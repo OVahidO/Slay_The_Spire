@@ -3,6 +3,7 @@
 #include "skillcards.h"
 #include "enemy.h"
 #include "player.h"
+#include "potion.h"
 #include "statuscards.h"
 #include "ui_gameplay.h"
 #include <QString>
@@ -410,6 +411,28 @@ void GamePlay::playedCardHandler(Card *card)
     });
 
     cardToDiscardPileAnim->start();
+}
+
+void GamePlay::usedPotionHandler(Potion* potion)
+{
+    if(dynamic_cast<FirePotion*>(potion))
+        for(Enemy* enemy : m_enemys)
+        {
+            potion->applyEffect(enemy);
+        }
+    else
+    {
+        if(m_player)
+            potion->applyEffect(m_player);
+    }
+
+    if(m_player)
+    {
+        int potionIndex = m_player->Potions().indexOf(potion);
+        m_player->Potions()[potionIndex] = nullptr;
+
+        delete potion;
+    }
 }
 
 void GamePlay::updateHpLabels()
