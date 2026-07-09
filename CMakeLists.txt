@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(Slay_The_Spire LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Multimedia)
 
 qt_standard_project_setup()
 
@@ -22,20 +22,26 @@ qt_add_executable(Slay_The_Spire
     player.h player.cpp
     gameplay.h gameplay.cpp gameplay.ui
     enemy.h enemy.cpp
-    normalenemies.h normalenemies.cpp
-    eliteenemies.h eliteenemies.cpp
-    bossenemies.h bossenemies.cpp
+    allenemies.h allenemies.cpp
+    relic.h relic.cpp
+    allrelics.h allrelics.cpp
+
     ${RESOURCES}
     combatant.h combatant.cpp
     buffdebuff.h buffdebuff.cpp
     potion.h potion.cpp potion.ui
     topbar.h topbar.cpp topbar.ui
+    relic.h relic.cpp
+    allrelics.h allrelics.cpp
+    allenemies.h allenemies.cpp
+    #
 )
 
 target_link_libraries(Slay_The_Spire
     PRIVATE
         Qt::Core
         Qt::Widgets
+        Qt::Multimedia
 )
 
 install(TARGETS Slay_The_Spire

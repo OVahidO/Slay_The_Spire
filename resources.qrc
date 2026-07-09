@@ -21,6 +21,19 @@
         <file>Pics/Icons/card-type-icon/vector shield icon-gold.png</file>
         <file>Pics/Icons/card-type-icon/virus.png</file>
         <file>Pics/Icons/card-type-icon/virus-gold.png</file>
+        <file>Pics/Icons/relic/normal/anchor.png</file>
+        <file>Pics/Icons/relic/normal/girya.png</file>
+        <file>Pics/Icons/relic/normal/ice_cream.png</file>
+        <file>Pics/Icons/relic/normal/kunai.png</file>
+        <file>Pics/Icons/relic/normal/shuriken.png</file>
+        <file>Pics/Icons/relic/event/CultistMask.png</file>
+        <file>Pics/Icons/relic/event/FaceOfCleric.png</file>
+        <file>Pics/Icons/relic/event/MutagenicStrength.png</file>
+        <file>Pics/Icons/relic/event/WarpedTongs.png</file>
+        <file>Pics/Icons/relic/boss/black_star.png</file>
+        <file>Pics/Icons/relic/boss/calling_bell.png</file>
+        <file>Pics/Icons/relic/boss/MarkofPain.png</file>
+        <file>Pics/Icons/relic/boss/velvet_choker.png</file>
     </qresource>
     <qresource prefix="/card-art">
         <file>Pics/Cards/Attack/bash.png</file>
@@ -65,5 +78,42 @@
         <file>Pics/Potions/fire_potion.png</file>
         <file>Pics/Potions/swift_potion.png</file>
         <file>Pics/Potions/radiant_tincture.png</file>
+    <qresource prefix="/sounds">
+        <file>Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3</file>
+    </qresource>
+    <qresource prefix="/enemies">
+        <file>Pics/Enemies/intents/attack.png</file>
+        <file>Pics/Enemies/intents/buff.png</file>
+        <file>Pics/Enemies/intents/debuff.png</file>
+        <file>Pics/Enemies/intents/defend.png</file>
+        <file>Pics/Enemies/intents/escape.png</file>
+        <file>Pics/Enemies/intents/sleep.png</file>
+        <file>Pics/Enemies/intents/status.png</file>
+        <file>Pics/Enemies/intents/status_card.png</file>
+        <file>Pics/Enemies/intents/stun.png</file>
+        <file>Pics/Enemies/intents/unknown.png</file>
+        <file>Pics/Enemies/Act I/Acid-slime-l-pretty.webp</file>
+        <file>Pics/Enemies/Act I/Acid-slime-m-pretty.webp</file>
+        <file>Pics/Enemies/Act I/Acid-slime-s-pretty.webp</file>
+        <file>Pics/Enemies/Act I/calcified_cultist.png</file>
+        <file>Pics/Enemies/Act I/Cultist-pretty.webp</file>
+        <file>Pics/Enemies/Act I/cultists.png</file>
+        <file>Pics/Enemies/Act I/damp_cultist.png</file>
+        <file>Pics/Enemies/Act I/Gremlin-nob-pretty.webp</file>
+        <file>Pics/Enemies/Act I/Hexaghust.webp</file>
+        <file>Pics/Enemies/Act I/Jaw-worm-pretty.webp</file>
+        <file>Pics/Enemies/Act I/Looter-pretty.webp</file>
+        <file>Pics/Enemies/Act I/louse_progenitor.png</file>
+        <file>Pics/Enemies/Act I/Louse-green-pretty.webp</file>
+        <file>Pics/Enemies/Act I/Louse-red-pretty.webp</file>
+        <file>Pics/Enemies/Act I/Mugger.webp</file>
+        <file>Pics/Enemies/Act I/Sentry-pretty.webp</file>
+        <file>Pics/Enemies/Act I/Slaver-blue-pretty.webp</file>
+        <file>Pics/Enemies/Act I/Slaver-red-pretty.webp</file>
+        <file>Pics/Enemies/Act I/Slime-boss-pretty.webp</file>
+        <file>Pics/Enemies/Act II/Book-of-stabbing-pretty.webp</file>
+        <file>Pics/Enemies/Act II/Champ.webp</file>
+        <file>Pics/Enemies/Act II/Slaver-leader-pretty.webp</file>
+        <file>Pics/Enemies/Act II/Spheric-guardian-pretty.webp</file>
     </qresource>
 </RCC>

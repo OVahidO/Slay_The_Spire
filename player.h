@@ -5,6 +5,8 @@
 
 class Card;
 class Potion;
+class Player;
+class Relic;
 
 class Player : public Combatant
 {
@@ -40,6 +42,13 @@ public:
     void heal(int n = 1);
     bool addPotion(Potion* potion);
 
+    QVector<Relic *> &relics();
+    void addRelic(Relic *relic);
+    void triggerRelicsCombatStart(GamePlay *game);
+    void triggerRelicsCombatEnd();
+    void triggerRelicsTurnStart();
+    void triggerRelicsTurnEnd();
+
 signals:
     void hpChanged();
     void coinChanged();
@@ -57,6 +66,7 @@ private:
 
     QVector<Card *> m_HandsCards;
     QVector<Potion *> m_Potions{4 , nullptr};
+    QVector<Relic *> m_relics;
 };
 
 #endif // PLAYER_H
