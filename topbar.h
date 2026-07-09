@@ -22,6 +22,7 @@ public slots:
     void updateHpLabel();
     void updateCoinLabel();
     void potionClicked(Potion* potion);
+    void newPotionHandler(Potion* potion);
 
 signals:
     void potionUsed(Potion* potion);
@@ -30,7 +31,7 @@ private:
     Ui::Topbar *ui;
     Player* m_player;
     bool m_isInCombat = false;
-    QVector<Potion*> m_emptyBottles;
+    QVector<Potion*> m_emptyBottles{4, nullptr};
 };
 
 #endif // TOPBAR_H

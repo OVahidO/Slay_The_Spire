@@ -38,11 +38,13 @@ public:
     void loseHp(int n = 1);
     void loseEnergy(int n = 1);
     void heal(int n = 1);
+    bool addPotion(Potion* potion);
 
 signals:
     void hpChanged();
     void coinChanged();
     void energyChanged();
+    void potionAdded(Potion* potion);
     void valueChanged();
 
 private:
@@ -54,7 +56,7 @@ private:
     int m_handSize = 5;
 
     QVector<Card *> m_HandsCards;
-    QVector<Potion *> m_Potions;
+    QVector<Potion *> m_Potions{4 , nullptr};
 };
 
 #endif // PLAYER_H

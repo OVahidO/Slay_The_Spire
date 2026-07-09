@@ -12,21 +12,11 @@ Topbar::Topbar(Player* player, QWidget *parent)
 //
     m_isInCombat = true;
 //
-    m_player->Potions().append(new BlockPotion);
-    m_player->Potions().append(new FirePotion);
-    m_player->Potions().append(new EnergyPotion);
-    m_player->Potions().append(new Fairy_in_a_Bottle);
-
-    int i = 0;
-    for(Potion* potion : m_player->Potions())
+    for(int i=0; i<m_emptyBottles.size(); i++)
     {
-        ui->gridLayout->addWidget(potion, 0, i);
-        potion->show();
-        m_emptyBottles.append(new emptyBottle);
-        m_emptyBottles[i]->hide();
+        m_emptyBottles[i] = (new emptyBottle(this));
         ui->gridLayout->addWidget(m_emptyBottles[i], 0, i);
-        connect(potion, &Potion::potionClicked, this, &Topbar::potionClicked);
-        i++;
+        m_emptyBottles[i]->show();
     }
 
     connect(m_player, &Player::hpChanged, this, &Topbar::updateHpLabel);
@@ -56,8 +46,29 @@ void Topbar::potionClicked(Potion* potion)
     if(m_isInCombat)
     {
         int slotIndex = m_player->Potions().indexOf(potion);
+
+        // ui->gridLayout->removeWidget(potion);
+        // potion->setParent(nullptr);
+
+        // potion->setEnabled(false);
         potion->hide();
+
         m_emptyBottles[slotIndex]->show();
+
         emit potionUsed(potion);
+    }
+}
+
+void Topbar::newPotionHandler(Potion* potion)
+{
+    int potionIndex = m_player->Potions().indexOf(potion);
+    if(potionIndex != -1)
+    {
+        m_emptyBottles[potionIndex]->hide();
+        potion->setParent(this);
+        ui->gridLayout->addWidget(potion, 0, potionIndex);
+        potion->show();
+
+        connect(potion, &Potion::potionClicked, this, &Topbar::potionClicked);
     }
 }

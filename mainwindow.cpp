@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     Player* player = new Player("Vahid&Ahoora", 100);
     m_topbar = new Topbar(player, this);
     ui->verticalLayout->insertWidget(0, m_topbar);
+    connect(player, &Player::potionAdded, m_topbar, &Topbar::newPotionHandler);
     GamePlay* g = new GamePlay(player, this);
     int gamePlay_index = ui->stackedWidget->addWidget(g);
     ui->stackedWidget->setCurrentIndex(gamePlay_index);

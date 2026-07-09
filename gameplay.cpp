@@ -327,12 +327,10 @@ void GamePlay::usedPotionHandler(Potion* potion)
 
     if(m_player)
     {
-        auto it = std::find(m_player->Potions().begin(), m_player->Potions().end(), potion);
-        if(it != m_player->Potions().end())
-        {
-            m_player->Potions().erase(it);
-            delete potion;
-        }
+        int potionIndex = m_player->Potions().indexOf(potion);
+        m_player->Potions()[potionIndex] = nullptr;
+
+        delete potion;
     }
 }
 

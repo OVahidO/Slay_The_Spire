@@ -99,6 +99,20 @@ void Player::heal(int n)
         m_currentHP = m_maxHP;
 }
 
+bool Player::addPotion(Potion* potion)
+{
+    for(int i=0; i < m_Potions.size() ; i++)
+    {
+        if(m_Potions[i] == nullptr)
+        {
+            m_Potions[i] = potion;
+            emit potionAdded(potion);
+            return true;
+        }
+    }
+    return false;
+}
+
 bool Player::cannotPlayAttacks() const
 {
     return m_cannotPlayAttacks;
