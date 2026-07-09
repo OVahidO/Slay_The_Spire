@@ -2,8 +2,10 @@
 #include "gameplay.h"
 #include "player.h"
 
-Enemy::Enemy(QString name, int minHP, int maxHP, bool isMultiplayer, QGraphicsItem *parent)
+Enemy::Enemy(
+    QString name, int minHP, int maxHP, enemyType type, bool isMultiplayer, QGraphicsItem *parent)
     : Combatant(name, minHP + rand() % (maxHP - minHP + 1), parent)
+    , m_type(type)
 {
     if (isMultiplayer) {
         m_maxHP *= 2;
@@ -149,4 +151,9 @@ EnemyIntent Enemy::pickIntent(const QVector<QPair<int, EnemyIntent>> &options) c
     }
 
     return EnemyIntent();
+}
+
+void Enemy::loadPic()
+{
+    m_pic.load(m_soucePath);
 }

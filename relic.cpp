@@ -72,9 +72,7 @@ void Relic::loadIcon()
 
 Relic *createRandomNormalRelic()
 {
-    // فعلاً با relicهایی که پیاده‌سازی شدن
-    // بعداً expand کن
-    static const int normalRelicCount = 3; // ← با هر relic جدید آپدیت کن
+    static const int normalRelicCount = 3;
     int r = QRandomGenerator::global()->bounded(normalRelicCount);
     switch (r) {
     case 0:

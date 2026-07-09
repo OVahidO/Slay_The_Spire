@@ -46,4 +46,21 @@ public:
     void onEquip(GamePlay *game) override;
 };
 
+class MarkOfPain : public Relic
+{
+public:
+    explicit MarkOfPain(QGraphicsItem *parent = nullptr);
+    void onEquip(GamePlay *game) override;
+    void onCombatStart(GamePlay *game) override;
+};
+
+class VelvetChoker : public Relic
+{
+public:
+    explicit VelvetChoker(QGraphicsItem *parent = nullptr);
+    void onEquip(GamePlay *game) override;
+    void onTurnStart(Player *player) override;
+    void onCardPlayed(Card *card, Player *player) override;
+};
+
 #endif // ALLRELICS_H

@@ -7,6 +7,8 @@
 class Player;
 class GamePlay;
 
+enum class enemyType { Normal, Elite, Boss };
+
 enum class IntentType {
     Attack,
     Defend,
@@ -34,6 +36,7 @@ public:
     explicit Enemy(QString name,
                    int minHP,
                    int maxHP,
+                   enemyType type,
                    bool isMultiplayer = false,
                    QGraphicsItem *parent = nullptr);
     virtual ~Enemy() = default;
@@ -48,6 +51,14 @@ protected:
     EnemyIntent pickIntent(const QVector<QPair<int, EnemyIntent>> &options) const;
 
     EnemyIntent m_currentIntent;
+
+    QString m_soucePath;
+    QPixmap m_enemyPic;
+    // QVector<QString> m_intentPaths;
+    // QVector<QPixmap> m_enemyIntents;
+    enemyType m_type;
+
+    void loadPic();
 
     EnemyIntent attackIntent(int damage) const;
     EnemyIntent defendIntent(int block) const;

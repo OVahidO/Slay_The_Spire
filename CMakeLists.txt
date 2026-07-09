@@ -22,15 +22,16 @@ qt_add_executable(Slay_The_Spire
     player.h player.cpp
     gameplay.h gameplay.cpp gameplay.ui
     enemy.h enemy.cpp
-    normalenemies.h normalenemies.cpp
-    eliteenemies.h eliteenemies.cpp
-    bossenemies.h bossenemies.cpp
+
+
+
     ${RESOURCES}
     combatant.h combatant.cpp
     buffdebuff.h buffdebuff.cpp
     topbar.h topbar.cpp topbar.ui
     relic.h relic.cpp
     allrelics.h allrelics.cpp
+    allenemies.h allenemies.cpp
     #
 )
 
