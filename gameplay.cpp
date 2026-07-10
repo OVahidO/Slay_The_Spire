@@ -280,6 +280,11 @@ void GamePlay::endCombat()
     // m_player->HandsCards().clear();
 }
 
+std::vector<Card *> &GamePlay::deck()
+{
+    return m_deck;
+}
+
 ///
 
 void GamePlay::addCardToHand(Card* card)

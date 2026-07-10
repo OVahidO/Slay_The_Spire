@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include <QTimer>
 #include "card.h"
+#include "gameplay.h"
 #include "player.h"
 #include "relic.h"
 
@@ -53,23 +54,35 @@ void Campfire::checkAvailableOptions()
     //     m_restBtn->setText("Rest (Disabled by Coffee Dripper)");
     // }
 
+    if (m_player->currentHP() >= m_player->maxHP()) {
+        m_restBtn->setEnabled(false);
+        m_restBtn->setText("Rest (Already Full HP)");
+    }
+
     if (!hasGirya || (giryaRelic && giryaRelic->counter() <= 0))
         m_liftBtn->setVisible(false);
 }
 
 void Campfire::onRestClicked()
 {
-    if (m_player) {
-        int healAmount = m_player->maxHP() * 0.20;
-        m_player->heal(healAmount);
+    if (!m_player)
+        return;
 
-        emit campfireFinished();
-    }
+    int healAmount = qRound(m_player->maxHP() * 0.20);
+    m_player->heal(healAmount);
+
+    emit campfireFinished();
 }
 
 void Campfire::onSmithClicked()
 {
-    emit requestCardUpgrade();
+    if (!m_gamePlay)
+        return;
+
+    UpgradeDialog dialog(m_gamePlay, this);
+
+    if (dialog.exec() == QDialog::Accepted && dialog.cardWasUpgraded())
+        emit campfireFinished();
 }
 
 void Campfire::onLiftClicked()
@@ -80,8 +93,7 @@ void Campfire::onLiftClicked()
     for (Relic *r : m_player->relics()) {
         if (r->name() == "Girya" && r->counter() > 0) {
             r->setCounter(r->counter() - 1);
-
-            // will be implemented
+            // اعمال 1 Strength دائمی روی بازیکن (will be implemented)
             break;
         }
     }
@@ -89,41 +101,44 @@ void Campfire::onLiftClicked()
     emit campfireFinished();
 }
 
-UpgradeDialog::UpgradeDialog(Player *player, QWidget *parent)
+UpgradeDialog::UpgradeDialog(GamePlay *gamePlay, QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle("Select a Card to Upgrade (Smith)");
-    // setFixedSize(600, 400);
 
     QGridLayout *layout = new QGridLayout(this);
-
-    QVector<Card *> &deck = player->HandsCards();
 
     int row = 0;
     int col = 0;
     bool hasUpgradableCards = false;
 
-    for (Card *card : deck) {
-        if (card && !card->isUpgraded()) {
-            hasUpgradableCards = true;
+    if (gamePlay) {
+        for (Card *card : gamePlay->deck()) {
+            if (card && !card->isUpgraded() && card->cardType() != CardType::Status
+                && card->cardType() != CardType::Curse) {
+                hasUpgradableCards = true;
 
-            QPushButton *cardBtn = new QPushButton(card->name(), this);
-            cardBtn->setFixedSize(120, 160);
+                QPushButton *cardBtn = new QPushButton(card->name(), this);
+                cardBtn->setFixedSize(120, 160);
 
-            connect(cardBtn, &QPushButton::clicked, this, [this, card]() {
-                card->upgrade();
-                QMessageBox::information(this,
-                                         "Smith Successful",
-                                         card->name() + " has been upgraded!");
-                this->accept();
-            });
+                connect(cardBtn, &QPushButton::clicked, this, [this, card]() {
+                    card->upgrade();
+                    card->update();
 
-            layout->addWidget(cardBtn, row, col);
+                    m_cardWasUpgraded = true;
 
-            col++;
-            if (col > 3) {
-                col = 0;
-                row++;
+                    QMessageBox::information(this,
+                                             "Smith Successful",
+                                             card->name() + " has been upgraded!");
+                    this->accept();
+                });
+
+                layout->addWidget(cardBtn, row, col);
+                col++;
+                if (col > 3) {
+                    col = 0;
+                    row++;
+                }
             }
         }
     }
@@ -132,4 +147,9 @@ UpgradeDialog::UpgradeDialog(Player *player, QWidget *parent)
         QMessageBox::warning(this, "No Cards", "You don't have any upgradable cards!");
         QTimer::singleShot(0, this, &QDialog::reject);
     }
+}
+
+bool UpgradeDialog::cardWasUpgraded() const
+{
+    return m_cardWasUpgraded;
 }

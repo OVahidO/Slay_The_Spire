@@ -48,6 +48,7 @@ public:
     void setSelectedHandCard(Card *card);
 
     void addCardToDeck(Card *card);
+    std::vector<Card *> &deck();
 
     void startCombat();
 

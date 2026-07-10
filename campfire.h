@@ -8,6 +8,7 @@
 #include <QWidget>
 
 class Player;
+class GamePlay;
 class Relic;
 
 class Campfire : public QWidget
@@ -27,7 +28,9 @@ private slots:
     void onLiftClicked();
 
 private:
+    GamePlay *m_gamePlay;
     Player *m_player;
+
     QPushButton *m_restBtn;
     QPushButton *m_smithBtn;
     QPushButton *m_liftBtn;
@@ -40,7 +43,13 @@ class UpgradeDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit UpgradeDialog(Player *player, QWidget *parent = nullptr);
+    explicit UpgradeDialog(GamePlay *gamePlay, QWidget *parent = nullptr);
+
+private:
+    bool m_cardWasUpgraded = false;
+
+public:
+    bool cardWasUpgraded() const;
 };
 
 #endif // CAMPFIRE_H
