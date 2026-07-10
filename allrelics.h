@@ -77,6 +77,7 @@ class Girya : public Relic
 public:
     explicit Girya(QGraphicsItem *parent = nullptr);
     // منطق اصلی این رلیک در استراحتگاه (Campfire) پیاده‌سازی می‌شود
+    void onCombatStart(GamePlay *game) override;
 };
 
 class Kunai : public Relic
