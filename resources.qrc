@@ -34,6 +34,7 @@
         <file>Pics/Icons/relic/boss/calling_bell.png</file>
         <file>Pics/Icons/relic/boss/MarkofPain.png</file>
         <file>Pics/Icons/relic/boss/velvet_choker.png</file>
+        <file>Pics/Icons/card-type-icon/ironclad_energy_icon.png</file>
     </qresource>
     <qresource prefix="/card-art">
         <file>Pics/Cards/Attack/bash.png</file>
@@ -78,7 +79,7 @@
         <file>Pics/Potions/fire_potion.png</file>
         <file>Pics/Potions/swift_potion.png</file>
         <file>Pics/Potions/radiant_tincture.png</file>
-        </qresource>
+    </qresource>
     <qresource prefix="/sounds">
         <file>Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3</file>
     </qresource>
