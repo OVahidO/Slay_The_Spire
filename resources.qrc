@@ -83,27 +83,6 @@
     <qresource prefix="/sounds">
         <file>Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3</file>
     </qresource>
-    <qresource prefix="/enemies">
-        <file>Pics/Enemies/Act I/Acid-slime-l-pretty.webp</file>
-        <file>Pics/Enemies/Act I/Acid-slime-m-pretty.webp</file>
-        <file>Pics/Enemies/Act I/Acid-slime-s-pretty.webp</file>
-        <file>Pics/Enemies/Act I/calcified_cultist.png</file>
-        <file>Pics/Enemies/Act I/Cultist-pretty.webp</file>
-        <file>Pics/Enemies/Act I/cultists.png</file>
-        <file>Pics/Enemies/Act I/damp_cultist.png</file>
-        <file>Pics/Enemies/Act I/Jaw-worm-pretty.webp</file>
-        <file>Pics/Enemies/Act I/Looter-pretty.webp</file>
-        <file>Pics/Enemies/Act I/louse_progenitor.png</file>
-        <file>Pics/Enemies/Act I/Louse-green-pretty.webp</file>
-        <file>Pics/Enemies/Act I/Louse-red-pretty.webp</file>
-        <file>Pics/Enemies/Act I/Mugger.webp</file>
-        <file>Pics/Enemies/Act I/Slaver-blue-pretty.webp</file>
-        <file>Pics/Enemies/Act I/Slaver-red-pretty.webp</file>
-        <file>Pics/Enemies/Act II/Book-of-stabbing-pretty.webp</file>
-        <file>Pics/Enemies/Act II/Champ.webp</file>
-        <file>Pics/Enemies/Act II/Slaver-leader-pretty.webp</file>
-        <file>Pics/Enemies/Act II/Spheric-guardian-pretty.webp</file>
-    </qresource>
     <qresource prefix="/Map">
         <file>Pics/Map/chest.png</file>
         <file>Pics/Map/chestOutline.png</file>
@@ -198,5 +177,37 @@
         <file>Pics/Enemies/intents/Miscellaneous/StS2_Intent_Status_Card.png</file>
         <file>Pics/Enemies/intents/Miscellaneous/StS2_Intent_Stun.png</file>
         <file>Pics/Enemies/intents/Miscellaneous/StS2_Intent_Unknown.png</file>
+    </qresource>
+    <qresource prefix="/enemies">
+        <file>Pics/Enemies/enemy/normal/AcidSlimeL.png</file>
+        <file>Pics/Enemies/enemy/normal/AcidSlimeM.png</file>
+        <file>Pics/Enemies/enemy/normal/AcidSlimeS.png</file>
+        <file>Pics/Enemies/enemy/normal/Cultist.png</file>
+        <file>Pics/Enemies/enemy/normal/GreenLouse.png</file>
+        <file>Pics/Enemies/enemy/normal/Icon_Barricade.png</file>
+        <file>Pics/Enemies/enemy/normal/Icon_CurlUp.png</file>
+        <file>Pics/Enemies/enemy/normal/Icon_Entangled.png</file>
+        <file>Pics/Enemies/enemy/normal/Icon_Ritual.png</file>
+        <file>Pics/Enemies/enemy/normal/Icon_Split.png</file>
+        <file>Pics/Enemies/enemy/normal/Icon_Thievery.png</file>
+        <file>Pics/Enemies/enemy/normal/JawWorm.png</file>
+        <file>Pics/Enemies/enemy/normal/Looter.png</file>
+        <file>Pics/Enemies/enemy/normal/Mugger.png</file>
+        <file>Pics/Enemies/enemy/normal/RedLouse.png</file>
+        <file>Pics/Enemies/enemy/normal/SlaverBlue.png</file>
+        <file>Pics/Enemies/enemy/normal/SlaverRed.png</file>
+        <file>Pics/Enemies/enemy/normal/SphericGuardian.png</file>
+        <file>Pics/Enemies/enemy/elite/BookOfStabbing.png</file>
+        <file>Pics/Enemies/enemy/elite/GremlinNob.png</file>
+        <file>Pics/Enemies/enemy/elite/Icon_Anger.png</file>
+        <file>Pics/Enemies/enemy/elite/Icon_Artifact.png</file>
+        <file>Pics/Enemies/enemy/elite/Icon_PainfulStabs.png</file>
+        <file>Pics/Enemies/enemy/elite/Sentry.png</file>
+        <file>Pics/Enemies/enemy/elite/Taskmaster.png</file>
+        <file>Pics/Enemies/enemy/boss/Champ.png</file>
+        <file>Pics/Enemies/enemy/boss/Hexaghost.png</file>
+        <file>Pics/Enemies/enemy/boss/Icon_Split.png</file>
+        <file>Pics/Enemies/enemy/boss/Intent_Unknown.png</file>
+        <file>Pics/Enemies/enemy/boss/SlimeBoss.png</file>
     </qresource>
 </RCC>
