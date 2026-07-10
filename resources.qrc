@@ -84,16 +84,6 @@
         <file>Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3</file>
     </qresource>
     <qresource prefix="/enemies">
-        <file>Pics/Enemies/intents/attack.png</file>
-        <file>Pics/Enemies/intents/buff.png</file>
-        <file>Pics/Enemies/intents/debuff.png</file>
-        <file>Pics/Enemies/intents/defend.png</file>
-        <file>Pics/Enemies/intents/escape.png</file>
-        <file>Pics/Enemies/intents/sleep.png</file>
-        <file>Pics/Enemies/intents/status.png</file>
-        <file>Pics/Enemies/intents/status_card.png</file>
-        <file>Pics/Enemies/intents/stun.png</file>
-        <file>Pics/Enemies/intents/unknown.png</file>
         <file>Pics/Enemies/Act I/Acid-slime-l-pretty.webp</file>
         <file>Pics/Enemies/Act I/Acid-slime-m-pretty.webp</file>
         <file>Pics/Enemies/Act I/Acid-slime-s-pretty.webp</file>
@@ -145,5 +135,68 @@
         <file>Pics/Map/shop.png</file>
         <file>Pics/Map/shop_blood.png</file>
         <file>Pics/Map/shopOutline.png</file>
+    </qresource>
+    <qresource prefix="/buffdebuff-intent">
+        <file>Pics/Buff-Debuff/Buffs/StS2_Icon_DemonForm.png</file>
+        <file>Pics/Buff-Debuff/Buffs/StS2_Icon_Dexterity.png</file>
+        <file>Pics/Buff-Debuff/Buffs/StS2_Icon_FeelNoPain.png</file>
+        <file>Pics/Buff-Debuff/Buffs/StS2_Icon_FlexPotion.png</file>
+        <file>Pics/Buff-Debuff/Buffs/StS2_Icon_Intangible.png</file>
+        <file>Pics/Buff-Debuff/Buffs/StS2_Icon_Juggernaut.png</file>
+        <file>Pics/Buff-Debuff/Buffs/StS2_Icon_Plating.png</file>
+        <file>Pics/Buff-Debuff/Buffs/StS2_Icon_Rage.png</file>
+        <file>Pics/Buff-Debuff/Buffs/StS2_Icon_RetainHand.png</file>
+        <file>Pics/Buff-Debuff/Buffs/StS2_Icon_Strength.png</file>
+        <file>Pics/Buff-Debuff/Buffs/StS2_Icon_Thorns.png</file>
+        <file>Pics/Buff-Debuff/Buffs/StS2_Icon_Vigor.png</file>
+        <file>Pics/Buff-Debuff/Debuffs/StS2_Icon_Dexterity.png</file>
+        <file>Pics/Buff-Debuff/Debuffs/StS2_Icon_Frail.png</file>
+        <file>Pics/Buff-Debuff/Debuffs/StS2_Icon_NoBlock.png</file>
+        <file>Pics/Buff-Debuff/Debuffs/StS2_Icon_NoDraw.png</file>
+        <file>Pics/Buff-Debuff/Debuffs/StS2_Icon_Strength.png</file>
+        <file>Pics/Buff-Debuff/Debuffs/StS2_Icon_Vulnerable.png</file>
+        <file>Pics/Buff-Debuff/Debuffs/StS2_Icon_Weak.png</file>
+        <file>Pics/Buff-Debuff/Debuffs/StS2_Icon_FlexPotion.png</file>
+        <file>Pics/Buff-Debuff/Buffs/Icon_Barricade.png</file>
+        <file>Pics/Buff-Debuff/Buffs/Icon_Berserk.png</file>
+        <file>Pics/Buff-Debuff/Buffs/Icon_Brutality.png</file>
+        <file>Pics/Buff-Debuff/Buffs/Icon_Metallicize.png</file>
+        <file>Pics/Enemies/intents/Attacking/StS2_Intent_Attack1.png</file>
+        <file>Pics/Enemies/intents/Attacking/StS2_Intent_Attack2.png</file>
+        <file>Pics/Enemies/intents/Attacking/StS2_Intent_Attack3.png</file>
+        <file>Pics/Enemies/intents/Attacking/StS2_Intent_Attack4.png</file>
+        <file>Pics/Enemies/intents/Attacking/StS2_Intent_Attack5.png</file>
+        <file>Pics/Enemies/intents/Attacking/StS2_Intent_Death_Blow.png</file>
+        <file>Pics/Enemies/intents/Blocking/Intent_DefendAttack2.png</file>
+        <file>Pics/Enemies/intents/Blocking/Intent_DefendAttack3.png</file>
+        <file>Pics/Enemies/intents/Blocking/Intent_DefendAttack4.png</file>
+        <file>Pics/Enemies/intents/Blocking/Intent_DefendAttack5.png</file>
+        <file>Pics/Enemies/intents/Blocking/Intent_DefendAttack6.png</file>
+        <file>Pics/Enemies/intents/Blocking/Intent_DefendAttack7.png</file>
+        <file>Pics/Enemies/intents/Blocking/StS2_Intent_Defend.png</file>
+        <file>Pics/Enemies/intents/Buffing/Intent_BuffAttack2.png</file>
+        <file>Pics/Enemies/intents/Buffing/Intent_BuffAttack3.png</file>
+        <file>Pics/Enemies/intents/Buffing/Intent_BuffAttack4.png</file>
+        <file>Pics/Enemies/intents/Buffing/Intent_BuffAttack5.png</file>
+        <file>Pics/Enemies/intents/Buffing/Intent_BuffAttack6.png</file>
+        <file>Pics/Enemies/intents/Buffing/Intent_BuffAttack7.png</file>
+        <file>Pics/Enemies/intents/Buffing/Intent_DefendBuff.png</file>
+        <file>Pics/Enemies/intents/Buffing/StS2_Intent_Buff.png</file>
+        <file>Pics/Enemies/intents/Debuffing/Intent_DebuffAttack2.png</file>
+        <file>Pics/Enemies/intents/Debuffing/Intent_DebuffAttack3.png</file>
+        <file>Pics/Enemies/intents/Debuffing/Intent_DebuffAttack4.png</file>
+        <file>Pics/Enemies/intents/Debuffing/Intent_DebuffAttack5.png</file>
+        <file>Pics/Enemies/intents/Debuffing/Intent_DebuffAttack6.png</file>
+        <file>Pics/Enemies/intents/Debuffing/Intent_DebuffAttack7.png</file>
+        <file>Pics/Enemies/intents/Debuffing/Intent_DebuffDefend.png</file>
+        <file>Pics/Enemies/intents/Debuffing/Intent_DebuffStrong.png</file>
+        <file>Pics/Enemies/intents/Debuffing/StS2_Intent_Card_Debuff.png</file>
+        <file>Pics/Enemies/intents/Debuffing/StS2_Intent_Debuff.png</file>
+        <file>Pics/Enemies/intents/Miscellaneous/Intent_Unknown.png</file>
+        <file>Pics/Enemies/intents/Miscellaneous/StS2_Intent_Escape.png</file>
+        <file>Pics/Enemies/intents/Miscellaneous/StS2_Intent_Sleep.png</file>
+        <file>Pics/Enemies/intents/Miscellaneous/StS2_Intent_Status_Card.png</file>
+        <file>Pics/Enemies/intents/Miscellaneous/StS2_Intent_Stun.png</file>
+        <file>Pics/Enemies/intents/Miscellaneous/StS2_Intent_Unknown.png</file>
     </qresource>
 </RCC>
