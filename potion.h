@@ -61,7 +61,7 @@ class SwiftPotion : public Potion
 {
 public:
     explicit SwiftPotion(QWidget *parent = nullptr);
-    //void applyEffect(Combatant* c) override;
+    void applyEffect(Combatant *c) override;
 };
 
 class Fairy_in_a_Bottle : public Potion
