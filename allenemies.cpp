@@ -3,7 +3,7 @@
 Cultist::Cultist(bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("Cultist", 48, 54, enemyType::Normal, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/Cultist.png";
     loadPic();
     calculateNextIntent();
 }
@@ -35,7 +35,7 @@ void Cultist::calculateNextIntent()
 JawWorm::JawWorm(bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("Jaw Worm", 42, 46, enemyType::Normal, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/JawWorm.png";
     loadPic();
     calculateNextIntent();
 }
@@ -66,9 +66,10 @@ Louse::Louse(bool isMultiplayer, QGraphicsItem *parent)
             isMultiplayer,
             parent)
 {
-    m_soucePath = "";
     loadPic();
     m_isRed = (m_name == "Red Louse");
+    m_soucePath = (m_isRed) ? ":/enemies/Pics/Enemies/enemy/normal/RedLouse.png"
+                            : ":/enemies/Pics/Enemies/enemy/normal/GreenLouse.png";
     calculateNextIntent();
 }
 
@@ -114,6 +115,8 @@ bool Slime::shouldSplit() const
 AcidSlimeS::AcidSlimeS(bool isMultiplayer, QGraphicsItem *parent)
     : Slime("Small Slime", 8, 12, enemyType::Normal, isMultiplayer, parent)
 {
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/AcidSlimeS.png";
+    loadPic();
     calculateNextIntent();
 }
 
@@ -131,7 +134,7 @@ void AcidSlimeS::calculateNextIntent()
 AcidSlimeM::AcidSlimeM(bool isMultiplayer, QGraphicsItem *parent)
     : Slime("Medium Slime", 28, 32, enemyType::Normal, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/AcidSlimeM.png";
     loadPic();
     calculateNextIntent();
 }
@@ -152,7 +155,7 @@ void AcidSlimeM::calculateNextIntent()
 AcidSlimeL::AcidSlimeL(bool isMultiplayer, QGraphicsItem *parent)
     : Slime("Large Slime", 68, 72, enemyType::Normal, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/AcidSlimeL.png";
     loadPic();
     calculateNextIntent();
 }
@@ -225,7 +228,7 @@ void Thief::calculateNextIntent()
 Looter::Looter(bool isMultiplayer, QGraphicsItem *parent)
     : Thief("Looter", 44, 48, 10, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/Looter.png";
     loadPic();
 }
 
@@ -234,7 +237,7 @@ Looter::Looter(bool isMultiplayer, QGraphicsItem *parent)
 Mugger::Mugger(bool isMultiplayer, QGraphicsItem *parent)
     : Thief("Mugger", 52, 56, 14, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/Mugger.png";
     loadPic();
 }
 
@@ -243,7 +246,7 @@ Mugger::Mugger(bool isMultiplayer, QGraphicsItem *parent)
 BlueSlaver::BlueSlaver(bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("Blue Slaver", 46, 50, enemyType::Normal, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/SlaverBlue.png";
     loadPic();
     calculateNextIntent();
 }
@@ -263,7 +266,7 @@ void BlueSlaver::calculateNextIntent()
 RedSlaver::RedSlaver(bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("Red Slaver", 46, 50, enemyType::Normal, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/SlaverRed.png";
     loadPic();
     calculateNextIntent();
 }
@@ -296,7 +299,7 @@ void RedSlaver::calculateNextIntent()
 SphericGuardian::SphericGuardian(bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("Spheric Guardian", 20, 20, enemyType::Normal, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/SphericGuardian.png";
     loadPic();
     addBlock(25);
     calculateNextIntent();
@@ -317,10 +320,12 @@ void SphericGuardian::calculateNextIntent()
     m_currentIntent = pickIntent(options);
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 GremlinKnob::GremlinKnob(bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("Gremlin Knob", 82, 86, enemyType::Elite, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/elite/GremlinNob.png";
     loadPic();
     calculateNextIntent();
 }
@@ -354,7 +359,7 @@ Sentry::Sentry(bool startsWithBeam, bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("Sentry", 38, 42, enemyType::Elite, isMultiplayer, parent)
     , m_startsWithBeam(startsWithBeam)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/elite/Sentry.png";
     loadPic();
     calculateNextIntent();
 }
@@ -381,7 +386,7 @@ void Sentry::calculateNextIntent()
 BookOfStabbing::BookOfStabbing(bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("Book of Stabbing", 160, 162, enemyType::Elite, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/elite/BookOfStabbing.png";
     loadPic();
     calculateNextIntent();
 }
@@ -405,7 +410,7 @@ void BookOfStabbing::calculateNextIntent()
 Taskmaster::Taskmaster(bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("Taskmaster", 54, 60, enemyType::Elite, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/elite/Taskmaster.png";
     loadPic();
     calculateNextIntent();
 }
@@ -423,7 +428,7 @@ void Taskmaster::calculateNextIntent()
 KingSlime::KingSlime(bool isMultiplayer, QGraphicsItem *parent)
     : Slime("King Slime", 140, 140, enemyType::Boss, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/boss/SlimeBoss.png";
     loadPic();
     calculateNextIntent();
 }
@@ -467,7 +472,7 @@ bool KingSlime::shouldSplit() const
 HexaGhost::HexaGhost(bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("HexaGhost", 250, 250, enemyType::Boss, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/boss/Hexaghost.png";
     loadPic();
     calculateNextIntent();
 }
@@ -521,7 +526,7 @@ void HexaGhost::calculateNextIntent()
 TheChamp::TheChamp(bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("The Champ", 420, 420, enemyType::Boss, isMultiplayer, parent)
 {
-    m_soucePath = "";
+    m_soucePath = ":/enemies/Pics/Enemies/enemy/boss/Champ.png";
     loadPic();
     calculateNextIntent();
 }

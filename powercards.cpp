@@ -96,6 +96,7 @@ void Brutality::applyEffect(Player *player, Enemy *target)
                                                           game->drawFromDrawPile();
                                                   },
                                                   PowerUseTime::StartTurn});
+        player->applyBuffDebuff(BuffDebuffType::Brutality, 1);
     }
 }
 
@@ -157,6 +158,7 @@ void DemonForm::applyEffect(Player *player, Enemy *target)
                             self->applyBuffDebuff(BuffDebuffType::Strength, value);
                         },
                         PowerUseTime::StartTurn});
+        player->applyBuffDebuff(BuffDebuffType::DemonForm, m_strengthPerTurn);
     }
 }
 
@@ -208,6 +210,7 @@ void Metallicize::applyEffect(Player *player, Enemy *target)
             PowerEffect{m_blockPerTurn,
                         [](Combatant *self, int value, GamePlay *) { self->addBlock(value); },
                         PowerUseTime::EndTurn});
+        player->applyBuffDebuff(BuffDebuffType::Metallicize, m_blockPerTurn);
     }
 }
 
@@ -263,6 +266,7 @@ void Berserk::applyEffect(Player *player, Enemy *target)
 
     if (player) {
         player->applyBuffDebuff(BuffDebuffType::Vulnerable, m_vulnerableAmount);
+        player->applyBuffDebuff(BuffDebuffType::Berserk, 1);
 
         player->powerEffects().append(PowerEffect{1,
                                                   [](Combatant *self, int value, GamePlay *) {
@@ -386,8 +390,10 @@ void Barricade::applyEffect(Player *player, Enemy *target)
 {
     Q_UNUSED(target);
 
-    if (player)
+    if (player) {
         player->setBarricade(true);
+        player->applyBuffDebuff(BuffDebuffType::Barricade, 1);
+    }
 }
 
 void Barricade::upgrade()
@@ -444,6 +450,7 @@ void FeelNoPain::applyEffect(Player *player, Enemy *target)
             PowerEffect{m_blockAmount,
                         [](Combatant *self, int value, GamePlay *) { self->addBlock(value); },
                         PowerUseTime::OnExhaust});
+        player->applyBuffDebuff(BuffDebuffType::FeelNoPain, m_blockAmount);
     }
 }
 

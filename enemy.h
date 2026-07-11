@@ -2,6 +2,7 @@
 #define ENEMY_H
 
 #include <QPair>
+#include <QPixmap>
 #include "combatant.h"
 
 class Player;
@@ -27,6 +28,7 @@ struct EnemyIntent
     int value = 0;
     int secondaryValue = 0;
     bool isHidden = false;
+    QPixmap icon;
 };
 
 class Enemy : public Combatant
@@ -47,15 +49,14 @@ public:
     EnemyIntent getCurrentIntent() const;
     virtual void calculateNextIntent() = 0;
 
+    QPixmap getIntentIcon(IntentType type) const;
+
 protected:
     EnemyIntent pickIntent(const QVector<QPair<int, EnemyIntent>> &options) const;
-
     EnemyIntent m_currentIntent;
 
     QString m_soucePath;
     QPixmap m_enemyPic;
-    // QVector<QString> m_intentPaths;
-    // QVector<QPixmap> m_enemyIntents;
     enemyType m_type;
 
     void loadPic();
@@ -72,4 +73,25 @@ protected:
     EnemyIntent escapeIntent() const;
     EnemyIntent unknownIntent() const;
 };
+
+/*
+int startX = 0;
+int startY = 80;
+
+for (BuffDebuff* effect : m_activeEffects) {
+    if (effect->stacks() == 0) continue;
+
+    QRectF iconRect(startX, startY, 32, 32); 
+
+    painter->drawPixmap(iconRect.toRect(), effect->icon());
+
+    painter->setPen(Qt::white);
+    QFont font("Arial", 10, QFont::Bold);
+    painter->setFont(font);
+    painter->drawText(iconRect, Qt::AlignBottom | Qt::AlignRight, QString::number(effect->stacks()));
+
+    startX += 36; 
+}
+*/
+
 #endif // ENEMY_H

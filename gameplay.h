@@ -48,6 +48,7 @@ public:
     void setSelectedHandCard(Card *card);
 
     void addCardToDeck(Card *card);
+    std::vector<Card *> &deck();
 
     void startCombat();
 
@@ -142,6 +143,7 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
 private:
+    QGraphicsPixmapItem *m_glow = nullptr;
     QGraphicsPixmapItem* m_buttonPicture;
     QGraphicsTextItem* m_plainText;
 };

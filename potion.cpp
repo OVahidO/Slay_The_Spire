@@ -74,7 +74,7 @@ void EnergyPotion::applyEffect(Combatant* c)
 SwiftPotion::SwiftPotion(QWidget *parent)
     :Potion(3, ":/Potions/Pics/Potions/swift_potion.png", parent) {}
 
-//void SwiftPotion::applyEffect(Combatant* c) {}
+void SwiftPotion::applyEffect(Combatant *c) {}
 
 Fairy_in_a_Bottle::Fairy_in_a_Bottle(QWidget *parent)
     :Potion(0, ":/Potions/Pics/Potions/fairy_in_a_bottle.png", parent)

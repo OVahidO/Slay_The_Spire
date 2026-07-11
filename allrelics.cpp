@@ -9,7 +9,7 @@
 #include "player.h"
 #include "statuscards.h"
 
-FaceOfTheCleric::FaceOfTheCleric(QGraphicsItem *parent)
+FaceOfTheCleric::FaceOfTheCleric(QWidget *parent)
     : Relic("Face of the Cleric",
             "Increase your max HP by 1 after every combat.",
             relicType::Event,
@@ -27,7 +27,7 @@ void FaceOfTheCleric::onCombatEnd(Player *player)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-CultistHeadpiece::CultistHeadpiece(QGraphicsItem *parent)
+CultistHeadpiece::CultistHeadpiece(QWidget *parent)
     : Relic("Cultist Headpiece", "CAW CAWW!", relicType::Event, parent)
 {
     m_soucePath = ":/icons/Pics/Icons/relic/event/CultistMask.png";
@@ -47,7 +47,7 @@ void CultistHeadpiece::onCombatStart(GamePlay *game)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-MutagenicStrength::MutagenicStrength(QGraphicsItem *parent)
+MutagenicStrength::MutagenicStrength(QWidget *parent)
     : Relic("Mutagenic Strength",
             "At the start of combat gain 3 Strength and lose it after that turn.",
             relicType::Event,
@@ -75,7 +75,7 @@ void MutagenicStrength::onTurnEnd(Player *player)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-WarpedTongs::WarpedTongs(QGraphicsItem *parent)
+WarpedTongs::WarpedTongs(QWidget *parent)
     : Relic("Warped Tongs",
             "At the start of combat upgrade a random card for the rest of the combat.",
             relicType::Event,
@@ -112,7 +112,7 @@ void WarpedTongs::onCombatStart(GamePlay *game)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-CallingBell::CallingBell(QGraphicsItem *parent)
+CallingBell::CallingBell(QWidget *parent)
     : Relic("Calling Bell",
             "Obtain the Curse of the Bell and 3 random normal relics.",
             relicType::Boss,
@@ -138,7 +138,7 @@ void CallingBell::onEquip(GamePlay *game)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-MarkOfPain::MarkOfPain(QGraphicsItem *parent)
+MarkOfPain::MarkOfPain(QWidget *parent)
     : Relic(
           "Mark of Pain",
           "Gain 1 extra energy per turn; at the start of combat have 2 WOUNDS added to draw pile.",
@@ -167,7 +167,7 @@ void MarkOfPain::onCombatStart(GamePlay *game)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-VelvetChoker::VelvetChoker(QGraphicsItem *parent)
+VelvetChoker::VelvetChoker(QWidget *parent)
     : Relic("Velvet Choker",
             "Gain 1 extra energy per turn; you can no longer play more than 6 cards per turn.",
             relicType::Boss,
@@ -205,7 +205,7 @@ void VelvetChoker::onCardPlayed(Card *card, Player *player)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-BlackStar::BlackStar(QGraphicsItem *parent)
+BlackStar::BlackStar(QWidget *parent)
     : Relic("Black Star", "Elites now drop 2 relics when defeated.", relicType::Boss, parent)
 {
     m_soucePath = ":/icons/Pics/Icons/relic/boss/black_star.png";
@@ -214,7 +214,7 @@ BlackStar::BlackStar(QGraphicsItem *parent)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Girya::Girya(QGraphicsItem *parent)
+Girya::Girya(QWidget *parent)
     : Relic("Girya", "You may now lift at campsites.", relicType::Normal, parent)
 {
     m_soucePath = ":/icons/Pics/Icons/relic/normal/girya.png";
@@ -223,9 +223,19 @@ Girya::Girya(QGraphicsItem *parent)
 }
 // اگر بازیکن این رلیک را داشت و m_counter > 0 بود، گزینه Lift فعال می‌شود.
 
+void Girya::onCombatStart(GamePlay *game)
+{
+    if (game && game->player()) {
+        int liftedTimes = 3 - m_counter;
+
+        if (liftedTimes > 0)
+            game->player()->applyBuffDebuff(BuffDebuffType::Strength, liftedTimes);
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Kunai::Kunai(QGraphicsItem *parent)
+Kunai::Kunai(QWidget *parent)
     : Relic("Kunai",
             "Every time you play 3 attacks in a turn gain 1 Dexterity.",
             relicType::Normal,
@@ -260,7 +270,7 @@ void Kunai::onCardPlayed(Card *card, Player *player)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Shuriken::Shuriken(QGraphicsItem *parent)
+Shuriken::Shuriken(QWidget *parent)
     : Relic("Shuriken",
             "Every time you play 3 attacks in a turn gain 1 Strength.",
             relicType::Normal,
@@ -294,7 +304,7 @@ void Shuriken::onCardPlayed(Card *card, Player *player)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-IceCream::IceCream(QGraphicsItem *parent)
+IceCream::IceCream(QWidget *parent)
     : Relic("Ice Cream", "Energy is now conserved between turns.", relicType::Normal, parent)
 {
     m_soucePath = ":/icons/Pics/Icons/relic/normal/ice_cream.png";
@@ -318,7 +328,7 @@ void IceCream::onTurnStart(Player *player)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Anchor::Anchor(QGraphicsItem *parent)
+Anchor::Anchor(QWidget *parent)
     : Relic("Anchor", "Start each combat with 10 block.", relicType::Normal, parent)
 {
     m_soucePath = ":/icons/Pics/Icons/relic/normal/anchor.png";
