@@ -6,7 +6,8 @@
 class StatusCard : public Card
 {
 public:
-    explicit StatusCard(QString name,
+    explicit StatusCard(CardID ID,
+                        QString name,
                         int energyCost,
                         QString description,
                         bool isRare = false,

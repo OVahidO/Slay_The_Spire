@@ -9,7 +9,8 @@ protected:
     int m_damage;
 
 public:
-    AttackCard(QString name,
+    AttackCard(CardID ID,
+               QString name,
                int energyCost,
                QString description,
                int damage,
@@ -24,7 +25,7 @@ public:
 class Strike : public AttackCard
 {
 public:
-    explicit Strike(QGraphicsItem *parent = nullptr);
+    explicit Strike(QGraphicsItem *parent = nullptr); 
     void applyEffect(Player *player, Enemy *target) override;
     void upgrade() override;
     Card *clone() const override;

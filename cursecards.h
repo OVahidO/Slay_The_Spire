@@ -6,7 +6,8 @@
 class CurseCard : public Card
 {
 public:
-    explicit CurseCard(QString name,
+    explicit CurseCard(CardID ID,
+                       QString name,
                        int energyCost,
                        QString description,
                        bool isRare = false,

@@ -10,8 +10,11 @@
 #include <QPixmap>
 #include <QRegularExpression>
 #include <QString>
+#include <QHash>
 #include <QTextDocument>
 #include <QVariantAnimation>
+#include <functional>
+#include "cardIDeas.h"
 
 class Enemy;
 class Player;
@@ -25,7 +28,8 @@ class Card : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    explicit Card(QString name,
+    explicit Card(CardID ID,
+                  QString name,
                   CardType type,
                   int energyCost,
                   QString description,
@@ -70,6 +74,16 @@ public:
 
     void setOwnerPlayer(Player *player);
 
+    ///////////////////////////////////
+
+    using CreatorFunc = std::function<Card*()>;
+
+    static QHash<CardID, CreatorFunc>& creators();
+
+    static Card* Creat(CardID cardID);
+
+    ///////////////////////////////////
+
 signals:
     void targetCardPlayed(Card *card, Player *player, Enemy *targetEnemy);
     void noTargetCardPlayed(Card* card);
@@ -88,7 +102,6 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
     ///
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-    ///
 
     int m_ID;
     QString m_name;

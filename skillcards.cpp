@@ -4,14 +4,15 @@
 #include "player.h"
 #include "statuscards.h"
 
-SkillCard::SkillCard(QString name,
+SkillCard::SkillCard(CardID ID,
+                     QString name,
                      int energyCost,
                      QString description,
                      bool isRare,
                      bool isExhaust,
                      bool requiresTarget,
                      QGraphicsItem *parent)
-    : Card(name, CardType::Skill, energyCost, description, isRare, isExhaust, requiresTarget, parent)
+    : Card(ID, name, CardType::Skill, energyCost, description, isRare, isExhaust, requiresTarget, parent)
 {}
 
 SkillCard::~SkillCard() {}
@@ -22,7 +23,7 @@ QString SkillCard::getDynamicDescription(Player *player, Enemy *target) const
 }
 
 Defend::Defend(QGraphicsItem *parent)
-    : SkillCard("Defend", 1, "Gain %1 block", false, false, true, parent)
+    : SkillCard(CardID::Defend, "Defend", 1, "Gain %1 block", false, false, true, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Skill/defend_ironclad.png";
     loadPixmap();
@@ -69,8 +70,14 @@ QString Defend::getDynamicDescription(Player *player, Enemy *target) const
     return m_description.arg(finalBlock);
 }
 
+static inline bool DefendRegistered = []()
+{
+    Card::creators()[CardID::Defend] = [](){return new class Defend;};
+    return true;
+}();
+
 Exhume::Exhume(QGraphicsItem *parent)
-    : SkillCard("Exhume", 1, "Put a card from exhaust pile into hand", true, true, false, parent)
+    : SkillCard(CardID::Exhume, "Exhume", 1, "Put a card from exhaust pile into hand", true, true, false, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Skill/Red-Exhume-Art.png";
     loadPixmap();
@@ -110,8 +117,14 @@ Card *Exhume::clone() const
     return copy;
 }
 
+static inline bool ExhumeRegistered = []()
+{
+    Card::creators()[CardID::Exhume] = [](){return new class Exhume;};
+    return true;
+}();
+
 Limit_Break::Limit_Break(QGraphicsItem *parent)
-    : SkillCard("Limit Break", 1, "Double your Strength\nExhaust", true, true, true, parent)
+    : SkillCard(CardID::LimitBreak, "Limit Break", 1, "Double your Strength\nExhaust", true, true, true, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Skill/Red-LimitBreak-Art.png";
     loadPixmap();
@@ -151,8 +164,14 @@ Card *Limit_Break::clone() const
     return copy;
 }
 
+static inline bool Limit_BreakRegistered = []()
+{
+    Card::creators()[CardID::LimitBreak] = [](){return new class Limit_Break;};
+    return true;
+}();
+
 Offering::Offering(QGraphicsItem *parent)
-    : SkillCard("Offering", 0, "Lose 6 HP\nGain 2 Energy\nDraw 3 cards", true, true, true, parent)
+    : SkillCard(CardID::Offering, "Offering", 0, "Lose 6 HP\nGain 2 Energy\nDraw 3 cards", true, true, true, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Skill/offering.png";
     loadPixmap();
@@ -200,8 +219,14 @@ Card *Offering::clone() const
     return copy;
 }
 
+static inline bool OfferingRegistered = []()
+{
+    Card::creators()[CardID::Offering] = [](){return new class Offering;};
+    return true;
+}();
+
 Impervious::Impervious(QGraphicsItem *parent)
-    : SkillCard("Impervious", 2, "Gain %1 block", true, true, true, parent)
+    : SkillCard(CardID::Impervious, "Impervious", 2, "Gain %1 block", true, true, true, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Skill/impervious.png";
     loadPixmap();
@@ -247,8 +272,14 @@ QString Impervious::getDynamicDescription(Player *player, Enemy *target) const
     return m_description.arg(finalBlock);
 }
 
+static inline bool ImperviousRegistered = []()
+{
+    Card::creators()[CardID::Impervious] = [](){return new class Impervious;};
+    return true;
+}();
+
 Power_Through::Power_Through(QGraphicsItem *parent)
-    : SkillCard("Power Through",
+    : SkillCard(CardID::PowerThrough, "Power Through",
                 1,
                 "Gain %1 block\nAdd 2 WOUNDs into hand",
                 false,
@@ -308,8 +339,14 @@ QString Power_Through::getDynamicDescription(Player *player, Enemy *target) cons
     return m_description.arg(finalBlock);
 }
 
+static inline bool Power_ThroughRegistered = []()
+{
+    Card::creators()[CardID::PowerThrough] = [](){return new class Power_Through;};
+    return true;
+}();
+
 Bloodletting::Bloodletting(QGraphicsItem *parent)
-    : SkillCard("Bloodletting", 0, "Lose 3 HP\nGain 2 Energy", false, false, true, parent)
+    : SkillCard(CardID::Bloodletting, "Bloodletting", 0, "Lose 3 HP\nGain 2 Energy", false, false, true, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Skill/bloodletting.png";
     loadPixmap();
@@ -349,8 +386,14 @@ Card *Bloodletting::clone() const
     return copy;
 }
 
+static inline bool BloodlettingRegistered = []()
+{
+    Card::creators()[CardID::Bloodletting] = [](){return new class Bloodletting;};
+    return true;
+}();
+
 Entrench::Entrench(QGraphicsItem *parent)
-    : SkillCard("Entrench", 2, "Double your Block", false, false, false, parent)
+    : SkillCard(CardID::Entrench, "Entrench", 2, "Double your Block", false, false, false, parent)
 {
     m_sourcePath = "";
     loadPixmap();
@@ -389,8 +432,15 @@ Card *Entrench::clone() const
     return copy;
 }
 
+static inline bool EntrenchRegistered = []()
+{
+    Card::creators()[CardID::Entrench] = [](){return new class Entrench;};
+    return true;
+}();
+
 Dual_Wield::Dual_Wield(QGraphicsItem *parent)
-    : SkillCard("Dual Wield",
+    : SkillCard(CardID::DualWield,
+                "Dual Wield",
                 1,
                 "Choose a card in hand\nAdd 2 copies into hand",
                 false,
@@ -450,3 +500,9 @@ Card *Dual_Wield::clone() const
 
     return copy;
 }
+
+static inline bool Dual_WieldRegistered = []()
+{
+    Card::creators()[CardID::DualWield] = [](){return new class Dual_Wield;};
+    return true;
+}();

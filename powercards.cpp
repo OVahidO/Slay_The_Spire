@@ -2,14 +2,15 @@
 #include "enemy.h"
 #include "gameplay.h"
 #include "player.h"
-PowerCard::PowerCard(QString name,
+PowerCard::PowerCard(CardID ID,
+                     QString name,
                      int energyCost,
                      QString description,
                      bool requiresTarget,
                      bool isExhaust,
                      bool isRare,
                      QGraphicsItem *parent)
-    : Card(name, CardType::Power, energyCost, description, isRare, isExhaust, requiresTarget, parent)
+    : Card(ID, name, CardType::Power, energyCost, description, isRare, isExhaust, requiresTarget, parent)
 {}
 
 QString PowerCard::getDynamicDescription(Player *player, Enemy *target) const
@@ -20,7 +21,7 @@ QString PowerCard::getDynamicDescription(Player *player, Enemy *target) const
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Inflame::Inflame(QGraphicsItem *parent)
-    : PowerCard("Inflame", 1, "Gain 2 Strength", false, false, false, parent)
+    : PowerCard(CardID::Inflame, "Inflame", 1, "Gain 2 Strength", false, false, false, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Power/inflame.png";
     loadPixmap();
@@ -58,10 +59,17 @@ Card *Inflame::clone() const
     return copy;
 }
 
+static inline bool InflameRegistered = []()
+{
+    Card::creators()[CardID::Inflame] = [](){return new class Inflame;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Brutality::Brutality(QGraphicsItem *parent)
-    : PowerCard("Brutality",
+    : PowerCard(CardID::Brutality,
+                "Brutality",
                 0,
                 "At the start of your turn, lose 1 HP and draw 1 card.",
                 false,
@@ -116,10 +124,17 @@ Card *Brutality::clone() const
     return copy;
 }
 
+static inline bool BrutalityRegistered = []()
+{
+    Card::creators()[CardID::Brutality] = [](){return new class Brutality;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 DemonForm::DemonForm(QGraphicsItem *parent)
-    : PowerCard("Demon Form",
+    : PowerCard(CardID::DemonForm,
+                "Demon Form",
                 3,
                 "At the start of your turn gain 3 Strength",
                 false,
@@ -169,10 +184,16 @@ Card *DemonForm::clone() const
     return copy;
 }
 
+static inline bool DemonFormRegistered = []()
+{
+    Card::creators()[CardID::DemonForm] = [](){return new class DemonForm;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Metallicize::Metallicize(QGraphicsItem *parent)
-    : PowerCard("Metallicize", 1, "At the end of your turn get 3 block", false, false, false, parent)
+    : PowerCard(CardID::Metallicize, "Metallicize", 1, "At the end of your turn get 3 block", false, false, false, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Power/Red-Metallicize-Art.png";
     loadPixmap();
@@ -214,10 +235,17 @@ Card *Metallicize::clone() const
     return copy;
 }
 
+static inline bool MetallicizeRegistered = []()
+{
+    Card::creators()[CardID::Metallicize] = [](){return new class Metallicize;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Berserk::Berserk(QGraphicsItem *parent)
-    : PowerCard("Berserk",
+    : PowerCard(CardID::Berserk,
+                "Berserk",
                 0,
                 "Gain 2 Vulnerable\nAt the start of your turn get 1 extra Energy",
                 false,
@@ -270,10 +298,17 @@ Card *Berserk::clone() const
     return copy;
 }
 
+static inline bool BerserkRegistered = []()
+{
+    Card::creators()[CardID::Berserk] = [](){return new class Berserk;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 DarkEmbrace::DarkEmbrace(QGraphicsItem *parent)
-    : PowerCard("Dark Embrace",
+    : PowerCard(CardID::DarkEmbrace,
+                "Dark Embrace",
                 2,
                 "Every time a card is Exhausted, draw a card",
                 false,
@@ -325,10 +360,17 @@ Card *DarkEmbrace::clone() const
     return copy;
 }
 
+static inline bool DarkEmbraceRegistered = []()
+{
+    Card::creators()[CardID::DarkEmbrace] = [](){return new class DarkEmbrace;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Barricade::Barricade(QGraphicsItem *parent)
-    : PowerCard("Barricade",
+    : PowerCard(CardID::Barricade,
+                "Barricade",
                 3,
                 "Block is not removed at the start of your turn",
                 false,
@@ -371,10 +413,17 @@ Card *Barricade::clone() const
     return copy;
 }
 
+static inline bool BarricadeRegistered = []()
+{
+    Card::creators()[CardID::Barricade] = [](){return new class Barricade;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 FeelNoPain::FeelNoPain(QGraphicsItem *parent)
-    : PowerCard("Feel No Pain",
+    : PowerCard(CardID::FeelNoPain,
+                "Feel No Pain",
                 1,
                 "Every time a card is Exhausted, gain 3 block",
                 false,
@@ -421,3 +470,9 @@ Card *FeelNoPain::clone() const
 
     return copy;
 }
+
+static inline bool FeelNoPainRegistered = []()
+{
+    Card::creators()[CardID::FeelNoPain] = [](){return new class FeelNoPain;};
+    return true;
+}();

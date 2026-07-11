@@ -8,6 +8,7 @@
 
 /////////////
 class Player;
+class Card;
 /////////////
 
 class Database : public QObject
@@ -30,12 +31,13 @@ public:
     static bool insertPlayerValue(Player* p);
     static bool updatePlayerValue(Player* p);
     static bool deletePlayerValue(Player* p);
-    static QVector<Player> selectAllPlayers();
+    static QVector<Player*> selectAllPlayers();
     //////////////////////////////////////////
     static bool creatPlayersDeckTable();
     static bool insertPlayersDeckValue(Player* p);
     static bool updatePlayersDeckValue(Player* p);
     static bool deletePlayersDeckValue(Player* p);
+    static QVector<Card*> selectPlayersDeck(Player* p);
     //////////////////////////////////////////
     static void close();
 

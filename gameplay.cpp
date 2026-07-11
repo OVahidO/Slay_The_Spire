@@ -53,11 +53,11 @@ GamePlay::GamePlay(Player* player, QWidget *parent)
     connect(endTurnButton, &EndTurnButton::onClick, this, &GamePlay::endTurnButtonClicked);
     connect(this, &GamePlay::enemiesTurnEnded, endTurnButton, &EndTurnButton::activeButton);
     //////////////////
-    m_drawPile.push_back(new Strike);
-    m_drawPile.push_back(new Exhume);
-    m_drawPile.push_back(new Strike);
-    m_drawPile.push_back(new Defend);
-    m_drawPile.push_back(new Defend);
+    m_drawPile.push_back(new class Strike);
+    m_drawPile.push_back(new class Exhume);
+    m_drawPile.push_back(new class Strike);
+    m_drawPile.push_back(new class Defend);
+    m_drawPile.push_back(new class Defend);
     emit valueChanged();
     draw();
     //////////////////

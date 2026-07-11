@@ -2,9 +2,11 @@
 #include "enemy.h"
 #include "gameplay.h"
 #include "player.h"
+#include "cardIDeas.h"
 #include "statuscards.h"
 
-AttackCard::AttackCard(QString name,
+AttackCard::AttackCard(CardID ID,
+                       QString name,
                        int energyCost,
                        QString description,
                        int damage,
@@ -12,7 +14,7 @@ AttackCard::AttackCard(QString name,
                        bool isExhaust,
                        bool isRare,
                        QGraphicsItem *parent)
-    : Card(name, CardType::Attack, energyCost, description, isRare, isExhaust, requiresTarget, parent)
+    : Card(ID, name, CardType::Attack, energyCost, description, isRare, isExhaust, requiresTarget, parent)
     , m_damage(damage)
 {}
 
@@ -35,7 +37,7 @@ QString AttackCard::getDynamicDescription(Player *player, Enemy *target) const
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Strike::Strike(QGraphicsItem *parent)
-    : AttackCard("Strike", 1, "Deal %1 damage", 6, true, false, false, parent)
+    : AttackCard(CardID::Strike, "Strike", 1, "Deal %1 damage", 6, true, false, false, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Attack/strike_ironclad.png";
     loadPixmap();
@@ -70,10 +72,16 @@ Card *Strike::clone() const
     return copy;
 }
 
+static inline bool StrikeRegistered = []()
+{
+    Card::creators()[CardID::Strike] = [](){return new class Strike;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Bludgeon::Bludgeon(QGraphicsItem *parent)
-    : AttackCard("Bludgeon", 3, "Deal %1 damage", 32, true, false, true, parent)
+    : AttackCard(CardID::Bludgeon, "Bludgeon", 3, "Deal %1 damage", 32, true, false, true, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Attack/bludgeon.png";
     loadPixmap();
@@ -108,10 +116,17 @@ Card *Bludgeon::clone() const
     return copy;
 }
 
+static inline bool BludgeonRegistered = []()
+{
+    Card::creators()[CardID::Bludgeon] = [](){return new class Bludgeon;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Reaper::Reaper(QGraphicsItem *parent)
-    : AttackCard("Reaper",
+    : AttackCard(CardID::Reaper,
+                 "Reaper",
                  2,
                  "Deal %1 damage to all enemies\nHeal HP equal to unblocked damage\nExhaust",
                  4,
@@ -159,10 +174,17 @@ Card *Reaper::clone() const
     return copy;
 }
 
+static inline bool ReaperRegistered = []()
+{
+    Card::creators()[CardID::Reaper] = [](){return new class Reaper;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Feed::Feed(QGraphicsItem *parent)
-    : AttackCard("Feed",
+    : AttackCard(CardID::Feed,
+                 "Feed",
                  1,
                  "Deal %1 damage\nIf fatal, raise max HP by %2\nExhaust",
                  10,
@@ -226,10 +248,17 @@ QString Feed::getDynamicDescription(Player *player, Enemy *target) const
     return m_description.arg(finalDamage, maxHpFinalIncrease);
 }
 
+static inline bool FeedRegistered = []()
+{
+    Card::creators()[CardID::Feed] = [](){return new class Feed;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Immolate::Immolate(QGraphicsItem *parent)
-    : AttackCard("Immolate",
+    : AttackCard(CardID::Immolate,
+                 "Immolate",
                  2,
                  "Deal %1 damage to all enemies\nAdd 2 BURN into discard pile",
                  21,
@@ -279,10 +308,16 @@ Card *Immolate::clone() const
     return copy;
 }
 
+static inline bool ImmolateRegistered = []()
+{
+    Card::creators()[CardID::Immolate] = [](){return new class Immolate;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Bash::Bash(QGraphicsItem *parent)
-    : AttackCard("Bash", 2, "Deal %1 damage\nApply %2 Vulnerable", 8, true, false, false, parent)
+    : AttackCard(CardID::Bash, "Bash", 2, "Deal %1 damage\nApply %2 Vulnerable", 8, true, false, false, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Attack/bash.png";
     loadPixmap();
@@ -339,10 +374,17 @@ QString Bash::getDynamicDescription(Player *player, Enemy *target) const
     return m_description.arg(finalDamage, finalVulnValue);
 }
 
+static inline bool BashRegistered = []()
+{
+    Card::creators()[CardID::Bash] = [](){return new class Bash;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Clash::Clash(QGraphicsItem *parent)
-    : AttackCard("Clash",
+    : AttackCard(CardID::Clash,
+                 "Clash",
                  0,
                  "Deal %1 damage\nCan only be played if every card in hand is an attack",
                  14,
@@ -394,10 +436,16 @@ Card *Clash::clone() const
     return copy;
 }
 
+static inline bool ClashRegistered = []()
+{
+    Card::creators()[CardID::Clash] = [](){return new class Clash;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Hemokinesis::Hemokinesis(QGraphicsItem *parent)
-    : AttackCard("Hemokinesis", 1, "Lose 2 HP\nDeal %1 damage", 15, true, false, false, parent)
+    : AttackCard(CardID::Hemokinesis, "Hemokinesis", 1, "Lose 2 HP\nDeal %1 damage", 15, true, false, false, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Attack/hemokinesis.png";
     loadPixmap();
@@ -435,10 +483,17 @@ Card *Hemokinesis::clone() const
     return copy;
 }
 
+static inline bool HemokinesisRegistered = []()
+{
+    Card::creators()[CardID::Hemokinesis] = [](){return new class Hemokinesis;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 BloodForBlood::BloodForBlood(QGraphicsItem *parent)
-    : AttackCard("Blood for Blood",
+    : AttackCard(CardID::BloodForBlood,
+                 "Blood for Blood",
                  4,
                  "Deal %1 damage\nCosts 1 less for every time you take unblocked damage",
                  18,
@@ -483,10 +538,17 @@ Card *BloodForBlood::clone() const
     return copy;
 }
 
+static inline bool BloodForBloodRegistered = []()
+{
+    Card::creators()[CardID::BloodForBlood] = [](){return new class BloodForBlood;};
+    return true;
+}();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Whirlwind::Whirlwind(QGraphicsItem *parent)
-    : AttackCard("Whirlwind",
+    : AttackCard(CardID::Whirlwind,
+                 "Whirlwind",
                  -1, //X
                  "Deal %1 damage to all enemies X times",
                  5,
@@ -541,3 +603,9 @@ Card *Whirlwind::clone() const
 
     return copy;
 }
+
+static inline bool WhirlwindRegistered = []()
+{
+    Card::creators()[CardID::Whirlwind] = [](){return new class Whirlwind;};
+    return true;
+}();

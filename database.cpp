@@ -144,20 +144,20 @@ bool Database::updatePlayerValue(Player* p)
     return true;
 }
 
-QVector<Player> Database::selectAllPlayers()
+QVector<Player*> Database::selectAllPlayers()
 {
-    QVector<Player> players;
+    QVector<Player*> players;
     QSqlQuery query("SELECT * FROM Player");
 
     while(query.next())
     {
-        Player player(query.value(1).toString(), query.value(5).toInt());
-        //player.setID(query.value(0).toInt());
-        //player.setPass(query.value(2).toString());
-        //player.setLevel(query.value(3).toInt());
-        //player.setHp(query.value(4).toInt());
-        //player.setCoin(query.value(6).toInt());
-        //player.setScore(query.value(7).toInt());
+        Player* player = new Player(query.value(1).toString(), query.value(5).toInt());
+        //player->setID(query.value(0).toInt());
+        //player->setPass(query.value(2).toString());
+        //player->setLevel(query.value(3).toInt());
+        //player->setHp(query.value(4).toInt());
+        //player->setCoin(query.value(6).toInt());
+        //player->setScore(query.value(7).toInt());
 
         players.append(player);
     }
@@ -243,4 +243,33 @@ bool Database::deletePlayersDeckValue(Player* p)
     }
 
     return true;
+}
+
+QVector<Card*> Database::selectPlayersDeck(Player* p)
+{
+    QVector<Card*> Deck;
+    QSqlQuery query(db);
+
+    if(!query.prepare("SELECT * FROM PlayersDeck WHERE playerID=?"))
+    {
+        qDebug() << db.lastError().text();
+        return Deck;
+    }
+
+    //query.addBindValue(p->ID());
+
+    if(!query.exec())
+    {
+        qDebug() << db.lastError().text();
+        return Deck;
+    }
+
+    while(query.next())
+    {
+        CardID cardID = static_cast<CardID>(query.value(1).toInt());
+        Card* c = Card::Creat(cardID);
+        Deck.append(c);
+    }
+
+    return Deck;
 }

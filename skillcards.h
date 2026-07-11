@@ -6,7 +6,8 @@
 class SkillCard : public Card
 {
 public:
-    explicit SkillCard(QString name,
+    explicit SkillCard(CardID ID,
+                       QString name,
                        int energyCost,
                        QString description,
                        bool isRare = false,
