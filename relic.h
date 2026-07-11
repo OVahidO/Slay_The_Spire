@@ -1,7 +1,7 @@
 #ifndef RELIC_H
 #define RELIC_H
 
-#include <QGraphicsObject>
+#include <QWidget>
 
 class GamePlay;
 class Player;
@@ -9,18 +9,16 @@ class Card;
 
 enum class relicType { Normal, Boss, Event };
 
-class Relic : public QGraphicsObject
+namespace Ui {
+class Relic;
+}
+
+class Relic : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Relic(QString name,
-                   QString description,
-                   relicType type,
-                   QGraphicsItem *parent = nullptr);
-    virtual ~Relic() = default;
-
-    QRectF boundingRect() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    explicit Relic(QString name, QString description, relicType type, QWidget *parent = nullptr);
+    virtual ~Relic();
 
     virtual void onCombatStart(GamePlay *game) {}
     virtual void onCombatEnd(Player *player) {}
@@ -49,6 +47,9 @@ protected:
     int m_counter = -1; // like for kunai
 
     void loadIcon();
+
+private:
+    Ui::Relic *ui;
 };
 
 #endif // RELIC_H

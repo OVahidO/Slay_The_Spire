@@ -1,48 +1,24 @@
 #include "relic.h"
 #include <QRandomGenerator>
 #include "allrelics.h"
+#include "ui_relic.h"
 
-#include <QPainter>
-
-Relic::Relic(QString name, QString description, relicType type, QGraphicsItem *parent)
-    : m_name(name)
+Relic::Relic(QString name, QString description, relicType type, QWidget *parent)
+    : QWidget(parent)
+    , m_name(name)
     , m_description(description)
     , m_type(type)
-    , QGraphicsObject(parent)
-{}
-
-QRectF Relic::boundingRect() const
+    , ui(new Ui::Relic)
 {
-    return QRectF(0, 0, 64, 64);
+    ui->setupUi(this);
+    setFixedSize(64, 64);
+
+    ui->counterLabel->hide();
 }
 
-void Relic::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+Relic::~Relic()
 {
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
-
-    painter->setRenderHint(QPainter::Antialiasing);
-
-    if (!m_icon.isNull()) {
-        painter->drawPixmap(boundingRect().toRect(), m_icon);
-    } else {
-        painter->setBrush(Qt::darkGray);
-        painter->setPen(Qt::NoPen);
-        painter->drawEllipse(boundingRect());
-
-        painter->setPen(Qt::white);
-        painter->drawText(boundingRect(), Qt::AlignCenter, "?");
-    }
-
-    if (m_counter >= 0) {
-        QRectF counterRect(44, 44, 20, 20);
-
-        painter->setBrush(Qt::black);
-        painter->setPen(Qt::white);
-        painter->drawEllipse(counterRect);
-
-        painter->drawText(counterRect, Qt::AlignCenter, QString::number(m_counter));
-    }
+    delete ui;
 }
 
 QString Relic::name() const
@@ -63,11 +39,18 @@ int Relic::counter() const
 void Relic::setCounter(int value)
 {
     m_counter = value;
+    if (m_counter >= 0) {
+        ui->counterLabel->setText(QString::number(m_counter));
+        ui->counterLabel->show();
+    } else {
+        ui->counterLabel->hide();
+    }
 }
 
 void Relic::loadIcon()
 {
-    m_icon.load(m_soucePath);
+    QPixmap pix(m_soucePath);
+    ui->relicIcon->setPixmap(pix.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 Relic *Relic::createRandomNormalRelic()

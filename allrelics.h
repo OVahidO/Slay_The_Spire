@@ -7,14 +7,14 @@
 class FaceOfTheCleric : public Relic
 {
 public:
-    explicit FaceOfTheCleric(QGraphicsItem *parent = nullptr);
+    explicit FaceOfTheCleric(QWidget *parent = nullptr);
     void onCombatEnd(Player *player) override;
 };
 
 class CultistHeadpiece : public Relic
 {
 public:
-    explicit CultistHeadpiece(QGraphicsItem *parent = nullptr);
+    explicit CultistHeadpiece(QWidget *parent = nullptr);
     void onCombatStart(GamePlay *game) override;
 
 private:
@@ -24,7 +24,7 @@ private:
 class MutagenicStrength : public Relic
 {
 public:
-    explicit MutagenicStrength(QGraphicsItem *parent = nullptr);
+    explicit MutagenicStrength(QWidget *parent = nullptr);
     void onCombatStart(GamePlay *game) override;
     void onTurnEnd(Player *player) override;
 
@@ -35,21 +35,21 @@ private:
 class WarpedTongs : public Relic
 {
 public:
-    explicit WarpedTongs(QGraphicsItem *parent = nullptr);
+    explicit WarpedTongs(QWidget *parent = nullptr);
     void onCombatStart(GamePlay *game) override;
 };
 
 class CallingBell : public Relic
 {
 public:
-    explicit CallingBell(QGraphicsItem *parent = nullptr);
+    explicit CallingBell(QWidget *parent = nullptr);
     void onEquip(GamePlay *game) override;
 };
 
 class MarkOfPain : public Relic
 {
 public:
-    explicit MarkOfPain(QGraphicsItem *parent = nullptr);
+    explicit MarkOfPain(QWidget *parent = nullptr);
     void onEquip(GamePlay *game) override;
     void onCombatStart(GamePlay *game) override;
 };
@@ -57,7 +57,7 @@ public:
 class VelvetChoker : public Relic
 {
 public:
-    explicit VelvetChoker(QGraphicsItem *parent = nullptr);
+    explicit VelvetChoker(QWidget *parent = nullptr);
     void onEquip(GamePlay *game) override;
     void onTurnStart(Player *player) override;
     void onCardPlayed(Card *card, Player *player) override;
@@ -66,7 +66,7 @@ public:
 class BlackStar : public Relic
 {
 public:
-    explicit BlackStar(QGraphicsItem *parent = nullptr);
+    explicit BlackStar(QWidget *parent = nullptr);
     // void onEquip(GamePlay *game) override;
     // به صورت غیرفعال عمل می‌کند
     // منطق آن توسط GamePlay چک می‌شود.
@@ -75,7 +75,7 @@ public:
 class Girya : public Relic
 {
 public:
-    explicit Girya(QGraphicsItem *parent = nullptr);
+    explicit Girya(QWidget *parent = nullptr);
     // منطق اصلی این رلیک در استراحتگاه (Campfire) پیاده‌سازی می‌شود
     void onCombatStart(GamePlay *game) override;
 };
@@ -83,7 +83,7 @@ public:
 class Kunai : public Relic
 {
 public:
-    explicit Kunai(QGraphicsItem *parent = nullptr);
+    explicit Kunai(QWidget *parent = nullptr);
     void onTurnStart(Player *player) override;
     void onCardPlayed(Card *card, Player *player) override;
 };
@@ -91,7 +91,7 @@ public:
 class Shuriken : public Relic
 {
 public:
-    explicit Shuriken(QGraphicsItem *parent = nullptr);
+    explicit Shuriken(QWidget *parent = nullptr);
     void onTurnStart(Player *player) override;
     void onCardPlayed(Card *card, Player *player) override;
 };
@@ -99,7 +99,7 @@ public:
 class IceCream : public Relic
 {
 public:
-    explicit IceCream(QGraphicsItem *parent = nullptr);
+    explicit IceCream(QWidget *parent = nullptr);
     void onTurnEnd(Player *player) override;
     void onTurnStart(Player *player) override;
 
@@ -110,7 +110,7 @@ private:
 class Anchor : public Relic
 {
 public:
-    explicit Anchor(QGraphicsItem *parent = nullptr);
+    explicit Anchor(QWidget *parent = nullptr);
     void onCombatStart(GamePlay *game) override;
 };
 

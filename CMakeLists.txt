@@ -31,7 +31,7 @@ qt_add_executable(Slay_The_Spire
     buffdebuff.h buffdebuff.cpp
     potion.h potion.cpp potion.ui
     topbar.h topbar.cpp topbar.ui
-    relic.h relic.cpp
+    relic.h relic.cpp relic.ui
     allrelics.h allrelics.cpp
     allenemies.h allenemies.cpp
     mapButton.h mapButton.cpp

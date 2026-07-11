@@ -206,7 +206,7 @@ Shop::PotionSpawn Shop::createRandomPotion() const
         return {new BlockPotion(), ":/Potions/Pics/Potions/block_potion.png"};
     case 4:
         return {new Fairy_in_a_Bottle(), ":/Potions/Pics/Potions/fairy_in_a_bottle.png"};
-    default:
+        // default:
         // return {new SwiftPotion(), ":/Potions/Pics/Potions/swift_potion.png"};
     }
 }
