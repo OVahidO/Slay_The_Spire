@@ -35,6 +35,7 @@
         <file>Pics/Icons/relic/boss/MarkofPain.png</file>
         <file>Pics/Icons/relic/boss/velvet_choker.png</file>
         <file>Pics/Icons/card-type-icon/ironclad_energy_icon.png</file>
+        <file>Pics/Icons/end_turn_button_glow.png</file>
     </qresource>
     <qresource prefix="/card-art">
         <file>Pics/Cards/Attack/bash.png</file>

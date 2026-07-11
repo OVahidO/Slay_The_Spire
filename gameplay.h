@@ -143,6 +143,7 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
 private:
+    QGraphicsPixmapItem *m_glow = nullptr;
     QGraphicsPixmapItem* m_buttonPicture;
     QGraphicsTextItem* m_plainText;
 };

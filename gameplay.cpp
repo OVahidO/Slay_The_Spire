@@ -48,7 +48,7 @@ GamePlay::GamePlay(Player* player, QWidget *parent)
     updateEnergyLabel();
 
     EndTurnButton* endTurnButton = new EndTurnButton();
-    endTurnButton->setPos(1000, 400);
+    endTurnButton->setPos(1020, 410);
     m_scene->addItem(endTurnButton);
     connect(endTurnButton, &EndTurnButton::onClick, this, &GamePlay::endTurnButtonClicked);
     connect(this, &GamePlay::enemiesTurnEnded, endTurnButton, &EndTurnButton::activeButton);
@@ -447,7 +447,11 @@ void GamePlay::updateHpLabels()
 
 void GamePlay::updateEnergyLabel()
 {
-    m_energyLabel->setPlainText(QString::number(m_player->energy()) + "/" + QString::number(m_player->maxEnergy()));
+    m_energyLabel->setPlainText(QString("%1/%2").arg(m_player->energy()).arg(m_player->maxEnergy()));
+
+    QRectF textRect = m_energyLabel->boundingRect();
+
+    m_energyLabel->setPos((74 - textRect.width()) / 2, (74 - textRect.height()) / 2);
 }
 
 void GamePlay::updatePlayerInformLabels()
@@ -553,14 +557,16 @@ void GamePlay::creatEnergyUI()
 
     QGraphicsTextItem* energyLabel = new QGraphicsTextItem(energyBackground);
     energyLabel->setPlainText("0 / 3");
-    QFont font("Arial", 16, QFont::Bold);
+    QFont font("Belwe Bd BT", 14, QFont::Bold);
+
     energyLabel->setFont(font);
-    energyLabel->setDefaultTextColor(Qt::red);
+    energyLabel->setDefaultTextColor(Qt::white);
 
-    qreal textX = energyBackground->boundingRect().width()/2 - 18;
-    qreal textY = energyBackground->boundingRect().height()/2 - 14;
+    QRectF textRect = energyLabel->boundingRect();
+    QRectF bgRect = energyBackground->boundingRect();
 
-    energyLabel->setPos(textX, textY);
+    energyLabel->setPos((bgRect.width() - textRect.width()) / 2,
+                        (bgRect.height() - textRect.height()) / 2);
     m_energyLabel = energyLabel;
 }
 
@@ -570,6 +576,16 @@ EndTurnButton::EndTurnButton(QGraphicsItem* parent)
     this->setAcceptHoverEvents(true);
 
     m_buttonPicture = new QGraphicsPixmapItem(this);
+    m_glow = new QGraphicsPixmapItem(this);
+
+    QPixmap glow(":/icons/Pics/Icons/end_turn_button_glow.png");
+
+    m_glow->setPixmap(glow.scaled(m_buttonPicture->pixmap().size(),
+                                  Qt::KeepAspectRatio,
+                                  Qt::SmoothTransformation));
+
+    m_glow->setVisible(false);
+    m_glow->setZValue(-1);
     m_plainText = new QGraphicsTextItem(m_buttonPicture);
 
     loadButtonPixmap(":/icons/Pics/Icons/endTurnButton.png");
@@ -597,7 +613,8 @@ void EndTurnButton::loadButtonPixmap(QString pixmapPath)
     if(m_buttonPicture)
     {
         QPixmap pixmap(pixmapPath);
-        m_buttonPicture->setPixmap(pixmap.scaled(350, 200, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        m_buttonPicture->setPixmap(
+            pixmap.scaled(240, 140, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
 }
 
@@ -615,6 +632,8 @@ void EndTurnButton::setButtonText(QString plainText)
 
 void EndTurnButton::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
+    m_glow->setVisible(true);
+
     if (m_plainText) {
         m_plainText->setDefaultTextColor(Qt::red);
     }
@@ -632,6 +651,7 @@ void EndTurnButton::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 
 void EndTurnButton::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
+    m_glow->setVisible(false);
 
     if (m_plainText) {
         m_plainText->setDefaultTextColor(Qt::white);
