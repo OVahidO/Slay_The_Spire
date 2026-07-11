@@ -37,6 +37,7 @@ qt_add_executable(Slay_The_Spire
     mapButton.h mapButton.cpp
     map.h map.cpp map.ui
     campfire.h campfire.cpp
+    shop.h shop.cpp
     #
 )
 
