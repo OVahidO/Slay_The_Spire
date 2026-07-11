@@ -3,6 +3,8 @@ project(Slay_The_Spire LANGUAGES CXX)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Multimedia)
 
+find_package(Qt6 6.5 REQUIRED COMPONENTS Sql)
+
 qt_standard_project_setup()
 
 qt_add_resources(RESOURCES resources.qrc)
@@ -36,8 +38,11 @@ qt_add_executable(Slay_The_Spire
     allenemies.h allenemies.cpp
     mapButton.h mapButton.cpp
     map.h map.cpp map.ui
+    database.h database.cpp
     #
 )
+
+target_link_libraries(Slay_The_Spire PRIVATE Qt6::Sql)
 
 target_link_libraries(Slay_The_Spire
     PRIVATE
