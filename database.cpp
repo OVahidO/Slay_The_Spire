@@ -1,5 +1,6 @@
 #include "database.h"
 #include "player.h"
+#include "card.h"
 #include <QDebug>
 
 QSqlDatabase Database::db;
@@ -65,7 +66,7 @@ bool Database::insertPlayerValue(Player* p)
                   "current_Hp,"
                   "max_Hp,"
                   "coin,"
-                  "score,"
+                  "score"
                   ")"
                   "VALUE(?,?,?,?,?,?)"))
     {return false;}
@@ -89,7 +90,7 @@ bool Database::insertPlayerValue(Player* p)
 
 bool Database::deletePlayerValue(Player* p)
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
 
     if(!query.prepare("DELETE FROM Player WHERE id=?"))
     {
@@ -97,7 +98,7 @@ bool Database::deletePlayerValue(Player* p)
         return false;
     }
     //add player ID;
-    //query.addBindValue(p->id());
+    //query.addBindValue(p->ID());
 
     if(!query.exec())
     {
@@ -110,7 +111,7 @@ bool Database::deletePlayerValue(Player* p)
 
 bool Database::updatePlayerValue(Player* p)
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
 
     if(!query.prepare("UPDATE Player SET "
                   "name=?,"
@@ -162,4 +163,84 @@ QVector<Player> Database::selectAllPlayers()
     }
 
     return players;
+}
+
+bool Database::creatPlayersDeckTable()
+{
+    QSqlQuery query(db);
+
+    if(!query.exec("CREATE TABLE IF NOT EXISTS PlayersDeck ("
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    "playerID INTEGER,"
+                    "cardID INTEGER"
+                    ")"))
+    {
+        qDebug() << db.lastError().text();
+        return false;
+    }
+
+    return true;
+}
+
+bool Database::insertPlayersDeckValue(Player* p)
+{
+    QSqlQuery query(db);
+
+    if(!query.prepare("INSERT INTO PlayersDeck ("
+                       "playerID,"
+                       "cardID"
+                       ")"
+                       "VALUE(?,?)"))
+    {
+        qDebug() << db.lastError().text();
+        return false;
+    }
+
+    db.transaction();
+
+    for(Card* card : p->Deck())
+    {
+        //query.addBindValue(p->ID());
+        query.addBindValue(card->ID());
+
+        if(!query.exec())
+        {
+            qDebug() << db.lastError().text();
+            db.rollback();
+            return false;
+        }
+    }
+
+    db.commit();
+
+    return true;
+}
+
+bool Database::updatePlayersDeckValue(Player* p)
+{
+    if(!Database::deletePlayersDeckValue(p))
+        return false;
+
+    return Database::insertPlayersDeckValue(p);
+}
+
+bool Database::deletePlayersDeckValue(Player* p)
+{
+    QSqlQuery query(db);
+
+    if(!query.prepare("DELETE FROM PlayersDeck WHERE playerID=?"))
+    {
+        qDebug() << db.lastError().text();
+        return false;
+    }
+    //add player ID;
+    //query.addBindValue(p->ID());
+
+    if(!query.exec())
+    {
+        qDebug() << db.lastError().text();
+        return false;
+    }
+
+    return true;
 }

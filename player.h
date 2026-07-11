@@ -24,6 +24,7 @@ public:
     int maxEnergy() const;
     int handSize() const;
 
+    QVector<Card *> &Deck();
     QVector<Card *> &HandsCards();
     QVector<Potion *> &Potions();
 
@@ -64,6 +65,7 @@ private:
     int m_maxEnergy = 3;
     int m_handSize = 5;
 
+    QVector<Card *> m_Deck;
     QVector<Card *> m_HandsCards;
     QVector<Potion *> m_Potions{4 , nullptr};
     QVector<Relic *> m_relics;

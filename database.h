@@ -25,11 +25,18 @@ public:
     static Database& instance();
 
     static bool open(QString dbPath);
+    //////////////////////////////////////////
     static bool creatPlayerTable();
     static bool insertPlayerValue(Player* p);
     static bool updatePlayerValue(Player* p);
     static bool deletePlayerValue(Player* p);
     static QVector<Player> selectAllPlayers();
+    //////////////////////////////////////////
+    static bool creatPlayersDeckTable();
+    static bool insertPlayersDeckValue(Player* p);
+    static bool updatePlayersDeckValue(Player* p);
+    static bool deletePlayersDeckValue(Player* p);
+    //////////////////////////////////////////
     static void close();
 
 signals:
