@@ -100,76 +100,12 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     QRectF iconRect(rect.right() - 45, rect.top() + 10, 35, 35);
 
-    // QRectF energyBadge(rect.x() + 12, rect.y() + 12, 40, 40);
-
-    // painter->setBrush(typeColor);
-    // painter->setPen(QPen(Qt::white, 2));
-    // painter->drawEllipse(energyBadge);
-
-    // QColor energyTextColor = (m_energyCost < m_baseEnergyCost) ? QColor(90, 230, 120) : Qt::white;
-    // painter->setPen(energyTextColor);
-
-    // QFont energyFont("Oxanium", 16, QFont::Bold);
-    // painter->setFont(energyFont);
-    // painter->drawText(energyBadge, Qt::AlignCenter, QString::number(m_energyCost));
-
     QRectF energyBadge(rect.left() + 10, rect.top() + 10, 34, 34);
 
-    //======================
-    // Glow
-    //======================
+    QPixmap energyPixmap(":/icons/Pics/Icons/card-type-icon/ironclad_energy_icon.png");
 
-    painter->setPen(Qt::NoPen);
-    painter->setBrush(QColor(80, 150, 255, 45));
-
-    painter->drawEllipse(energyBadge.adjusted(-4, -4, 4, 4));
-
-    //======================
-    // Main Gradient
-    //======================
-
-    QRadialGradient grad(energyBadge.center(), energyBadge.width() / 2);
-
-    grad.setColorAt(0.0, QColor(120, 180, 255));
-    grad.setColorAt(0.55, QColor(65, 115, 205));
-    grad.setColorAt(1.0, QColor(28, 58, 118));
-
-    painter->setBrush(gradient);
-    painter->setPen(QPen(Qt::white, 1.5));
-
-    painter->drawEllipse(energyBadge);
-
-    //======================
-    // Highlight
-    //======================
-
-    QRectF shine(energyBadge.left() + 5,
-                 energyBadge.top() + 3,
-                 energyBadge.width() - 10,
-                 energyBadge.height() / 3.2);
-
-    QLinearGradient shineGradient(shine.topLeft(), shine.bottomLeft());
-
-    shineGradient.setColorAt(0, QColor(255, 255, 255, 180));
-    shineGradient.setColorAt(1, QColor(255, 255, 255, 0));
-
-    painter->setBrush(shineGradient);
-    painter->setPen(Qt::NoPen);
-
-    painter->drawEllipse(shine);
-
-    //======================
-    // Inner Ring
-    //======================
-
-    painter->setBrush(Qt::NoBrush);
-    painter->setPen(QPen(QColor(255, 255, 255, 70), 1));
-
-    painter->drawEllipse(energyBadge.adjusted(2, 2, -2, -2));
-
-    //======================
-    // Energy Text
-    //======================
+    if (!energyPixmap.isNull())
+        painter->drawPixmap(energyBadge, energyPixmap, energyPixmap.rect());
 
     QColor energyTextColor = (m_energyCost < m_baseEnergyCost) ? QColor(110, 255, 140) : Qt::white;
 

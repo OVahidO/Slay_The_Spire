@@ -15,52 +15,52 @@ Enemy::Enemy(
 
 EnemyIntent Enemy::attackIntent(int damage) const
 {
-    return {IntentType::Attack, damage, 0, false};
+    return {IntentType::Attack, damage, 0, false, getIntentIcon(IntentType::Attack)};
 }
 
 EnemyIntent Enemy::defendIntent(int block) const
 {
-    return {IntentType::Defend, block, 0, false};
+    return {IntentType::Defend, block, 0, false, getIntentIcon(IntentType::Defend)};
 }
 
 EnemyIntent Enemy::buffIntent(int value) const
 {
-    return {IntentType::Buff, value, 0, false};
+    return {IntentType::Buff, value, 0, false, getIntentIcon(IntentType::Buff)};
 }
 
 EnemyIntent Enemy::debuffIntent(int value) const
 {
-    return {IntentType::Debuff, value, 0, false};
+    return {IntentType::Debuff, value, 0, false, getIntentIcon(IntentType::Debuff)};
 }
 
 EnemyIntent Enemy::entangleIntent() const
 {
-    return {IntentType::Entangle, 0, 0, false};
+    return {IntentType::Entangle, 0, 0, false, getIntentIcon(IntentType::Entangle)};
 }
 
 EnemyIntent Enemy::attackDefendIntent(int damage, int block) const
 {
-    return {IntentType::AttackDefend, damage, block, false};
+    return {IntentType::AttackDefend, damage, block, false, getIntentIcon(IntentType::AttackDefend)};
 }
 
 EnemyIntent Enemy::attackDebuffIntent(int damage, int value) const
 {
-    return {IntentType::AttackDebuff, damage, value, false};
+    return {IntentType::AttackDebuff, damage, value, false, getIntentIcon(IntentType::AttackDebuff)};
 }
 
 EnemyIntent Enemy::defendBuffIntent(int block, int value) const
 {
-    return {IntentType::DefendBuff, block, value, false};
+    return {IntentType::DefendBuff, block, value, false, getIntentIcon(IntentType::DefendBuff)};
 }
 
 EnemyIntent Enemy::escapeIntent() const
 {
-    return {IntentType::Unknown, 0, 0, true};
+    return {IntentType::Unknown, 0, 0, true, getIntentIcon(IntentType::Unknown)};
 }
 
 EnemyIntent Enemy::unknownIntent() const
 {
-    return {IntentType::Unknown, 0, 0, false};
+    return {IntentType::Unknown, 0, 0, false, getIntentIcon(IntentType::Unknown)};
 }
 
 void Enemy::executeIntent(Player *player)
@@ -156,4 +156,44 @@ EnemyIntent Enemy::pickIntent(const QVector<QPair<int, EnemyIntent>> &options) c
 void Enemy::loadPic()
 {
     m_enemyPic.load(m_soucePath);
+}
+
+QPixmap Enemy::getIntentIcon(IntentType type) const
+{
+    QString path;
+
+    switch (type) {
+    case IntentType::Attack:
+        path = ":/buffdebuff-intent/Pics/Enemies/intents/Attacking/StS2_Intent_Attack5.png";
+        break;
+    case IntentType::Defend:
+        path = ":/buffdebuff-intent/Pics/Enemies/intents/Blocking/StS2_Intent_Defend.png";
+        break;
+    case IntentType::Buff:
+        path = ":/buffdebuff-intent/Pics/Enemies/intents/Buffing/StS2_Intent_Buff.png";
+        break;
+    case IntentType::Debuff:
+        path = ":/buffdebuff-intent/Pics/Enemies/intents/Debuffing/StS2_Intent_Debuff.png";
+        break;
+    case IntentType::AttackDefend:
+        path = ":/buffdebuff-intent/Pics/Enemies/intents/Blocking/Intent_DefendAttack7.png";
+        break;
+    case IntentType::AttackDebuff:
+        path = ":/buffdebuff-intent/Pics/Enemies/intents/Debuffing/Intent_DebuffAttack7.png";
+        break;
+    case IntentType::DefendBuff:
+        path = ":/buffdebuff-intent/Pics/Enemies/intents/Buffing/Intent_DefendBuff.png";
+        break;
+    case IntentType::Entangle:
+        path = ":/buffdebuff-intent/Pics/Enemies/intents/Debuffing/Intent_DebuffStrong.png";
+        break;
+    case IntentType::Unknown:
+    default:
+        path = ":/buffdebuff-intent/Pics/Enemies/intents/Miscellaneous/Intent_Unknown.png";
+        break;
+    }
+
+    QPixmap icon;
+    icon.load(path);
+    return icon;
 }
