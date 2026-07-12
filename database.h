@@ -5,6 +5,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QPair>
 
 /////////////
 class Player;
@@ -31,13 +32,15 @@ public:
     static bool insertPlayerValue(Player* p);
     static bool updatePlayerValue(Player* p);
     static bool deletePlayerValue(Player* p);
-    static QVector<Player*> selectAllPlayers();
+    static QVector<QPair<Player* , unsigned int>> selectAllPlayers();
     //////////////////////////////////////////
     static bool creatPlayersDeckTable();
     static bool insertPlayersDeckValue(Player* p);
     static bool updatePlayersDeckValue(Player* p);
     static bool deletePlayersDeckValue(Player* p);
     static QVector<Card*> selectPlayersDeck(Player* p);
+    //////////////////////////////////////////
+    static bool updateMapSeedValue(int playerID, unsigned int seed);
     //////////////////////////////////////////
     static void close();
 

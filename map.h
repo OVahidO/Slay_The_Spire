@@ -5,6 +5,7 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QVector>
+#include <random>
 
 class MapButton;
 
@@ -18,7 +19,7 @@ class Map : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Map(QWidget *parent = nullptr);
+    explicit Map(unsigned int seed, QWidget *parent = nullptr);
     ~Map();
 
 signals:
@@ -33,6 +34,9 @@ private:
 
     QVector<QVector<MapButton*>> m_levels;
     void connectLevels();
+
+    std::mt19937 m_randRange;
+    unsigned int m_seed;
 };
 
 #endif // MAP_H

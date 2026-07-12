@@ -44,7 +44,8 @@ bool Database::creatPlayerTable()
                "current_Hp INTEGER,"
                "max_Hp INTEGER,"
                "coin INTEGER,"
-               "score INTEGER"
+               "score INTEGER,"
+               "seed INTEGER"
                ")"))
     {
         qDebug() << db.lastError().text();
@@ -66,17 +67,19 @@ bool Database::insertPlayerValue(Player* p)
                   "current_Hp,"
                   "max_Hp,"
                   "coin,"
-                  "score"
+                  "score,"
+                  "seed"
                   ")"
-                  "VALUE(?,?,?,?,?,?)"))
+                  "VALUES(?,?,?,?,?,?,?,?)"))
     {return false;}
 
     query.addBindValue(p->name());
-    query.addBindValue(0);
-    query.addBindValue(0);
+    // query.addBindValue(p->password());
+    // query.addBindValue(p->level());
     query.addBindValue(p->currentHP());
     query.addBindValue(p->maxHP());
     query.addBindValue(p->coin());
+    // query.addBindValue(p->score());
     query.addBindValue(0);
 
     if(!query.exec())
@@ -114,7 +117,7 @@ bool Database::updatePlayerValue(Player* p)
     QSqlQuery query(db);
 
     if(!query.prepare("UPDATE Player SET "
-                  "name=?,"
+                  "username=?,"
                   "level=?,"
                   "current_Hp=?,"
                   "max_Hp=?,"
@@ -144,9 +147,9 @@ bool Database::updatePlayerValue(Player* p)
     return true;
 }
 
-QVector<Player*> Database::selectAllPlayers()
+QVector<QPair<Player* , unsigned int>> Database::selectAllPlayers()
 {
-    QVector<Player*> players;
+    QVector<QPair<Player* , unsigned int>> players;
     QSqlQuery query("SELECT * FROM Player");
 
     while(query.next())
@@ -159,10 +162,34 @@ QVector<Player*> Database::selectAllPlayers()
         //player->setCoin(query.value(6).toInt());
         //player->setScore(query.value(7).toInt());
 
-        players.append(player);
+        players.append({player, query.value(8).toInt()});
     }
 
     return players;
+}
+
+bool Database::updateMapSeedValue(int playerID, unsigned int seed)
+{
+    QSqlQuery query(db);
+
+    if(!query.prepare("UPDATE Player SET "
+                       "seed=?"
+                       "WHERE id=?"))
+    {
+        qDebug() << db.lastError().text();
+        return false;
+    }
+
+    query.addBindValue(seed);
+    query.addBindValue(playerID);
+
+    if(!query.exec())
+    {
+        qDebug() << db.lastError().text();
+        return false;
+    }
+
+    return true;
 }
 
 bool Database::creatPlayersDeckTable()

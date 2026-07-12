@@ -2,12 +2,19 @@
 #include "mapButton.h"
 #include "ui_map.h"
 
-Map::Map(QWidget *parent)
+int rand(int min, int max, std::mt19937& range)
+{
+    std::uniform_int_distribution<int> dist(min , max);
+    return dist(range);
+}
+
+Map::Map(unsigned int seed, QWidget *parent)
     : QWidget{parent}
     , ui(new Ui::Map)
 {
     ui->setupUi(this);
-    srand(std::time(0));
+    m_seed = seed;
+    m_randRange.seed(m_seed);
     ////////////////////////
     m_scene = new QGraphicsScene(this);
     m_view = ui->graphicsView;
@@ -31,7 +38,7 @@ Map::Map(QWidget *parent)
             level.append(new MapButton(MapButtonType::TREASURE, i, 0));
         else if(i == 0)
         {
-            for(int j = 0; j<((rand()%2)+3); j++)
+            for(int j = 0; j<(rand(0, 1, m_randRange)+2); j++)
             {
                 MapButton* b = new MapButton(MapButtonType::ENEMY, i, j);
                 b->setEnabled(true);
@@ -40,12 +47,12 @@ Map::Map(QWidget *parent)
         }
         else if(i < 5)
         {
-            for(int j = 0; j<((rand()%4)+1); j++)
+            for(int j = 0; j < rand(0, 3, m_randRange)+1; j++)
             {
-                int l = (rand()%100 + 1);
+                int l = rand(1, 100, m_randRange);
                 if(l <= 90 - ((i-1)*15))
                 {
-                    if(rand()%100 < 65)
+                    if(rand(1, 100, m_randRange) <= 65)
                         level.append(new MapButton(MapButtonType::ENEMY, i, j));
                     else
                         level.append(new MapButton(MapButtonType::EVENT, i, j));
@@ -58,13 +65,13 @@ Map::Map(QWidget *parent)
                 {
                     if(i != 4)
                     {
-                        MapButtonType t = static_cast<MapButtonType>(rand()%2 + 3);
+                        MapButtonType t = static_cast<MapButtonType>(rand(0, 1, m_randRange) + 3);
                         level.append(new MapButton(t, i, j));
                     }
                     else
                     {
                         bool isReapet = false;
-                        if(rand()%100 < 75)
+                        if(rand(1, 100, m_randRange) <= 75)
                         {
                             for(auto& mapButton : m_levels[i-1])
                             {
@@ -79,7 +86,7 @@ Map::Map(QWidget *parent)
                                 level.append(new MapButton(MapButtonType::CAMPFIRE, i, j));
                             else
                             {
-                                MapButtonType t = static_cast<MapButtonType>(rand()%2);
+                                MapButtonType t = static_cast<MapButtonType>(rand(0, 1, m_randRange));
                                 level.append(new MapButton(t, i, j));
                             }
                         }
@@ -98,7 +105,7 @@ Map::Map(QWidget *parent)
                                 level.append(new MapButton(MapButtonType::SHOP, i, j));
                             else
                             {
-                                MapButtonType t = static_cast<MapButtonType>(rand()%2);
+                                MapButtonType t = static_cast<MapButtonType>(rand(0, 1, m_randRange));
                                 level.append(new MapButton(t, i, j));
                             }
                         }
@@ -108,19 +115,19 @@ Map::Map(QWidget *parent)
         }
         else if(i > 5)
         {
-            for(int j = 0; j<((rand()%4)+1); j++)
+            for(int j = 0; j < rand(0, 3, m_randRange)+1; j++)
             {
                 if(i == 9)
                     level.append(new MapButton(MapButtonType::CAMPFIRE, i ,j));
                 else
                 {
-                    int l = (rand()%100 + 1);
+                    int l = rand(1, 100, m_randRange);
                     if(l <= 50)
                         level.append(new MapButton(MapButtonType::ELITE, i ,j));
                     else if(l <= 10+(i*10))
                     {
                         bool isReapet = false;
-                        if(rand()%100 < 50)
+                        if(rand(1, 100, m_randRange) <= 50)
                         {
                             for(auto& mapButton : m_levels[i-1])
                             {
@@ -135,7 +142,7 @@ Map::Map(QWidget *parent)
                                 level.append(new MapButton(MapButtonType::CAMPFIRE, i, j));
                             else
                             {
-                                MapButtonType t = static_cast<MapButtonType>(rand()%2);
+                                MapButtonType t = static_cast<MapButtonType>(rand(0, 1, m_randRange));
                                 level.append(new MapButton(t, i, j));
                             }
                         }
@@ -154,14 +161,14 @@ Map::Map(QWidget *parent)
                                 level.append(new MapButton(MapButtonType::SHOP, i, j));
                             else
                             {
-                                MapButtonType t = static_cast<MapButtonType>(rand()%2);
+                                MapButtonType t = static_cast<MapButtonType>(rand(0, 1, m_randRange));
                                 level.append(new MapButton(t, i, j));
                             }
                         }
                     }
                     else
                     {
-                        MapButtonType t = static_cast<MapButtonType>(rand()%2);
+                        MapButtonType t = static_cast<MapButtonType>(rand(0, 1, m_randRange));
                         level.append(new MapButton(t, i, j));
                     }
                 }
@@ -198,11 +205,11 @@ void Map::connectLevels()
             {
                 if(!currentLevel[j]->nextButtons().contains(nextLevel[targetIndex]))
                     currentLevel[j]->nextButtons().append(nextLevel[targetIndex]);
-                if(targetIndex-1 >= 0 && rand()%100 < 20 )
+                if(targetIndex-1 >= 0 && rand(1, 100, m_randRange) <= 20 )
                 {
                     currentLevel[j]->nextButtons().append(nextLevel[targetIndex-1]);
                 }
-                if(targetIndex+1 < nextSize && rand()%100 < 20 )
+                if(targetIndex+1 < nextSize && rand(1, 100, m_randRange) <= 20 )
                 {
                     currentLevel[j]->nextButtons().append(nextLevel[targetIndex+1]);
                 }
@@ -211,11 +218,11 @@ void Map::connectLevels()
             {
                 if(!currentLevel[targetIndex]->nextButtons().contains(nextLevel[j]))
                     currentLevel[targetIndex]->nextButtons().append(nextLevel[j]);
-                if(j-1 >= 0 && rand()%100 < 20 )
+                if(j-1 >= 0 && rand(1, 100, m_randRange) <= 20 )
                 {
                     currentLevel[targetIndex]->nextButtons().append(nextLevel[j-1]);
                 }
-                if(j+1 < nextSize && rand()%100 < 20 )
+                if(j+1 < nextSize && rand(1, 100, m_randRange) <= 20 )
                 {
                     currentLevel[targetIndex]->nextButtons().append(nextLevel[j+1]);
                 }
