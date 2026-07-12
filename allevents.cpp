@@ -324,7 +324,7 @@ void FaceTrader::onTouch()
     if (!m_player)
         return;
 
-    int percent = 5 + QRandomGenerator::global()->bounded(6); // 5-10 inclusive
+    int percent = 5 + QRandomGenerator::global()->bounded(6);
     int hpLoss = qRound(m_player->maxHP() * (percent / 100.0));
 
     m_player->loseHp(hpLoss);
