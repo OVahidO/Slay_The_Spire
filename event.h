@@ -116,4 +116,9 @@ private:
     void refreshAvailability();
 };
 
+Event *createRandomEvent(int actNumber,
+                         Player *player,
+                         GamePlay *gamePlay,
+                         QWidget *parent = nullptr);
+
 #endif // EVENT_H

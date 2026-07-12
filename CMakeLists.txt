@@ -39,6 +39,8 @@ qt_add_executable(Slay_The_Spire
     campfire.h campfire.cpp
     shop.h shop.cpp
     event.h event.cpp
+    carddialogs.h carddialogs.cpp
+    allevents.h allevents.cpp
     #
 )
 

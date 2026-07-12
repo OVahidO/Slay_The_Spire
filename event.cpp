@@ -1,4 +1,5 @@
 #include "event.h"
+#include "allevents.h"
 
 #include <QCursor>
 #include <QFont>
@@ -7,6 +8,10 @@
 #include <QLinearGradient>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QRandomGenerator>
+#include <QVBoxLayout>
+#include <QVector>
+#include <functional>
 
 EventGraphicsView::EventGraphicsView(QGraphicsScene *scene, QWidget *parent)
     : QGraphicsView(scene, parent)
@@ -253,4 +258,31 @@ void Event::refreshAvailability()
         bool available = m_options[i].isAvailable ? m_options[i].isAvailable() : true;
         m_optionItems[i]->setOptionEnabled(available);
     }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Event *createRandomEvent(int actNumber, Player *player, GamePlay *gamePlay, QWidget *parent)
+{
+    QVector<std::function<Event *()>> pool;
+
+    pool.append([&]() -> Event * { return new OminousForge(player, gamePlay, parent); });
+    pool.append([&]() -> Event * { return new Lab(player, gamePlay, parent); });
+
+    if (actNumber == 1) {
+        pool.append([&]() -> Event * { return new GoldenIdolEvent(player, gamePlay, parent); });
+        pool.append([&]() -> Event * { return new TheCleric(player, gamePlay, parent); });
+    } else if (actNumber == 2) {
+        pool.append([&]() -> Event * { return new Augmenter(player, gamePlay, parent); });
+        pool.append([&]() -> Event * { return new FaceTrader(player, gamePlay, parent); });
+        pool.append([&]() -> Event * { return new Colosseum(player, gamePlay, parent); });
+        pool.append([&]() -> Event * { return new PleadingVagrant(player, gamePlay, parent); });
+        pool.append([&]() -> Event * { return new TheJoust(player, gamePlay, parent); });
+    }
+
+    if (pool.isEmpty())
+        return nullptr;
+
+    int index = QRandomGenerator::global()->bounded(pool.size());
+    return pool[index]();
 }
