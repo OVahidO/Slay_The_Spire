@@ -114,4 +114,17 @@ public:
     void onCombatStart(GamePlay *game) override;
 };
 
+class GoldenIdol : public Relic
+{
+public:
+    explicit GoldenIdol(QWidget *parent = nullptr);
+};
+
+class GremlinVisage : public Relic
+{
+public:
+    explicit GremlinVisage(QWidget *parent = nullptr);
+    void onCombatStart(GamePlay *game) override;
+};
+
 #endif // ALLRELICS_H

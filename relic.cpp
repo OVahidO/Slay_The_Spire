@@ -55,8 +55,10 @@ void Relic::loadIcon()
 
 Relic *Relic::createRandomNormalRelic()
 {
-    static const int normalRelicCount = 3;
+    static const int normalRelicCount = 5;
+
     int r = QRandomGenerator::global()->bounded(normalRelicCount);
+
     switch (r) {
     case 0:
         return new FaceOfTheCleric();

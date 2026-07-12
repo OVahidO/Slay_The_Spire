@@ -340,3 +340,27 @@ void Anchor::onCombatStart(GamePlay *game)
     if (game && game->player())
         game->player()->addBlock(10);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+GoldenIdol::GoldenIdol(QWidget *parent)
+    : Relic("Golden Idol", "A stolen relic. Its origin remains a mystery.", relicType::Event, parent)
+{
+    m_soucePath = ":/icons/Pics/Icons/relic/event/GoldenIdol.png";
+    loadIcon();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+GremlinVisage::GremlinVisage(QWidget *parent)
+    : Relic("Gremlin Visage", "At the start of combat gain 1 Weak.", relicType::Event, parent)
+{
+    m_soucePath = ":/icons/Pics/Icons/relic/event/GremlinMask.png";
+    loadIcon();
+}
+
+void GremlinVisage::onCombatStart(GamePlay *game)
+{
+    if (game && game->player())
+        game->player()->applyBuffDebuff(BuffDebuffType::Weak, 1);
+}

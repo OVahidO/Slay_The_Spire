@@ -34,7 +34,7 @@ public:
 
     void setCounter(int value);
 
-    Relic *createRandomNormalRelic();
+    static Relic *createRandomNormalRelic();
 
 signals:
 

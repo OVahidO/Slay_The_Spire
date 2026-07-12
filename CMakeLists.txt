@@ -41,6 +41,7 @@ qt_add_executable(Slay_The_Spire
     event.h event.cpp
     carddialogs.h carddialogs.cpp
     allevents.h allevents.cpp
+    backgrounds.qrc
     #
 )
 

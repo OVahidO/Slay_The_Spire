@@ -64,7 +64,7 @@ Card *createRandomTransformCard()
 
 OminousForge::OminousForge(Player *player, GamePlay *gamePlay, QWidget *parent)
     : Event("Ominous Forge",
-            ":/events/Pics/Events/ominous_forge.png",
+            ":/events/Pics/Background/Events/Event-OminousForge.png",
             EventScope::Any,
             player,
             gamePlay,
@@ -112,7 +112,12 @@ void OminousForge::onRummage()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Lab::Lab(Player *player, GamePlay *gamePlay, QWidget *parent)
-    : Event("Lab", ":/events/Pics/Events/lab.png", EventScope::Any, player, gamePlay, parent)
+    : Event("Lab",
+            ":/events/Pics/Background/Events/Event-Lab.png",
+            EventScope::Any,
+            player,
+            gamePlay,
+            parent)
 {
     setDescription("Rows of bubbling, unlabeled potions line the shelves of this abandoned lab...");
 
@@ -139,7 +144,7 @@ void Lab::onSearch()
 
 GoldenIdolEvent::GoldenIdolEvent(Player *player, GamePlay *gamePlay, QWidget *parent)
     : Event("Golden Idol",
-            ":/events/Pics/Events/golden_idol.png",
+            ":/events/Pics/Background/Events/Event-GoldenIdol.png",
             EventScope::Act1,
             player,
             gamePlay,
@@ -161,7 +166,7 @@ void GoldenIdolEvent::onSteal()
     if (!m_player)
         return;
 
-    // m_player->addRelic(new GoldenIdol());
+    m_player->addRelic(new GoldenIdol());
     m_player->addMaxHp(-5);
 }
 
@@ -169,7 +174,7 @@ void GoldenIdolEvent::onSteal()
 
 TheCleric::TheCleric(Player *player, GamePlay *gamePlay, QWidget *parent)
     : Event("The Cleric",
-            ":/events/Pics/Events/the_cleric.png",
+            ":/events/Pics/Background/Events/Event-Cleric.png",
             EventScope::Act1,
             player,
             gamePlay,
@@ -220,7 +225,7 @@ void TheCleric::onPurify()
 
 Augmenter::Augmenter(Player *player, GamePlay *gamePlay, QWidget *parent)
     : Event("Augmenter",
-            ":/events/Pics/Events/augmenter.png",
+            ":/events/Pics/Background/Events/Event-Augmenter.png",
             EventScope::Act2,
             player,
             gamePlay,
@@ -295,7 +300,7 @@ void Augmenter::transformCard(Card *card)
 
 FaceTrader::FaceTrader(Player *player, GamePlay *gamePlay, QWidget *parent)
     : Event("Face Trader",
-            ":/events/Pics/Events/face_trader.png",
+            ":/events/Pics/Background/Events/Event-FaceTrader.png",
             EventScope::Act2,
             player,
             gamePlay,
@@ -336,7 +341,7 @@ void FaceTrader::onTrade()
         m_player->addRelic(new FaceOfTheCleric());
         break;
     case 1:
-        // m_player->addRelic(new GremlinVisage());
+        m_player->addRelic(new GremlinVisage());
         break;
     case 2:
         m_player->addRelic(new CultistHeadpiece());
@@ -348,7 +353,7 @@ void FaceTrader::onTrade()
 
 Colosseum::Colosseum(Player *player, GamePlay *gamePlay, QWidget *parent)
     : Event("The Colosseum",
-            ":/events/Pics/Events/colosseum.png",
+            ":/events/Pics/Background/Events/Event-Colosseum.png",
             EventScope::Act2,
             player,
             gamePlay,
@@ -377,7 +382,7 @@ void Colosseum::onFight()
 
 PleadingVagrant::PleadingVagrant(Player *player, GamePlay *gamePlay, QWidget *parent)
     : Event("Pleading Vagrant",
-            ":/events/Pics/Events/pleading_vagrant.png",
+            ":/events/Pics/Background/Events/Event-Vagrant.png",
             EventScope::Act2,
             player,
             gamePlay,
@@ -400,7 +405,7 @@ void PleadingVagrant::onGive()
         return;
 
     m_player->setCoin(m_player->coin() - 85);
-    // m_player->addRelic(Relic::createRandomNormalRelic());
+    m_player->addRelic(Relic::createRandomNormalRelic());
 }
 
 void PleadingVagrant::onRob()
@@ -408,7 +413,7 @@ void PleadingVagrant::onRob()
     if (!m_player || !m_gamePlay)
         return;
 
-    // m_player->addRelic(Relic::createRandomNormalRelic());
+    m_player->addRelic(Relic::createRandomNormalRelic());
     // m_gamePlay->addCardToDeck(new Regret());
 }
 
@@ -416,7 +421,7 @@ void PleadingVagrant::onRob()
 
 TheJoust::TheJoust(Player *player, GamePlay *gamePlay, QWidget *parent)
     : Event("The Joust",
-            ":/events/Pics/Events/the_joust.png",
+            ":/events/Pics/Background/Events/Event-Joust.png",
             EventScope::Act2,
             player,
             gamePlay,

@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/events">
+        <file>Pics/Background/Events/Event-Augmenter.png</file>
+        <file>Pics/Background/Events/Event-Cleric.png</file>
+        <file>Pics/Background/Events/Event-Colosseum.png</file>
+        <file>Pics/Background/Events/Event-FaceTrader.png</file>
+        <file>Pics/Background/Events/Event-GoldenIdol.png</file>
+        <file>Pics/Background/Events/Event-Joust.png</file>
+        <file>Pics/Background/Events/Event-Lab.png</file>
+        <file>Pics/Background/Events/Event-OminousForge.png</file>
+        <file>Pics/Background/Events/Event-Vagrant.png</file>
+    </qresource>
+</RCC>

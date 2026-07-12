@@ -67,7 +67,16 @@ void Player::setHandSize(int handSize)
 
 void Player::addMaxHp(int n)
 {
-    m_maxHP += (n < 0) ? 0 : n;
+    m_maxHP += n;
+
+    if (m_maxHP < 1)
+        m_maxHP = 1;
+
+    if (m_currentHP > m_maxHP)
+        m_currentHP = m_maxHP;
+
+    emit hpChanged();
+    emit valueChanged();
 }
 
 void Player::addEnergy(int n)
