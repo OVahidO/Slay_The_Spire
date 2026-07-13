@@ -44,19 +44,19 @@ Card *createRandomTransformCard()
 {
     switch (QRandomGenerator::global()->bounded(6)) {
     case 0:
-        return new Strike();
+        return new class Strike();
     case 1:
-        return new Defend();
+        return new class Defend();
     case 2:
-        return new Bash();
+        return new class Bash();
     case 3:
-        return new Clash();
+        return new class Clash();
     case 4:
-        return new Entrench();
+        return new class Entrench();
     case 5:
-        return new Inflame();
+        return new class Inflame();
     default:
-        return new Strike();
+        return new class Strike();
     }
 }
 
