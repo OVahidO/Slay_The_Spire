@@ -73,7 +73,7 @@ public:
 signals:
     void targetCardPlayed(Card *card, Player *player, Enemy *targetEnemy);
     void noTargetCardPlayed(Card* card);
-    void cardEnterrdMouse(Card* card);
+    void cardEnteredMouse(Card *card);
     void cardLeavedMouse(Card* card);
 
 protected:
