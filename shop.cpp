@@ -145,49 +145,49 @@ Card *Shop::createRandomCard(bool rare) const
         int r = QRandomGenerator::global()->bounded(10);
         switch (r) {
         case 0:
-            return new Strike();
+            return new class Strike();
         case 1:
-            return new Bash();
+            return new class Bash();
         case 2:
-            return new Clash();
+            return new class Clash();
         case 3:
-            return new Hemokinesis();
+            return new class Hemokinesis();
         case 4:
-            return new BloodForBlood();
+            return new class BloodForBlood();
         case 5:
-            return new Whirlwind();
+            return new class Whirlwind();
         case 6:
-            return new Defend();
+            return new class Defend();
         case 7:
-            return new Entrench();
+            return new class Entrench();
         case 8:
-            return new Bloodletting();
+            return new class Bloodletting();
         case 9:
-            return new Inflame();
+            return new class Inflame();
         default:
-            return new Strike();
+            return new class Strike();
         }
     } else {
         int r = QRandomGenerator::global()->bounded(8);
         switch (r) {
         case 0:
-            return new Bludgeon();
+            return new class Bludgeon();
         case 1:
-            return new Reaper();
+            return new class Reaper();
         case 2:
-            return new Feed();
+            return new class Feed();
         case 3:
-            return new Immolate();
+            return new class Immolate();
         case 4:
-            return new Exhume();
+            return new class Exhume();
         case 5:
-            return new Limit_Break();
+            return new class Limit_Break();
         case 6:
-            return new Offering();
+            return new class Offering();
         case 7:
-            return new Impervious();
+            return new class Impervious();
         default:
-            return new Bludgeon();
+            return new class Bludgeon();
         }
     }
 }

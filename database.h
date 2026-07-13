@@ -1,0 +1,50 @@
+#ifndef DATABASE_H
+#define DATABASE_H
+
+#include <QObject>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QPair>
+
+/////////////
+class Player;
+class Card;
+/////////////
+
+class Database : public QObject
+{
+    Q_OBJECT
+
+private:
+    Database();
+    Database(const Database&) = delete;
+    Database& operator=(const Database&) = delete;
+
+    static QSqlDatabase db;
+
+public:
+    static Database& instance();
+
+    static bool open(QString dbPath);
+    //////////////////////////////////////////
+    static bool creatPlayerTable();
+    static bool insertPlayerValue(Player* p);
+    static bool updatePlayerValue(Player* p);
+    static bool deletePlayerValue(Player* p);
+    static QVector<QPair<Player* , unsigned int>> selectAllPlayers();
+    //////////////////////////////////////////
+    static bool creatPlayersDeckTable();
+    static bool insertPlayersDeckValue(Player* p);
+    static bool updatePlayersDeckValue(Player* p);
+    static bool deletePlayersDeckValue(Player* p);
+    static QVector<Card*> selectPlayersDeck(Player* p);
+    //////////////////////////////////////////
+    static bool updateMapSeedValue(int playerID, unsigned int seed);
+    //////////////////////////////////////////
+    static void close();
+
+signals:
+};
+
+#endif // DATABASE_H

@@ -8,7 +8,8 @@
 class PowerCard : public Card
 {
 public:
-    PowerCard(QString name,
+    PowerCard(CardID ID,
+              QString name,
               int energyCost,
               QString description,
               bool requiresTarget,

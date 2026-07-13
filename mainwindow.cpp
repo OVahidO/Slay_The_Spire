@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(m_topbar, &Topbar::potionUsed, g, &GamePlay::usedPotionHandler);
 
-    // Map* m = new Map(this);
+    // Map* m = new Map(0, this);
     // int map_Index = ui->stackedWidget->addWidget(m);
     // ui->stackedWidget->setCurrentIndex(map_Index);
 }

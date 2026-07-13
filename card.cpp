@@ -2,7 +2,8 @@
 #include "player.h"
 #include "enemy.h"
 
-Card::Card(QString name,
+Card::Card(CardID ID,
+           QString name,
            CardType type,
            int energyCost,
            QString description,
@@ -11,7 +12,6 @@ Card::Card(QString name,
            bool requiresTarget,
            QGraphicsItem *parent)
     : QGraphicsObject(parent)
-    , m_ID(rand() % 1000 + 1000)
     , m_name(name)
     , m_type(type)
     , m_energyCost(energyCost)
@@ -365,6 +365,23 @@ void Card::setHoveredEnemy(Enemy *enemy)
     m_hoveredEnemy = enemy;
 }
 ///
+
+////////////////////
+
+using CreatorFunc = std::function<Card*()>;
+
+QHash<CardID, CreatorFunc> &Card::creators()
+{
+    static QHash<CardID, CreatorFunc> creators;
+    return creators;
+}
+
+Card* Card::Creat(CardID cardID)
+{
+    return Card::creators()[cardID]();
+}
+
+////////////////////
 
 int Card::ID() const
 {

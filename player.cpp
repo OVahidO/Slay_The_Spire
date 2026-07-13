@@ -33,6 +33,11 @@ int Player::handSize() const
     return m_handSize;
 }
 
+QVector<Card *> &Player::Deck()
+{
+    return m_Deck;
+}
+
 QVector<Card *> &Player::HandsCards()
 {
     return m_HandsCards;
