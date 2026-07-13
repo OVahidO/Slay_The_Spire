@@ -37,13 +37,11 @@ Card::Card(QString name,
 
     connect(m_hoverAnimation, &QVariantAnimation::valueChanged, this, [this](const QVariant& value){this->setScale(value.toReal());});
 
-    auto *shadow = new QGraphicsDropShadowEffect;
+    auto *shadow = new QGraphicsDropShadowEffect(this);
     shadow->setBlurRadius(20);
-    shadow->setOffset(0, 6);
+    shadow->setOffset(1, 6);
     shadow->setColor(QColor(0, 0, 0, 160));
-    setGraphicsEffect(shadow);
 
-    ///
     loadTypeIcon();
 }
 
@@ -56,7 +54,21 @@ void Card::loadPixmap()
 {
     if (!m_sourcePath.isEmpty()) {
         m_cardPixmap = QPixmap(m_sourcePath);
+
+        QRectF rect = boundingRect();
+
+        QSizeF pixSize = m_cardPixmap.size();
+
+        qreal scale = qMax(rect.width() / pixSize.width(), rect.height() / pixSize.height());
+
+        QSizeF scaledSize = pixSize * scale;
+
+        qreal x = rect.x() + (rect.width() - scaledSize.width()) / 2.0;
+        qreal y = rect.y() + (rect.height() - scaledSize.height()) / 2.0;
+
+        m_targetPixmapRect = QRectF(x, y, scaledSize.width(), scaledSize.height());
     }
+    m_energyPixmap.load(":/icons/Pics/Icons/card-type-icon/ironclad_energy_icon.png");
 }
 
 void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -68,7 +80,7 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
 
     QRectF rect = boundingRect();
-    qreal radius = 16;
+    qreal radius = 10;
 
     QPainterPath cardShape;
     cardShape.addRoundedRect(rect, radius, radius);
@@ -77,16 +89,8 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->fillRect(rect, QColor(20, 20, 25));
 
     if (!m_cardPixmap.isNull()) {
-        QSizeF pixSize = m_cardPixmap.size();
-        qreal scale = qMax(rect.width() / pixSize.width(), rect.height() / pixSize.height());
-        QSizeF scaledSize = pixSize * scale;
-
-        qreal x = rect.x() + (rect.width() - scaledSize.width()) / 2.0;
-        qreal y = rect.y() + (rect.height() - scaledSize.height()) / 2.0;
-
-        QRectF targetRect(x, y, scaledSize.width(), scaledSize.height());
-        painter->drawPixmap(targetRect, m_cardPixmap, m_cardPixmap.rect());
-        painter->fillRect(rect, QColor(0, 0, 0, 10));
+        painter->drawPixmap(m_targetPixmapRect, m_cardPixmap, m_cardPixmap.rect());
+        painter->fillRect(rect, QColor(0, 0, 0, 15));
     }
 
     QRectF fadeRect(rect.x(), rect.y() + rect.height() * 0.55, rect.width(), rect.height() * 0.45);
@@ -98,14 +102,11 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     QColor typeColor = colorForCardType(m_type);
 
-    QRectF iconRect(rect.right() - 45, rect.top() + 10, 35, 35);
 
     QRectF energyBadge(rect.left() + 10, rect.top() + 10, 34, 34);
 
-    QPixmap energyPixmap(":/icons/Pics/Icons/card-type-icon/ironclad_energy_icon.png");
-
-    if (!energyPixmap.isNull())
-        painter->drawPixmap(energyBadge, energyPixmap, energyPixmap.rect());
+    if (!m_energyPixmap.isNull())
+        painter->drawPixmap(energyBadge, m_energyPixmap, m_energyPixmap.rect());
 
     QColor energyTextColor = (m_energyCost < m_baseEnergyCost) ? QColor(110, 255, 140) : Qt::white;
 
@@ -120,14 +121,18 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     QRectF textRect(rect.x() + 14, fadeRect.y() + 8, rect.width() - 28, fadeRect.height() - 16);
 
+    QRectF nameIconRect(textRect.left(), textRect.top() + 2, 18, 18);
+
+    painter->drawPixmap(nameIconRect, m_typeIcon, m_typeIcon.rect());
+
     QColor nameColor = m_isUpgraded ? QColor(90, 230, 110) : Qt::white;
     QFont nameFont("Cinzel", 15, QFont::Bold);
     painter->setFont(nameFont);
     painter->setPen(nameColor);
-    painter->drawText(textRect, Qt::AlignTop | Qt::AlignLeft, m_name);
+    QRectF nameTextRect = textRect.adjusted(24, 0, 0, 0);
+    painter->drawText(nameTextRect, Qt::AlignTop | Qt::AlignLeft, m_name);
 
     QRectF descRect = textRect.adjusted(0, 26, 0, 0);
-
     QTextDocument doc;
     doc.setDefaultFont(QFont("Rajdhani", 10));
     doc.setTextWidth(descRect.width());
@@ -137,16 +142,6 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->translate(descRect.topLeft());
     doc.drawContents(painter, QRectF(0, 0, descRect.width(), descRect.height()));
     painter->restore();
-
-    painter->setPen(Qt::NoPen);
-
-    painter->setBrush(QColor(255, 255, 255, 18));
-
-    painter->drawEllipse(iconRect.adjusted(-3, -3, 3, 3));
-
-    painter->drawPixmap(iconRect, m_typeIcon, m_typeIcon.rect());
-
-    painter->drawPixmap(iconRect, m_typeIcon, m_typeIcon.rect());
 
     painter->setClipping(false);
     painter->setPen(QPen(typeColor.darker(130), 2.5));
@@ -215,7 +210,6 @@ void Card::loadTypeIcon()
     }
 }
 
-///
 QString Card::highlightKeywords(const QString &text) const
 {
     static const QStringList keywords = {"Strength",
@@ -239,7 +233,6 @@ QString Card::highlightKeywords(const QString &text) const
 
     return escaped;
 }
-///
 
 void Card::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
@@ -304,21 +297,11 @@ void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     else if(!this->m_needTarget)
         emit this->noTargetCardPlayed(this);
 
-    ///
-    if (this->m_needTarget && (player || target)) {
-        if ((this->cardType() == CardType::Attack && target)
-            || (this->cardType() != CardType::Attack && player))
-            emit this->targetCardPlayed(this, player, target);
-    } else if (!this->m_needTarget)
-        emit this->noTargetCardPlayed(this);
-
     this->setHoveredEnemy(nullptr);
-    ///
 
     QGraphicsItem::mouseReleaseEvent(event);
 }
 
-///
 void Card::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mouseMoveEvent(event);
@@ -348,7 +331,6 @@ void Card::setHoveredEnemy(Enemy *enemy)
 {
     m_hoveredEnemy = enemy;
 }
-///
 
 int Card::ID() const
 {

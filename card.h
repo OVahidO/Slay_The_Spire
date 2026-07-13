@@ -78,6 +78,8 @@ signals:
 
 protected:
     QPixmap m_cardPixmap;
+    QRectF m_targetPixmapRect;
+    QPixmap m_energyPixmap;
     void loadPixmap();
     QVariantAnimation* m_hoverAnimation;
     qreal m_oldZValue;
