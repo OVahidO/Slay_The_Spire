@@ -20,7 +20,6 @@ class DAZE : public StatusCard
 {
 public:
     explicit DAZE(QGraphicsItem *parent = nullptr);
-
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };
 
@@ -28,7 +27,6 @@ class SLIME : public StatusCard
 {
 public:
     explicit SLIME(QGraphicsItem *parent = nullptr);
-
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };
 
@@ -36,7 +34,6 @@ class WOUND : public StatusCard
 {
 public:
     explicit WOUND(QGraphicsItem *parent = nullptr);
-
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };
 
@@ -44,7 +41,6 @@ class BURN : public StatusCard
 {
 public:
     explicit BURN(QGraphicsItem *parent = nullptr);
-
     void applyEffect(Player *player = nullptr, Enemy *targetEnemy = nullptr) override;
 };
 

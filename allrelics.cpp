@@ -32,8 +32,8 @@ CultistHeadpiece::CultistHeadpiece(QWidget *parent)
 {
     m_soucePath = ":/icons/Pics/Icons/relic/event/CultistMask.png";
     loadIcon();
-    m_cawSound.setSource(
-        QUrl(":/sounds/Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3"));
+    m_cawSound.setSource(QUrl(
+        "qrc:/soundeffects/Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3"));
     m_cawSound.setVolume(0.8f);
 }
 
@@ -221,7 +221,6 @@ Girya::Girya(QWidget *parent)
     loadIcon();
     m_counter = 3;
 }
-// اگر بازیکن این رلیک را داشت و m_counter > 0 بود، گزینه Lift فعال می‌شود.
 
 void Girya::onCombatStart(GamePlay *game)
 {
@@ -249,7 +248,6 @@ Kunai::Kunai(QWidget *parent)
 void Kunai::onTurnStart(Player *player)
 {
     Q_UNUSED(player);
-    // در شروع نوبت شمارنده را صفر می‌کنیم[cite: 45].
     m_counter = 0;
 }
 

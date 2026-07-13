@@ -487,7 +487,7 @@ void HexaGhost::calculateNextIntent()
     }
 
     if (m_turnCount == 2) {
-        int dividerDamage = 1; // placeholder
+        int dividerDamage = 1;
         m_currentIntent = EnemyIntent{IntentType::Attack, dividerDamage, 6, false};
         return;
     }
@@ -495,19 +495,19 @@ void HexaGhost::calculateNextIntent()
     int cycleIndex = (m_turnCount - 3) % 7;
 
     switch (cycleIndex) {
-    case 0: // Sear
+    case 0:
     case 2:
     case 5:
         m_currentIntent = EnemyIntent{IntentType::Attack, 6, 1, false};
         break;
-    case 1: // Tackle
+    case 1:
     case 4:
         m_currentIntent = EnemyIntent{IntentType::Attack, 5, 2, false};
         break;
-    case 3: // Inflame
+    case 3:
         m_currentIntent = defendBuffIntent(12, 2);
         break;
-    case 6: // Inferno
+    case 6:
         m_currentIntent = EnemyIntent{IntentType::Attack, 2, 6, false};
         break;
     }

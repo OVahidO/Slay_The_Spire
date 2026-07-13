@@ -169,7 +169,6 @@ void GamePlay::addCardToDiscardPile(Card *card)
     m_discardPile.push_back(card);
 }
 
-///
 void GamePlay::addCardToExhaustPile(Card *card)
 {
     m_ExhaustPile.push_back(card);
@@ -217,75 +216,72 @@ void GamePlay::startCombat()
     playerTurn();
 }
 
-// void removeTemporaryCardsFromPile(std::vector<Card *> &pile)
-// {
-//     pile.erase(std::remove_if(pile.begin(),
-//                               pile.end(),
-//                               [](Card *card) {
-//                                   if (card->lifetime() == CardLifetime::EndOfCombat) {
-//                                       delete card;
-//                                       return true;
-//                                   }
+void removeTemporaryCardsFromPile(std::vector<Card *> &pile)
+{
+    pile.erase(std::remove_if(pile.begin(),
+                              pile.end(),
+                              [](Card *card) {
+                                  if (card->lifetime() == CardLifetime::EndOfCombat) {
+                                      delete card;
+                                      return true;
+                                  }
 
-//                                   return false;
-//                               }),
-//                pile.end());
-// }
+                                  return false;
+                              }),
+               pile.end());
+}
 
-// void GamePlay::removeTemporaryCards()
-// {
-//     std::vector<std::vector<Card *> *> piles = {&m_deck,
-//                                                 &m_drawPile,
-//                                                 &m_discardPile,
-//                                                 &m_ExhaustPile};
+void GamePlay::removeTemporaryCards()
+{
+    std::vector<std::vector<Card *> *> piles = {&m_deck,
+                                                &m_drawPile,
+                                                &m_discardPile,
+                                                &m_ExhaustPile};
 
-//     for (auto *pile : piles)
-//         removeTemporaryCardsFromPile(*pile);
+    for (auto *pile : piles)
+        removeTemporaryCardsFromPile(*pile);
 
-//     auto &hand = m_player->HandsCards();
+    auto &hand = m_player->HandsCards();
 
-//     hand.erase(std::remove_if(hand.begin(),
-//                               hand.end(),
-//                               [](Card *card) {
-//                                   if (card->lifetime() == CardLifetime::EndOfCombat) {
-//                                       delete card;
-//                                       return true;
-//                                   }
+    hand.erase(std::remove_if(hand.begin(),
+                              hand.end(),
+                              [](Card *card) {
+                                  if (card->lifetime() == CardLifetime::EndOfCombat) {
+                                      delete card;
+                                      return true;
+                                  }
 
-//                                   return false;
-//                               }),
-//                hand.end());
-// }
+                                  return false;
+                              }),
+               hand.end());
+}
 
 void GamePlay::endCombat()
 {
-    // removeTemporaryCards();
+    removeTemporaryCards();
 
-    //m_player->setBlock(0);
+    m_player->setBlock(0);
 
-    // for (Card *card : m_player->HandsCards())
-    // {
-    //     if (card->lifetime() == CardLifetime::Permanent)
-    //         m_discardPile.push_back(card);
-    // }
+    for (Card *card : m_player->HandsCards()) {
+        if (card->lifetime() == CardLifetime::Permanent)
+            m_discardPile.push_back(card);
+    }
 
-    // m_drawPile.clear();
+    m_drawPile.clear();
 
     // m_effects.clear();
 
     // m_powerEffects.clear();
 
-    // m_ExhaustPile.clear();
+    m_ExhaustPile.clear();
 
-    // m_player->HandsCards().clear();
+    m_player->HandsCards().clear();
 }
 
 std::vector<Card *> &GamePlay::deck()
 {
     return m_deck;
 }
-
-///
 
 void GamePlay::addCardToHand(Card* card)
 {
@@ -710,5 +706,3 @@ void GamePlay::setSelectedHandCard(Card *card)
 }
 
 // when player selected card call gameplay->setSelectedHandCard(card);
-
-///

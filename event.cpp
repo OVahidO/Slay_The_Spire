@@ -173,7 +173,6 @@ Event::Event(const QString &eventTitle,
     m_view = new EventGraphicsView(m_scene, this);
     connect(m_view, &EventGraphicsView::itemClicked, this, [this](QGraphicsItem *item) {
         Q_UNUSED(item);
-        // نیازی به هندل کردن اینجا نیست؛ کلیک‌ها مستقیم توسط SelectableOptionItem::clicked مدیریت می‌شوند.
     });
 
     m_titleItem = new QGraphicsTextItem(m_eventTitle);

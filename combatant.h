@@ -28,6 +28,7 @@ public:
     virtual ~Combatant();
 
     virtual int takeDamage(int incomingDamage, bool isAttackDamage = true);
+    void setBlock(int amount);
     void addBlock(int amount);
     void addBlockFromCard(int amount);
     void resetBlock();

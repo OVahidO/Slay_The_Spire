@@ -175,22 +175,6 @@ QColor Card::colorForCardType(CardType type) const
     return Qt::gray;
 }
 
-// void Card::drawTypeGem(QPainter *painter, const QRectF &rect) const
-// {
-//     QColor gemColor = isRare() ? QColor(184, 148, 30) : colorForCardType(m_type);
-
-//     qreal gemSize = 34;
-//     QRectF gemRect(rect.right() - gemSize - 8, rect.top() + 8, gemSize, gemSize);
-
-//     painter->setBrush(gemColor.darker(115));
-//     painter->setPen(QPen(Qt::white, 1.5));
-//     painter->drawEllipse(gemRect);
-
-//     painter->setPen(QPen(Qt::white, 2.2, Qt::SolidLine, Qt::RoundCap));
-//     QPointF c = gemRect.center();
-//     qreal r = gemSize * 0.28;
-// }
-
 void Card::loadTypeIcon()
 {
     switch (m_type) {

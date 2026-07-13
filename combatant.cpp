@@ -38,6 +38,11 @@ int Combatant::takeDamage(int incomingDamage, bool isAttackDamage)
     return damageAfterBlock;
 }
 
+void Combatant::setBlock(int amount)
+{
+    m_block = amount;
+}
+
 void Combatant::addBlock(int amount)
 {
     m_block += amount;
@@ -149,7 +154,7 @@ int Combatant::calculateOutgoingDamage(int baseDamage) const
     int modified = baseDamage + effectStacks(BuffDebuffType::Strength);
 
     if (effectStacks(BuffDebuffType::Weak) > 0)
-        modified = static_cast<int>(modified * 0.75); // floor طبق ویکی
+        modified = static_cast<int>(modified * 0.75);
 
     if (modified < 0)
         modified = 0;

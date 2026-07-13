@@ -68,8 +68,7 @@ class BlackStar : public Relic
 public:
     explicit BlackStar(QWidget *parent = nullptr);
     // void onEquip(GamePlay *game) override;
-    // به صورت غیرفعال عمل می‌کند
-    // منطق آن توسط GamePlay چک می‌شود.
+    // منطق آن توسط GamePlay چک شود.
 };
 
 class Girya : public Relic

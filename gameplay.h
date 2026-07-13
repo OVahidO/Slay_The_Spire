@@ -10,12 +10,10 @@
 #include <random>
 #include <QParallelAnimationGroup>
 
-// Temporary player and Enemy;
 class Player;
 class Enemy;
 class Card;
 class Potion;
-//////////////////////////////
 
 namespace Ui {
 class GamePlay;
@@ -55,7 +53,7 @@ public:
     void removeTemporaryCardsFromPile(std::vector<Card *> &pile);
     void removeTemporaryCards();
     void endCombat();
-    ///
+
     void addCardToHand(Card *card);
     void drawFromExhaustPile();
     void drawFromDrawPile();
@@ -101,7 +99,6 @@ private:
 
     /// for dual wield
     Card *m_selectedHandCard = nullptr;
-    ///
 
     QGraphicsScene *m_scene;
     QGraphicsView *m_view;

@@ -370,11 +370,7 @@ Colosseum::Colosseum(Player *player, GamePlay *gamePlay, QWidget *parent)
 
 void Colosseum::onFight()
 {
-    // توجه: اسپاون واقعی Elite و اعطای پاداش باید در سطح GamePlay/MainWindow انجام شود،
     // جایی که جریان Map/Combat مدیریت می‌شود. این Event فقط قصد را با سیگنال اعلام می‌کند:
-    //   ۱. یکی از الیت‌ها را رندوم انتخاب و اسپاون کن (eliteenemies.h)
-    //   ۲. Combat را عادی شروع کن
-    //   ۳. بعد از پیروزی، پاداش استاندارد Elite بده (طلای 30-40 + Relic + احتمال Potion)
     emit triggerEliteCombat();
 }
 
