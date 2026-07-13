@@ -114,7 +114,7 @@ void GamePlay::draw()
         card->setPos(ui->drawPileButton->pos());
         m_player->HandsCards().push_back(card);
         m_scene->addItem(card);
-        connect(card, &Card::cardEnterrdMouse, this, &GamePlay::updateHandsCardsLayout);
+        connect(card, &Card::cardEnteredMouse, this, &GamePlay::updateHandsCardsLayout);
         connect(card, &Card::cardLeavedMouse, this, &GamePlay::updateHandsCardsLayout);
         connect(card, &Card::targetCardPlayed, this, &GamePlay::targetCardsHandler);
         connect(card, &Card::noTargetCardPlayed, this, &GamePlay::noTargetCardsHandler);
@@ -216,7 +216,7 @@ void GamePlay::startCombat()
     playerTurn();
 }
 
-void removeTemporaryCardsFromPile(std::vector<Card *> &pile)
+void GamePlay::removeTemporaryCardsFromPile(std::vector<Card *> &pile)
 {
     pile.erase(std::remove_if(pile.begin(),
                               pile.end(),

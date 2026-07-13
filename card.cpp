@@ -253,7 +253,7 @@ void Card::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
     m_hoverAnimation->setEndValue(1.2);
     m_hoverAnimation->start();
 
-    emit cardEnterrdMouse(this);
+    emit cardEnteredMouse(this);
 }
 
 void Card::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
