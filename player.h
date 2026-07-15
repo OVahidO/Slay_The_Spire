@@ -35,6 +35,9 @@ public:
     bool cannotPlayAttacks() const;
     void setCannotPlayAttacks(bool value);
 
+    bool cannotPlayCards() const;
+    void setCannotPlayCards(bool value);
+
     void addMaxHp(int n = 1);
     void addEnergy(int n = 1);
     void loseHp(int n = 1);
@@ -58,6 +61,7 @@ signals:
 
 private:
     bool m_cannotPlayAttacks = false;
+    bool m_cannotPlayCards = false;
 
     int m_coin = 0;
     int m_energy = 3;

@@ -56,12 +56,25 @@ RewardScreen::RewardScreen(Player *player,
     grantGoldAndPotion();
 
     if (m_combatType == RewardCombatType::Elite) {
-        Relic *relic = createRandomNormalRelicForElite();
-        if (relic) {
-            relic->onEquip(m_gamePlay);
-            m_player->addRelic(relic);
-            m_relicGrantedItem->setPlainText("Relic obtained: " + relic->name());
+        bool hasBlackStar = false;
+        for (Relic *r : m_player->relics())
+            if (r->name() == "Black Star") {
+                hasBlackStar = true;
+                break;
+            }
+
+        int relicCount = hasBlackStar ? 2 : 1;
+        QStringList grantedNames;
+
+        for (int i = 0; i < relicCount; ++i) {
+            Relic *relic = createRandomNormalRelicForElite();
+            if (relic) {
+                m_gamePlay->grantRelicToPlayer(relic);
+                grantedNames << relic->name();
+            }
         }
+
+        m_relicGrantedItem->setPlainText("Relic obtained: " + grantedNames.join(", "));
     }
 
     m_relicStageResolved = (m_combatType != RewardCombatType::Boss);
@@ -93,7 +106,6 @@ RewardScreen::RewardScreen(Player *player,
 
     updateContinueButtonState();
 }
-
 RewardScreen::~RewardScreen() {}
 
 void RewardScreen::setupScene()
@@ -353,8 +365,7 @@ void RewardScreen::setupBossRelicChoices()
                 return;
 
             Relic *relic = m_bossRelicFactories[i]();
-            relic->onEquip(m_gamePlay);
-            m_player->addRelic(relic);
+            m_gamePlay->grantRelicToPlayer(relic);
             m_relicGrantedItem->setPlainText("Relic obtained: " + relic->name());
 
             for (SelectableOptionItem *option : m_bossRelicItems) {

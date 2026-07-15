@@ -1,26 +1,25 @@
 #include "gameplay.h"
-#include "attackcards.h"
-#include "skillcards.h"
-#include "enemy.h"
-#include "player.h"
-#include "potion.h"
-#include "statuscards.h"
-#include "ui_gameplay.h"
-#include <QString>
-#include <QPropertyAnimation>
-#include <QTimer>
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
+#include <QPropertyAnimation>
+#include <QString>
+#include <QTimer>
+#include "attackcards.h"
+#include "enemy.h"
+#include "player.h"
+#include "potion.h"
+#include "relic.h"
+#include "skillcards.h"
+#include "statuscards.h"
+#include "ui_gameplay.h"
 
 GamePlay::GamePlay(Player* player, QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::GamePlay)
 {
     ui->setupUi(this);
-    this->setFixedSize(1280 , 640);
-    //setup attributes
-    //////////////////
+    this->setFixedSize(1280, 640);
 
     m_player = player;
 
@@ -30,8 +29,6 @@ GamePlay::GamePlay(Player* player, QWidget *parent)
 
     updateHpLabels();
 
-    //////////////////
-    // ahoora's
     m_scene = new QGraphicsScene(this);
     m_scene->setSceneRect(0, 0, width(), height());
 
@@ -43,29 +40,37 @@ GamePlay::GamePlay(Player* player, QWidget *parent)
     m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    ///////////////////
     creatEnergyUI();
     updateEnergyLabel();
 
-    EndTurnButton* endTurnButton = new EndTurnButton();
+    EndTurnButton *endTurnButton = new EndTurnButton();
     endTurnButton->setPos(1020, 410);
     m_scene->addItem(endTurnButton);
     connect(endTurnButton, &EndTurnButton::onClick, this, &GamePlay::endTurnButtonClicked);
     connect(this, &GamePlay::enemiesTurnEnded, endTurnButton, &EndTurnButton::activeButton);
-    //////////////////
-    m_drawPile.push_back(new Strike);
-    m_drawPile.push_back(new Exhume);
-    m_drawPile.push_back(new Strike);
-    m_drawPile.push_back(new Defend);
-    m_drawPile.push_back(new Defend);
+
+    m_deck.push_back(new Strike);
+    m_deck.push_back(new Strike);
+    m_deck.push_back(new Strike);
+    m_deck.push_back(new Strike);
+    m_deck.push_back(new Strike);
+    m_deck.push_back(new Bash);
+    m_deck.push_back(new Defend);
+    m_deck.push_back(new Defend);
+    m_deck.push_back(new Defend);
+    m_deck.push_back(new Defend);
+
+    for (Card *c : m_deck)
+        c->setOwnerPlayer(m_player);
+
     emit valueChanged();
-    draw();
-    //////////////////
 
     connect(this, &GamePlay::playerTurnEnded, this, &GamePlay::enemiesTurn);
     connect(this, &GamePlay::enemiesTurnEnded, this, &GamePlay::playerTurn);
     connect(this, &GamePlay::cardPlayed, this, &GamePlay::playedCardHandler);
     connect(this, &GamePlay::valueChanged, this, &GamePlay::update);
+
+    startCombat();
 }
 
 GamePlay::~GamePlay()
@@ -90,27 +95,110 @@ Player *&GamePlay::player()
     return m_player;
 }
 
+// ---------------- Enemies management ----------------
+
+std::vector<Enemy *> &GamePlay::enemies()
+{
+    return m_enemys;
+}
+
+void GamePlay::addEnemy(Enemy *enemy)
+{
+    if (!enemy)
+        return;
+
+    m_enemys.push_back(enemy);
+    m_scene->addItem(enemy);
+}
+
+void GamePlay::clearEnemies()
+{
+    for (Enemy *e : m_enemys) {
+        m_scene->removeItem(e);
+        delete e;
+    }
+    m_enemys.clear();
+}
+
+bool GamePlay::allEnemiesDead() const
+{
+    for (Enemy *e : m_enemys)
+        if (!e->isDead())
+            return false;
+
+    return true;
+}
+
+void GamePlay::removeDeadEnemies()
+{
+    for (auto it = m_enemys.begin(); it != m_enemys.end();) {
+        Enemy *e = *it;
+        if (e->isDead()) {
+            m_scene->removeItem(e);
+            it = m_enemys.erase(it);
+            e->deleteLater();
+        } else {
+            ++it;
+        }
+    }
+
+    if (m_enemys.empty())
+        emit combatWon();
+}
+
+// ---------------- Energy / Draw ----------------
+
 void GamePlay::playerReviveEnergy()
 {
+    // انرژی هر نوبت ریست می‌شود (مگر Ice Cream که خودش قبل از این با addEnergy جبران می‌کند)
     m_player->setEnergy(m_player->maxEnergy());
 }
 
 void GamePlay::draw()
 {
-    int* cardsDrawn = new int(0);
-    int targetCount = this->m_player->handSize();
-    QTimer* drawTimer = new QTimer(this);
-    connect(drawTimer, &QTimer::timeout, this, [this, targetCount, cardsDrawn, drawTimer]()
-    {
-        if(*cardsDrawn >= targetCount || m_drawPile.empty())
-        {
+    drawCards(DRAW_COUNT_PER_TURN);
+}
+
+void GamePlay::drawCards(int count)
+{
+    int *cardsDrawn = new int(0);
+
+    int availableSlots = HAND_MAX_SIZE - static_cast<int>(m_player->HandsCards().size());
+    int targetCount = qMin(count, qMax(0, availableSlots));
+
+    if (targetCount <= 0) {
+        delete cardsDrawn;
+        return;
+    }
+
+    QTimer *drawTimer = new QTimer(this);
+    connect(drawTimer, &QTimer::timeout, this, [this, targetCount, cardsDrawn, drawTimer]() {
+        if (*cardsDrawn >= targetCount
+            || static_cast<int>(m_player->HandsCards().size()) >= HAND_MAX_SIZE) {
             drawTimer->stop();
             drawTimer->deleteLater();
             delete cardsDrawn;
             return;
         }
 
-        Card* card = m_drawPile.back();
+        if (m_drawPile.empty()) {
+            if (m_discardPile.empty()) {
+                drawTimer->stop();
+                drawTimer->deleteLater();
+                delete cardsDrawn;
+                return;
+            }
+            fillingDrawPile();
+        }
+
+        if (m_drawPile.empty()) {
+            drawTimer->stop();
+            drawTimer->deleteLater();
+            delete cardsDrawn;
+            return;
+        }
+
+        Card *card = m_drawPile.back();
         card->setPos(ui->drawPileButton->pos());
         m_player->HandsCards().push_back(card);
         m_scene->addItem(card);
@@ -121,9 +209,8 @@ void GamePlay::draw()
         m_drawPile.pop_back();
         emit valueChanged();
 
-    updateHandsCardsLayout();
-    (*cardsDrawn)++;
-
+        updateHandsCardsLayout();
+        (*cardsDrawn)++;
     });
     drawTimer->start(200);
 }
@@ -144,22 +231,20 @@ void GamePlay::fillingDrawPile()
     emit valueChanged();
 }
 
-// bool GamePlay::isEnoughEnergy(int cardEnergyCost)
-// {
-//     /*if(m_player->energy >= cardEnergyCost)
-//     {
-//         m_player->loseEnergy(cardEnergyCost);
-//         return true;
-//     }*/
-//     return false;
-// }
+bool GamePlay::isEnoughEnergy(int cardEnergyCost)
+{
+    return m_player->energy() >= cardEnergyCost;
+}
 
 int GamePlay::takeDamageToAllEnemies(int damage)
 {
     int totalDamageDealt = 0;
 
     for (Enemy *enemy : m_enemys)
-        totalDamageDealt += enemy->takeDamage(damage);
+        if (!enemy->isDead())
+            totalDamageDealt += enemy->takeDamage(damage);
+
+    removeDeadEnemies();
 
     return totalDamageDealt;
 }
@@ -177,9 +262,32 @@ void GamePlay::addCardToExhaustPile(Card *card)
 
 void GamePlay::applyBurnDamage()
 {
-    for (Card *card : m_player->HandsCards())
-        if (dynamic_cast<BURN *>(card))
-            m_player->takeDamage(2, false);
+    for (Card *card : m_player->HandsCards()) {
+        BURN *burn = dynamic_cast<BURN *>(card);
+        if (burn)
+            m_player->takeDamage(burn->burnDamage(), false);
+    }
+}
+
+void GamePlay::upgradeAllBurnsInDeck()
+{
+    auto upgradeInPile = [](std::vector<Card *> &pile) {
+        for (Card *card : pile) {
+            BURN *burn = dynamic_cast<BURN *>(card);
+            if (burn)
+                burn->upgrade();
+        }
+    };
+
+    upgradeInPile(m_drawPile);
+    upgradeInPile(m_discardPile);
+    upgradeInPile(m_ExhaustPile);
+
+    for (Card *card : m_player->HandsCards()) {
+        BURN *burn = dynamic_cast<BURN *>(card);
+        if (burn)
+            burn->upgrade();
+    }
 }
 
 void GamePlay::addCardToDeck(Card *card)
@@ -188,11 +296,45 @@ void GamePlay::addCardToDeck(Card *card)
     card->setOwnerPlayer(m_player);
 }
 
+void GamePlay::addCardToDrawPile(Card *card, bool shuffleIn)
+{
+    if (!card)
+        return;
+
+    card->setOwnerPlayer(m_player);
+
+    if (!shuffleIn || m_drawPile.empty()) {
+        m_drawPile.push_back(card);
+        emit valueChanged();
+        return;
+    }
+
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::uniform_int_distribution<size_t> dist(0, m_drawPile.size());
+    size_t insertIndex = dist(g);
+
+    m_drawPile.insert(m_drawPile.begin() + insertIndex, card);
+    emit valueChanged();
+}
+
+void GamePlay::grantRelicToPlayer(Relic *relic)
+{
+    if (!relic || !m_player)
+        return;
+
+    relic->onEquip(this);
+    m_player->addRelic(relic);
+}
+
+// ---------------- Combat lifecycle ----------------
+
 void GamePlay::startCombat()
 {
     m_drawPile.clear();
     m_discardPile.clear();
     m_ExhaustPile.clear();
+    setTurn(0);
 
     std::vector<Card *> innateCards;
     std::vector<Card *> normalCards;
@@ -210,8 +352,13 @@ void GamePlay::startCombat()
     std::shuffle(normalCards.begin(), normalCards.end(), g);
 
     m_drawPile = normalCards;
-
     m_drawPile.insert(m_drawPile.end(), innateCards.begin(), innateCards.end());
+
+    m_player->setBlock(0);
+    m_player->triggerRelicsCombatStart(this);
+
+    for (Enemy *e : m_enemys)
+        e->applyBuffDebuff(BuffDebuffType::Strength, 0); // no-op, placeholder hook point
 
     playerTurn();
 }
@@ -258,24 +405,24 @@ void GamePlay::removeTemporaryCards()
 
 void GamePlay::endCombat()
 {
+    m_player->triggerRelicsCombatEnd();
+
     removeTemporaryCards();
 
     m_player->setBlock(0);
+    m_player->setBarricade(false);
 
     for (Card *card : m_player->HandsCards()) {
         if (card->lifetime() == CardLifetime::Permanent)
             m_discardPile.push_back(card);
+        m_scene->removeItem(card);
     }
 
     m_drawPile.clear();
-
-    // m_effects.clear();
-
-    // m_powerEffects.clear();
-
     m_ExhaustPile.clear();
-
     m_player->HandsCards().clear();
+
+    clearEnemies();
 }
 
 std::vector<Card *> &GamePlay::deck()
@@ -283,16 +430,31 @@ std::vector<Card *> &GamePlay::deck()
     return m_deck;
 }
 
-void GamePlay::addCardToHand(Card* card)
+void GamePlay::addCardToHand(Card *card)
 {
+    if (static_cast<int>(m_player->HandsCards().size()) >= HAND_MAX_SIZE) {
+        // دست پر است - کارت مستقیم به Discard می‌رود (رفتار استاندارد بازی)
+        addCardToDiscardPile(card);
+        return;
+    }
+
     m_player->HandsCards().push_back(card);
     card->setOwnerPlayer(m_player);
+    m_scene->addItem(card);
+    card->setPos(ui->drawPileButton->pos());
+
+    connect(card, &Card::cardEnteredMouse, this, &GamePlay::updateHandsCardsLayout);
+    connect(card, &Card::cardLeavedMouse, this, &GamePlay::updateHandsCardsLayout);
+    connect(card, &Card::targetCardPlayed, this, &GamePlay::targetCardsHandler);
+    connect(card, &Card::noTargetCardPlayed, this, &GamePlay::noTargetCardsHandler);
+
+    updateHandsCardsLayout();
+    emit valueChanged();
 }
 
 void GamePlay::drawFromExhaustPile()
 {
-    if(!m_ExhaustPile.empty())
-    {
+    if (!m_ExhaustPile.empty()) {
         addCardToHand(m_ExhaustPile.back());
         m_ExhaustPile.pop_back();
     }
@@ -300,19 +462,23 @@ void GamePlay::drawFromExhaustPile()
 
 void GamePlay::drawFromDrawPile()
 {
-    if(!m_drawPile.empty())
-    {
+    if (m_drawPile.empty())
+        fillingDrawPile();
+
+    if (!m_drawPile.empty()) {
         addCardToHand(m_drawPile.back());
         m_drawPile.pop_back();
     }
 }
+
+// ---------------- Turn flow ----------------
 
 void GamePlay::playerTurn()
 {
     //ui->Enable
     addTurn();
     playerReviveEnergy();
-    if(m_drawPile.empty())
+    if (m_drawPile.empty())
         fillingDrawPile();
     draw();
     update();
@@ -322,73 +488,152 @@ void GamePlay::enemiesTurn()
 {
     m_player->setCannotPlayAttacks(false);
 
-    // ui->Disable
-    // Ahoora->addEnemiesAi...
-    // if(m_player->Hp <= 0)
-    // {
-    //     emit playerDead();
-    //     return;
-    // }
+    m_player->triggerPowerEffects(PowerUseTime::EndTurn, this);
+    m_player->triggerRelicsTurnEnd();
+
+    applyBurnDamage();
+
+    if (m_player->currentHP() <= 0) {
+        emit playerDead();
+        return;
+    }
+
+    for (size_t i = 0; i < m_enemys.size(); ++i) {
+        Enemy *enemy = m_enemys[i];
+        if (enemy->isDead())
+            continue;
+
+        enemy->applyEnemyIntent(this);
+
+        if (m_player->currentHP() <= 0) {
+            emit playerDead();
+            return;
+        }
+
+        // بررسی Split برای Slime‌ها (Large Slime / King Slime)
+        Slime *slime = dynamic_cast<Slime *>(enemy);
+        if (slime && slime->needsToSplit()) {
+            QVector<Enemy *> children = slime->createSplitChildren(false);
+
+            for (Enemy *child : children)
+                addEnemy(child);
+
+            slime->markSplit();
+            m_scene->removeItem(enemy);
+            m_enemys.erase(m_enemys.begin() + i);
+            enemy->deleteLater();
+            --i;
+        }
+    }
+
+    removeDeadEnemies();
+
+    m_player->tickDecayingBuffDebuff();
+
+    for (Enemy *enemy : m_enemys)
+        enemy->tickDecayingBuffDebuff();
+
     emit enemiesTurnEnded();
+}
+
+void GamePlay::discardHandToDiscardPile()
+{
+    auto handCopy = m_player->HandsCards();
+
+    for (Card *card : handCopy) {
+        card->disconnect();
+        m_scene->removeItem(card);
+
+        if (card->isExhaust())
+            m_ExhaustPile.push_back(card);
+        else
+            m_discardPile.push_back(card);
+    }
+
+    m_player->HandsCards().clear();
+    emit valueChanged();
 }
 
 void GamePlay::endTurnButtonClicked()
 {
-    for(Card* card : m_player->HandsCards())
-    {
-        emit playedCardHandler(card);
-    }
+    // کارت‌های باقیمانده در دست به Discard Pile می‌روند (بدون بازی شدن)
+    discardHandToDiscardPile();
+
     emit playerTurnEnded();
 }
+
 void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy)
 {
-    if(m_player->energy() >= card->energyCost())
-    {
+    if (m_player->cannotPlayCards())
+        return;
+
+    if (isEnoughEnergy(card->energyCost())) {
         card->applyEffect(player, targetEnemy);
         card->applyEffect(this);
         emit cardPlayed(card);
         m_player->loseEnergy(card->energyCost());
+
+        for (Relic *r : m_player->relics())
+            r->onCardPlayed(card, m_player);
+
+        for (Enemy *e : m_enemys)
+            if (!e->isDead())
+                e->onAnyCardPlayed(card->cardType(), this);
+
+        removeDeadEnemies();
     }
 }
 
 void GamePlay::noTargetCardsHandler(Card *card)
 {
-    if(m_player->energy() >= card->energyCost())
-    {
-        if(card->applyEffect(this))
-        {
+    if (m_player->cannotPlayCards())
+        return;
+
+    if (isEnoughEnergy(card->energyCost())) {
+        if (card->applyEffect(this)) {
             emit cardPlayed(card);
             m_player->loseEnergy(card->energyCost());
+
+            for (Relic *r : m_player->relics())
+                r->onCardPlayed(card, m_player);
+
+            for (Enemy *e : m_enemys)
+                if (!e->isDead())
+                    e->onAnyCardPlayed(card->cardType(), this);
         }
     }
 }
 
 void GamePlay::playedCardHandler(Card *card)
 {
-    m_player->HandsCards().erase(std::find(m_player->HandsCards().begin(), m_player->HandsCards().end(), card));
+    auto &hand = m_player->HandsCards();
+    auto it = std::find(hand.begin(), hand.end(), card);
+    if (it != hand.end())
+        hand.erase(it);
+
     updateHandsCardsLayout();
 
     card->disconnect();
     card->setZValue(1000);
 
-    QParallelAnimationGroup* cardToDiscardPileAnim = new QParallelAnimationGroup(this);
+    QParallelAnimationGroup *cardToDiscardPileAnim = new QParallelAnimationGroup(this);
 
-    QPropertyAnimation* posAnim = new QPropertyAnimation(card, "pos");
+    QPropertyAnimation *posAnim = new QPropertyAnimation(card, "pos");
     posAnim->setDuration(300);
     posAnim->setStartValue(card->pos());
-    if(card->isExhaust())
+    if (card->isExhaust())
         posAnim->setEndValue(ui->exhaustPileButton->pos());
     else
         posAnim->setEndValue(ui->discardPileButton->pos());
     posAnim->setEasingCurve(QEasingCurve::InQuad);
 
-    QPropertyAnimation* rotateAnim = new QPropertyAnimation(card, "rotation");
+    QPropertyAnimation *rotateAnim = new QPropertyAnimation(card, "rotation");
     rotateAnim->setDuration(300);
     rotateAnim->setStartValue(card->rotation());
     rotateAnim->setEndValue(36);
     rotateAnim->setEasingCurve(QEasingCurve::InQuad);
 
-    QPropertyAnimation* scaleAnim = new QPropertyAnimation(card, "scale");
+    QPropertyAnimation *scaleAnim = new QPropertyAnimation(card, "scale");
     scaleAnim->setDuration(300);
     scaleAnim->setStartValue(card->scale());
     scaleAnim->setEndValue(0.5);
@@ -397,49 +642,51 @@ void GamePlay::playedCardHandler(Card *card)
     cardToDiscardPileAnim->addAnimation(rotateAnim);
     cardToDiscardPileAnim->addAnimation(scaleAnim);
 
-    if(card->isExhaust())
+    bool isExhaustCard = card->isExhaust();
+
+    if (isExhaustCard)
         m_ExhaustPile.push_back(card);
     else
         m_discardPile.push_back(card);
     emit valueChanged();
 
-    connect(cardToDiscardPileAnim, &QParallelAnimationGroup::finished, this, [this, card, cardToDiscardPileAnim]()
-    {
-        m_scene->removeItem(card);
+    if (isExhaustCard)
+        m_player->triggerPowerEffects(PowerUseTime::OnExhaust, this);
 
-        cardToDiscardPileAnim->deleteLater();
+    connect(cardToDiscardPileAnim,
+            &QParallelAnimationGroup::finished,
+            this,
+            [this, card, cardToDiscardPileAnim]() {
+                m_scene->removeItem(card);
 
-    });
+                cardToDiscardPileAnim->deleteLater();
+            });
 
     cardToDiscardPileAnim->start();
 }
 
-void GamePlay::usedPotionHandler(Potion* potion)
+void GamePlay::usedPotionHandler(Potion *potion)
 {
-    if(dynamic_cast<FirePotion*>(potion))
-        for(Enemy* enemy : m_enemys)
-        {
+    if (dynamic_cast<FirePotion *>(potion)) {
+        for (Enemy *enemy : m_enemys)
             potion->applyEffect(enemy);
-        }
-    else
-    {
-        if(m_player)
+
+        removeDeadEnemies();
+    } else {
+        if (m_player)
             potion->applyEffect(m_player);
     }
 
-    if(m_player)
-    {
+    if (m_player) {
         int potionIndex = m_player->Potions().indexOf(potion);
-        m_player->Potions()[potionIndex] = nullptr;
+        if (potionIndex != -1)
+            m_player->Potions()[potionIndex] = nullptr;
 
         delete potion;
     }
 }
 
-void GamePlay::updateHpLabels()
-{
-
-}
+void GamePlay::updateHpLabels() {}
 
 void GamePlay::updateEnergyLabel()
 {
@@ -450,15 +697,14 @@ void GamePlay::updateEnergyLabel()
     m_energyLabel->setPos((74 - textRect.width()) / 2, (74 - textRect.height()) / 2);
 }
 
-void GamePlay::updatePlayerInformLabels()
+void GamePlay::updatePlayerInformLabels() {}
+
+void GamePlay::updateHandsCardsLayout(Card *hoveredCard)
 {
-
-}
-
-void GamePlay::updateHandsCardsLayout(Card* hoveredCard) {
-    auto& cards = m_player->HandsCards();
+    auto &cards = m_player->HandsCards();
     int cardCount = cards.size();
-    if (cardCount == 0) return;
+    if (cardCount == 0)
+        return;
 
     int hoveredIndex = -1;
     if (hoveredCard != nullptr) {
@@ -545,13 +791,13 @@ void GamePlay::update()
 
 void GamePlay::creatEnergyUI()
 {
-    QGraphicsPixmapItem* energyBackground = new QGraphicsPixmapItem();
+    QGraphicsPixmapItem *energyBackground = new QGraphicsPixmapItem();
     QPixmap pixmap(":/icons/Pics/Icons/energyRedVFX.png");
     energyBackground->setPixmap(pixmap);
     energyBackground->setPos(20, 400);
     m_scene->addItem(energyBackground);
 
-    QGraphicsTextItem* energyLabel = new QGraphicsTextItem(energyBackground);
+    QGraphicsTextItem *energyLabel = new QGraphicsTextItem(energyBackground);
     energyLabel->setPlainText("0 / 3");
     QFont font("Belwe Bd BT", 14, QFont::Bold);
 
@@ -566,8 +812,8 @@ void GamePlay::creatEnergyUI()
     m_energyLabel = energyLabel;
 }
 
-EndTurnButton::EndTurnButton(QGraphicsItem* parent)
-    :QGraphicsObject(parent)
+EndTurnButton::EndTurnButton(QGraphicsItem *parent)
+    : QGraphicsObject(parent)
 {
     this->setAcceptHoverEvents(true);
 
@@ -590,24 +836,22 @@ EndTurnButton::EndTurnButton(QGraphicsItem* parent)
 
 QRectF EndTurnButton::boundingRect() const
 {
-    if(m_buttonPicture)
-    {
+    if (m_buttonPicture) {
         return m_buttonPicture->boundingRect();
     }
     return QRectF(0, 0, 100, 100);
 }
 
-void EndTurnButton::paint(QPainter *painter,
-           const QStyleOptionGraphicsItem *option,
-           QWidget *widget)
+void EndTurnButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    Q_UNUSED(painter); Q_UNUSED(option); Q_UNUSED(widget);
+    Q_UNUSED(painter);
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
 }
 
 void EndTurnButton::loadButtonPixmap(QString pixmapPath)
 {
-    if(m_buttonPicture)
-    {
+    if (m_buttonPicture) {
         QPixmap pixmap(pixmapPath);
         m_buttonPicture->setPixmap(
             pixmap.scaled(240, 140, Qt::KeepAspectRatio, Qt::SmoothTransformation));
@@ -616,17 +860,16 @@ void EndTurnButton::loadButtonPixmap(QString pixmapPath)
 
 void EndTurnButton::setButtonText(QString plainText)
 {
-    if(m_plainText)
-    {
+    if (m_plainText) {
         m_plainText->setPlainText(plainText);
         m_plainText->setFont(QFont("Arial", 14, QFont::Bold));
-        qreal textX = (this->boundingRect().width() - m_plainText->boundingRect().width())/2.0;
-        qreal textY = (this->boundingRect().height() - m_plainText->boundingRect().height())/2.0;
+        qreal textX = (this->boundingRect().width() - m_plainText->boundingRect().width()) / 2.0;
+        qreal textY = (this->boundingRect().height() - m_plainText->boundingRect().height()) / 2.0;
         m_plainText->setPos(textX, textY);
     }
 }
 
-void EndTurnButton::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+void EndTurnButton::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     m_glow->setVisible(true);
 
@@ -634,9 +877,9 @@ void EndTurnButton::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
         m_plainText->setDefaultTextColor(Qt::red);
     }
 
-    this->setPos(this->pos().x(), (this->pos().y())-5);
+    this->setPos(this->pos().x(), (this->pos().y()) - 5);
 
-    QGraphicsDropShadowEffect* glowEffect = new QGraphicsDropShadowEffect(this);
+    QGraphicsDropShadowEffect *glowEffect = new QGraphicsDropShadowEffect(this);
     glowEffect->setOffset(0, 0);
     glowEffect->setColor(Qt::white);
     glowEffect->setBlurRadius(20);
@@ -645,7 +888,7 @@ void EndTurnButton::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
     QGraphicsObject::hoverEnterEvent(event);
 }
 
-void EndTurnButton::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+void EndTurnButton::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     m_glow->setVisible(false);
 
@@ -653,23 +896,22 @@ void EndTurnButton::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
         m_plainText->setDefaultTextColor(Qt::white);
     }
 
-    this->setPos(this->pos().x(), (this->pos().y())+5);
+    this->setPos(this->pos().x(), (this->pos().y()) + 5);
 
     this->setGraphicsEffect(nullptr);
 
     QGraphicsObject::hoverLeaveEvent(event);
 }
 
-void EndTurnButton::mousePressEvent(QGraphicsSceneMouseEvent* event)
+void EndTurnButton::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if(event->button() == Qt::LeftButton)
-    {
+    if (event->button() == Qt::LeftButton) {
         this->setAcceptHoverEvents(false);
         if (m_buttonPicture) {
             m_buttonPicture->setAcceptHoverEvents(false);
         }
         this->setGraphicsEffect(nullptr);
-        QGraphicsColorizeEffect* grayEffect = new QGraphicsColorizeEffect(this);
+        QGraphicsColorizeEffect *grayEffect = new QGraphicsColorizeEffect(this);
         grayEffect->setColor(Qt::black);
         grayEffect->setStrength(0.9);
         this->setGraphicsEffect(grayEffect);
@@ -689,9 +931,6 @@ void EndTurnButton::activeButton()
     this->setGraphicsEffect(nullptr);
     this->setButtonText("End Turn");
     this->m_plainText->setDefaultTextColor(Qt::white);
-
-    //m_discardPile.push_back(card);
-    //m_player->m_HandsCards.erase(std::find(m_HandsCards.begin(), m_HandsCards.end(), card));
 }
 
 /// for dual wield
@@ -704,5 +943,3 @@ void GamePlay::setSelectedHandCard(Card *card)
 {
     m_selectedHandCard = card;
 }
-
-// when player selected card call gameplay->setSelectedHandCard(card);

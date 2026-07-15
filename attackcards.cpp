@@ -223,7 +223,7 @@ QString Feed::getDynamicDescription(Player *player, Enemy *target) const
 
     int maxHpFinalIncrease = m_increaseMaxHp;
 
-    return m_description.arg(finalDamage, maxHpFinalIncrease);
+    return m_description.arg(finalDamage).arg(maxHpFinalIncrease);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -334,9 +334,7 @@ QString Bash::getDynamicDescription(Player *player, Enemy *target) const
             finalDamage = static_cast<int>(finalDamage * 1.5);
     }
 
-    int finalVulnValue = m_vulnerableValue;
-
-    return m_description.arg(finalDamage, finalVulnValue);
+    return m_description.arg(finalDamage).arg(m_vulnerableValue);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////

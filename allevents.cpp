@@ -17,12 +17,12 @@
 #include <algorithm>
 
 namespace {
-// Card *createRandomCurse()
-// {
-//     return (QRandomGenerator::global()->bounded(2) == 0)
-//                ? static_cast<Card *>(new Regret())
-//                : static_cast<Card *>(new CurseOfTheBell());
-// }
+Card *createRandomCurse()
+{
+    return (QRandomGenerator::global()->bounded(2) == 0)
+               ? static_cast<Card *>(new Regret())
+               : static_cast<Card *>(new CurseOfTheBell());
+}
 
 Potion *createRandomPotion()
 {
@@ -105,8 +105,8 @@ void OminousForge::onRummage()
     if (!m_player || !m_gamePlay)
         return;
 
-    m_player->addRelic(new WarpedTongs());
-    // m_gamePlay->addCardToDeck(createRandomCurse());
+    m_gamePlay->grantRelicToPlayer(new WarpedTongs());
+    m_gamePlay->addCardToDeck(createRandomCurse());
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,10 +163,10 @@ GoldenIdolEvent::GoldenIdolEvent(Player *player, GamePlay *gamePlay, QWidget *pa
 
 void GoldenIdolEvent::onSteal()
 {
-    if (!m_player)
+    if (!m_player || !m_gamePlay)
         return;
 
-    m_player->addRelic(new GoldenIdol());
+    m_gamePlay->grantRelicToPlayer(new GoldenIdol());
     m_player->addMaxHp(-5);
 }
 
@@ -254,8 +254,8 @@ Augmenter::Augmenter(Player *player, GamePlay *gamePlay, QWidget *parent)
 
 void Augmenter::onTestJAX()
 {
-    // if (m_gamePlay)
-    //     m_gamePlay->addCardToDeck(new J_A_X());
+    if (m_gamePlay)
+        m_gamePlay->addCardToDeck(new J_A_X());
 }
 
 void Augmenter::onBecomeTestSubject()
@@ -276,8 +276,8 @@ void Augmenter::onBecomeTestSubject()
 
 void Augmenter::onIngestMutagens()
 {
-    if (m_player)
-        m_player->addRelic(new MutagenicStrength());
+    if (m_gamePlay)
+        m_gamePlay->grantRelicToPlayer(new MutagenicStrength());
 }
 
 void Augmenter::transformCard(Card *card)
@@ -333,22 +333,21 @@ void FaceTrader::onTouch()
 
 void FaceTrader::onTrade()
 {
-    if (!m_player)
+    if (!m_player || !m_gamePlay)
         return;
 
     switch (QRandomGenerator::global()->bounded(3)) {
     case 0:
-        m_player->addRelic(new FaceOfTheCleric());
+        m_gamePlay->grantRelicToPlayer(new FaceOfTheCleric());
         break;
     case 1:
-        m_player->addRelic(new GremlinVisage());
+        m_gamePlay->grantRelicToPlayer(new GremlinVisage());
         break;
     case 2:
-        m_player->addRelic(new CultistHeadpiece());
+        m_gamePlay->grantRelicToPlayer(new CultistHeadpiece());
         break;
     }
 }
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Colosseum::Colosseum(Player *player, GamePlay *gamePlay, QWidget *parent)
@@ -370,7 +369,6 @@ Colosseum::Colosseum(Player *player, GamePlay *gamePlay, QWidget *parent)
 
 void Colosseum::onFight()
 {
-    // جایی که جریان Map/Combat مدیریت می‌شود. این Event فقط قصد را با سیگنال اعلام می‌کند:
     emit triggerEliteCombat();
 }
 
@@ -401,7 +399,7 @@ void PleadingVagrant::onGive()
         return;
 
     m_player->setCoin(m_player->coin() - 85);
-    m_player->addRelic(Relic::createRandomNormalRelic());
+    m_gamePlay->grantRelicToPlayer(Relic::createRandomNormalRelic());
 }
 
 void PleadingVagrant::onRob()
@@ -409,8 +407,8 @@ void PleadingVagrant::onRob()
     if (!m_player || !m_gamePlay)
         return;
 
-    m_player->addRelic(Relic::createRandomNormalRelic());
-    // m_gamePlay->addCardToDeck(new Regret());
+    m_gamePlay->grantRelicToPlayer(Relic::createRandomNormalRelic());
+    m_gamePlay->addCardToDeck(new Regret());
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////

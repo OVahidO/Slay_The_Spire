@@ -183,3 +183,12 @@ void Combatant::triggerPowerEffects(PowerUseTime time, GamePlay *game)
         if (effect.useTime == time)
             effect.func(this, effect.value, game);
 }
+
+void Combatant::overrideHP(int hp)
+{
+    if (hp < 1)
+        hp = 1;
+
+    m_maxHP = hp;
+    m_currentHP = hp;
+}

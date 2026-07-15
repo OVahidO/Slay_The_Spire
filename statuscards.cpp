@@ -25,6 +25,11 @@ void DAZE::applyEffect(Player *player, Enemy *targetEnemy)
     Q_UNUSED(targetEnemy);
 }
 
+Card *DAZE::clone() const
+{
+    return new DAZE();
+}
+
 SLIME::SLIME(QGraphicsItem *parent)
     : StatusCard("SLIME", 1, "", false, true, false, parent)
 {
@@ -38,6 +43,11 @@ void SLIME::applyEffect(Player *player, Enemy *targetEnemy)
     Q_UNUSED(targetEnemy);
 }
 
+Card *SLIME::clone() const
+{
+    return new SLIME();
+}
+
 WOUND::WOUND(QGraphicsItem *parent)
     : StatusCard("WOUND", 0, "", false, false, false, parent)
 {
@@ -49,6 +59,11 @@ void WOUND::applyEffect(Player *player, Enemy *targetEnemy)
 {
     Q_UNUSED(player);
     Q_UNUSED(targetEnemy);
+}
+
+Card *WOUND::clone() const
+{
+    return new WOUND();
 }
 
 BURN::BURN(QGraphicsItem *parent)
@@ -68,4 +83,29 @@ void BURN::applyEffect(Player *player, Enemy *targetEnemy)
 {
     Q_UNUSED(player);
     Q_UNUSED(targetEnemy);
+}
+
+Card *BURN::clone() const
+{
+    BURN *copy = new BURN();
+    if (m_isUpgraded)
+        copy->upgrade();
+    return copy;
+}
+
+void BURN::upgrade()
+{
+    if (m_isUpgraded)
+        return;
+
+    Card::upgrade();
+
+    m_damage = 4;
+    m_name = "BURN+";
+    m_description = "At the end of your turn\nif in hand: take 4 damage";
+}
+
+int BURN::burnDamage() const
+{
+    return m_damage;
 }

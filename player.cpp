@@ -133,6 +133,16 @@ void Player::setCannotPlayAttacks(bool value)
     m_cannotPlayAttacks = value;
 }
 
+bool Player::cannotPlayCards() const
+{
+    return m_cannotPlayCards;
+}
+
+void Player::setCannotPlayCards(bool value)
+{
+    m_cannotPlayCards = value;
+}
+
 QVector<Relic *> &Player::relics()
 {
     return m_relics;

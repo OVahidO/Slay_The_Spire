@@ -42,10 +42,20 @@ CurseOfTheBell::CurseOfTheBell(QGraphicsItem *parent)
     loadPixmap();
 }
 
+Card *J_A_X::clone() const
+{
+    return new J_A_X();
+}
+
 void CurseOfTheBell::applyEffect(Player *player, Enemy *targetEnemy)
 {
     Q_UNUSED(player);
     Q_UNUSED(targetEnemy);
+}
+
+Card *CurseOfTheBell::clone() const
+{
+    return new CurseOfTheBell();
 }
 
 Regret::Regret(QGraphicsItem *parent)
@@ -65,4 +75,9 @@ void Regret::applyEffect(Player *player, Enemy *targetEnemy)
 {
     Q_UNUSED(player);
     Q_UNUSED(targetEnemy);
+}
+
+Card *Regret::clone() const
+{
+    return new Regret();
 }

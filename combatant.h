@@ -55,6 +55,8 @@ public:
     QVector<PowerEffect> &powerEffects();
     void triggerPowerEffects(PowerUseTime time, GamePlay *game = nullptr);
 
+    void overrideHP(int hp);
+
 protected:
     bool m_hasBarricade = false;
     QString m_name;
