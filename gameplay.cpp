@@ -219,7 +219,8 @@ void GamePlay::drawCards(int count)
 
         updateHandsCardsLayout();
         (*cardsDrawn)++;
-        connectCardVfxSignals(card);        
+        connectCardVfxSignals(card);
+        
     });
 
     drawTimer->start(200);
