@@ -7,6 +7,7 @@
 
 class Player;
 class GamePlay;
+enum class CardType;
 
 enum class enemyType { Normal, Elite, Boss };
 
@@ -43,13 +44,20 @@ public:
                    QGraphicsItem *parent = nullptr);
     virtual ~Enemy() = default;
 
-    void executeIntent(Player *player);
+    virtual QRectF boundingRect() const override;
+    virtual void paint(QPainter *painter,
+                       const QStyleOptionGraphicsItem *option,
+                       QWidget *widget) override;
+
+    virtual void executeIntent(Player *player);
     void applyEnemyIntent(GamePlay *game);
 
     EnemyIntent getCurrentIntent() const;
     virtual void calculateNextIntent() = 0;
 
     QPixmap getIntentIcon(IntentType type) const;
+
+    virtual void onAnyCardPlayed(CardType cardType, GamePlay *game) {}
 
 protected:
     EnemyIntent pickIntent(const QVector<QPair<int, EnemyIntent>> &options) const;
@@ -72,6 +80,8 @@ protected:
     EnemyIntent defendBuffIntent(int block, int value) const;
     EnemyIntent escapeIntent() const;
     EnemyIntent unknownIntent() const;
+
+    virtual void onIntentExecuted(GamePlay *game) {}
 };
 
 /*

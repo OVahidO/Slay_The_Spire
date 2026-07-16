@@ -31,11 +31,11 @@ void J_A_X::applyEffect(Player *player, Enemy *targetEnemy)
     }
 }
 
-// static inline bool J_A_XRegistered = []()
-// {
-//     Card::creators()[CardID::JAX] = [](){return new class J_A_X;};
-//     return true;
-// }();
+static inline bool J_A_XRegistered = []()
+{
+    Card::creators()[CardID::JAX] = [](){return new class J_A_X;};
+    return true;
+}();
 
 CurseOfTheBell::CurseOfTheBell(QGraphicsItem *parent)
     : CurseCard(CardID::CurseOfTheBell,
@@ -51,17 +51,27 @@ CurseOfTheBell::CurseOfTheBell(QGraphicsItem *parent)
     loadPixmap();
 }
 
+Card *J_A_X::clone() const
+{
+    return new J_A_X();
+}
+
 void CurseOfTheBell::applyEffect(Player *player, Enemy *targetEnemy)
 {
     Q_UNUSED(player);
     Q_UNUSED(targetEnemy);
 }
 
-// static inline bool CurseOfTheBellRegistered = []()
-// {
-//     Card::creators()[CardID::CurseOfTheBell] = [](){return new class CurseOfTheBell;};
-//     return true;
-// }();
+static inline bool CurseOfTheBellRegistered = []()
+{
+    Card::creators()[CardID::CurseOfTheBell] = [](){return new class CurseOfTheBell;};
+    return true;
+}();
+
+Card *CurseOfTheBell::clone() const
+{
+    return new CurseOfTheBell();
+}
 
 Regret::Regret(QGraphicsItem *parent)
     : CurseCard(CardID::Regret,
@@ -83,8 +93,13 @@ void Regret::applyEffect(Player *player, Enemy *targetEnemy)
     Q_UNUSED(targetEnemy);
 }
 
-// static inline bool RegretRegistered = []()
-// {
-//     Card::creators()[CardID::Regret] = [](){return new class Regret;};
-//     return true;
-// }();
+static inline bool RegretRegistered = []()
+{
+    Card::creators()[CardID::Regret] = [](){return new class Regret;};
+    return true;
+}();
+
+Card *Regret::clone() const
+{
+    return new Regret();
+}

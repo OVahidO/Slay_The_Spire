@@ -87,11 +87,13 @@ public:
 signals:
     void targetCardPlayed(Card *card, Player *player, Enemy *targetEnemy);
     void noTargetCardPlayed(Card* card);
-    void cardEnterrdMouse(Card* card);
+    void cardEnteredMouse(Card *card);
     void cardLeavedMouse(Card* card);
 
 protected:
     QPixmap m_cardPixmap;
+    QRectF m_targetPixmapRect;
+    QPixmap m_energyPixmap;
     void loadPixmap();
     QVariantAnimation* m_hoverAnimation;
     qreal m_oldZValue;
@@ -100,7 +102,6 @@ protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
-    ///
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 
     int m_ID;

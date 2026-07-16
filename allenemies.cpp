@@ -1,11 +1,14 @@
 #include "allenemies.h"
+#include "gameplay.h"
+#include "player.h"
+#include "statuscards.h"
 
 Cultist::Cultist(bool isMultiplayer, QGraphicsItem *parent)
     : Enemy("Cultist", 48, 54, enemyType::Normal, isMultiplayer, parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/Cultist.png";
     loadPic();
-    calculateNextIntent();
+    Cultist::calculateNextIntent();
 }
 
 void Cultist::calculateNextIntent()
@@ -37,7 +40,7 @@ JawWorm::JawWorm(bool isMultiplayer, QGraphicsItem *parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/JawWorm.png";
     loadPic();
-    calculateNextIntent();
+    JawWorm::calculateNextIntent();
 }
 
 void JawWorm::calculateNextIntent()
@@ -70,7 +73,7 @@ Louse::Louse(bool isMultiplayer, QGraphicsItem *parent)
     m_isRed = (m_name == "Red Louse");
     m_soucePath = (m_isRed) ? ":/enemies/Pics/Enemies/enemy/normal/RedLouse.png"
                             : ":/enemies/Pics/Enemies/enemy/normal/GreenLouse.png";
-    calculateNextIntent();
+    Louse::calculateNextIntent();
 }
 
 int Louse::randomBiteDamage() const
@@ -112,12 +115,30 @@ bool Slime::shouldSplit() const
     return false;
 }
 
+bool Slime::needsToSplit() const
+{
+    return !m_hasSplit && shouldSplit();
+}
+
+void Slime::markSplit()
+{
+    m_hasSplit = true;
+}
+
+QVector<Enemy *> Slime::createSplitChildren(bool isMultiplayer) const
+{
+    Q_UNUSED(isMultiplayer);
+    return {};
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 AcidSlimeS::AcidSlimeS(bool isMultiplayer, QGraphicsItem *parent)
     : Slime("Small Slime", 8, 12, enemyType::Normal, isMultiplayer, parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/AcidSlimeS.png";
     loadPic();
-    calculateNextIntent();
+    AcidSlimeS::calculateNextIntent();
 }
 
 void AcidSlimeS::calculateNextIntent()
@@ -129,6 +150,26 @@ void AcidSlimeS::calculateNextIntent()
     m_currentIntent = pickIntent(options);
 }
 
+bool AcidSlimeS::shouldSplit() const
+{
+    return false;
+}
+
+void AcidSlimeS::executeIntent(Player *player)
+{
+    if (needsToSplit())
+        return;
+
+    Enemy::executeIntent(player);
+}
+
+QVector<Enemy *> AcidSlimeS::createSplitChildren(bool isMultiplayer) const
+{
+    QVector<Enemy *> children;
+    children.clear();
+    return children;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 AcidSlimeM::AcidSlimeM(bool isMultiplayer, QGraphicsItem *parent)
@@ -136,7 +177,7 @@ AcidSlimeM::AcidSlimeM(bool isMultiplayer, QGraphicsItem *parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/AcidSlimeM.png";
     loadPic();
-    calculateNextIntent();
+    AcidSlimeM::calculateNextIntent();
 }
 
 void AcidSlimeM::calculateNextIntent()
@@ -150,6 +191,34 @@ void AcidSlimeM::calculateNextIntent()
     m_currentIntent = pickIntent(options);
 }
 
+bool AcidSlimeM::shouldSplit() const
+{
+    return m_currentHP <= m_maxHP / 2;
+}
+
+void AcidSlimeM::executeIntent(Player *player)
+{
+    if (needsToSplit())
+        return;
+
+    Enemy::executeIntent(player);
+}
+
+QVector<Enemy *> AcidSlimeM::createSplitChildren(bool isMultiplayer) const
+{
+    QVector<Enemy *> children;
+
+    if (m_currentHP <= 12) {
+        for (int i = 0; i < 2; ++i) {
+            AcidSlimeS *child = new AcidSlimeS(isMultiplayer);
+            child->overrideHP(m_currentHP);
+            children.append(child);
+        }
+    }
+
+    return children;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 AcidSlimeL::AcidSlimeL(bool isMultiplayer, QGraphicsItem *parent)
@@ -157,16 +226,15 @@ AcidSlimeL::AcidSlimeL(bool isMultiplayer, QGraphicsItem *parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/AcidSlimeL.png";
     loadPic();
-    calculateNextIntent();
+    AcidSlimeL::calculateNextIntent();
 }
 
 void AcidSlimeL::calculateNextIntent()
 {
     m_turnCount++;
 
-    if (!m_hasSplit && m_currentHP <= m_maxHP / 2) {
-        m_currentIntent = {IntentType::Unknown, 0, 0, false};
-
+    if (needsToSplit()) {
+        m_currentIntent = unknownIntent();
         return;
     }
 
@@ -179,7 +247,39 @@ void AcidSlimeL::calculateNextIntent()
 
 bool AcidSlimeL::shouldSplit() const
 {
-    return !m_hasSplit && m_currentHP <= m_maxHP / 2;
+    return m_currentHP <= m_maxHP / 2;
+}
+
+void AcidSlimeL::executeIntent(Player *player)
+{
+    if (needsToSplit())
+        return;
+
+    Enemy::executeIntent(player);
+}
+
+QVector<Enemy *> AcidSlimeL::createSplitChildren(bool isMultiplayer) const
+{
+    QVector<Enemy *> children;
+
+    if (m_currentHP <= 12) {
+        for (int i = 0; i < 2; ++i) {
+            AcidSlimeS *child = new AcidSlimeS(isMultiplayer);
+            child->overrideHP(m_currentHP);
+            children.append(child);
+            return children;
+        }
+    }
+
+    else if (m_currentHP <= 32) {
+        for (int i = 0; i < 2; ++i) {
+            AcidSlimeM *child = new AcidSlimeM(isMultiplayer);
+            child->overrideHP(m_currentHP);
+            children.append(child);
+        }
+    }
+
+    return children;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -189,7 +289,7 @@ Thief::Thief(
     : Enemy(name, minHP, maxHP, enemyType::Normal, isMultiplayer, parent)
     , m_mugDamage(mugDamage)
 {
-    calculateNextIntent();
+    Thief::calculateNextIntent();
 }
 
 bool Thief::hasEscaped() const
@@ -248,7 +348,7 @@ BlueSlaver::BlueSlaver(bool isMultiplayer, QGraphicsItem *parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/SlaverBlue.png";
     loadPic();
-    calculateNextIntent();
+    BlueSlaver::calculateNextIntent();
 }
 
 void BlueSlaver::calculateNextIntent()
@@ -268,7 +368,7 @@ RedSlaver::RedSlaver(bool isMultiplayer, QGraphicsItem *parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/SlaverRed.png";
     loadPic();
-    calculateNextIntent();
+    RedSlaver::calculateNextIntent();
 }
 
 void RedSlaver::calculateNextIntent()
@@ -302,7 +402,7 @@ SphericGuardian::SphericGuardian(bool isMultiplayer, QGraphicsItem *parent)
     m_soucePath = ":/enemies/Pics/Enemies/enemy/normal/SphericGuardian.png";
     loadPic();
     addBlock(25);
-    calculateNextIntent();
+    SphericGuardian::calculateNextIntent();
 }
 
 void SphericGuardian::calculateNextIntent()
@@ -327,7 +427,7 @@ GremlinKnob::GremlinKnob(bool isMultiplayer, QGraphicsItem *parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/elite/GremlinNob.png";
     loadPic();
-    calculateNextIntent();
+    GremlinKnob::calculateNextIntent();
 }
 
 void GremlinKnob::calculateNextIntent()
@@ -345,11 +445,11 @@ void GremlinKnob::calculateNextIntent()
     m_currentIntent = pickIntent(options);
 }
 
-void GremlinKnob::onPlayerSkillPlayed()
+void GremlinKnob::onAnyCardPlayed(CardType cardType, GamePlay *game)
 {
-    m_soucePath = "";
-    loadPic();
-    if (m_enrageStacks > 0)
+    Q_UNUSED(game);
+
+    if (m_enrageStacks > 0 && cardType == CardType::Skill)
         applyBuffDebuff(BuffDebuffType::Strength, 2);
 }
 
@@ -361,7 +461,7 @@ Sentry::Sentry(bool startsWithBeam, bool isMultiplayer, QGraphicsItem *parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/elite/Sentry.png";
     loadPic();
-    calculateNextIntent();
+    Sentry::calculateNextIntent();
 }
 
 void Sentry::calculateNextIntent()
@@ -374,11 +474,17 @@ void Sentry::calculateNextIntent()
         m_currentIntent = attackIntent(9);
     else
         m_currentIntent = debuffIntent(2);
+}
 
-    // if (!useBeam) {
-    //     player->shuffleIntoDiscard(new DAZE());
-    //     player->shuffleIntoDiscard(new DAZE());
-    // }
+void Sentry::onIntentExecuted(GamePlay *game)
+{
+    if (!game)
+        return;
+
+    if (m_currentIntent.type == IntentType::Debuff) {
+        game->addCardToDrawPile(new DAZE(), true);
+        game->addCardToDrawPile(new DAZE(), true);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -388,7 +494,7 @@ BookOfStabbing::BookOfStabbing(bool isMultiplayer, QGraphicsItem *parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/elite/BookOfStabbing.png";
     loadPic();
-    calculateNextIntent();
+    BookOfStabbing::calculateNextIntent();
 }
 
 void BookOfStabbing::calculateNextIntent()
@@ -412,15 +518,21 @@ Taskmaster::Taskmaster(bool isMultiplayer, QGraphicsItem *parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/elite/Taskmaster.png";
     loadPic();
-    calculateNextIntent();
+    Taskmaster::calculateNextIntent();
 }
 
 void Taskmaster::calculateNextIntent()
 {
     m_turnCount++;
     m_currentIntent = EnemyIntent{IntentType::Attack, 7, 1, false};
+}
 
-    // player->addCardToDiscard(new WOUND());
+void Taskmaster::onIntentExecuted(GamePlay *game)
+{
+    if (!game)
+        return;
+
+    game->addCardToDiscardPile(new WOUND());
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -430,14 +542,14 @@ KingSlime::KingSlime(bool isMultiplayer, QGraphicsItem *parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/boss/SlimeBoss.png";
     loadPic();
-    calculateNextIntent();
+    KingSlime::calculateNextIntent();
 }
 
 void KingSlime::calculateNextIntent()
 {
     m_turnCount++;
 
-    if (!m_hasSplit && shouldSplit()) {
+    if (needsToSplit()) {
         m_currentIntent = unknownIntent();
         return;
     }
@@ -452,19 +564,48 @@ void KingSlime::calculateNextIntent()
         m_currentIntent = attackIntent(35);
         break;
     case 2:
-        m_currentIntent = debuffIntent(3);
+        m_currentIntent
+            = unknownIntent(); // Goop Spray: فقط SLIME اضافه می‌کند، اثر Debuff عمومی ندارد
         break;
     }
-
-    // if (phase == 2) {
-    //     for (int i = 0; i < 3; ++i)
-    //         player->addCardToDiscard(new SLIME());
-    // }
 }
 
 bool KingSlime::shouldSplit() const
 {
-    return !m_hasSplit && m_currentHP <= m_maxHP / 2;
+    return m_currentHP <= m_maxHP / 2;
+}
+
+void KingSlime::executeIntent(Player *player)
+{
+    if (needsToSplit())
+        return;
+
+    Enemy::executeIntent(player);
+}
+
+QVector<Enemy *> KingSlime::createSplitChildren(bool isMultiplayer) const
+{
+    QVector<Enemy *> children;
+
+    for (int i = 0; i < 2; ++i) {
+        AcidSlimeL *child = new AcidSlimeL(isMultiplayer);
+        child->overrideHP(m_currentHP);
+        children.append(child);
+    }
+
+    return children;
+}
+
+void KingSlime::onIntentExecuted(GamePlay *game)
+{
+    if (!game || needsToSplit())
+        return;
+
+    int phase = (m_turnCount - 1) % 3;
+    if (phase == 2) {
+        for (int i = 0; i < 3; ++i)
+            game->addCardToDiscardPile(new SLIME());
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -474,7 +615,7 @@ HexaGhost::HexaGhost(bool isMultiplayer, QGraphicsItem *parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/boss/Hexaghost.png";
     loadPic();
-    calculateNextIntent();
+    HexaGhost::calculateNextIntent();
 }
 
 void HexaGhost::calculateNextIntent()
@@ -483,42 +624,58 @@ void HexaGhost::calculateNextIntent()
 
     if (m_turnCount == 1) {
         m_currentIntent = unknownIntent();
+        m_lastCycleIndex = -1;
         return;
     }
 
     if (m_turnCount == 2) {
-        int dividerDamage = 1; // placeholder
+        int dividerDamage = 1;
         m_currentIntent = EnemyIntent{IntentType::Attack, dividerDamage, 6, false};
+        m_lastCycleIndex = -1;
         return;
     }
 
     int cycleIndex = (m_turnCount - 3) % 7;
+    m_lastCycleIndex = cycleIndex;
 
     switch (cycleIndex) {
-    case 0: // Sear
+    case 0:
     case 2:
     case 5:
         m_currentIntent = EnemyIntent{IntentType::Attack, 6, 1, false};
         break;
-    case 1: // Tackle
+    case 1:
     case 4:
         m_currentIntent = EnemyIntent{IntentType::Attack, 5, 2, false};
         break;
-    case 3: // Inflame
+    case 3:
         m_currentIntent = defendBuffIntent(12, 2);
         break;
-    case 6: // Inferno
+    case 6:
         m_currentIntent = EnemyIntent{IntentType::Attack, 2, 6, false};
         break;
     }
+}
 
-    // if (cycleIndex == 0 || cycleIndex == 2 || cycleIndex == 5)
-    //     player->addCardToDiscard(new Burn());
-    // if (cycleIndex == 6) {
-    //     for (int i = 0; i < 3; ++i)
-    //         player->addCardToDiscard(new Burn());
-    //     player->upgradeAllBurnsInDeck();
-    // }
+void HexaGhost::onIntentExecuted(GamePlay *game)
+{
+    if (!game)
+        return;
+
+    // Sear (فازهای 0، 2، 5): یک BURN به Discard اضافه می‌شود
+    if (m_lastCycleIndex == 0 || m_lastCycleIndex == 2 || m_lastCycleIndex == 5) {
+        game->addCardToDiscardPile(new BURN());
+    }
+    // Inferno (فاز 6): همه BURNهای موجود ارتقا پیدا می‌کنند + 3 BURN+ جدید اضافه می‌شود
+    else if (m_lastCycleIndex == 6) {
+        game->upgradeAllBurnsInDeck();
+
+        for (int i = 0; i < 3; ++i) {
+            BURN *burn = new BURN();
+            burn->upgrade();
+            game->addCardToDiscardPile(burn);
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -528,7 +685,7 @@ TheChamp::TheChamp(bool isMultiplayer, QGraphicsItem *parent)
 {
     m_soucePath = ":/enemies/Pics/Enemies/enemy/boss/Champ.png";
     loadPic();
-    calculateNextIntent();
+    TheChamp::calculateNextIntent();
 }
 
 void TheChamp::calculateNextIntent()

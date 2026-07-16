@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/soundeffects">
+        <file>Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3</file>
+    </qresource>
+</RCC>

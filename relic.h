@@ -44,7 +44,7 @@ protected:
     QString m_soucePath;
     QPixmap m_icon;
     relicType m_type;
-    int m_counter = -1; // like for kunai
+    int m_counter = -1;
 
     void loadIcon();
 

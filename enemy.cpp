@@ -1,4 +1,5 @@
 #include "enemy.h"
+#include "card.h"
 #include "gameplay.h"
 #include "player.h"
 
@@ -12,6 +13,71 @@ Enemy::Enemy(
         m_currentHP = m_maxHP;
     }
 }
+
+//temperory
+QRectF Enemy::boundingRect() const
+{
+    if (!m_enemyPic.isNull())
+        return QRectF(0, 0, m_enemyPic.width(), m_enemyPic.height());
+
+    return QRectF(0, 0, 200, 300);
+}
+
+void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
+
+    QRectF rect = boundingRect();
+
+    if (!m_enemyPic.isNull()) {
+        painter->drawPixmap(rect, m_enemyPic, m_enemyPic.rect());
+    } else {
+        painter->setBrush(QColor(80, 20, 20));
+        painter->setPen(QPen(Qt::white, 2));
+        painter->drawRoundedRect(rect, 8, 8);
+        painter->setPen(Qt::white);
+        painter->drawText(rect, Qt::AlignCenter, m_name);
+    }
+
+    // نوار HP
+    qreal barHeight = 10;
+    QRectF hpBg(0, rect.height() + 5, rect.width(), barHeight);
+    painter->setBrush(QColor(40, 40, 40));
+    painter->setPen(Qt::NoPen);
+    painter->drawRect(hpBg);
+
+    qreal hpRatio = m_maxHP > 0 ? static_cast<qreal>(m_currentHP) / m_maxHP : 0;
+    QRectF hpFill(0, rect.height() + 5, rect.width() * hpRatio, barHeight);
+    painter->setBrush(QColor(200, 40, 40));
+    painter->drawRect(hpFill);
+
+    painter->setPen(Qt::white);
+    QFont font("Arial", 9, QFont::Bold);
+    painter->setFont(font);
+    painter->drawText(hpBg, Qt::AlignCenter, QString("%1/%2").arg(m_currentHP).arg(m_maxHP));
+
+    // آیکون Intent فعلی بالای دشمن
+    if (!m_currentIntent.icon.isNull()) {
+        QRectF intentRect(rect.width() / 2 - 20, -55, 40, 40);
+        painter->drawPixmap(intentRect, m_currentIntent.icon, m_currentIntent.icon.rect());
+
+        if (m_currentIntent.type == IntentType::Attack
+            || m_currentIntent.type == IntentType::AttackDefend
+            || m_currentIntent.type == IntentType::AttackDebuff) {
+            painter->setPen(Qt::white);
+            QFont valFont("Arial", 11, QFont::Bold);
+            painter->setFont(valFont);
+            painter->drawText(QRectF(rect.width() / 2 - 20, -18, 40, 20),
+                              Qt::AlignCenter,
+                              QString::number(m_currentIntent.value));
+        }
+    }
+}
+//
 
 EnemyIntent Enemy::attackIntent(int damage) const
 {
@@ -124,6 +190,7 @@ void Enemy::applyEnemyIntent(GamePlay *game)
 
     triggerPowerEffects(PowerUseTime::StartTurn, game);
     executeIntent(player);
+    onIntentExecuted(game);
     calculateNextIntent();
     triggerPowerEffects(PowerUseTime::EndTurn, game);
 }

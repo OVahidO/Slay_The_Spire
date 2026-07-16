@@ -83,9 +83,6 @@
         <file>Pics/Potions/swift_potion.png</file>
         <file>Pics/Potions/radiant_tincture.png</file>
     </qresource>
-    <qresource prefix="/sounds">
-        <file>Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3</file>
-    </qresource>
     <qresource prefix="/Map">
         <file>Pics/Map/chest.png</file>
         <file>Pics/Map/chestOutline.png</file>

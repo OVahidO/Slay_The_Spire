@@ -32,8 +32,8 @@ CultistHeadpiece::CultistHeadpiece(QWidget *parent)
 {
     m_soucePath = ":/icons/Pics/Icons/relic/event/CultistMask.png";
     loadIcon();
-    m_cawSound.setSource(
-        QUrl(":/sounds/Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3"));
+    m_cawSound.setSource(QUrl(
+        "qrc:/soundeffects/Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3"));
     m_cawSound.setVolume(0.8f);
 }
 
@@ -127,15 +127,13 @@ void CallingBell::onEquip(GamePlay *game)
     if (!game || !game->player())
         return;
 
-    // game->addCardToDeck(new CurseOfTheBell());
+    game->addCardToDeck(new class CurseOfTheBell());
 
     for (int i = 0; i < 3; ++i) {
         Relic *r = createRandomNormalRelic();
-        r->onEquip(game);
-        game->player()->addRelic(r);
+        game->grantRelicToPlayer(r);
     }
 }
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 MarkOfPain::MarkOfPain(QWidget *parent)
@@ -160,8 +158,8 @@ void MarkOfPain::onEquip(GamePlay *game)
 void MarkOfPain::onCombatStart(GamePlay *game)
 {
     if (game) {
-        // game->addCardToHand(new WOUND());
-        // game->addCardToHand(new WOUND());
+        game->addCardToDrawPile(new WOUND(), true);
+        game->addCardToDrawPile(new WOUND(), true);
     }
 }
 
@@ -187,8 +185,8 @@ void VelvetChoker::onEquip(GamePlay *game)
 void VelvetChoker::onTurnStart(Player *player)
 {
     m_counter = 0;
-    // if (player)
-    //     player->setCannotPlayCards(false);
+    if (player)
+        player->setCannotPlayCards(false);
 }
 
 void VelvetChoker::onCardPlayed(Card *card, Player *player)
@@ -199,8 +197,8 @@ void VelvetChoker::onCardPlayed(Card *card, Player *player)
 
     m_counter++;
 
-    // if (m_counter >= 6)
-    //     player->setCannotPlayCards(true);
+    if (m_counter >= 6)
+        player->setCannotPlayCards(true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -221,7 +219,6 @@ Girya::Girya(QWidget *parent)
     loadIcon();
     m_counter = 3;
 }
-// اگر بازیکن این رلیک را داشت و m_counter > 0 بود، گزینه Lift فعال می‌شود.
 
 void Girya::onCombatStart(GamePlay *game)
 {
@@ -249,7 +246,6 @@ Kunai::Kunai(QWidget *parent)
 void Kunai::onTurnStart(Player *player)
 {
     Q_UNUSED(player);
-    // در شروع نوبت شمارنده را صفر می‌کنیم[cite: 45].
     m_counter = 0;
 }
 

@@ -45,6 +45,10 @@ public:
           bool isMultiplayer = false,
           QGraphicsItem *parent = nullptr);
 
+    bool needsToSplit() const;
+    void markSplit();
+    virtual QVector<Enemy *> createSplitChildren(bool isMultiplayer) const;
+
 protected:
     bool m_hasSplit = false;
     virtual bool shouldSplit() const;
@@ -55,6 +59,11 @@ class AcidSlimeS : public Slime
 public:
     explicit AcidSlimeS(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+    bool shouldSplit() const override;
+    QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
+
+protected:
+    void executeIntent(Player *player) override;
 };
 
 class AcidSlimeM : public Slime
@@ -62,6 +71,11 @@ class AcidSlimeM : public Slime
 public:
     explicit AcidSlimeM(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+    bool shouldSplit() const override;
+    QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
+
+protected:
+    void executeIntent(Player *player) override;
 };
 
 class AcidSlimeL : public Slime
@@ -70,6 +84,10 @@ public:
     explicit AcidSlimeL(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
     bool shouldSplit() const override;
+    QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
+
+protected:
+    void executeIntent(Player *player) override;
 };
 
 class Thief : public Enemy
@@ -133,7 +151,7 @@ class GremlinKnob : public Enemy
 public:
     explicit GremlinKnob(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
-    void onPlayerSkillPlayed();
+    void onAnyCardPlayed(CardType cardType, GamePlay *game) override;
 
 private:
     int m_enrageStacks = 0;
@@ -150,6 +168,8 @@ public:
 
 private:
     bool m_startsWithBeam;
+
+    void onIntentExecuted(GamePlay *game) override;
 };
 
 class BookOfStabbing : public Enemy
@@ -167,6 +187,9 @@ class Taskmaster : public Enemy
 public:
     explicit Taskmaster(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+
+private:
+    void onIntentExecuted(GamePlay *game) override;
 };
 
 class KingSlime : public Slime
@@ -175,6 +198,13 @@ public:
     explicit KingSlime(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
     bool shouldSplit() const override;
+    QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
+
+protected:
+    void executeIntent(Player *player) override;
+
+private:
+    void onIntentExecuted(GamePlay *game) override;
 };
 
 class HexaGhost : public Enemy
@@ -182,6 +212,10 @@ class HexaGhost : public Enemy
 public:
     explicit HexaGhost(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+
+private:
+    int m_lastCycleIndex = -1;
+    void onIntentExecuted(GamePlay *game) override;
 };
 
 class TheChamp : public Enemy
