@@ -30,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
     M->show();
     int MenuIndex = ui->stackedWidget->addWidget(M);
     ui->stackedWidget->setCurrentIndex(MenuIndex);
+    connect(M, &MainMenu::exit, this, [this](){this->deleteLater();});
+    //connect(M, &MainMenu::playerIsReady, this, ?);
 }
 
 MainWindow::~MainWindow()

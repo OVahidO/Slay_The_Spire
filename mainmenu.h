@@ -5,6 +5,7 @@
 
 /////////////
 class Player;
+class Login_Signup;
 /////////////
 
 namespace Ui {
@@ -22,26 +23,21 @@ public:
 signals:
     void playerIsReady(Player* player);
 
+    void exit();
+
 private slots:
     void on_SignupButton_clicked();
 
-    void on_BackButton_clicked();
-
-    void on_usernameInput_editingFinished();
-
-    void on_passwordInput_editingFinished();
-
-    void on_confirimPasswordInput_editingFinished();
-
-    void on_SignupEnterButton_clicked();
-
     void on_Loginbutton_clicked();
 
-    void on_LoginEnterButton_clicked();
+    void on_ExitButton_clicked();
+
+    void on_ExitButton_2_clicked();
 
 private:
     Ui::MainMenu *ui;
-    QVector<QPair<Player* , unsigned int>> m_players;
+    Login_Signup* m_loginSignup;
+    QWidget* m_overlay;
 };
 
 #endif // MAINMENU_H

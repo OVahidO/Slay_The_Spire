@@ -48,6 +48,7 @@ qt_add_executable(Slay_The_Spire
     allevents.h allevents.cpp
     backgrounds.qrc
     mainmenu.h mainmenu.cpp mainmenu.ui
+    login_signup.h login_signup.cpp login_signup.ui
     #
 )
 
