@@ -44,6 +44,7 @@ qt_add_executable(Slay_The_Spire
     backgrounds.qrc
     reward.h reward.cpp
     sounds.qrc
+    combatvisuals.h combatvisuals.cpp
     #
 )
 

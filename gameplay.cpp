@@ -1,11 +1,17 @@
 #include "gameplay.h"
+
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QPropertyAnimation>
+#include <QRandomGenerator>
+#include <QSequentialAnimationGroup>
 #include <QString>
 #include <QTimer>
+
+#include "allenemies.h"
 #include "attackcards.h"
+#include "combatvisuals.h"
 #include "enemy.h"
 #include "player.h"
 #include "potion.h"
@@ -14,7 +20,7 @@
 #include "statuscards.h"
 #include "ui_gameplay.h"
 
-GamePlay::GamePlay(Player* player, QWidget *parent)
+GamePlay::GamePlay(Player *player, QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::GamePlay)
 {
@@ -39,6 +45,8 @@ GamePlay::GamePlay(Player* player, QWidget *parent)
 
     m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    // setupBackground (":/backgrounds/Pics/Background/combat_placeholder.png");
 
     creatEnergyUI();
     updateEnergyLabel();
@@ -211,7 +219,9 @@ void GamePlay::drawCards(int count)
 
         updateHandsCardsLayout();
         (*cardsDrawn)++;
+        connectCardVfxSignals(card);        
     });
+
     drawTimer->start(200);
 }
 
@@ -433,7 +443,6 @@ std::vector<Card *> &GamePlay::deck()
 void GamePlay::addCardToHand(Card *card)
 {
     if (static_cast<int>(m_player->HandsCards().size()) >= HAND_MAX_SIZE) {
-        // دست پر است - کارت مستقیم به Discard می‌رود (رفتار استاندارد بازی)
         addCardToDiscardPile(card);
         return;
     }
@@ -447,6 +456,8 @@ void GamePlay::addCardToHand(Card *card)
     connect(card, &Card::cardLeavedMouse, this, &GamePlay::updateHandsCardsLayout);
     connect(card, &Card::targetCardPlayed, this, &GamePlay::targetCardsHandler);
     connect(card, &Card::noTargetCardPlayed, this, &GamePlay::noTargetCardsHandler);
+
+    connectCardVfxSignals(card);
 
     updateHandsCardsLayout();
     emit valueChanged();
@@ -510,7 +521,6 @@ void GamePlay::enemiesTurn()
             return;
         }
 
-        // بررسی Split برای Slime‌ها (Large Slime / King Slime)
         Slime *slime = dynamic_cast<Slime *>(enemy);
         if (slime && slime->needsToSplit()) {
             QVector<Enemy *> children = slime->createSplitChildren(false);
@@ -942,4 +952,145 @@ Card *GamePlay::selectedHandCard() const
 void GamePlay::setSelectedHandCard(Card *card)
 {
     m_selectedHandCard = card;
+}
+
+void GamePlay::connectCardVfxSignals(Card *card)
+{
+    connect(card, &Card::enemyHoverChanged, this, &GamePlay::onCardEnemyHoverChanged);
+}
+
+void GamePlay::onCardEnemyHoverChanged(Enemy *enemy)
+{
+    if (enemy)
+        showTargetingFrame(enemy);
+    else
+        hideTargetingFrame();
+}
+
+void GamePlay::setupBackground(const QString &imagePath)
+{
+    if (m_backgroundItem) {
+        m_scene->removeItem(m_backgroundItem);
+        delete m_backgroundItem;
+        m_backgroundItem = nullptr;
+    }
+
+    QPixmap bg(imagePath); // Placeholder: مسیر واقعی رو خودت جایگزین کن
+    if (bg.isNull())
+        return;
+
+    bg = bg.scaled(m_scene->sceneRect().size().toSize(),
+                   Qt::IgnoreAspectRatio,
+                   Qt::SmoothTransformation);
+
+    m_backgroundItem = m_scene->addPixmap(bg);
+    m_backgroundItem->setZValue(-100);
+    m_backgroundItem->setPos(0, 0);
+
+    // اگر گیف انیمیشنی خواستی: به‌جای QPixmap از QMovie + QGraphicsProxyWidget(QLabel)
+    // استفاده کن، چون QGraphicsPixmapItem فریم‌های متحرک را پشتیبانی نمی‌کند.
+}
+
+void GamePlay::showTargetingFrame(Enemy *enemy)
+{
+    if (!enemy || enemy->isDead())
+        return;
+
+    if (!m_targetFrame) {
+        m_targetFrame = new TargetFrame();
+        // TODO: مسیر ۴ عکس گوشه قاب هدف‌گیری رو اینجا بذار
+        m_targetFrame->setCornerPixmaps(":/icons/Pics/Icons/target/corner_tl.png",
+                                        ":/icons/Pics/Icons/target/corner_tr.png",
+                                        ":/icons/Pics/Icons/target/corner_bl.png",
+                                        ":/icons/Pics/Icons/target/corner_br.png");
+        m_scene->addItem(m_targetFrame);
+    }
+
+    m_targetFrame->attachToTarget(enemy);
+}
+
+void GamePlay::hideTargetingFrame()
+{
+    if (m_targetFrame)
+        m_targetFrame->hideFrame();
+}
+
+void GamePlay::playAttackJolt(Combatant *attacker, bool attackerIsPlayer)
+{
+    if (!attacker)
+        return;
+
+    QPointF originalPos = attacker->pos();
+    qreal joltDistance = attackerIsPlayer ? 40.0 : -40.0;
+
+    QPropertyAnimation *forward = new QPropertyAnimation(attacker, "pos");
+    forward->setDuration(120);
+    forward->setStartValue(originalPos);
+    forward->setEndValue(QPointF(originalPos.x() + joltDistance, originalPos.y()));
+    forward->setEasingCurve(QEasingCurve::OutQuad);
+
+    QPropertyAnimation *backward = new QPropertyAnimation(attacker, "pos");
+    backward->setDuration(150);
+    backward->setStartValue(QPointF(originalPos.x() + joltDistance, originalPos.y()));
+    backward->setEndValue(originalPos);
+    backward->setEasingCurve(QEasingCurve::InQuad);
+
+    QSequentialAnimationGroup *joltSequence = new QSequentialAnimationGroup(this);
+    joltSequence->addAnimation(forward);
+    joltSequence->addAnimation(backward);
+
+    connect(joltSequence, &QSequentialAnimationGroup::finished, joltSequence, &QObject::deleteLater);
+
+    joltSequence->start();
+}
+
+void GamePlay::showFloatingDamage(Combatant *target, int amount, bool isHeal)
+{
+    if (!target || amount == 0)
+        return;
+
+    FloatingDamageText *floatingText = new FloatingDamageText(amount, isHeal);
+
+    QRectF targetRect = target->boundingRect();
+    QPointF spawnPos = target->pos() + QPointF(targetRect.width() / 2.0, targetRect.height() / 3.0);
+
+    floatingText->setPos(spawnPos);
+    floatingText->setZValue(2000);
+    m_scene->addItem(floatingText);
+
+    connect(floatingText, &FloatingDamageText::finished, this, [this, floatingText]() {
+        m_scene->removeItem(floatingText);
+        floatingText->deleteLater();
+    });
+
+    floatingText->play();
+}
+
+void GamePlay::triggerScreenShake(int intensity, int durationMs)
+{
+    if (!m_view)
+        return;
+
+    QTimer *shakeTimer = new QTimer(this);
+    auto elapsed = std::make_shared<int>(0);
+    const int stepInterval = 30; // ms
+
+    connect(shakeTimer, &QTimer::timeout, this, [this, shakeTimer, intensity, durationMs, elapsed]() {
+        *elapsed += stepInterval;
+
+        if (*elapsed >= durationMs) {
+            m_view->resetTransform();
+            shakeTimer->stop();
+            shakeTimer->deleteLater();
+            return;
+        }
+
+        int dx = QRandomGenerator::global()->bounded(-intensity, intensity + 1);
+        int dy = QRandomGenerator::global()->bounded(-intensity, intensity + 1);
+
+        m_view->resetTransform();
+        m_view->translate(dx, dy);
+    });
+
+    shakeTimer->start(stepInterval);
 }
