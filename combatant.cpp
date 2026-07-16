@@ -39,6 +39,8 @@ int Combatant::takeDamage(int incomingDamage, bool isAttackDamage)
     if (m_currentHP < 0)
         m_currentHP = 0;
 
+    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
+
     return damageAfterBlock;
 }
 
@@ -57,7 +59,6 @@ void Combatant::addBlock(int amount)
 void Combatant::addBlockFromCard(int amount)
 {
     addBlock(calculateBlock(amount));
-    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
 }
 
 void Combatant::resetBlock()
@@ -70,7 +71,6 @@ void Combatant::resetBlock()
 bool Combatant::isDead() const
 {
     return m_currentHP <= 0;
-    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
 }
 
 const QString &Combatant::name() const
@@ -138,12 +138,15 @@ void Combatant::applyBuffDebuff(BuffDebuffType type, int stacks)
                 m_activeEffects.removeAt(i);
             }
 
+            updateBuffUI();
             return;
         }
     }
 
-    if (stacks != 0)
+    if (stacks != 0) {
         m_activeEffects.append(new BuffDebuff(type, stacks));
+        updateBuffUI();
+    }
 }
 
 void Combatant::tickDecayingBuffDebuff()
@@ -156,6 +159,8 @@ void Combatant::tickDecayingBuffDebuff()
             m_activeEffects.removeAt(i);
         }
     }
+
+    updateBuffUI();
 }
 
 int Combatant::calculateOutgoingDamage(int baseDamage) const
@@ -179,7 +184,6 @@ int Combatant::calculateBlock(int baseAmount) const
         modified = static_cast<int>(modified * 0.75);
 
     return qMax(0, modified);
-    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
 }
 
 QVector<PowerEffect> &Combatant::powerEffects()
@@ -230,6 +234,15 @@ QRectF HealthBarItem::boundingRect() const
     return QRectF(0, -20, m_width, m_height + 20);
 }
 
+int HealthBarItem::width() const
+{
+    return m_width;
+}
+int HealthBarItem::height() const
+{
+    return m_height;
+}
+
 void HealthBarItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option);
@@ -268,6 +281,7 @@ BuffItem::BuffItem(BuffDebuffType type, int stacks, QGraphicsItem *parent)
     , m_type(type)
     , m_stacks(stacks)
 {
+    setAcceptHoverEvents(true);
     setupAppearance();
 }
 
@@ -371,33 +385,26 @@ void BuffItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
 void Combatant::updateBuffUI()
 {
-    // ۱. ابتدا تمام آیکون‌های قبلی را پاک می‌کنیم
-    for (BuffItem *item : m_buffItems) {
-        delete item; // چون Parent دارند از Scene هم حذف می‌شوند
-    }
+    for (BuffItem *item : m_buffItems)
+        delete item;
     m_buffItems.clear();
 
-    // ۲. متغیرهای مختصات برای چیدمان گرید-مانند (افقی)
     int startX = 0;
-    // ارتفاع رو طوری تنظیم می‌کنیم که بیفته زیر هلث‌بار.
-    // فرضا اگر HealthBar روی y=0 تا y=20 باشه، باف‌ها رو می‌ذاریم روی y=25
-    int startY = 25;
-    int spacing = 35; // فاصله هر آیکون از آیکون بعدی
+    // زیر هلث‌بار قرار می‌گیره؛ هلث‌بار خودش روی y=150 نسبت به Combatant است
+    int startY = m_healthBar->pos().y() + m_healthBar->height() + 10;
+    int spacing = 35;
 
-    // ۳. به ازای هر باف فعال، یک آیتم گرافیکی جدید می‌سازیم
-    for (int i = 0; i < m_activeEffects.size(); ++i) {
-        BuffDebuff *effect = m_activeEffects[i];
-
-        // اگر استک صفر است، نیازی به رسم نیست
+    for (BuffDebuff *effect : m_activeEffects) {
         if (effect->stacks() <= 0)
             continue;
 
-        // ساخت آیتم جدید و قرار دادن Combatant (یا هلث‌بار) به عنوان پدر آن
         BuffItem *newItem = new BuffItem(effect->type(), effect->stacks(), this);
-
-        // تنظیم مختصات
         newItem->setPos(startX + (m_buffItems.size() * spacing), startY);
-
         m_buffItems.append(newItem);
     }
+}
+
+BuffDebuffType BuffItem::Btype() const
+{
+    return m_type;
 }

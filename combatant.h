@@ -86,9 +86,12 @@ public:
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
+    int width() const;
+    int height() const;
+
 private:
-    int m_currentHp = 10;
-    int m_maxHp = 10;
+    int m_currentHp = 80;
+    int m_maxHp = 80;
     int m_block = 0;
 
     int m_width = 120;
@@ -105,7 +108,7 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
     void setStacks(int stacks);
-    BuffDebuffType type() const { return m_type; }
+    BuffDebuffType Btype() const;
 
 private:
     BuffDebuffType m_type;
