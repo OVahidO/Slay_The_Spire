@@ -23,7 +23,8 @@ void Cultist::calculateNextIntent()
         if (!m_hasIncantation) {
             m_hasIncantation = true;
 
-            powerEffects().append(PowerEffect{3,
+            powerEffects().append(PowerEffect{":/icons/Pics/Enemies/enemy/normal/Icon_Ritual.png",
+                                              3,
                                               [](Combatant *self, int value, GamePlay *) {
                                                   self->applyBuffDebuff(BuffDebuffType::Strength,
                                                                         value);

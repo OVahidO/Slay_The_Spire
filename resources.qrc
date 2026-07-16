@@ -39,6 +39,7 @@
         <file>Pics/Icons/relic/event/GoldenIdol.png</file>
         <file>Pics/Icons/relic/event/GremlinMask.png</file>
         <file>Pics/Buff-Debuff/Buffs/Icon_DarkEmbrace.png</file>
+        <file>Pics/Enemies/enemy/normal/Icon_Ritual.png</file>
     </qresource>
     <qresource prefix="/card-art">
         <file>Pics/Cards/Attack/bash.png</file>
