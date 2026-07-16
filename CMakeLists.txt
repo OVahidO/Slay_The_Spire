@@ -51,6 +51,7 @@ qt_add_executable(Slay_The_Spire
     sounds.qrc
     mainmenu.h mainmenu.cpp mainmenu.ui
     login_signup.h login_signup.cpp login_signup.ui
+    combatvisuals.h combatvisuals.cpp
     #
 )
 

@@ -80,12 +80,12 @@ void BuffDebuff::loadIcon()
     case BuffDebuffType::Flex:
         path = ":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/StS2_Icon_FlexPotion.png";
         break;
-    case BuffDebuffType::Intangible:
-        path = ":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/StS2_Icon_Intangible.png";
-        break;
-    case BuffDebuffType::Rage:
-        path = ":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/StS2_Icon_Rage.png";
-        break;
+        // case BuffDebuffType::Intangible:
+        //     path = ":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/StS2_Icon_Intangible.png";
+        //     break;
+        // case BuffDebuffType::Rage:
+        //     path = ":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/StS2_Icon_Rage.png";
+        //     break;
     }
 
     m_icon.load(path);

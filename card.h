@@ -89,6 +89,7 @@ signals:
     void noTargetCardPlayed(Card* card);
     void cardEnteredMouse(Card *card);
     void cardLeavedMouse(Card* card);
+    void enemyHoverChanged(Enemy *enemy);
 
 protected:
     QPixmap m_cardPixmap;

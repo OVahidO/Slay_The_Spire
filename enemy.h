@@ -56,6 +56,7 @@ public:
     virtual void calculateNextIntent() = 0;
 
     QPixmap getIntentIcon(IntentType type) const;
+    QPixmap picture() const;
 
     virtual void onAnyCardPlayed(CardType cardType, GamePlay *game) {}
 

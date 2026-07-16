@@ -6,16 +6,20 @@
 #include <QGraphicsView>
 #include <QParallelAnimationGroup>
 #include <QVBoxLayout>
+#include <QVector>
 #include <QWidget>
-#include "allenemies.h"
 #include <algorithm>
 #include <random>
+
+#include "combatvisuals.h"
 
 class Player;
 class Enemy;
 class Card;
 class Potion;
 class Relic;
+class Combatant;
+class QGraphicsPixmapItem;
 
 namespace Ui {
 class GamePlay;
@@ -74,6 +78,18 @@ public:
     void discardHandToDiscardPile();
     void removeDeadEnemies();
 
+    // ------------------------- Combat VFX (گرافیک و انیمیشن) -------------------------
+    void setupBackground(const QString &imagePath);
+
+    void showTargetingFrame(Enemy *enemy);
+    void hideTargetingFrame();
+
+    void playAttackJolt(Combatant *attacker, bool attackerIsPlayer);
+
+    void showFloatingDamage(Combatant *target, int amount, bool isHeal = false);
+
+    void triggerScreenShake(int intensity = 12, int durationMs = 300);
+
 signals:
     void enemiesTurnEnded();
     void playerTurnEnded();
@@ -95,6 +111,9 @@ public slots:
     void updatePlayerInformLabels();
     void updateHandsCardsLayout(Card *hoveredCard = nullptr);
     void update();
+
+private slots:
+    void onCardEnemyHoverChanged(Enemy *enemy);
 
 private:
     Ui::GamePlay *ui;
@@ -120,7 +139,12 @@ private:
     std::vector<Card *> m_drawPile;
     std::vector<Card *> m_discardPile;
     std::vector<Card *> m_ExhaustPile;
-    //////////////////////////////////
+    /////////////////////////////////
+
+    QGraphicsPixmapItem *m_backgroundItem = nullptr;
+    TargetFrame *m_targetFrame = nullptr;
+
+    void connectCardVfxSignals(Card *card);
 };
 
 class EndTurnButton : public QGraphicsObject {

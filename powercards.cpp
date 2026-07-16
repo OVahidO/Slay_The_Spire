@@ -86,16 +86,18 @@ void Brutality::applyEffect(Player *player, Enemy *target)
     Q_UNUSED(target);
 
     if (player) {
-        player->powerEffects().append(PowerEffect{1,
-                                                  [](Combatant *self, int value, GamePlay *game) {
-                                                      Player *p = dynamic_cast<Player *>(self);
-                                                      if (p)
-                                                          p->loseHp(value);
+        player->powerEffects().append(
+            PowerEffect{":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/Icon_Brutality.png",
+                        1,
+                        [](Combatant *self, int value, GamePlay *game) {
+                            Player *p = dynamic_cast<Player *>(self);
+                            if (p)
+                                p->loseHp(value);
 
-                                                      if (game)
-                                                          game->drawFromDrawPile();
-                                                  },
-                                                  PowerUseTime::StartTurn});
+                            if (game)
+                                game->drawFromDrawPile();
+                        },
+                        PowerUseTime::StartTurn});
         player->applyBuffDebuff(BuffDebuffType::Brutality, 1);
     }
 }
@@ -153,7 +155,8 @@ void DemonForm::applyEffect(Player *player, Enemy *target)
 
     if (player) {
         player->powerEffects().append(
-            PowerEffect{m_strengthPerTurn,
+            PowerEffect{":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/StS2_Icon_DemonForm.png",
+                        m_strengthPerTurn,
                         [](Combatant *self, int value, GamePlay *) {
                             self->applyBuffDebuff(BuffDebuffType::Strength, value);
                         },
@@ -207,7 +210,8 @@ void Metallicize::applyEffect(Player *player, Enemy *target)
 
     if (player) {
         player->powerEffects().append(
-            PowerEffect{m_blockPerTurn,
+            PowerEffect{":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/Icon_Metallicize.png",
+                        m_blockPerTurn,
                         [](Combatant *self, int value, GamePlay *) { self->addBlock(value); },
                         PowerUseTime::EndTurn});
         player->applyBuffDebuff(BuffDebuffType::Metallicize, m_blockPerTurn);
@@ -268,13 +272,15 @@ void Berserk::applyEffect(Player *player, Enemy *target)
         player->applyBuffDebuff(BuffDebuffType::Vulnerable, m_vulnerableAmount);
         player->applyBuffDebuff(BuffDebuffType::Berserk, 1);
 
-        player->powerEffects().append(PowerEffect{1,
-                                                  [](Combatant *self, int value, GamePlay *) {
-                                                      Player *p = dynamic_cast<Player *>(self);
-                                                      if (p)
-                                                          p->addEnergy(value);
-                                                  },
-                                                  PowerUseTime::StartTurn});
+        player->powerEffects().append(
+            PowerEffect{":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/Icon_Berserk.png",
+                        1,
+                        [](Combatant *self, int value, GamePlay *) {
+                            Player *p = dynamic_cast<Player *>(self);
+                            if (p)
+                                p->addEnergy(value);
+                        },
+                        PowerUseTime::StartTurn});
     }
 }
 
@@ -329,15 +335,17 @@ void DarkEmbrace::applyEffect(Player *player, Enemy *target)
     Q_UNUSED(target);
 
     if (player) {
-        player->powerEffects().append(PowerEffect{0,
-                                                  [](Combatant *self, int value, GamePlay *game) {
-                                                      Q_UNUSED(self);
-                                                      Q_UNUSED(value);
+        player->powerEffects().append(
+            PowerEffect{":/icons/Pics/Buff-Debuff/Buffs/Icon_DarkEmbrace.png",
+                        0,
+                        [](Combatant *self, int value, GamePlay *game) {
+                            Q_UNUSED(self);
+                            Q_UNUSED(value);
 
-                                                      if (game)
-                                                          game->drawFromDrawPile();
-                                                  },
-                                                  PowerUseTime::OnExhaust});
+                            if (game)
+                                game->drawFromDrawPile();
+                        },
+                        PowerUseTime::OnExhaust});
     }
 }
 
@@ -391,8 +399,18 @@ void Barricade::applyEffect(Player *player, Enemy *target)
     Q_UNUSED(target);
 
     if (player) {
-        player->setBarricade(true);
         player->applyBuffDebuff(BuffDebuffType::Barricade, 1);
+        player->powerEffects().append(
+            PowerEffect{":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/Icon_Barricade.png",
+                        0,
+                        [](Combatant *self, int value, GamePlay *game) {
+                            Q_UNUSED(self);
+                            Q_UNUSED(value);
+                            Player *p = dynamic_cast<Player *>(self);
+                            if (p)
+                                p->setBarricade(true);
+                        },
+                        PowerUseTime::StartTurn});
     }
 }
 
@@ -447,7 +465,8 @@ void FeelNoPain::applyEffect(Player *player, Enemy *target)
 
     if (player) {
         player->powerEffects().append(
-            PowerEffect{m_blockAmount,
+            PowerEffect{":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/StS2_Icon_FeelNoPain.png",
+                        m_blockAmount,
                         [](Combatant *self, int value, GamePlay *) { self->addBlock(value); },
                         PowerUseTime::OnExhaust});
         player->applyBuffDebuff(BuffDebuffType::FeelNoPain, m_blockAmount);
