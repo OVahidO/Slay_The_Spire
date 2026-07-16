@@ -10,4 +10,8 @@
         <file>Pics/Background/Events/Event-OminousForge.png</file>
         <file>Pics/Background/Events/Event-Vagrant.png</file>
     </qresource>
+    <qresource prefix="/MainMenu">
+        <file>Pics/MainMenu/eng.png</file>
+        <file>Pics/MainMenu/main_menu_bg.png</file>
+    </qresource>
 </RCC>

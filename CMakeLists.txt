@@ -8,6 +8,7 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Sql)
 qt_standard_project_setup()
 
 qt_add_resources(RESOURCES resources.qrc)
+qt_add_resources(RESOURCES backgrounds.qrc)
 
 qt_add_executable(Slay_The_Spire
     WIN32 MACOSX_BUNDLE
@@ -48,6 +49,8 @@ qt_add_executable(Slay_The_Spire
     backgrounds.qrc
     reward.h reward.cpp
     sounds.qrc
+    mainmenu.h mainmenu.cpp mainmenu.ui
+    login_signup.h login_signup.cpp login_signup.ui
     #
 )
 
