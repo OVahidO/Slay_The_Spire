@@ -18,9 +18,13 @@ enum class PowerUseTime { StartTurn, EndTurn, OnExhaust };
 
 struct PowerEffect
 {
+    QString iconPath;
     int value;
     void (*func)(Combatant *self, int value, GamePlay *game);
     PowerUseTime useTime;
+
+    const QString &IconPath() const;
+    QPixmap icon() const;
 };
 
 class Combatant : public QGraphicsObject
