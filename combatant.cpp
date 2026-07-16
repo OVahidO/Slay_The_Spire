@@ -9,7 +9,11 @@ Combatant::Combatant(QString name, int maxHP, QGraphicsItem *parent)
     , m_currentHP(maxHP)
     , m_block(0)
     , m_turnCount(0)
-{}
+{
+    m_healthBar = new HealthBarItem(this);
+    m_healthBar->setPos(0, 150);
+    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
+}
 
 Combatant::~Combatant()
 {
@@ -41,27 +45,32 @@ int Combatant::takeDamage(int incomingDamage, bool isAttackDamage)
 void Combatant::setBlock(int amount)
 {
     m_block = amount;
+    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
 }
 
 void Combatant::addBlock(int amount)
 {
     m_block += amount;
+    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
 }
 
 void Combatant::addBlockFromCard(int amount)
 {
     addBlock(calculateBlock(amount));
+    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
 }
 
 void Combatant::resetBlock()
 {
     if (!m_hasBarricade)
         m_block = 0;
+    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
 }
 
 bool Combatant::isDead() const
 {
     return m_currentHP <= 0;
+    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
 }
 
 const QString &Combatant::name() const
@@ -170,6 +179,7 @@ int Combatant::calculateBlock(int baseAmount) const
         modified = static_cast<int>(modified * 0.75);
 
     return qMax(0, modified);
+    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
 }
 
 QVector<PowerEffect> &Combatant::powerEffects()
@@ -191,4 +201,203 @@ void Combatant::overrideHP(int hp)
 
     m_maxHP = hp;
     m_currentHP = hp;
+    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
+}
+
+HealthBarItem::HealthBarItem(QGraphicsItem *parent)
+    : QGraphicsObject(parent)
+{
+    setAcceptHoverEvents(true);
+}
+
+void HealthBarItem::updateStats(int currentHp, int maxHp, int block)
+{
+    m_currentHp = currentHp;
+    m_maxHp = maxHp;
+    m_block = block;
+
+    QString tooltipText = QString("HP: %1 / %2").arg(m_currentHp).arg(m_maxHp);
+    if (m_block > 0) {
+        tooltipText += QString("\nBlock: %1").arg(m_block);
+    }
+    setToolTip(tooltipText);
+
+    update();
+}
+
+QRectF HealthBarItem::boundingRect() const
+{
+    return QRectF(0, -20, m_width, m_height + 20);
+}
+
+void HealthBarItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
+    qreal hpPercentage = (qreal) m_currentHp / (qreal) m_maxHp;
+    if (hpPercentage < 0.0)
+        hpPercentage = 0.0;
+    if (hpPercentage > 1.0)
+        hpPercentage = 1.0;
+
+    painter->setBrush(QColor(50, 50, 50));
+    painter->setPen(Qt::black);
+    painter->drawRect(0, 0, m_width, m_height);
+
+    painter->setBrush(QColor(200, 50, 50));
+    painter->drawRect(0, 0, m_width * hpPercentage, m_height);
+
+    if (m_block > 0) {
+        painter->setPen(QPen(QColor(100, 150, 255), 2));
+        painter->setBrush(Qt::NoBrush);
+        painter->drawRect(0, 0, m_width, m_height);
+
+        painter->setPen(QColor(100, 150, 255));
+        painter->drawText(QRectF(0, -18, m_width, 15), Qt::AlignLeft, QString("[%1]").arg(m_block));
+    }
+
+    painter->setPen(Qt::white);
+    painter->drawText(QRectF(0, 0, m_width, m_height),
+                      Qt::AlignCenter,
+                      QString("%1/%2").arg(m_currentHp).arg(m_maxHp));
+}
+
+BuffItem::BuffItem(BuffDebuffType type, int stacks, QGraphicsItem *parent)
+    : QGraphicsObject(parent)
+    , m_type(type)
+    , m_stacks(stacks)
+{
+    setupAppearance();
+}
+
+void BuffItem::setupAppearance()
+{
+    QString tooltipText;
+
+    switch (m_type) {
+    case BuffDebuffType::Strength:
+        m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/StS2_Icon_Strength.png");
+        tooltipText = "Deal additional damage.";
+        break;
+    case BuffDebuffType::Vulnerable:
+        m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Debuffs/StS2_Icon_Vulnerable.png");
+        tooltipText = "Take 50% more damage from attacks.";
+        break;
+    case BuffDebuffType::Weak:
+        m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Debuffs/StS2_Icon_Weak.png");
+        tooltipText = "Deal 50% less damage with attacks.";
+        break;
+    case BuffDebuffType::Dexterity:
+        m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Debuffs/StS2_Icon_Weak.png");
+        tooltipText = "Improves Block Block gained from cards.";
+        break;
+    case BuffDebuffType::Frail:
+        m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Debuffs/StS2_Icon_Frail.png");
+        tooltipText = "Gain 25% less Block from cards.";
+        break;
+    case BuffDebuffType::Barricade:
+        m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/Icon_Barricade.png");
+        tooltipText = "Block Block is not removed at the beginning of your turn.";
+        break;
+    case BuffDebuffType::Berserk:
+        m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/Icon_Berserk.png");
+        tooltipText = "At the start of your turn, gain Energy.";
+        break;
+    case BuffDebuffType::Brutality:
+        m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/Icon_Brutality.png");
+        tooltipText = "At the start of your turn, lose HP and draw cards.";
+        break;
+    case BuffDebuffType::Metallicize:
+        m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/Icon_Metallicize.png");
+        tooltipText = "At the end of every turn, gain Block.";
+        break;
+    case BuffDebuffType::DemonForm:
+        m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/StS2_Icon_DemonForm.png");
+        tooltipText = "At the start of your turn, gain Strength.";
+        break;
+    case BuffDebuffType::FeelNoPain:
+        m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/StS2_Icon_FeelNoPain.png");
+        tooltipText = "Whenever you Exhaust a card, gain Block.";
+        break;
+    case BuffDebuffType::Flex:
+        m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/StS2_Icon_FlexPotion.png");
+        tooltipText
+            = "Strength adds additional damage to Attacks. At the end of this turn, lose Strength.";
+        break;
+        // case BuffDebuffType::Intangible:
+        //     m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/StS2_Icon_FlexPotion.png");
+        //     tooltipText
+        //         = "Strength adds additional damage to Attacks. At the end of this turn, lose Strength.";
+        //     break;
+        // case BuffDebuffType::Rage:
+        //     m_icon.load(":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/StS2_Icon_FlexPotion.png");
+        //     tooltipText
+        //         = "Strength adds additional damage to Attacks. At the end of this turn, lose Strength.";
+        //     break;
+
+    default:
+        tooltipText = "Unknown Effect";
+        break;
+    }
+
+    setToolTip(tooltipText);
+}
+
+void BuffItem::setStacks(int stacks)
+{
+    m_stacks = stacks;
+    update();
+}
+
+QRectF BuffItem::boundingRect() const
+{
+    return QRectF(0, 0, 32, 32);
+}
+
+void BuffItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
+    if (!m_icon.isNull()) {
+        painter->drawPixmap(0, 0, 32, 32, m_icon);
+    }
+
+    painter->setPen(Qt::white);
+    painter->setFont(QFont("Arial", 10, QFont::Bold));
+    painter->drawText(boundingRect(), Qt::AlignBottom | Qt::AlignRight, QString::number(m_stacks));
+}
+
+void Combatant::updateBuffUI()
+{
+    // ۱. ابتدا تمام آیکون‌های قبلی را پاک می‌کنیم
+    for (BuffItem *item : m_buffItems) {
+        delete item; // چون Parent دارند از Scene هم حذف می‌شوند
+    }
+    m_buffItems.clear();
+
+    // ۲. متغیرهای مختصات برای چیدمان گرید-مانند (افقی)
+    int startX = 0;
+    // ارتفاع رو طوری تنظیم می‌کنیم که بیفته زیر هلث‌بار.
+    // فرضا اگر HealthBar روی y=0 تا y=20 باشه، باف‌ها رو می‌ذاریم روی y=25
+    int startY = 25;
+    int spacing = 35; // فاصله هر آیکون از آیکون بعدی
+
+    // ۳. به ازای هر باف فعال، یک آیتم گرافیکی جدید می‌سازیم
+    for (int i = 0; i < m_activeEffects.size(); ++i) {
+        BuffDebuff *effect = m_activeEffects[i];
+
+        // اگر استک صفر است، نیازی به رسم نیست
+        if (effect->stacks() <= 0)
+            continue;
+
+        // ساخت آیتم جدید و قرار دادن Combatant (یا هلث‌بار) به عنوان پدر آن
+        BuffItem *newItem = new BuffItem(effect->type(), effect->stacks(), this);
+
+        // تنظیم مختصات
+        newItem->setPos(startX + (m_buffItems.size() * spacing), startY);
+
+        m_buffItems.append(newItem);
+    }
 }
