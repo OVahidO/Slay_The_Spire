@@ -272,6 +272,7 @@ void Map::addMapButtons()
                 for(auto& mapButton : sameLevelButtons)
                     mapButton->setEnabled(false);
             });
+            connect(currentMapButtons, &MapButton::onClick, this, &Map::nodeSelected);
 
             int buttonX = (currentMapButtons->levelPosIndex()+1)*250 + 50 + rand()%100 - rand()%100;
             if(currentLevel.size() == 1)
@@ -316,4 +317,18 @@ void Map::addRoads()
                 m_scene->addItem(road);
                 }
             }
+}
+
+void Map::enableLevel(int levelIndex)
+{
+    if (levelIndex < 0 || levelIndex >= m_levels.size())
+        return;
+
+    for (MapButton *button : m_levels[levelIndex])
+        button->setEnabled(true);
+}
+
+unsigned int Map::seed() const
+{
+    return m_seed;
 }

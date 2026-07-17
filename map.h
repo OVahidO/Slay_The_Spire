@@ -22,7 +22,12 @@ public:
     explicit Map(unsigned int seed, QWidget *parent = nullptr);
     ~Map();
 
+    void enableLevel(int levelIndex);
+    unsigned int seed() const;
+
 signals:
+
+    void nodeSelected(MapButton *button);
 
 private:
     Ui::Map *ui;
