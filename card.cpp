@@ -12,6 +12,7 @@ Card::Card(CardID ID,
            bool requiresTarget,
            QGraphicsItem *parent)
     : QGraphicsObject(parent)
+    , m_ID(static_cast<int>(ID))
     , m_name(name)
     , m_type(type)
     , m_energyCost(energyCost)
