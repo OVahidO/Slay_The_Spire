@@ -12,26 +12,29 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setFixedSize(1280, 720);
-    Player* player = new Player("Vahid&Ahoora", 100);
-    // m_topbar = new Topbar(player, this);
-    // ui->verticalLayout->insertWidget(0, m_topbar);
-    // connect(player, &Player::potionAdded, m_topbar, &Topbar::newPotionHandler);
-    GamePlay* g = new GamePlay(player, this);
-    int gamePlay_index = ui->stackedWidget->addWidget(g);
-    ui->stackedWidget->setCurrentIndex(gamePlay_index);
+    // Player* player = new Player("Vahid&Ahoora", 100);
+    // // m_topbar = new Topbar(player, this);
+    // // ui->verticalLayout->insertWidget(0, m_topbar);
+    // // connect(player, &Player::potionAdded, m_topbar, &Topbar::newPotionHandler);
+    // GamePlay* g = new GamePlay(player, this);
+    // int gamePlay_index = ui->stackedWidget->addWidget(g);
+    // ui->stackedWidget->setCurrentIndex(gamePlay_index);
 
-    // connect(m_topbar, &Topbar::potionUsed, g, &GamePlay::usedPotionHandler);
+    // // connect(m_topbar, &Topbar::potionUsed, g, &GamePlay::usedPotionHandler);
 
-    // Map* m = new Map(0, this);
-    // int map_Index = ui->stackedWidget->addWidget(m);
-    // ui->stackedWidget->setCurrentIndex(map_Index);
+    // // Map* m = new Map(0, this);
+    // // int map_Index = ui->stackedWidget->addWidget(m);
+    // // ui->stackedWidget->setCurrentIndex(map_Index);
 
-    MainMenu* M = new MainMenu(this);
-    M->show();
-    int MenuIndex = ui->stackedWidget->addWidget(M);
-    ui->stackedWidget->setCurrentIndex(MenuIndex);
-    connect(M, &MainMenu::exit, this, [this](){this->deleteLater();});
-    //connect(M, &MainMenu::playerIsReady, this, ?);
+    // MainMenu* M = new MainMenu(this);
+    // M->show();
+    // int MenuIndex = ui->stackedWidget->addWidget(M);
+    // ui->stackedWidget->setCurrentIndex(MenuIndex);
+    // connect(M, &MainMenu::exit, this, [this](){this->deleteLater();});
+    // //connect(M, &MainMenu::playerIsReady, this, ?);
+
+    // m_gameManager = new GameManager(ui->stackedWidget, this);
+    // m_gameManager->start();
 }
 
 MainWindow::~MainWindow()

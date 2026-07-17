@@ -79,7 +79,12 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     connect(this, &GamePlay::cardPlayed, this, &GamePlay::playedCardHandler);
     connect(this, &GamePlay::valueChanged, this, &GamePlay::update);
 
-    startCombat();
+    // startCombat() دیگر اینجا صدا زده نمی‌شود.
+    // GamePlay اکنون یک نمونه‌ی پایدار در طول کل Run است (چون deck باید بین
+    // مبارزات باقی بماند) و شروع واقعیِ هر مبارزه فقط توسط GameManager،
+    // درست قبل از افزودن دشمنان به صحنه، با فراخوانی صریح startCombat() انجام می‌شود.
+
+    // startCombat();
 }
 
 GamePlay::~GamePlay()

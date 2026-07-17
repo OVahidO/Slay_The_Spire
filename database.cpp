@@ -90,7 +90,7 @@ bool Database::insertPlayerValue(Player* p)
         return false;
     }
 
-    // p->setId(query.lastInsertId().toInt());
+    p->setId(query.lastInsertId().toInt());
 
     return true;
 }
@@ -159,12 +159,12 @@ QVector<QPair<Player* , unsigned int>> Database::selectAllPlayers()
     while(query.next())
     {
         //
-        // Player *player = new Player(query.value(2).toString(), query.value(5).toInt());
-        // player->setId(query.value(0).toInt());
-        // player->setCurrentHPDirect(query.value(4).toInt());
-        // player->setCoin(query.value(6).toInt());
+        Player *player = new Player(query.value(2).toString(), query.value(5).toInt());
+        player->setId(query.value(0).toInt());
+        player->setCurrentHPDirect(query.value(4).toInt());
+        player->setCoin(query.value(6).toInt());
         //
-        Player* player = new Player(query.value(1).toString(), query.value(5).toInt());
+        // Player* player = new Player(query.value(1).toString(), query.value(5).toInt());
         //player->setID(query.value(0).toInt());
         //player->setPass(query.value(2).toString());
         //player->setLevel(query.value(3).toInt());
@@ -188,8 +188,8 @@ Player *Database::loadPlayerById(int playerID)
         return nullptr;
 
     Player *player = new Player(query.value(1).toString(), query.value(3).toInt());
-    // player->setId(query.value(0).toInt());
-    // player->setCurrentHPDirect(query.value(2).toInt());
+    player->setId(query.value(0).toInt());
+    player->setCurrentHPDirect(query.value(2).toInt());
     player->setCoin(query.value(4).toInt());
 
     return player;

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class Topbar;
+class GameManager;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,5 +23,6 @@ public:
 private:
     Ui::MainWindow *ui;
     Topbar* m_topbar;
+    GameManager *m_gameManager;
 };
 #endif // MAINWINDOW_H
