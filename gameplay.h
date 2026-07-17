@@ -78,7 +78,7 @@ public:
     void discardHandToDiscardPile();
     void removeDeadEnemies();
 
-    // ------------------------- Combat VFX (گرافیک و انیمیشن) -------------------------
+    // ------------------------- Combat VFX -------------------------
     void setupBackground(const QString &imagePath);
 
     void showTargetingFrame(Enemy *enemy);
