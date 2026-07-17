@@ -360,3 +360,18 @@ void GremlinVisage::onCombatStart(GamePlay *game)
     if (game && game->player())
         game->player()->applyBuffDebuff(BuffDebuffType::Weak, 1);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+BurningBlood::BurningBlood(QWidget *parent)
+    : Relic("Burning Blood", "At the end of combat: heal 6 HP.", relicType::Normal, parent)
+{
+    m_soucePath = ":/icons/Pics/Icons/relic/normal/StS2_BurningBlood.png";
+    loadIcon();
+}
+
+void BurningBlood::onCombatEnd(Player *player)
+{
+    if (player)
+        player->heal(6);
+}

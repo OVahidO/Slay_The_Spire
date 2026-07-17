@@ -126,4 +126,11 @@ public:
     void onCombatStart(GamePlay *game) override;
 };
 
+class BurningBlood : public Relic
+{
+public:
+    explicit BurningBlood(QWidget *parent = nullptr);
+    void onCombatEnd(Player *player) override;
+};
+
 #endif // ALLRELICS_H
