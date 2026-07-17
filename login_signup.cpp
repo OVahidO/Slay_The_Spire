@@ -9,7 +9,7 @@ Login_Signup::Login_Signup(QWidget *parent)
 {
     ui->setupUi(this);
     this->setGeometry(525,300,500,500);
-    Database::open("");
+    // Database توسط GameManager یک‌بار در ابتدای برنامه باز و آماده می‌شود؛
     m_players = Database::selectAllPlayers();
 
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
@@ -125,7 +125,10 @@ void Login_Signup::on_SignupEnterButton_clicked()
 {
     Player* player = new Player(ui->usernameInput->text(), 100);
     Database::insertPlayerValue(player);
-    Database::close();
+    // Database::close() قبلاً اینجا صدا زده می‌شد که باعث می‌شد
+    // GameManager دیگر نتواند به دیتابیس دسترسی داشته باشد. حذف شد.
+
+    // Database::close();
     emit playerIsReady(player);
     this->accept();
 }
@@ -142,21 +145,34 @@ void Login_Signup::on_LoginEnterButton_clicked()
         ui->LoginErrorLabel->setText("Error: password is empty!");
         return;
     }
-    for(auto& player : m_players)
-    {
-        if(ui->LoginUsernameInput->text() == player.first->name())
-        {
-            // if(ui->LoginPasswordInput->text() == player.first->password())
-            // {
-            //     emit playerIsReady(player.first);
-            //     Database::close();
-            //     this->accept();
-            //     return;
-            // }
-            // else
-            //     break;
+
+    int playerID = -1;
+    if (Database::validateLogin(ui->LoginUsernameInput->text(),
+                                ui->LoginPasswordInput->text(),
+                                playerID)) {
+        Player *player = Database::loadPlayerById(playerID);
+        if (player) {
+            emit playerIsReady(player);
+            this->accept();
+            return;
         }
     }
+
+    // for(auto& player : m_players)
+    // {
+    //     if(ui->LoginUsernameInput->text() == player.first->name())
+    //     {
+    //         // if(ui->LoginPasswordInput->text() == player.first->password())
+    //         // {
+    //         //     emit playerIsReady(player.first);
+    //         //     Database::close();
+    //         //     this->accept();
+    //         //     return;
+    //         // }
+    //         // else
+    //         //     break;
+    //     }
+    // }
     ui->LoginErrorLabel->setText("Error: username or password isn't correct!");
 }
 
