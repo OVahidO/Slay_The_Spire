@@ -61,6 +61,8 @@ public:
 
     void overrideHP(int hp);
 
+    void setCurrentHPDirect(int hp);
+
 protected:
     HealthBarItem *m_healthBar;
     bool m_hasBarricade = false;

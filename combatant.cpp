@@ -208,6 +208,17 @@ void Combatant::overrideHP(int hp)
     m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
 }
 
+void Combatant::setCurrentHPDirect(int hp)
+{
+    if (hp < 0)
+        hp = 0;
+    if (hp > m_maxHP)
+        hp = m_maxHP;
+
+    m_currentHP = hp;
+    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
+}
+
 HealthBarItem::HealthBarItem(QGraphicsItem *parent)
     : QGraphicsObject(parent)
 {
@@ -390,7 +401,6 @@ void Combatant::updateBuffUI()
     m_buffItems.clear();
 
     int startX = 0;
-    // زیر هلث‌بار قرار می‌گیره؛ هلث‌بار خودش روی y=150 نسبت به Combatant است
     int startY = m_healthBar->pos().y() + m_healthBar->height() + 10;
     int spacing = 35;
 
