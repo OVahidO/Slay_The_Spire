@@ -19,6 +19,9 @@ public:
                        const QStyleOptionGraphicsItem *option,
                        QWidget *widget) override;
 
+    int id() const;
+    void setId(int id);
+
     int coin() const;
     int energy() const;
     int maxEnergy() const;
@@ -61,6 +64,8 @@ signals:
     void valueChanged();
 
 private:
+    int m_id = -1;
+
     bool m_cannotPlayAttacks = false;
     bool m_cannotPlayCards = false;
 

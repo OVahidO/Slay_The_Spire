@@ -13,6 +13,16 @@ QRectF Player::boundingRect() const
 
 void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {}
 
+int Player::id() const
+{
+    return m_id;
+}
+
+void Player::setId(int id)
+{
+    m_id = id;
+}
+
 int Player::coin() const
 {
     return m_coin;

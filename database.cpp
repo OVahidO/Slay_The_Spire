@@ -368,8 +368,8 @@ QVector<Card*> Database::selectPlayersDeck(Player* p)
 
     while(query.next())
     {
-        CardID cardID = static_cast<CardID>(query.value(1).toInt());
-        Card* c = Card::Creat(cardID);
+        CardID cardID = static_cast<CardID>(query.value(2).toInt());
+        Card *c = Card::Creat(cardID);
         Deck.append(c);
     }
 
