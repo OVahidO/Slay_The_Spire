@@ -61,12 +61,16 @@ Relic *Relic::createRandomNormalRelic()
 
     switch (r) {
     case 0:
-        return new FaceOfTheCleric();
+        return new Anchor();
     case 1:
-        return new MutagenicStrength();
+        return new Girya();
     case 2:
-        return new WarpedTongs();
+        return new Kunai();
+    case 3:
+        return new Shuriken();
+    case 4:
+        return new IceCream();
     default:
-        return new FaceOfTheCleric();
+        return new Anchor();
     }
 }
