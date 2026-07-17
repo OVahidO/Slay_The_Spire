@@ -75,3 +75,17 @@ void MainMenu::on_ExitButton_2_clicked()
     emit exit();
 }
 
+void MainMenu::on_StartButton_clicked()
+{
+    emit startGameClicked();
+}
+
+void MainMenu::on_LeaderBoardButton_clicked()
+{
+    emit leaderboardClicked();
+}
+
+void MainMenu::on_Settingbutton_clicked()
+{
+    emit settingsClicked();
+}

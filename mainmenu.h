@@ -22,8 +22,11 @@ public:
 
 signals:
     void playerIsReady(Player* player);
-
     void exit();
+
+    void startGameClicked();
+    void leaderboardClicked();
+    void settingsClicked();
 
 private slots:
     void on_SignupButton_clicked();
@@ -33,6 +36,12 @@ private slots:
     void on_ExitButton_clicked();
 
     void on_ExitButton_2_clicked();
+
+    void on_StartButton_clicked();
+
+    void on_LeaderBoardButton_clicked();
+
+    void on_Settingbutton_clicked();
 
 private:
     Ui::MainMenu *ui;
