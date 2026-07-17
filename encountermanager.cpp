@@ -36,7 +36,6 @@ QVector<Enemy *> EncounterManager::generateEncounter(int act,
             if (r == 0) {
                 result.append(new GremlinKnob(isMultiplayer));
             } else {
-                // Three Sentries: سنتری وسط با Beam شروع می‌کند، دو تای دیگر با Bolt
                 result.append(new Sentry(false, isMultiplayer));
                 result.append(new Sentry(true, isMultiplayer));
                 result.append(new Sentry(false, isMultiplayer));
@@ -46,9 +45,6 @@ QVector<Enemy *> EncounterManager::generateEncounter(int act,
             if (r == 0) {
                 result.append(new BookOfStabbing(isMultiplayer));
             } else {
-                // طبق داک: Taskmaster + 1 Green Slaver + 1 Red Slaver.
-                // کلاس Green Slaver در پروژه پیاده‌سازی نشده؛ به‌جای آن از
-                // BlueSlaver به‌عنوان جایگزین نزدیک‌ترین موجود استفاده شده است.
                 result.append(new Taskmaster(isMultiplayer));
                 result.append(new BlueSlaver(isMultiplayer));
                 result.append(new RedSlaver(isMultiplayer));

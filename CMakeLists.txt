@@ -53,6 +53,7 @@ qt_add_executable(Slay_The_Spire
     login_signup.h login_signup.cpp login_signup.ui
     combatvisuals.h combatvisuals.cpp
     encountermanager.h encountermanager.cpp
+    gamemanager.h gamemanager.cpp
     #
 )
 
