@@ -18,6 +18,7 @@
 #include "potion.h"
 #include "relic.h"
 #include "reward.h"
+#include "settings.h"
 #include "shop.h"
 
 GameManager::GameManager(QStackedWidget *stack, QObject *parent)
@@ -213,7 +214,7 @@ void GameManager::onMainMenuLeaderboard()
 
 void GameManager::onMainMenuSettings()
 {
-    // TODO: صفحه‌ی Settings هنوز پیاده‌سازی نشده است.
+    showSettingsPage(SettingsMode::MainMenu);
 }
 
 // ==================== Map ====================
@@ -628,4 +629,100 @@ Potion *GameManager::createPotionFromTag(const QString &tag) const
         return new Fairy_in_a_Bottle();
 
     return nullptr;
+}
+
+// ==================== Settings ====================
+
+void GameManager::showSettingsPage(SettingsMode mode)
+{
+    if (!m_settings) {
+        m_settings = new SettingsDialog(m_player, mode);
+        m_stack->addWidget(m_settings);
+
+        m_settings->setVolume(m_masterVolume);
+        m_settings->setMuted(m_isMuted);
+
+        connect(m_settings,
+                &SettingsDialog::volumeChanged,
+                this,
+                &GameManager::onSettingsVolumeChanged);
+        connect(m_settings, &SettingsDialog::muteToggled, this, &GameManager::onSettingsMuteToggled);
+        connect(m_settings,
+                &SettingsDialog::credentialsSaveRequested,
+                this,
+                &GameManager::onSettingsCredentialsSaveRequested);
+        connect(m_settings, &SettingsDialog::returnRequested, this, &GameManager::onSettingsReturn);
+        connect(m_settings,
+                &SettingsDialog::closeRequested,
+                this,
+                &GameManager::onSettingsCloseFromMenu);
+        connect(m_settings,
+                &SettingsDialog::saveAndQuitRequested,
+                this,
+                &GameManager::onSettingsSaveAndQuit);
+        connect(m_settings,
+                &SettingsDialog::abandonRunRequested,
+                this,
+                &GameManager::onSettingsAbandonRun);
+    } else {
+        m_settings->setMode(mode);
+    }
+
+    m_screenBeforeSettings = m_stack->currentWidget();
+
+    switchTo(m_settings);
+}
+
+void GameManager::onSettingsReturn()
+{
+    if (m_screenBeforeSettings)
+        switchTo(m_screenBeforeSettings);
+    else
+        switchTo(m_gamePlay);
+
+    m_screenBeforeSettings = nullptr;
+}
+
+void GameManager::onSettingsCloseFromMenu()
+{
+    if (m_screenBeforeSettings)
+        switchTo(m_screenBeforeSettings);
+    else
+        showMainMenu();
+
+    m_screenBeforeSettings = nullptr;
+}
+
+void GameManager::onSettingsSaveAndQuit()
+{
+    autoSaveProgress();
+
+    m_screenBeforeSettings = nullptr;
+    showMainMenu();
+}
+
+void GameManager::onSettingsAbandonRun()
+{
+    returnToMainMenuAfterDefeat();
+
+    m_screenBeforeSettings = nullptr;
+}
+
+void GameManager::onSettingsVolumeChanged(int volume)
+{
+    m_masterVolume = volume;
+}
+
+void GameManager::onSettingsMuteToggled(bool muted)
+{
+    m_isMuted = muted;
+}
+
+void GameManager::onSettingsCredentialsSaveRequested(const QString &username,
+                                                     const QString &password)
+{
+    if (!m_player)
+        return;
+
+    Database::updateCredentials(m_player->id(), username, password);
 }

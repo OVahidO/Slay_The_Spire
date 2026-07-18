@@ -6,9 +6,7 @@
 
 class Enemy;
 
-// مسئول انتخاب و ساخت دشمنان
-
-class EncounterManager
+class EncounterManager : public QObject
 {
     Q_OBJECT
 public:

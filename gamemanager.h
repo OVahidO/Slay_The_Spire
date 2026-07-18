@@ -9,6 +9,7 @@
 
 #include "mapButton.h"
 #include "reward.h"
+#include "settings.h"
 
 class Player;
 class GamePlay;
@@ -23,6 +24,7 @@ class Enemy;
 class Relic;
 class Potion;
 class Card;
+class SettingsDialog;
 
 class QStackedWidget;
 class QWidget;
@@ -40,6 +42,7 @@ public:
     void showVictoryPage();
     void showDefeatPage();
     void showLeaderboard();
+    void showSettingsPage(SettingsMode mode);
 
 public slots:
     void returnToMainMenuAfterDefeat();
@@ -56,6 +59,13 @@ private slots:
     void onMainMenuStart();
     void onMainMenuLeaderboard();
     void onMainMenuSettings();
+    void onSettingsReturn();
+    void onSettingsCloseFromMenu();
+    void onSettingsSaveAndQuit();
+    void onSettingsAbandonRun();
+    void onSettingsVolumeChanged(int volume);
+    void onSettingsMuteToggled(bool muted);
+    void onSettingsCredentialsSaveRequested(const QString &username, const QString &password);
 
     // Map
     void onMapNodeSelected(MapButton *button);
@@ -130,6 +140,13 @@ private:
     Relic *createRelicFromName(const QString &name) const;
     QString potionTypeTag(Potion *potion) const;
     Potion *createPotionFromTag(const QString &tag) const;
+
+    // --- Setting ---
+    SettingsDialog *m_settings = nullptr;
+    QWidget *m_screenBeforeSettings = nullptr;
+
+    int m_masterVolume = 80;
+    bool m_isMuted = false;
 };
 
 #endif // GAMEMANAGER_H
