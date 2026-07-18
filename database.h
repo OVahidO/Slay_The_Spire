@@ -92,6 +92,9 @@ public:
 
     static void close();
 
+    // Account settings support
+    static bool updateCredentials(int playerID, const QString &username, const QString &password);
+
 signals:
 };
 

@@ -628,3 +628,24 @@ QStringList Database::loadRunPotions(int playerID)
 
     return result;
 }
+
+bool Database::updateCredentials(int playerID, const QString &username, const QString &password)
+{
+    QSqlQuery query(db);
+
+    if (!query.prepare("UPDATE Player SET username=?, password=? WHERE id=?")) {
+        qDebug() << db.lastError().text();
+        return false;
+    }
+
+    query.addBindValue(username);
+    query.addBindValue(password);
+    query.addBindValue(playerID);
+
+    if (!query.exec()) {
+        qDebug() << db.lastError().text();
+        return false;
+    }
+
+    return true;
+}
