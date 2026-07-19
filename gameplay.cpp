@@ -74,6 +74,13 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
 
     emit valueChanged();
 
+    m_drawPile.push_back(new class Defend);
+    m_drawPile.push_back(new class Strike);
+    m_drawPile.push_back(new class Defend);
+    m_drawPile.push_back(new class Clash);
+
+    draw();
+
     connect(this, &GamePlay::playerTurnEnded, this, &GamePlay::enemiesTurn);
     connect(this, &GamePlay::enemiesTurnEnded, this, &GamePlay::playerTurn);
     connect(this, &GamePlay::cardPlayed, this, &GamePlay::playedCardHandler);
@@ -562,16 +569,8 @@ void GamePlay::discardHandToDiscardPile()
 
     for (Card *card : handCopy) {
         card->disconnect();
-        m_scene->removeItem(card);
-
-        if (card->isExhaust())
-            m_ExhaustPile.push_back(card);
-        else
-            m_discardPile.push_back(card);
+        emit cardPlayed(card);
     }
-
-    m_player->HandsCards().clear();
-    emit valueChanged();
 }
 
 void GamePlay::endTurnButtonClicked()
