@@ -508,6 +508,7 @@ void GamePlay::enemiesTurn()
 
     if (m_player->currentHP() <= 0) {
         emit playerDead();
+        // eliminated
         return;
     }
 

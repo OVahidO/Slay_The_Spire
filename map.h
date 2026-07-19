@@ -25,6 +25,8 @@ public:
     void enableLevel(int levelIndex);
     unsigned int seed() const;
 
+    void setLocked(bool locked);
+
 signals:
 
     void nodeSelected(MapButton *button);
@@ -42,6 +44,8 @@ private:
 
     std::mt19937 m_randRange;
     unsigned int m_seed;
+
+    bool m_locked = false;
 };
 
 #endif // MAP_H
