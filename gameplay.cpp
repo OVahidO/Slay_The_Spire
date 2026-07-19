@@ -529,6 +529,7 @@ void GamePlay::enemiesTurn()
             continue;
 
         enemy->applyEnemyIntent(this);
+        m_scene->update();
 
         if (m_player->currentHP() <= 0) {
             emit playerDead();
@@ -587,6 +588,8 @@ void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy
         return;
 
     if (isEnoughEnergy(card->energyCost())) {
+        if(card->cardType() == CardType::Attack)
+            player = m_player;
         card->applyEffect(player, targetEnemy);
         card->applyEffect(this);
         emit cardPlayed(card);
@@ -813,7 +816,7 @@ void GamePlay::refreshGamePlay()//struct room info//
     setupBackground(":/Combat/Pics/Background/Combat/basement.png");//room.background//
     //m_enemys = room.enmies;
     m_enemys.push_back(new AcidSlimeS);
-    m_enemys.push_back(new Louse);
+    m_enemys.push_back(new TheChamp);
     m_enemys.push_back(new Mugger);
     setupEnemies();
 }
@@ -1019,7 +1022,6 @@ void GamePlay::setupEnemies()
     int i = 0 , j=0;
     for(auto& enemy : m_enemys)
     {
-        //enemy->setScale(0.25);
         enemy->setPos(this->width()-225-(i), this->height()-280-(j));
         m_scene->addItem(enemy);
         i+=150; j+=25;

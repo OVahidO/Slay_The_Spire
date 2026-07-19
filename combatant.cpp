@@ -11,7 +11,7 @@ Combatant::Combatant(QString name, int maxHP, QGraphicsItem *parent)
     , m_turnCount(0)
 {
     m_healthBar = new HealthBarItem(this);
-    m_healthBar->setPos(0, 150);
+    m_healthBar->setPos(0, 100);
     m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
 }
 
