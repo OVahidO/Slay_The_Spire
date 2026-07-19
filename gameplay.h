@@ -90,6 +90,14 @@ public:
 
     void triggerScreenShake(int intensity = 12, int durationMs = 300);
 
+    // === Multiplayer (Co-op, حداکثر ۲ بازیکن) ===
+    void addRemotePlayer(Player *player);
+    Player *remotePlayer() const;
+    QVector<Player *> allPlayers() const;
+    bool allPlayersDead() const;
+    bool isCoopMode() const;
+    void setCoopMode(bool enabled);
+
 signals:
     void enemiesTurnEnded();
     void playerTurnEnded();
@@ -97,6 +105,9 @@ signals:
     void combatWon();
     void cardPlayed(Card *);
     void valueChanged();
+
+    void playerEliminated(Player *player);
+    void leaderNeedsReassignment();
 
 public slots:
     void playerTurn();
@@ -146,6 +157,9 @@ private:
     TargetFrame *m_targetFrame = nullptr;
 
     void connectCardVfxSignals(Card *card);
+
+    QVector<Player *> m_remotePlayers;
+    bool m_coopMode = false;
 };
 
 class EndTurnButton : public QGraphicsObject {

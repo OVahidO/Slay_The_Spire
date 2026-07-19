@@ -1096,3 +1096,49 @@ void GamePlay::triggerScreenShake(int intensity, int durationMs)
 
     shakeTimer->start(stepInterval);
 }
+
+void GamePlay::addRemotePlayer(Player *player)
+{
+    if (!player || m_remotePlayers.contains(player))
+        return;
+
+    m_remotePlayers.append(player);
+    player->setIsLocalPlayer(false);
+
+    connect(player, &Player::hpChanged, this, [this, player]() {
+        if (player->currentHP() <= 0)
+            emit playerEliminated(player);
+    });
+}
+
+Player *GamePlay::remotePlayer() const
+{
+    return m_remotePlayers.isEmpty() ? nullptr : m_remotePlayers.first();
+}
+
+QVector<Player *> GamePlay::allPlayers() const
+{
+    QVector<Player *> result;
+    if (m_player)
+        result.append(m_player);
+    result += m_remotePlayers;
+    return result;
+}
+
+bool GamePlay::allPlayersDead() const
+{
+    for (Player *p : allPlayers())
+        if (p && p->currentHP() > 0)
+            return false;
+    return true;
+}
+
+bool GamePlay::isCoopMode() const
+{
+    return m_coopMode;
+}
+
+void GamePlay::setCoopMode(bool enabled)
+{
+    m_coopMode = enabled;
+}
