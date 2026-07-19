@@ -81,6 +81,8 @@ public:
     // ------------------------- Combat VFX -------------------------
     void setupBackground(const QString &imagePath);
 
+    void setupEnemies();
+
     void showTargetingFrame(Enemy *enemy);
     void hideTargetingFrame();
 
@@ -97,6 +99,7 @@ signals:
     void combatWon();
     void cardPlayed(Card *);
     void valueChanged();
+    void gamePlayIsReady();
 
 public slots:
     void playerTurn();
@@ -111,6 +114,7 @@ public slots:
     void updatePlayerInformLabels();
     void updateHandsCardsLayout(Card *hoveredCard = nullptr);
     void update();
+    void refreshGamePlay();
 
 private slots:
     void onCardEnemyHoverChanged(Enemy *enemy);

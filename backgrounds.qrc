@@ -14,4 +14,8 @@
         <file>Pics/MainMenu/eng.png</file>
         <file>Pics/MainMenu/main_menu_bg.png</file>
     </qresource>
+    <qresource prefix="/Combat">
+        <file>Pics/Background/Combat/basement.png</file>
+        <file>Pics/Background/Combat/city.png</file>
+    </qresource>
 </RCC>

@@ -92,6 +92,7 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     // درست قبل از افزودن دشمنان به صحنه، با فراخوانی صریح startCombat() انجام می‌شود.
 
     // startCombat();
+    refreshGamePlay();
 }
 
 GamePlay::~GamePlay()
@@ -807,6 +808,16 @@ void GamePlay::update()
     ui->exhaustPileButton->setText(QString::number(m_ExhaustPile.size()));
 }
 
+void GamePlay::refreshGamePlay()//struct room info//
+{
+    setupBackground(":/Combat/Pics/Background/Combat/basement.png");//room.background//
+    //m_enemys = room.enmies;
+    m_enemys.push_back(new AcidSlimeS);
+    m_enemys.push_back(new Louse);
+    m_enemys.push_back(new Mugger);
+    setupEnemies();
+}
+
 void GamePlay::creatEnergyUI()
 {
     QGraphicsPixmapItem *energyBackground = new QGraphicsPixmapItem();
@@ -997,6 +1008,22 @@ void GamePlay::setupBackground(const QString &imagePath)
 
     // اگر گیف انیمیشنی خواستی: به‌جای QPixmap از QMovie + QGraphicsProxyWidget(QLabel)
     // استفاده کن، چون QGraphicsPixmapItem فریم‌های متحرک را پشتیبانی نمی‌کند.
+}
+
+void GamePlay::setupEnemies()
+{
+    int enemyCount = m_enemys.size();
+    if(enemyCount == 0)
+        return;
+
+    int i = 0 , j=0;
+    for(auto& enemy : m_enemys)
+    {
+        //enemy->setScale(0.25);
+        enemy->setPos(this->width()-225-(i), this->height()-280-(j));
+        m_scene->addItem(enemy);
+        i+=150; j+=25;
+    }
 }
 
 void GamePlay::showTargetingFrame(Enemy *enemy)
