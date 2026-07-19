@@ -112,7 +112,7 @@ void Brutality::upgrade()
     setInnate(true);
 
     m_name = "Brutality+";
-    m_description = "At the start of your turn, lose 1 HP and draw 1 card/nInnate.";
+    m_description = "At the start of your turn, lose 1 HP and draw 1 card\nInnate.";
 }
 
 Card *Brutality::clone() const
@@ -293,7 +293,7 @@ void Berserk::upgrade()
 
     m_vulnerableAmount -= 1;
     m_name = "Berserk+";
-    m_description = "Gain 2 Vulnerable\nAt the start of your turn get 1 extra Energy";
+    m_description = "Gain 1 Vulnerable\nAt the start of your turn get 1 extra Energy"; // FIX
 }
 
 Card *Berserk::clone() const
@@ -357,7 +357,7 @@ void DarkEmbrace::upgrade()
     Card::upgrade();
 
     m_energyCost -= 1;
-    m_name = "DarkEmbrace+";
+    m_name = "Dark Embrace+";
 }
 
 Card *DarkEmbrace::clone() const

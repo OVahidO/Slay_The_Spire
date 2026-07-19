@@ -214,6 +214,8 @@ void Feed::upgrade()
 
     Card::upgrade();
 
+    m_name = "Feed+";
+
     m_damage += 2;
     m_increaseMaxHp += 1;
 }
@@ -585,6 +587,8 @@ void Whirlwind::upgrade()
         return;
 
     Card::upgrade();
+
+    m_name = "Whirlwind+";
 
     m_damage += 3;
     m_name = "Whrilwind+";

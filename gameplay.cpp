@@ -527,13 +527,10 @@ void GamePlay::enemiesTurn()
             return;
         }
 
-        // بررسی Split برای Slime‌ها (Large Slime / King Slime)
         // Slime *slime = dynamic_cast<Slime *>(enemy);
         // if (slime && slime->needsToSplit()) {
-        //     QVector<Enemy *> children = slime->createSplitChildren(false);
-        // Slime *Slime = dynamic_cast<class Slime *>(enemy);
-        // if (Slime && Slime->needsToSplit()) {
-        //     QVector<Enemy *> children = Slime->createSplitChildren(false);
+        //     QVector<Enemy *> children = slime->createSplitChildren(
+        //         m_isMultiplayer); // نکته: پارامتر ثابتِ false باید هماهنگ با حالت بازی شود؛ رجوع به بخش Multiplayer پایین
 
         //     for (Enemy *child : children)
         //         addEnemy(child);

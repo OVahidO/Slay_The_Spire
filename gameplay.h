@@ -100,6 +100,7 @@ signals:
 
 public slots:
     void playerTurn();
+    void extracted(size_t &i, Enemy *&enemy);
     void enemiesTurn();
     void endTurnButtonClicked();
     void targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy);
