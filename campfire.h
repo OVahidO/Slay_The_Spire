@@ -102,6 +102,7 @@ class UpgradeDialog : public QDialog
     Q_OBJECT
 public:
     explicit UpgradeDialog(GamePlay *gamePlay, QWidget *parent = nullptr);
+    ~UpgradeDialog();
 
     bool cardWasUpgraded() const;
 
