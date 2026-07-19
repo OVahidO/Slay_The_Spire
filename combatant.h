@@ -63,6 +63,10 @@ public:
 
     void setCurrentHPDirect(int hp);
 
+signals:
+    // === Multiplayer ===
+    void combatStateChanged();
+
 protected:
     HealthBarItem *m_healthBar;
     bool m_hasBarricade = false;
