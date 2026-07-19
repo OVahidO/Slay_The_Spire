@@ -1,6 +1,7 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
+#include <QMutex>
 #include <QObject>
 #include <QPair>
 #include <QString>
@@ -10,6 +11,9 @@
 #include "mapButton.h"
 #include "reward.h"
 #include "settings.h"
+
+class QTcpServer;
+class QTcpSocket;
 
 class Player;
 class GamePlay;
@@ -44,14 +48,26 @@ public:
     void showLeaderboard();
     void showSettingsPage(SettingsMode mode);
 
+    // ---- Multiplayer ----
+    bool isMultiplayer() const;
+    void setMultiplayerMode(bool enabled);
+    bool isLeader() const;
+    void setLeader(bool leader);
+
 public slots:
     void returnToMainMenuAfterDefeat();
+
+    void onRemoteNodeSelectionReceived(int levelIndex, int levelPosIndex, MapButtonType type);
+    void reassignLeaderIfNeeded();
 
 signals:
     void runEnded();
     void victoryPageRequested();
     void defeatPageRequested();
     void leaderboardDataReady(QVector<QPair<QString, int>> scores);
+
+    void leaderChanged(bool isLeaderNow);
+    void localNodeSelectionReady(int levelIndex, int levelPosIndex, MapButtonType type);
 
 private slots:
     // Login/MainMenu
@@ -147,6 +163,13 @@ private:
 
     int m_masterVolume = 80;
     bool m_isMuted = false;
+
+    // --- Multiplayer ---
+    bool m_isMultiplayer = false;
+    bool m_isLeader = true;
+    QTcpServer *m_networkServer = nullptr;
+    QTcpSocket *m_networkSocket = nullptr;
+    QMutex m_networkMutex; // for thread
 };
 
 #endif // GAMEMANAGER_H

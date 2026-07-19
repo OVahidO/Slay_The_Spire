@@ -224,8 +224,14 @@ void GameManager::onMapNodeSelected(MapButton *button)
     if (!button)
         return;
 
+    if (m_isMultiplayer && !m_isLeader)
+        return;
+
     m_currentFloor = button->levelIndex();
     m_currentNodeIndex = button->levelPosIndex();
+
+    if (m_isMultiplayer)
+        emit localNodeSelectionReady(m_currentFloor, m_currentNodeIndex, button->buttonType());
 
     switch (button->buttonType()) {
     case MapButtonType::ENEMY:
@@ -271,7 +277,7 @@ void GameManager::startBattle(MapButtonType type)
                                                                    m_currentFloor,
                                                                    isElite,
                                                                    isBoss,
-                                                                   false,
+                                                                   m_isMultiplayer,
                                                                    usedPool);
 
     for (Enemy *e : enemies)
@@ -725,4 +731,40 @@ void GameManager::onSettingsCredentialsSaveRequested(const QString &username,
         return;
 
     Database::updateCredentials(m_player->id(), username, password);
+}
+
+// ==================== Multiplayer ====================
+
+bool GameManager::isMultiplayer() const
+{
+    return m_isMultiplayer;
+}
+void GameManager::setMultiplayerMode(bool enabled)
+{
+    m_isMultiplayer = enabled;
+}
+bool GameManager::isLeader() const
+{
+    return m_isLeader;
+}
+void GameManager::setLeader(bool leader)
+{
+    m_isLeader = leader;
+    emit leaderChanged(m_isLeader);
+}
+void GameManager::onRemoteNodeSelectionReceived(int levelIndex,
+                                                int levelPosIndex,
+                                                MapButtonType type)
+{
+    // TODO (فاز نهایی): پیدا کردن MapButton متناظر در m_map با (levelIndex, levelPosIndex)
+    // و اجرای همان مسیر منطقیِ onMapNodeSelected بدون صدور دوباره‌ی سیگنال شبکه (جلوگیری از لوپ)
+    Q_UNUSED(levelIndex);
+    Q_UNUSED(levelPosIndex);
+    Q_UNUSED(type);
+}
+
+void GameManager::reassignLeaderIfNeeded()
+{
+    // TODO (فاز نهایی): اگر Leader فعلی مرده/قطع است و طرف دیگر زنده است،
+    // setLeader را روی نمونه‌ی زنده true و روی نمونه‌ی مرده false کن + اطلاع‌رسانی شبکه‌ای
 }
