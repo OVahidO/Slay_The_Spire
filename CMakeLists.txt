@@ -56,6 +56,7 @@ qt_add_executable(Slay_The_Spire
     gamemanager.h gamemanager.cpp
     settings.h settings.cpp
     networkmanager.h networkmanager.cpp
+    networklobby.h networklobby.cpp
     #
 )
 
