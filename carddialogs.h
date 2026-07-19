@@ -20,6 +20,7 @@ public:
                                  int maxSelection,
                                  const QString &dialogTitle,
                                  QWidget *parent = nullptr);
+    ~CardSelectionDialog();
 
     QVector<Card *> selectedCards() const;
 
