@@ -56,6 +56,9 @@ public:
     void triggerRelicsTurnStart();
     void triggerRelicsTurnEnd();
 
+    bool isLocalPlayer() const;
+    void setIsLocalPlayer(bool isLocal);
+
 signals:
     void hpChanged();
     void coinChanged();
@@ -78,6 +81,8 @@ private:
     QVector<Card *> m_HandsCards;
     QVector<Potion *> m_Potions{4 , nullptr};
     QVector<Relic *> m_relics;
+
+    bool m_isLocalPlayer = true;
 };
 
 #endif // PLAYER_H
