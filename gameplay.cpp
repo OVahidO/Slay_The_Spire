@@ -3,6 +3,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsBlurEffect>
 #include <QPropertyAnimation>
 #include <QRandomGenerator>
 #include <QSequentialAnimationGroup>
@@ -19,6 +20,7 @@
 #include "skillcards.h"
 #include "statuscards.h"
 #include "ui_gameplay.h"
+#include "piledialog.h"
 
 GamePlay::GamePlay(Player *player, QWidget *parent)
     : QWidget(parent)
@@ -81,6 +83,8 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     m_drawPile.push_back(new class Strike);
     m_drawPile.push_back(new class Defend);
     m_drawPile.push_back(new class Clash);
+    m_drawPile.push_back(new class Defend);
+    m_drawPile.push_back(new class Strike);
 
     draw();
 
@@ -98,6 +102,13 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     m_scene->addItem(m_player);
     m_player->setPos(100,260);
     refreshGamePlay();
+
+    ////////////////////
+    m_overlay = new QWidget(this);
+    m_overlay->setGeometry(rect());
+    m_overlay->setStyleSheet("background-color: rgba(0,0,0,120);");
+    m_overlay->hide();
+    ////////////////////
 }
 
 GamePlay::~GamePlay()
@@ -1145,3 +1156,42 @@ void GamePlay::triggerScreenShake(int intensity, int durationMs)
 
     shakeTimer->start(stepInterval);
 }
+
+void GamePlay::on_drawPileButton_clicked()
+{
+    m_overlay->show();
+    auto blur = new QGraphicsBlurEffect;
+    blur->setBlurRadius(8);
+    this->setGraphicsEffect(blur);
+    PileDialog pd(m_drawPile, this);
+    pd.exec();
+    this->setGraphicsEffect(nullptr);
+    m_overlay->hide();
+}
+
+
+void GamePlay::on_discardPileButton_clicked()
+{
+    m_overlay->show();
+    auto blur = new QGraphicsBlurEffect;
+    blur->setBlurRadius(8);
+    this->setGraphicsEffect(blur);
+    PileDialog pd(m_discardPile, this);
+    pd.exec();
+    this->setGraphicsEffect(nullptr);
+    m_overlay->hide();
+}
+
+
+void GamePlay::on_exhaustPileButton_clicked()
+{
+    m_overlay->show();
+    auto blur = new QGraphicsBlurEffect;
+    blur->setBlurRadius(8);
+    this->setGraphicsEffect(blur);
+    PileDialog pd(m_ExhaustPile, this);
+    pd.exec();
+    this->setGraphicsEffect(nullptr);
+    m_overlay->hide();
+}
+

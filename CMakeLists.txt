@@ -54,6 +54,7 @@ qt_add_executable(Slay_The_Spire
     combatvisuals.h combatvisuals.cpp
     encountermanager.h encountermanager.cpp
     gamemanager.h gamemanager.cpp
+    piledialog.h piledialog.cpp piledialog.ui
 
     #
 )

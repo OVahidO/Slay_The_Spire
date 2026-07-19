@@ -119,6 +119,12 @@ public slots:
 private slots:
     void onCardEnemyHoverChanged(Enemy *enemy);
 
+    void on_drawPileButton_clicked();
+
+    void on_discardPileButton_clicked();
+
+    void on_exhaustPileButton_clicked();
+
 private:
     Ui::GamePlay *ui;
     Player *m_player;
@@ -134,6 +140,7 @@ private:
 
     QGraphicsScene *m_scene;
     QGraphicsView *m_view;
+    QWidget *m_overlay;
 
     void creatEnergyUI();
     QGraphicsTextItem *m_energyLabel;
