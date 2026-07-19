@@ -124,3 +124,102 @@ bool NetworkManager::isHost() const
 {
     return m_isHost;
 }
+
+// ==================== Framing (Length-Prefix) ====================
+// [quint32 bodySize][quint8 packetType][payload...]
+
+void NetworkManager::sendPacket(PacketType type, const QByteArray &payload)
+{
+    if (!isConnected())
+        return;
+
+    QByteArray block;
+    QDataStream stream(&block, QIODevice::WriteOnly);
+    stream.setVersion(kStreamVersion);
+
+    quint32 bodySize = static_cast<quint32>(sizeof(quint8) + payload.size());
+    stream << bodySize;
+    stream << static_cast<quint8>(type);
+    block.append(payload);
+
+    m_socket->write(block);
+}
+
+void NetworkManager::onSocketReadyRead()
+{
+    QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
+    if (!socket)
+        return;
+
+    m_recvBuffer.append(socket->readAll());
+    processBuffer();
+}
+
+void NetworkManager::processBuffer()
+{
+    while (true) {
+        if (m_recvBuffer.size() < static_cast<int>(sizeof(quint32)))
+            return;
+
+        QDataStream peekStream(m_recvBuffer);
+        peekStream.setVersion(kStreamVersion);
+
+        quint32 bodySize = 0;
+        peekStream >> bodySize;
+
+        int totalNeeded = static_cast<int>(sizeof(quint32) + bodySize);
+        if (m_recvBuffer.size() < totalNeeded)
+            return;
+
+        QByteArray body = m_recvBuffer.mid(sizeof(quint32), bodySize);
+        m_recvBuffer.remove(0, totalNeeded);
+
+        QDataStream bodyStream(body);
+        bodyStream.setVersion(kStreamVersion);
+
+        quint8 rawType = 0;
+        bodyStream >> rawType;
+
+        QByteArray payload = body.mid(sizeof(quint8));
+
+        emit packetReceived(static_cast<PacketType>(rawType), payload);
+    }
+}
+
+// ==================== Handshake / MapSeed ====================
+
+void NetworkManager::sendHandshake(const QString &playerName)
+{
+    QByteArray payload;
+    QDataStream stream(&payload, QIODevice::WriteOnly);
+    stream.setVersion(kStreamVersion);
+    stream << playerName;
+    sendPacket(PacketType::Handshake, payload);
+}
+
+QString NetworkManager::decodeHandshake(const QByteArray &payload)
+{
+    QString name;
+    QDataStream stream(payload);
+    stream.setVersion(kStreamVersion);
+    stream >> name;
+    return name;
+}
+
+void NetworkManager::sendMapSeed(quint32 seed)
+{
+    QByteArray payload;
+    QDataStream stream(&payload, QIODevice::WriteOnly);
+    stream.setVersion(kStreamVersion);
+    stream << seed;
+    sendPacket(PacketType::MapSeed, payload);
+}
+
+quint32 NetworkManager::decodeMapSeed(const QByteArray &payload)
+{
+    quint32 seed = 0;
+    QDataStream stream(payload);
+    stream.setVersion(kStreamVersion);
+    stream >> seed;
+    return seed;
+}
