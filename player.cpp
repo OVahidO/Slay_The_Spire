@@ -4,14 +4,43 @@
 
 Player::Player(QString name, int maxHP, QGraphicsItem *parent)
     : Combatant(name, maxHP, parent)
-{}
+{
+    m_resourcePath = ":/Characters/Pics/Characters/Ironclad.png";
+    load();
+}
 
 QRectF Player::boundingRect() const
 {
-    return QRectF(0, 0, 100, 100);
+        return QRectF(0, 0, 250, 200);
 }
 
-void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {}
+void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
+
+    if(!m_pix.isNull())
+    {
+        painter->drawPixmap(boundingRect(), m_pix, m_pix.rect());
+    }
+    else
+    {
+        painter->setBrush(Qt::white);
+        painter->setPen(QPen(QPen(Qt::black,2)));
+        painter->drawRoundedRect(boundingRect(), 10, 10);
+
+        painter->setPen(Qt::black);
+        painter->drawText(boundingRect(), Qt::AlignCenter, "PLAYER\n(No Image)");
+    }
+}
+
+void Player::load()
+{
+    m_pix.load(m_resourcePath);
+}
 
 int Player::id() const
 {

@@ -303,30 +303,30 @@ void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     QGraphicsItem::mouseReleaseEvent(event);
 }
 
-// void Card::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-// {
-//     QGraphicsItem::mouseMoveEvent(event);
+void Card::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mouseMoveEvent(event);
 
-//     Enemy *currentHoveredEnemy = nullptr;
-//     qreal maxArea = 0.0;
-//     QRectF cardRect = this->sceneBoundingRect();
+    Enemy *currentHoveredEnemy = nullptr;
+    qreal maxArea = 0.0;
+    QRectF cardRect = this->sceneBoundingRect();
 
-//     for (auto &item : collidingItems()) {
-//         QRectF itemReact = item->sceneBoundingRect();
-//         QRectF intersected = cardRect.intersected(itemReact);
-//         qreal Area = intersected.width() * intersected.height();
+    for (auto &item : collidingItems()) {
+        QRectF itemReact = item->sceneBoundingRect();
+        QRectF intersected = cardRect.intersected(itemReact);
+        qreal Area = intersected.width() * intersected.height();
 
-//         if (Area > maxArea) {
-//             Enemy *e = dynamic_cast<Enemy *>(item);
-//             if (e) {
-//                 maxArea = Area;
-//                 currentHoveredEnemy = e;
-//             }
-//         }
-//     }
+        if (Area > maxArea) {
+            Enemy *e = dynamic_cast<Enemy *>(item);
+            if (e) {
+                maxArea = Area;
+                currentHoveredEnemy = e;
+            }
+        }
+    }
 
-//     this->setHoveredEnemy(currentHoveredEnemy);
-// }
+    this->setHoveredEnemy(currentHoveredEnemy);
+}
 
 void Card::setHoveredEnemy(Enemy *enemy)
 {
@@ -401,7 +401,7 @@ bool Card::isExhaust() const
 
 bool Card::applyEffect(GamePlay *gameplay)
 {
-    return false;
+    return true;
 }
 
 bool Card::isUpgraded() const

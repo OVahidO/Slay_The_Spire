@@ -63,6 +63,9 @@ public:
 
     void setCurrentHPDirect(int hp);
 
+signals:
+    void takedDamage(Combatant* c, int damage);
+
 protected:
     HealthBarItem *m_healthBar;
     bool m_hasBarricade = false;

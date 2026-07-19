@@ -32,6 +32,9 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     connect(m_player, &Player::hpChanged, this, &GamePlay::updateHpLabels);
     connect(m_player, &Player::energyChanged, this, &GamePlay::updateEnergyLabel);
     connect(m_player, &Player::valueChanged, this, &GamePlay::updatePlayerInformLabels);
+    //
+    connect(m_player, &Player::takedDamage, this, [this](Combatant* c, int damage){this->showFloatingDamage(c,damage);});
+    //
 
     updateHpLabels();
 
@@ -52,7 +55,7 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     updateEnergyLabel();
 
     EndTurnButton *endTurnButton = new EndTurnButton();
-    endTurnButton->setPos(1020, 410);
+    endTurnButton->setPos(1020, 475);
     m_scene->addItem(endTurnButton);
     connect(endTurnButton, &EndTurnButton::onClick, this, &GamePlay::endTurnButtonClicked);
     connect(this, &GamePlay::enemiesTurnEnded, endTurnButton, &EndTurnButton::activeButton);
@@ -92,6 +95,8 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     // درست قبل از افزودن دشمنان به صحنه، با فراخوانی صریح startCombat() انجام می‌شود.
 
     // startCombat();
+    m_scene->addItem(m_player);
+    m_player->setPos(100,260);
     refreshGamePlay();
 }
 
@@ -588,11 +593,18 @@ void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy
         return;
 
     if (isEnoughEnergy(card->energyCost())) {
+
         if(card->cardType() == CardType::Attack)
+        {
             player = m_player;
+            this->playAttackJolt(m_player, true);
+        }
+
         card->applyEffect(player, targetEnemy);
         card->applyEffect(this);
+
         emit cardPlayed(card);
+        m_targetFrame->hideFrame();
         m_player->loseEnergy(card->energyCost());
 
         for (Relic *r : m_player->relics())
@@ -1023,6 +1035,8 @@ void GamePlay::setupEnemies()
     for(auto& enemy : m_enemys)
     {
         enemy->setPos(this->width()-225-(i), this->height()-280-(j));
+        connect(enemy, &Enemy::attacked, this, [this](Enemy* enemy){this->playAttackJolt(enemy, false);});
+        connect(enemy, &Enemy::takedDamage, this, [this](Combatant* c, int damage){this->showFloatingDamage(c, damage);});
         m_scene->addItem(enemy);
         i+=150; j+=25;
     }

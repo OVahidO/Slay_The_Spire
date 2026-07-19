@@ -78,6 +78,10 @@ private:
     QVector<Card *> m_HandsCards;
     QVector<Potion *> m_Potions{4 , nullptr};
     QVector<Relic *> m_relics;
+
+    QString m_resourcePath;
+    QPixmap m_pix;
+    void load();
 };
 
 #endif // PLAYER_H

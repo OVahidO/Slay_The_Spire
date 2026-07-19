@@ -18,6 +18,8 @@ AttackCard::AttackCard(CardID ID,
     , m_damage(damage)
 {}
 
+int AttackCard::damage() const {return m_damage;}
+
 QString AttackCard::getDynamicDescription(Player *player, Enemy *target) const
 {
     int finalDamage = m_damage;

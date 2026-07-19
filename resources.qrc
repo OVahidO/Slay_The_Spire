@@ -213,4 +213,7 @@
         <file>Pics/Enemies/enemy/boss/Intent_Unknown.png</file>
         <file>Pics/Enemies/enemy/boss/SlimeBoss.png</file>
     </qresource>
+    <qresource prefix="/Characters">
+        <file>Pics/Characters/Ironclad.png</file>
+    </qresource>
 </RCC>

@@ -141,6 +141,8 @@ void Enemy::executeIntent(Player *player)
         for (int i = 0; i < hits; ++i)
             player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
 
+        emit attacked(this);
+
         break;
     }
 
@@ -151,11 +153,17 @@ void Enemy::executeIntent(Player *player)
     case IntentType::AttackDefend:
         player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
         addBlock(m_currentIntent.secondaryValue);
+
+        emit attacked(this);
+
         break;
 
     case IntentType::AttackDebuff:
         player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
         player->applyBuffDebuff(BuffDebuffType::Vulnerable, m_currentIntent.secondaryValue);
+
+        emit attacked(this);
+
         break;
 
     case IntentType::DefendBuff:
