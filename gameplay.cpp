@@ -174,59 +174,55 @@ void GamePlay::draw()
 
 void GamePlay::drawCards(int count)
 {
-    int *cardsDrawn = new int(0);
-
     int availableSlots = HAND_MAX_SIZE - static_cast<int>(m_player->HandsCards().size());
     int targetCount = qMin(count, qMax(0, availableSlots));
 
-    if (targetCount <= 0) {
-        delete cardsDrawn;
+    if (targetCount <= 0)
         return;
-    }
 
+    // int *cardsDrawn = new int(0);
     QTimer *drawTimer = new QTimer(this);
-    connect(drawTimer, &QTimer::timeout, this, [this, targetCount, cardsDrawn, drawTimer]() {
-        if (*cardsDrawn >= targetCount
-            || static_cast<int>(m_player->HandsCards().size()) >= HAND_MAX_SIZE) {
-            drawTimer->stop();
-            drawTimer->deleteLater();
-            delete cardsDrawn;
-            return;
-        }
+    connect(drawTimer,
+            &QTimer::timeout,
+            this,
+            [this, targetCount, drawTimer, cardsDrawn = 0]() mutable {
+                if (cardsDrawn >= targetCount
+                    || static_cast<int>(m_player->HandsCards().size()) >= HAND_MAX_SIZE) {
+                    drawTimer->stop();
+                    drawTimer->deleteLater();
+                    return;
+                }
 
-        if (m_drawPile.empty()) {
-            if (m_discardPile.empty()) {
-                drawTimer->stop();
-                drawTimer->deleteLater();
-                delete cardsDrawn;
-                return;
-            }
-            fillingDrawPile();
-        }
+                if (m_drawPile.empty()) {
+                    if (m_discardPile.empty()) {
+                        drawTimer->stop();
+                        drawTimer->deleteLater();
+                        return;
+                    }
+                    fillingDrawPile();
+                }
 
-        if (m_drawPile.empty()) {
-            drawTimer->stop();
-            drawTimer->deleteLater();
-            delete cardsDrawn;
-            return;
-        }
+                if (m_drawPile.empty()) {
+                    drawTimer->stop();
+                    drawTimer->deleteLater();
+                    return;
+                }
 
-        Card *card = m_drawPile.back();
-        card->setPos(ui->drawPileButton->pos());
-        m_player->HandsCards().push_back(card);
-        m_scene->addItem(card);
-        connect(card, &Card::cardEnteredMouse, this, &GamePlay::updateHandsCardsLayout);
-        connect(card, &Card::cardLeavedMouse, this, &GamePlay::updateHandsCardsLayout);
-        connect(card, &Card::targetCardPlayed, this, &GamePlay::targetCardsHandler);
-        connect(card, &Card::noTargetCardPlayed, this, &GamePlay::noTargetCardsHandler);
-        m_drawPile.pop_back();
-        emit valueChanged();
+                Card *card = m_drawPile.back();
+                card->setPos(ui->drawPileButton->pos());
+                m_player->HandsCards().push_back(card);
+                m_scene->addItem(card);
+                connect(card, &Card::cardEnteredMouse, this, &GamePlay::updateHandsCardsLayout);
+                connect(card, &Card::cardLeavedMouse, this, &GamePlay::updateHandsCardsLayout);
+                connect(card, &Card::targetCardPlayed, this, &GamePlay::targetCardsHandler);
+                connect(card, &Card::noTargetCardPlayed, this, &GamePlay::noTargetCardsHandler);
+                m_drawPile.pop_back();
+                emit valueChanged();
 
-        updateHandsCardsLayout();
-        (*cardsDrawn)++;
-        connectCardVfxSignals(card);
-        
-    });
+                updateHandsCardsLayout();
+                cardsDrawn++;
+                connectCardVfxSignals(card);
+            });
 
     drawTimer->start(200);
 }
