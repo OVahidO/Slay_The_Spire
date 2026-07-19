@@ -26,7 +26,7 @@ public:
                        QWidget *widget) override;
 
 signals:
-    void onClick(MapButton* mapButton);
+    void onClick(MapButton *mapButton);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
