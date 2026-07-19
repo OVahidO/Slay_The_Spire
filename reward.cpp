@@ -392,6 +392,10 @@ void RewardScreen::onSceneItemClicked(QGraphicsItem *item)
     if (!card || !m_cardChoices.contains(card))
         return;
 
+    m_scene->removeItem(card);
+    m_gamePlay->addCardToDeck(card);
+    m_cardChoices.removeAll(card);
+
     m_gamePlay->addCardToDeck(card);
     m_cardChoices.removeAll(card);
 
