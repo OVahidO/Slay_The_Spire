@@ -18,4 +18,7 @@
         <file>Pics/Background/Combat/basement.png</file>
         <file>Pics/Background/Combat/city.png</file>
     </qresource>
+    <qresource prefix="/Campfire">
+        <file>Pics/Background/Campfire/campfire.png</file>
+    </qresource>
 </RCC>

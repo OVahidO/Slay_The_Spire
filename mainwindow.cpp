@@ -5,6 +5,8 @@
 #include "map.h"
 #include "ui_mainwindow.h"
 #include "topbar.h"
+#include "campfire.h"
+#include "shop.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setFixedSize(1280, 720);
     Player* player = new Player("Vahid&Ahoora", 100);
+    player->loseHp(25);/////
     m_topbar = new Topbar(player, this);
     ui->verticalLayout->insertWidget(0, m_topbar);
     connect(player, &Player::potionAdded, m_topbar, &Topbar::newPotionHandler);
@@ -35,6 +38,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     // m_gameManager = new GameManager(ui->stackedWidget, this);
     // m_gameManager->start();
+
+    Campfire* f = new Campfire(player,g,this);
+    int CampIndex = ui->stackedWidget->addWidget(f);
+    ui->stackedWidget->setCurrentIndex(CampIndex);
+
 }
 
 MainWindow::~MainWindow()

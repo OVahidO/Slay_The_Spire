@@ -71,7 +71,7 @@ void CampfireOptionItem::paint(QPainter *painter,
     painter->drawRoundedRect(rect, radius, radius);
 
     if (!m_icon.isNull()) {
-        QRectF iconRect(rect.width() / 2 - 40, 20, 80, 80);
+        QRectF iconRect(25, 10, 140, 120);
         painter->setOpacity(m_enabled ? 1.0 : 0.35);
         painter->drawPixmap(iconRect.toRect(), m_icon);
         painter->setOpacity(1.0);
@@ -145,6 +145,13 @@ Campfire::Campfire(Player *player, GamePlay *gamePlay, QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->addWidget(m_view);
+
+    ////////////////////
+    m_overlay = new QWidget(this);
+    m_overlay->setGeometry(rect());
+    m_overlay->setStyleSheet("background-color: rgba(0,0,0,120);");
+    m_overlay->hide();
+    ////////////////////
 }
 
 Campfire::~Campfire() {}
@@ -154,10 +161,11 @@ void Campfire::setupScene()
     m_scene = new QGraphicsScene(this);
     m_scene->setSceneRect(0, 0, 1280, 640);
 
-    QLinearGradient bgGradient(0, 0, 0, 640);
-    bgGradient.setColorAt(0.0, QColor(40, 25, 20));
-    bgGradient.setColorAt(1.0, QColor(15, 10, 8));
-    m_scene->setBackgroundBrush(bgGradient);
+    // QLinearGradient bgGradient(0, 0, 0, 640);
+    // bgGradient.setColorAt(0.0, QColor(40, 25, 20));
+    // bgGradient.setColorAt(1.0, QColor(15, 10, 8));
+    QGraphicsPixmapItem* bg = m_scene->addPixmap(QPixmap(":/Campfire/Pics/Background/Campfire/campfire.png"));
+    bg->setZValue(-1000);
 
     m_view = new CampfireGraphicsView(m_scene, this);
 
@@ -168,11 +176,11 @@ void Campfire::setupScene()
     m_titleItem->setPos(1280 / 2 - 220, 60);
     m_scene->addItem(m_titleItem);
 
-    m_restOption = new CampfireOptionItem("Rest", "Heal 20% of Max HP", ":/icons/Pics/Map/rest.png");
+    m_restOption = new CampfireOptionItem("Rest", "Heal 20% of Max HP", ":/icons/Pics/Icons/campfire/sleep.png");
     m_smithOption
         = new CampfireOptionItem("Smith",
                                  "Upgrade a card\nfrom your deck",
-                                 ":/icons/Pics/Icons/card-type-icon/black crossed sword.png");
+                                 ":/icons/Pics/Icons/campfire/smith.png");
     m_liftOption = new CampfireOptionItem("Lift",
                                           "Gain 1 permanent\nStrength (Girya)",
                                           ":/icons/Pics/Icons/relic/normal/girya.png");
@@ -181,13 +189,9 @@ void Campfire::setupScene()
     connect(m_smithOption, &CampfireOptionItem::clicked, this, &Campfire::onSmithClicked);
     connect(m_liftOption, &CampfireOptionItem::clicked, this, &Campfire::onLiftClicked);
 
-    qreal spacing = 260;
-    qreal startX = 1280 / 2 - (spacing * 3 / 2) + (spacing - 220) / 2;
-    qreal optionY = 220;
-
-    m_restOption->setPos(startX, optionY);
-    m_smithOption->setPos(startX + spacing, optionY);
-    m_liftOption->setPos(startX + spacing * 2, optionY);
+    m_restOption->setPos(420, 115);
+    m_smithOption->setPos(420 + 200, 115);
+    m_liftOption->setPos(420 + 200 * 2, 115);
 
     m_scene->addItem(m_restOption);
     m_scene->addItem(m_smithOption);
@@ -239,8 +243,28 @@ void Campfire::onSmithClicked()
 
     UpgradeDialog dialog(m_gamePlay, this);
 
+    m_overlay->show();
+    auto blur = new QGraphicsBlurEffect;
+    blur->setBlurRadius(8);
+    this->setGraphicsEffect(blur);
+
     if (dialog.exec() == QDialog::Accepted && dialog.cardWasUpgraded())
+    {
+        int upgradedCardID = dialog.upgradedCardID();
+        if(upgradedCardID != -1)
+        {
+            for(auto& card : m_gamePlay->deck())
+                if(card->ID() == upgradedCardID)
+                {
+                    card->upgrade();
+                    card->update();
+                }
+        }
         emit campfireFinished();
+    }
+
+    this->setGraphicsEffect(nullptr);
+    m_overlay->hide();
 }
 
 void Campfire::onLiftClicked()
@@ -302,16 +326,17 @@ UpgradeDialog::UpgradeDialog(GamePlay *gamePlay, QWidget *parent)
             if (card && !card->isUpgraded() && card->cardType() != CardType::Status
                 && card->cardType() != CardType::Curse) {
                 hasUpgradableCards = true;
-                m_selectableCards.append(card);
+                Card* clone = Card::Creat(static_cast<CardID>(card->ID()));
+                m_selectableCards.append(clone);
 
                 int row = index / perRow;
                 int col = index % perRow;
 
-                card->setFlag(QGraphicsItem::ItemIsMovable, false);
-                card->setFlag(QGraphicsItem::ItemIsSelectable, false);
-                card->setPos(cardStartX + col * cardSpacingX, cardStartY + row * cardSpacingY);
+                clone->setFlag(QGraphicsItem::ItemIsMovable, false);
+                clone->setFlag(QGraphicsItem::ItemIsSelectable, false);
+                clone->setPos(cardStartX + col * cardSpacingX, cardStartY + row * cardSpacingY);
 
-                m_scene->addItem(card);
+                m_scene->addItem(clone);
 
                 index++;
             }
@@ -338,6 +363,7 @@ void UpgradeDialog::onSceneItemClicked(QGraphicsItem *item)
     card->update();
 
     m_cardWasUpgraded = true;
+    m_upgradedCardID = card->ID();
 
     QMessageBox::information(this, "Smith Successful", card->name() + " has been upgraded!");
     accept();
@@ -346,4 +372,9 @@ void UpgradeDialog::onSceneItemClicked(QGraphicsItem *item)
 bool UpgradeDialog::cardWasUpgraded() const
 {
     return m_cardWasUpgraded;
+}
+
+int UpgradeDialog::upgradedCardID() const
+{
+    return m_upgradedCardID;
 }
