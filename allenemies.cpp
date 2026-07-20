@@ -156,12 +156,19 @@ bool AcidSlimeS::shouldSplit() const
     return false;
 }
 
-void AcidSlimeS::executeIntent(Player *player)
+// void AcidSlimeS::executeIntent(Player *player)
+// {
+//     if (needsToSplit())
+//         return;
+
+//     Enemy::executeIntent(player);
+// }
+
+void AcidSlimeS::executeIntent(GamePlay *game)
 {
     if (needsToSplit())
         return;
-
-    Enemy::executeIntent(player);
+    Enemy::executeIntent(game);
 }
 
 QVector<Enemy *> AcidSlimeS::createSplitChildren(bool isMultiplayer) const
@@ -197,12 +204,19 @@ bool AcidSlimeM::shouldSplit() const
     return m_currentHP <= m_maxHP / 2;
 }
 
-void AcidSlimeM::executeIntent(Player *player)
+// void AcidSlimeM::executeIntent(Player *player)
+// {
+//     if (needsToSplit())
+//         return;
+
+//     Enemy::executeIntent(player);
+// }
+
+void AcidSlimeM::executeIntent(GamePlay *game)
 {
     if (needsToSplit())
         return;
-
-    Enemy::executeIntent(player);
+    Enemy::executeIntent(game);
 }
 
 QVector<Enemy *> AcidSlimeM::createSplitChildren(bool isMultiplayer) const
@@ -251,12 +265,19 @@ bool AcidSlimeL::shouldSplit() const
     return m_currentHP <= m_maxHP / 2;
 }
 
-void AcidSlimeL::executeIntent(Player *player)
+// void AcidSlimeL::executeIntent(Player *player)
+// {
+//     if (needsToSplit())
+//         return;
+
+//     Enemy::executeIntent(player);
+// }
+
+void AcidSlimeL::executeIntent(GamePlay *game)
 {
     if (needsToSplit())
         return;
-
-    Enemy::executeIntent(player);
+    Enemy::executeIntent(game);
 }
 
 QVector<Enemy *> AcidSlimeL::createSplitChildren(bool isMultiplayer) const
@@ -576,12 +597,19 @@ bool KingSlime::shouldSplit() const
     return m_currentHP <= m_maxHP / 2;
 }
 
-void KingSlime::executeIntent(Player *player)
+// void KingSlime::executeIntent(Player *player)
+// {
+//     if (needsToSplit())
+//         return;
+
+//     Enemy::executeIntent(player);
+// }
+
+void KingSlime::executeIntent(GamePlay *game)
 {
     if (needsToSplit())
         return;
-
-    Enemy::executeIntent(player);
+    Enemy::executeIntent(game);
 }
 
 QVector<Enemy *> KingSlime::createSplitChildren(bool isMultiplayer) const

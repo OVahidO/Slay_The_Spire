@@ -202,3 +202,13 @@ void Player::setIsLocalPlayer(bool isLocal)
 {
     m_isLocalPlayer = isLocal;
 }
+
+bool Player::isEliminated() const
+{
+    return m_isEliminated;
+}
+
+void Player::setEliminated(bool eliminated)
+{
+    m_isEliminated = eliminated;
+}

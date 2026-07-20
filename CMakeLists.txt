@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(Slay_The_Spire LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Multimedia)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Multimedia Network)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Sql)
 
@@ -67,6 +67,7 @@ target_link_libraries(Slay_The_Spire
         Qt::Core
         Qt::Widgets
         Qt::Multimedia
+        Qt::Network
 )
 
 install(TARGETS Slay_The_Spire

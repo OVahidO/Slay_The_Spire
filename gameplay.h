@@ -90,13 +90,21 @@ public:
 
     void triggerScreenShake(int intensity = 12, int durationMs = 300);
 
-    // === Multiplayer (Co-op, حداکثر ۲ بازیکن) ===
+    // ------------------------- Multiplayer (Co-op) -------------------------
     void addRemotePlayer(Player *player);
     Player *remotePlayer() const;
     QVector<Player *> allPlayers() const;
     bool allPlayersDead() const;
     bool isCoopMode() const;
     void setCoopMode(bool enabled);
+
+    void setAuthoritative(bool authoritative);
+    bool isAuthoritative() const;
+
+    void markLocalTurnEnded();
+    void markRemoteTurnEnded();
+    bool bothPlayersEndedTurn() const;
+    void resetTurnEndFlags();
 
 signals:
     void enemiesTurnEnded();
@@ -108,6 +116,8 @@ signals:
 
     void playerEliminated(Player *player);
     void leaderNeedsReassignment();
+
+    void localTurnEndRequested();
 
 public slots:
     void playerTurn();
@@ -160,6 +170,10 @@ private:
 
     QVector<Player *> m_remotePlayers;
     bool m_coopMode = false;
+
+    bool m_isAuthoritative = true;
+    bool m_localEndedTurn = false;
+    bool m_remoteEndedTurn = false;
 };
 
 class EndTurnButton : public QGraphicsObject {

@@ -14,6 +14,7 @@
 #include "gameplay.h"
 #include "mainmenu.h"
 #include "map.h"
+#include "networklobby.h"
 #include "player.h"
 #include "potion.h"
 #include "relic.h"
@@ -76,6 +77,10 @@ void GameManager::showMainMenu()
                 this,
                 &GameManager::onMainMenuLeaderboard);
         connect(m_mainMenu, &MainMenu::settingsClicked, this, &GameManager::onMainMenuSettings);
+        connect(m_mainMenu,
+                &MainMenu::multiplayerClicked,
+                this,
+                &GameManager::onMainMenuMultiplayerClicked);
     }
 
     switchTo(m_mainMenu);
@@ -88,6 +93,12 @@ void GameManager::onPlayerReady(Player *player)
     m_player = player;
 
     prepareGamePlayForPlayer();
+
+    if (m_pendingMultiplayerRequested) {
+        m_pendingMultiplayerRequested = false;
+        showNetworkLobby();
+        return;
+    }
 
     if (Database::hasActiveRun(m_player->id()))
         resumeRun();
@@ -105,6 +116,18 @@ void GameManager::prepareGamePlayForPlayer()
 
     connect(m_gamePlay, &GamePlay::combatWon, this, &GameManager::onCombatWon);
     connect(m_gamePlay, &GamePlay::playerDead, this, &GameManager::onPlayerDead);
+
+    connect(m_gamePlay, &GamePlay::playerEliminated, this, &GameManager::onPlayerEliminated);
+
+    connect(m_gamePlay, &GamePlay::localTurnEndRequested, this, [this]() {
+        if (m_isMultiplayer && m_networkManager)
+            m_networkManager->sendTurnEnded();
+    });
+
+    connect(m_gamePlay, &GamePlay::cardPlayed, this, [this](Card *card) {
+        if (m_isMultiplayer && m_networkManager)
+            m_networkManager->sendCardPlayed(card);
+    });
 }
 
 void GameManager::grantStarterKit()
@@ -125,6 +148,9 @@ void GameManager::startNewRun()
 
     grantStarterKit();
     buildNewMap();
+
+    if (m_isMultiplayer && m_isLeader && m_networkManager)
+        m_networkManager->sendMapSeed(m_mapSeed);
 
     autoSaveProgress();
 }
@@ -224,14 +250,16 @@ void GameManager::onMapNodeSelected(MapButton *button)
     if (!button)
         return;
 
-    if (m_isMultiplayer && !m_isLeader)
+    if (m_isMultiplayer && !m_isLeader && !m_suppressNetworkNodeBroadcast)
         return;
 
     m_currentFloor = button->levelIndex();
     m_currentNodeIndex = button->levelPosIndex();
 
-    if (m_isMultiplayer)
-        emit localNodeSelectionReady(m_currentFloor, m_currentNodeIndex, button->buttonType());
+    if (m_isMultiplayer && !m_suppressNetworkNodeBroadcast && m_networkManager)
+        m_networkManager->sendNodeSelection(m_currentFloor,
+                                            m_currentNodeIndex,
+                                            button->buttonType());
 
     switch (button->buttonType()) {
     case MapButtonType::ENEMY:
@@ -283,6 +311,9 @@ void GameManager::startBattle(MapButtonType type)
     for (Enemy *e : enemies)
         m_gamePlay->addEnemy(e);
 
+    if (m_isMultiplayer && m_isLeader && m_networkManager)
+        m_networkManager->registerEnemiesForSync(m_gamePlay->enemies());
+
     m_pendingRewardType = isBoss    ? RewardCombatType::Boss
                           : isElite ? RewardCombatType::Elite
                                     : RewardCombatType::Enemy;
@@ -298,6 +329,9 @@ void GameManager::onCombatWon()
 
     m_gamePlay->endCombat();
 
+    if (m_networkManager)
+        m_networkManager->clearEnemySync();
+
     m_reward = new RewardScreen(m_player, m_gamePlay, m_pendingRewardType);
     connect(m_reward, &RewardScreen::rewardFinished, this, &GameManager::onRewardFinished);
 
@@ -307,9 +341,12 @@ void GameManager::onCombatWon()
 
 void GameManager::onPlayerDead()
 {
-    if (m_gamePlay)
+    if (m_gamePlay) {
         m_gamePlay->endCombat();
 
+        if (m_networkManager)
+            m_networkManager->clearEnemySync();
+    }
     showDefeatPage();
 }
 
@@ -415,6 +452,7 @@ void GameManager::showCampfireScreen()
 
     m_campfire = new Campfire(m_player, m_gamePlay);
     connect(m_campfire, &Campfire::campfireFinished, this, &GameManager::onCampfireFinished);
+    connect(m_campfire, &Campfire::reviveRequested, this, &GameManager::onCampfireReviveRequested);
 
     m_stack->addWidget(m_campfire);
     switchTo(m_campfire);
@@ -739,32 +777,351 @@ bool GameManager::isMultiplayer() const
 {
     return m_isMultiplayer;
 }
+
 void GameManager::setMultiplayerMode(bool enabled)
 {
     m_isMultiplayer = enabled;
 }
+
 bool GameManager::isLeader() const
 {
     return m_isLeader;
 }
+
 void GameManager::setLeader(bool leader)
 {
     m_isLeader = leader;
+
+    if (m_gamePlay)
+        m_gamePlay->setAuthoritative(!m_isMultiplayer || m_isLeader);
+
     emit leaderChanged(m_isLeader);
 }
+
+void GameManager::onMainMenuMultiplayerClicked()
+{
+    m_pendingMultiplayerRequested = true;
+}
+
+void GameManager::showNetworkLobby()
+{
+    if (!m_networkLobby) {
+        m_networkManager = new NetworkManager(this);
+
+        connect(m_networkManager,
+                &NetworkManager::hostStarted,
+                this,
+                &GameManager::onNetworkHostStarted);
+        connect(m_networkManager,
+                &NetworkManager::hostFailed,
+                this,
+                &GameManager::onNetworkHostFailed);
+        connect(m_networkManager,
+                &NetworkManager::clientConnected,
+                this,
+                &GameManager::onNetworkClientConnected);
+        connect(m_networkManager,
+                &NetworkManager::connectedToHost,
+                this,
+                &GameManager::onNetworkConnectedToHost);
+        connect(m_networkManager,
+                &NetworkManager::connectionFailed,
+                this,
+                &GameManager::onNetworkConnectionFailed);
+        connect(m_networkManager,
+                &NetworkManager::disconnected,
+                this,
+                &GameManager::onNetworkDisconnected);
+        connect(m_networkManager,
+                &NetworkManager::packetReceived,
+                this,
+                &GameManager::onPacketReceived);
+
+        m_networkLobby = new NetworkLobby();
+        m_stack->addWidget(m_networkLobby);
+
+        connect(m_networkLobby,
+                &NetworkLobby::hostRequested,
+                this,
+                &GameManager::onNetworkLobbyHostRequested);
+        connect(m_networkLobby,
+                &NetworkLobby::joinRequested,
+                this,
+                &GameManager::onNetworkLobbyJoinRequested);
+    }
+
+    switchTo(m_networkLobby);
+}
+
+void GameManager::onNetworkLobbyHostRequested(quint16 port)
+{
+    m_isMultiplayer = true;
+
+    if (!m_networkManager->hostGame(port))
+        return;
+}
+
+void GameManager::onNetworkLobbyJoinRequested(const QString &address, quint16 port)
+{
+    m_isMultiplayer = true;
+    m_networkManager->joinGame(address, port);
+}
+
+void GameManager::onNetworkHostStarted(quint16 port)
+{
+    if (m_networkLobby)
+        m_networkLobby->setStatusMessage(
+            QString("Waiting for second player on port %1 ...").arg(port));
+}
+
+void GameManager::onNetworkHostFailed(const QString &error)
+{
+    if (m_networkLobby)
+        m_networkLobby->setStatusMessage("Failed to host: " + error);
+}
+
+void GameManager::onNetworkClientConnected()
+{
+    setLeader(true);
+    if (m_gamePlay)
+        m_gamePlay->setCoopMode(true);
+
+    if (m_networkManager)
+        m_networkManager->sendHandshake(m_player ? m_player->name() : QString());
+
+    clearTransientScreen(m_networkLobby);
+    m_networkLobby = nullptr;
+
+    if (Database::hasActiveRun(m_player->id()))
+        resumeRun();
+    else
+        startNewRun();
+}
+
+void GameManager::onNetworkConnectedToHost()
+{
+    setLeader(false);
+    if (m_gamePlay)
+        m_gamePlay->setCoopMode(true);
+
+    if (m_networkManager)
+        m_networkManager->sendHandshake(m_player ? m_player->name() : QString());
+
+    clearTransientScreen(m_networkLobby);
+    m_networkLobby = nullptr;
+}
+
+void GameManager::onNetworkConnectionFailed(const QString &error)
+{
+    if (m_networkLobby)
+        m_networkLobby->setStatusMessage("Connection failed: " + error);
+}
+
+void GameManager::onNetworkDisconnected()
+{
+    m_isMultiplayer = false;
+
+    if (m_gamePlay) {
+        m_gamePlay->setCoopMode(false);
+        m_gamePlay->setAuthoritative(true);
+    }
+
+    if (m_map)
+        m_map->setLocked(false);
+
+    // TODO UI: نمایش یک پیام غیرمسدودکننده («ارتباط با هم‌تیمی قطع شد؛ ادامه در حالت تک‌نفره»)
+}
+
 void GameManager::onRemoteNodeSelectionReceived(int levelIndex,
                                                 int levelPosIndex,
                                                 MapButtonType type)
 {
-    // TODO (فاز نهایی): پیدا کردن MapButton متناظر در m_map با (levelIndex, levelPosIndex)
-    // و اجرای همان مسیر منطقیِ onMapNodeSelected بدون صدور دوباره‌ی سیگنال شبکه (جلوگیری از لوپ)
-    Q_UNUSED(levelIndex);
-    Q_UNUSED(levelPosIndex);
     Q_UNUSED(type);
+
+    if (!m_map)
+        return;
+
+    MapButton *button = m_map->buttonAt(levelIndex, levelPosIndex);
+    if (!button)
+        return;
+
+    m_suppressNetworkNodeBroadcast = true;
+    onMapNodeSelected(button);
+    m_suppressNetworkNodeBroadcast = false;
+}
+
+void GameManager::onPlayerEliminated(Player *player)
+{
+    if (!player || !player->isLocalPlayer())
+        return;
+
+    if (m_isMultiplayer && m_networkManager)
+        m_networkManager->sendPlayerEliminated(m_isLeader);
+
+    if (m_isMultiplayer && m_isLeader)
+        reassignLeaderIfNeeded();
+}
+
+void GameManager::onRemotePlayerEliminated(bool remoteWasLeader)
+{
+    if (remoteWasLeader) {
+        setLeader(true);
+
+        if (m_networkManager) {
+            m_networkManager->sendLeaderChanged(false);
+            if (m_gamePlay)
+                m_networkManager->registerEnemiesForSync(m_gamePlay->enemies());
+        }
+    }
 }
 
 void GameManager::reassignLeaderIfNeeded()
 {
-    // TODO (فاز نهایی): اگر Leader فعلی مرده/قطع است و طرف دیگر زنده است،
-    // setLeader را روی نمونه‌ی زنده true و روی نمونه‌ی مرده false کن + اطلاع‌رسانی شبکه‌ای
+    if (!m_gamePlay)
+        return;
+
+    Player *remote = m_gamePlay->remotePlayer();
+    if (m_player && m_player->currentHP() <= 0 && remote && remote->currentHP() > 0) {
+        setLeader(false);
+
+        if (m_networkManager) {
+            m_networkManager->sendLeaderChanged(true);
+            m_networkManager->clearEnemySync();
+        }
+    }
+}
+
+void GameManager::onCampfireReviveRequested()
+{
+    if (!m_gamePlay)
+        return;
+
+    Player *eliminatedTeammate = nullptr;
+    for (Player *p : m_gamePlay->allPlayers())
+        if (p && p->currentHP() <= 0) {
+            eliminatedTeammate = p;
+            break;
+        }
+
+    if (!eliminatedTeammate)
+        return;
+
+    int reviveHp = qMax(1, eliminatedTeammate->maxHP() / 2);
+    eliminatedTeammate->setCurrentHPDirect(reviveHp);
+    eliminatedTeammate->setEliminated(false);
+
+    if (m_networkManager)
+        m_networkManager->sendPlayerStateSync(eliminatedTeammate);
+}
+
+void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
+{
+    switch (type) {
+    case PacketType::Handshake: {
+        QString remoteName = NetworkManager::decodeHandshake(payload);
+        Q_UNUSED(remoteName); // TODO UI: نمایش نام هم‌تیمی
+        break;
+    }
+
+    case PacketType::MapSeed: {
+        if (m_isLeader)
+            break; // Leader خودش تولیدکننده‌ی Seed است
+
+        m_mapSeed = NetworkManager::decodeMapSeed(payload);
+        buildNewMap();
+        if (m_map)
+            m_map->setLocked(true); // Client حق کلیک مستقیم ندارد
+        break;
+    }
+
+    case PacketType::NodeSelection: {
+        int level = 0, pos = 0;
+        MapButtonType nodeType;
+        if (NetworkManager::decodeNodeSelection(payload, level, pos, nodeType))
+            onRemoteNodeSelectionReceived(level, pos, nodeType);
+        break;
+    }
+
+    case PacketType::EnemyStateSync: {
+        if (!m_gamePlay)
+            break;
+
+        NetEnemyState state = NetworkManager::decodeEnemyStateSync(payload);
+        auto &enemies = m_gamePlay->enemies();
+        if (state.enemyIndex >= enemies.size())
+            break;
+
+        Enemy *enemy = enemies[state.enemyIndex];
+        if (!enemy)
+            break;
+
+        enemy->setCurrentHPDirect(state.currentHP);
+        enemy->setBlock(state.block);
+
+        for (const auto &buffPair : state.buffs) {
+            BuffDebuffType buffType = static_cast<BuffDebuffType>(buffPair.first);
+            int delta = buffPair.second - enemy->effectStacks(buffType);
+            if (delta != 0)
+                enemy->applyBuffDebuff(buffType, delta);
+        }
+        break;
+    }
+
+    case PacketType::PlayerStateSync: {
+        Player *remote = m_gamePlay ? m_gamePlay->remotePlayer() : nullptr;
+        if (!remote)
+            break;
+
+        NetPlayerState state = NetworkManager::decodePlayerStateSync(payload);
+        remote->setCurrentHPDirect(state.currentHP);
+        remote->setBlock(state.block);
+        remote->setEnergy(state.energy);
+
+        for (const auto &buffPair : state.buffs) {
+            BuffDebuffType buffType = static_cast<BuffDebuffType>(buffPair.first);
+            int delta = buffPair.second - remote->effectStacks(buffType);
+            if (delta != 0)
+                remote->applyBuffDebuff(buffType, delta);
+        }
+        break;
+    }
+
+    case PacketType::CardPlayed: {
+        int cardID = 0;
+        bool upgraded = false;
+        if (NetworkManager::decodeCardPlayed(payload, cardID, upgraded)) {
+            Q_UNUSED(cardID);
+            Q_UNUSED(upgraded);
+            // for showing only
+        }
+        break;
+    }
+
+    case PacketType::LeaderChanged: {
+        bool becomeLeader = NetworkManager::decodeLeaderChanged(payload);
+        setLeader(becomeLeader);
+        if (m_map)
+            m_map->setLocked(!becomeLeader);
+        break;
+    }
+
+    case PacketType::PlayerEliminated: {
+        bool remoteWasLeader = NetworkManager::decodePlayerEliminated(payload);
+        onRemotePlayerEliminated(remoteWasLeader);
+        break;
+    }
+
+    case PacketType::GameOver: {
+        bool victory = NetworkManager::decodeGameOver(payload);
+        Q_UNUSED(
+            victory); // TODO UI: نمایش پیام پایان بازی از سمت هم‌تیمی
+        break;
+    }
+
+    case PacketType::TurnEnded: {
+        if (m_gamePlay)
+            m_gamePlay->markRemoteTurnEnded();
+        break;
+    }
+    }
 }

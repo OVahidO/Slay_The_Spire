@@ -49,7 +49,8 @@ public:
                        const QStyleOptionGraphicsItem *option,
                        QWidget *widget) override;
 
-    virtual void executeIntent(Player *player);
+    // virtual void executeIntent(Player *player);
+    virtual void executeIntent(GamePlay *game);
     void applyEnemyIntent(GamePlay *game);
 
     EnemyIntent getCurrentIntent() const;
@@ -83,26 +84,9 @@ protected:
     EnemyIntent unknownIntent() const;
 
     virtual void onIntentExecuted(GamePlay *game) {}
+
+    Player *chooseSingleTarget(GamePlay *game) const;
 };
 
-/*
-int startX = 0;
-int startY = 80;
-
-for (BuffDebuff* effect : m_activeEffects) {
-    if (effect->stacks() == 0) continue;
-
-    QRectF iconRect(startX, startY, 32, 32); 
-
-    painter->drawPixmap(iconRect.toRect(), effect->icon());
-
-    painter->setPen(Qt::white);
-    QFont font("Arial", 10, QFont::Bold);
-    painter->setFont(font);
-    painter->drawText(iconRect, Qt::AlignBottom | Qt::AlignRight, QString::number(effect->stacks()));
-
-    startX += 36; 
-}
-*/
 
 #endif // ENEMY_H

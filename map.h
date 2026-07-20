@@ -27,6 +27,8 @@ public:
 
     void setLocked(bool locked);
 
+    MapButton *buttonAt(int level, int pos) const;
+
 signals:
 
     void nodeSelected(MapButton *button);

@@ -339,3 +339,15 @@ void Map::setLocked(bool locked)
 {
     m_locked = locked;
 }
+
+MapButton *Map::buttonAt(int level, int pos) const
+{
+    if (level < 0 || level >= m_levels.size())
+        return nullptr;
+
+    for (MapButton *button : m_levels[level])
+        if (button->levelPosIndex() == pos)
+            return button;
+
+    return nullptr;
+}

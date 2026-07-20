@@ -9,6 +9,7 @@
 #include <QVector>
 
 #include "mapButton.h"
+#include "networkmanager.h"
 #include "reward.h"
 #include "settings.h"
 
@@ -29,6 +30,7 @@ class Relic;
 class Potion;
 class Card;
 class SettingsDialog;
+class NetworkLobby;
 
 class QStackedWidget;
 class QWidget;
@@ -98,6 +100,23 @@ private slots:
     // Event
     void onEventFinished();
     void onEventTriggersEliteCombat();
+
+    // Multiplayer
+    void onMainMenuMultiplayerClicked();
+
+    void onNetworkLobbyHostRequested(quint16 port);
+    void onNetworkLobbyJoinRequested(const QString &address, quint16 port);
+    void onNetworkHostStarted(quint16 port);
+    void onNetworkHostFailed(const QString &error);
+    void onNetworkClientConnected();
+    void onNetworkConnectedToHost();
+    void onNetworkConnectionFailed(const QString &error);
+    void onNetworkDisconnected();
+    void onPacketReceived(PacketType type, const QByteArray &payload);
+
+    void onPlayerEliminated(Player *player);
+    void onRemotePlayerEliminated(bool remoteWasLeader);
+    void onCampfireReviveRequested();
 
 private:
     QStackedWidget *m_stack;
@@ -170,6 +189,11 @@ private:
     QTcpServer *m_networkServer = nullptr;
     QTcpSocket *m_networkSocket = nullptr;
     QMutex m_networkMutex; // for thread
+    NetworkManager *m_networkManager = nullptr;
+    NetworkLobby *m_networkLobby = nullptr;
+    bool m_pendingMultiplayerRequested = false;
+    bool m_suppressNetworkNodeBroadcast = false;
+    void showNetworkLobby();
 };
 
 #endif // GAMEMANAGER_H

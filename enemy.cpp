@@ -3,6 +3,8 @@
 #include "gameplay.h"
 #include "player.h"
 
+#include <QRandomGenerator>
+
 Enemy::Enemy(
     QString name, int minHP, int maxHP, enemyType type, bool isMultiplayer, QGraphicsItem *parent)
     : Combatant(name, minHP + rand() % (maxHP - minHP + 1), parent)
@@ -129,18 +131,92 @@ EnemyIntent Enemy::unknownIntent() const
     return {IntentType::Unknown, 0, 0, false, getIntentIcon(IntentType::Unknown)};
 }
 
-void Enemy::executeIntent(Player *player)
+// void Enemy::executeIntent(Player *player)
+// {
+//     if (!player)
+//         return;
+
+//     switch (m_currentIntent.type) {
+//     case IntentType::Attack: {
+//         int hits = m_currentIntent.secondaryValue > 0 ? m_currentIntent.secondaryValue : 1;
+
+//         for (int i = 0; i < hits; ++i)
+//             player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
+
+//         break;
+//     }
+
+//     case IntentType::Defend:
+//         addBlock(m_currentIntent.value);
+//         break;
+
+//     case IntentType::AttackDefend:
+//         player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
+//         addBlock(m_currentIntent.secondaryValue);
+//         break;
+
+//     case IntentType::AttackDebuff:
+//         player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
+//         player->applyBuffDebuff(BuffDebuffType::Vulnerable, m_currentIntent.secondaryValue);
+//         break;
+
+//     case IntentType::DefendBuff:
+//         addBlock(m_currentIntent.value);
+//         applyBuffDebuff(BuffDebuffType::Strength, m_currentIntent.secondaryValue);
+//         break;
+
+//     case IntentType::Buff:
+//         applyBuffDebuff(BuffDebuffType::Strength, m_currentIntent.value);
+//         break;
+
+//     case IntentType::Debuff:
+//         player->applyBuffDebuff(BuffDebuffType::Weak, m_currentIntent.value);
+//         break;
+
+//     case IntentType::Entangle:
+//         player->setCannotPlayAttacks(true);
+//         break;
+
+//     case IntentType::Unknown:
+//     default:
+//         break;
+//     }
+// }
+
+Player *Enemy::chooseSingleTarget(GamePlay *game) const
 {
-    if (!player)
+    if (!game)
+        return nullptr;
+
+    QVector<Player *> candidates;
+    for (Player *p : game->allPlayers())
+        if (p && p->currentHP() > 0)
+            candidates.append(p);
+
+    if (candidates.isEmpty())
+        return game->player(); // fallback ایمن
+
+    if (candidates.size() == 1)
+        return candidates.first();
+
+    int index = QRandomGenerator::global()->bounded(candidates.size());
+    return candidates.at(index);
+}
+
+void Enemy::executeIntent(GamePlay *game)
+{
+    if (!game)
+        return;
+
+    Player *target = chooseSingleTarget(game);
+    if (!target)
         return;
 
     switch (m_currentIntent.type) {
     case IntentType::Attack: {
         int hits = m_currentIntent.secondaryValue > 0 ? m_currentIntent.secondaryValue : 1;
-
         for (int i = 0; i < hits; ++i)
-            player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
-
+            target->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
         break;
     }
 
@@ -149,13 +225,13 @@ void Enemy::executeIntent(Player *player)
         break;
 
     case IntentType::AttackDefend:
-        player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
+        target->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
         addBlock(m_currentIntent.secondaryValue);
         break;
 
     case IntentType::AttackDebuff:
-        player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
-        player->applyBuffDebuff(BuffDebuffType::Vulnerable, m_currentIntent.secondaryValue);
+        target->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
+        target->applyBuffDebuff(BuffDebuffType::Vulnerable, m_currentIntent.secondaryValue);
         break;
 
     case IntentType::DefendBuff:
@@ -168,11 +244,13 @@ void Enemy::executeIntent(Player *player)
         break;
 
     case IntentType::Debuff:
-        player->applyBuffDebuff(BuffDebuffType::Weak, m_currentIntent.value);
+        for (Player *p : game->allPlayers())
+            if (p && p->currentHP() > 0)
+                p->applyBuffDebuff(BuffDebuffType::Weak, m_currentIntent.value);
         break;
 
     case IntentType::Entangle:
-        player->setCannotPlayAttacks(true);
+        target->setCannotPlayAttacks(true);
         break;
 
     case IntentType::Unknown:
@@ -189,7 +267,8 @@ void Enemy::applyEnemyIntent(GamePlay *game)
     Player *player = game->player();
 
     triggerPowerEffects(PowerUseTime::StartTurn, game);
-    executeIntent(player);
+    // executeIntent(player);
+    executeIntent(game);
     onIntentExecuted(game);
     calculateNextIntent();
     triggerPowerEffects(PowerUseTime::EndTurn, game);

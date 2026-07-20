@@ -488,7 +488,7 @@ void GamePlay::drawFromDrawPile()
 
 void GamePlay::playerTurn()
 {
-    //ui->Enable
+    resetTurnEndFlags();
     addTurn();
     playerReviveEnergy();
     if (m_drawPile.empty())
@@ -506,10 +506,30 @@ void GamePlay::enemiesTurn()
 
     applyBurnDamage();
 
-    if (m_player->currentHP() <= 0) {
+    for (Player *p : allPlayers())
+        if (p && p->currentHP() <= 0 && !p->isEliminated()) {
+            p->setEliminated(true);
+            emit playerEliminated(p);
+        }
+
+    if (allPlayersDead()) {
         emit playerDead();
-        // eliminated
         return;
+    }
+
+    if (m_isAuthoritative) {
+        for (size_t i = 0; i < m_enemys.size(); ++i) {
+            Enemy *enemy = m_enemys[i];
+            if (enemy->isDead())
+                continue;
+
+            enemy->applyEnemyIntent(this);
+
+            if (allPlayersDead()) {
+                emit playerDead();
+                return;
+            }
+        }
     }
 
     for (size_t i = 0; i < m_enemys.size(); ++i) {
@@ -543,9 +563,12 @@ void GamePlay::enemiesTurn()
     removeDeadEnemies();
 
     m_player->tickDecayingBuffDebuff();
+    for (Player *p : m_remotePlayers)
+        p->tickDecayingBuffDebuff();
 
-    for (Enemy *enemy : m_enemys)
-        enemy->tickDecayingBuffDebuff();
+    if (m_isAuthoritative)
+        for (Enemy *enemy : m_enemys)
+            enemy->tickDecayingBuffDebuff();
 
     emit enemiesTurnEnded();
 }
@@ -572,7 +595,12 @@ void GamePlay::endTurnButtonClicked()
 {
     discardHandToDiscardPile();
 
-    emit playerTurnEnded();
+    if (!m_coopMode) {
+        emit playerTurnEnded();
+        return;
+    }
+
+    markLocalTurnEnded();
 }
 
 void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy)
@@ -1142,4 +1170,46 @@ bool GamePlay::isCoopMode() const
 void GamePlay::setCoopMode(bool enabled)
 {
     m_coopMode = enabled;
+}
+
+void GamePlay::setAuthoritative(bool authoritative)
+{
+    m_isAuthoritative = authoritative;
+}
+
+bool GamePlay::isAuthoritative() const
+{
+    return m_isAuthoritative;
+}
+
+void GamePlay::markLocalTurnEnded()
+{
+    m_localEndedTurn = true;
+    emit localTurnEndRequested();
+
+    if (bothPlayersEndedTurn()) {
+        resetTurnEndFlags();
+        emit playerTurnEnded();
+    }
+}
+
+void GamePlay::markRemoteTurnEnded()
+{
+    m_remoteEndedTurn = true;
+
+    if (bothPlayersEndedTurn()) {
+        resetTurnEndFlags();
+        emit playerTurnEnded();
+    }
+}
+
+bool GamePlay::bothPlayersEndedTurn() const
+{
+    return m_localEndedTurn && m_remoteEndedTurn;
+}
+
+void GamePlay::resetTurnEndFlags()
+{
+    m_localEndedTurn = false;
+    m_remoteEndedTurn = false;
 }

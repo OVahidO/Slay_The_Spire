@@ -59,6 +59,9 @@ public:
     bool isLocalPlayer() const;
     void setIsLocalPlayer(bool isLocal);
 
+    bool isEliminated() const;
+    void setEliminated(bool eliminated);
+
 signals:
     void hpChanged();
     void coinChanged();
@@ -83,6 +86,8 @@ private:
     QVector<Relic *> m_relics;
 
     bool m_isLocalPlayer = true;
+
+    bool m_isEliminated = false;
 };
 
 #endif // PLAYER_H
