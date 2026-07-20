@@ -17,10 +17,10 @@ Enemy::Enemy(
 //temperory
 QRectF Enemy::boundingRect() const
 {
-    if (!m_enemyPic.isNull())
-        return QRectF(0, 0, m_enemyPic.width(), m_enemyPic.height());
+    // if (!m_enemyPic.isNull())
+    //     return QRectF(0, 0, m_enemyPic.width(), m_enemyPic.height());
 
-    return QRectF(0, 0, 200, 300);
+    return QRectF(0, 0, 110, 100);
 }
 
 void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -44,21 +44,21 @@ void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     }
 
     // نوار HP
-    qreal barHeight = 10;
-    QRectF hpBg(0, rect.height() + 5, rect.width(), barHeight);
-    painter->setBrush(QColor(40, 40, 40));
-    painter->setPen(Qt::NoPen);
-    painter->drawRect(hpBg);
+    // qreal barHeight = 10;
+    // QRectF hpBg(0, rect.height() + 5, rect.width(), barHeight);
+    // painter->setBrush(QColor(40, 40, 40));
+    // painter->setPen(Qt::NoPen);
+    // painter->drawRect(hpBg);
 
-    qreal hpRatio = m_maxHP > 0 ? static_cast<qreal>(m_currentHP) / m_maxHP : 0;
-    QRectF hpFill(0, rect.height() + 5, rect.width() * hpRatio, barHeight);
-    painter->setBrush(QColor(200, 40, 40));
-    painter->drawRect(hpFill);
+    // qreal hpRatio = m_maxHP > 0 ? static_cast<qreal>(m_currentHP) / m_maxHP : 0;
+    // QRectF hpFill(0, rect.height() + 5, rect.width() * hpRatio, barHeight);
+    // painter->setBrush(QColor(200, 40, 40));
+    // painter->drawRect(hpFill);
 
-    painter->setPen(Qt::white);
-    QFont font("Arial", 9, QFont::Bold);
-    painter->setFont(font);
-    painter->drawText(hpBg, Qt::AlignCenter, QString("%1/%2").arg(m_currentHP).arg(m_maxHP));
+    // painter->setPen(Qt::white);
+    // QFont font("Arial", 9, QFont::Bold);
+    // painter->setFont(font);
+    // painter->drawText(hpBg, Qt::AlignCenter, QString("%1/%2").arg(m_currentHP).arg(m_maxHP));
 
     // آیکون Intent فعلی بالای دشمن
     if (!m_currentIntent.icon.isNull()) {
@@ -141,6 +141,8 @@ void Enemy::executeIntent(Player *player)
         for (int i = 0; i < hits; ++i)
             player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
 
+        emit attacked(this);
+
         break;
     }
 
@@ -151,11 +153,17 @@ void Enemy::executeIntent(Player *player)
     case IntentType::AttackDefend:
         player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
         addBlock(m_currentIntent.secondaryValue);
+
+        emit attacked(this);
+
         break;
 
     case IntentType::AttackDebuff:
         player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
         player->applyBuffDebuff(BuffDebuffType::Vulnerable, m_currentIntent.secondaryValue);
+
+        emit attacked(this);
+
         break;
 
     case IntentType::DefendBuff:
@@ -193,6 +201,7 @@ void Enemy::applyEnemyIntent(GamePlay *game)
     onIntentExecuted(game);
     calculateNextIntent();
     triggerPowerEffects(PowerUseTime::EndTurn, game);
+    update();
 }
 
 EnemyIntent Enemy::getCurrentIntent() const

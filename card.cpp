@@ -48,7 +48,7 @@ Card::Card(CardID ID,
 
 QRectF Card::boundingRect() const
 {
-    return QRectF(0, 0, 170, 240);
+    return QRectF(0, 0, 140, 210);
 }
 
 void Card::loadPixmap()
@@ -401,7 +401,7 @@ bool Card::isExhaust() const
 
 bool Card::applyEffect(GamePlay *gameplay)
 {
-    return false;
+    return true;
 }
 
 bool Card::isUpgraded() const

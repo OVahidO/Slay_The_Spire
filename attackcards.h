@@ -20,6 +20,7 @@ public:
                QGraphicsItem *parent);
     virtual ~AttackCard() = default;
     QString getDynamicDescription(Player *player, Enemy *target) const override;
+    int damage() const;
 };
 
 class Strike : public AttackCard

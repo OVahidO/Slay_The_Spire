@@ -60,6 +60,9 @@ public:
 
     virtual void onAnyCardPlayed(CardType cardType, GamePlay *game) {}
 
+signals:
+    void attacked(Enemy* enemy);
+
 protected:
     EnemyIntent pickIntent(const QVector<QPair<int, EnemyIntent>> &options) const;
     EnemyIntent m_currentIntent;

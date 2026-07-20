@@ -81,6 +81,8 @@ public:
     // ------------------------- Combat VFX -------------------------
     void setupBackground(const QString &imagePath);
 
+    void setupEnemies();
+
     void showTargetingFrame(Enemy *enemy);
     void hideTargetingFrame();
 
@@ -97,6 +99,7 @@ signals:
     void combatWon();
     void cardPlayed(Card *);
     void valueChanged();
+    void gamePlayIsReady();
 
 public slots:
     void playerTurn();
@@ -111,9 +114,16 @@ public slots:
     void updatePlayerInformLabels();
     void updateHandsCardsLayout(Card *hoveredCard = nullptr);
     void update();
+    void refreshGamePlay();
 
 private slots:
     void onCardEnemyHoverChanged(Enemy *enemy);
+
+    void on_drawPileButton_clicked();
+
+    void on_discardPileButton_clicked();
+
+    void on_exhaustPileButton_clicked();
 
 private:
     Ui::GamePlay *ui;
@@ -130,6 +140,7 @@ private:
 
     QGraphicsScene *m_scene;
     QGraphicsView *m_view;
+    QWidget *m_overlay;
 
     void creatEnergyUI();
     QGraphicsTextItem *m_energyLabel;

@@ -3,6 +3,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsBlurEffect>
 #include <QPropertyAnimation>
 #include <QRandomGenerator>
 #include <QSequentialAnimationGroup>
@@ -19,6 +20,7 @@
 #include "skillcards.h"
 #include "statuscards.h"
 #include "ui_gameplay.h"
+#include "piledialog.h"
 
 GamePlay::GamePlay(Player *player, QWidget *parent)
     : QWidget(parent)
@@ -32,6 +34,9 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     connect(m_player, &Player::hpChanged, this, &GamePlay::updateHpLabels);
     connect(m_player, &Player::energyChanged, this, &GamePlay::updateEnergyLabel);
     connect(m_player, &Player::valueChanged, this, &GamePlay::updatePlayerInformLabels);
+    //
+    connect(m_player, &Player::takedDamage, this, [this](Combatant* c, int damage){this->showFloatingDamage(c,damage);});
+    //
 
     updateHpLabels();
 
@@ -52,7 +57,7 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     updateEnergyLabel();
 
     EndTurnButton *endTurnButton = new EndTurnButton();
-    endTurnButton->setPos(1020, 410);
+    endTurnButton->setPos(1020, 475);
     m_scene->addItem(endTurnButton);
     connect(endTurnButton, &EndTurnButton::onClick, this, &GamePlay::endTurnButtonClicked);
     connect(this, &GamePlay::enemiesTurnEnded, endTurnButton, &EndTurnButton::activeButton);
@@ -74,6 +79,15 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
 
     emit valueChanged();
 
+    m_drawPile.push_back(new class Defend);
+    m_drawPile.push_back(new class Strike);
+    m_drawPile.push_back(new class Defend);
+    m_drawPile.push_back(new class Clash);
+    m_drawPile.push_back(new class Defend);
+    m_drawPile.push_back(new class Strike);
+
+    draw();
+
     connect(this, &GamePlay::playerTurnEnded, this, &GamePlay::enemiesTurn);
     connect(this, &GamePlay::enemiesTurnEnded, this, &GamePlay::playerTurn);
     connect(this, &GamePlay::cardPlayed, this, &GamePlay::playedCardHandler);
@@ -85,6 +99,16 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     // درست قبل از افزودن دشمنان به صحنه، با فراخوانی صریح startCombat() انجام می‌شود.
 
     // startCombat();
+    m_scene->addItem(m_player);
+    m_player->setPos(100,260);
+    refreshGamePlay();
+
+    ////////////////////
+    m_overlay = new QWidget(this);
+    m_overlay->setGeometry(rect());
+    m_overlay->setStyleSheet("background-color: rgba(0,0,0,120);");
+    m_overlay->hide();
+    ////////////////////
 }
 
 GamePlay::~GamePlay()
@@ -521,6 +545,7 @@ void GamePlay::enemiesTurn()
             continue;
 
         enemy->applyEnemyIntent(this);
+        m_scene->update();
 
         if (m_player->currentHP() <= 0) {
             emit playerDead();
@@ -562,16 +587,8 @@ void GamePlay::discardHandToDiscardPile()
 
     for (Card *card : handCopy) {
         card->disconnect();
-        m_scene->removeItem(card);
-
-        if (card->isExhaust())
-            m_ExhaustPile.push_back(card);
-        else
-            m_discardPile.push_back(card);
+        emit cardPlayed(card);
     }
-
-    m_player->HandsCards().clear();
-    emit valueChanged();
 }
 
 void GamePlay::endTurnButtonClicked()
@@ -587,9 +604,18 @@ void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy
         return;
 
     if (isEnoughEnergy(card->energyCost())) {
+
+        if(card->cardType() == CardType::Attack)
+        {
+            player = m_player;
+            this->playAttackJolt(m_player, true);
+        }
+
         card->applyEffect(player, targetEnemy);
         card->applyEffect(this);
+
         emit cardPlayed(card);
+        m_targetFrame->hideFrame();
         m_player->loseEnergy(card->energyCost());
 
         for (Relic *r : m_player->relics())
@@ -808,6 +834,16 @@ void GamePlay::update()
     ui->exhaustPileButton->setText(QString::number(m_ExhaustPile.size()));
 }
 
+void GamePlay::refreshGamePlay()//struct room info//
+{
+    setupBackground(":/Combat/Pics/Background/Combat/basement.png");//room.background//
+    //m_enemys = room.enmies;
+    m_enemys.push_back(new AcidSlimeS);
+    m_enemys.push_back(new TheChamp);
+    m_enemys.push_back(new Mugger);
+    setupEnemies();
+}
+
 void GamePlay::creatEnergyUI()
 {
     QGraphicsPixmapItem *energyBackground = new QGraphicsPixmapItem();
@@ -1000,6 +1036,23 @@ void GamePlay::setupBackground(const QString &imagePath)
     // استفاده کن، چون QGraphicsPixmapItem فریم‌های متحرک را پشتیبانی نمی‌کند.
 }
 
+void GamePlay::setupEnemies()
+{
+    int enemyCount = m_enemys.size();
+    if(enemyCount == 0)
+        return;
+
+    int i = 0 , j=0;
+    for(auto& enemy : m_enemys)
+    {
+        enemy->setPos(this->width()-225-(i), this->height()-280-(j));
+        connect(enemy, &Enemy::attacked, this, [this](Enemy* enemy){this->playAttackJolt(enemy, false);});
+        connect(enemy, &Enemy::takedDamage, this, [this](Combatant* c, int damage){this->showFloatingDamage(c, damage);});
+        m_scene->addItem(enemy);
+        i+=150; j+=25;
+    }
+}
+
 void GamePlay::showTargetingFrame(Enemy *enemy)
 {
     if (!enemy || enemy->isDead())
@@ -1103,3 +1156,42 @@ void GamePlay::triggerScreenShake(int intensity, int durationMs)
 
     shakeTimer->start(stepInterval);
 }
+
+void GamePlay::on_drawPileButton_clicked()
+{
+    m_overlay->show();
+    auto blur = new QGraphicsBlurEffect;
+    blur->setBlurRadius(8);
+    this->setGraphicsEffect(blur);
+    PileDialog pd(m_drawPile, this);
+    pd.exec();
+    this->setGraphicsEffect(nullptr);
+    m_overlay->hide();
+}
+
+
+void GamePlay::on_discardPileButton_clicked()
+{
+    m_overlay->show();
+    auto blur = new QGraphicsBlurEffect;
+    blur->setBlurRadius(8);
+    this->setGraphicsEffect(blur);
+    PileDialog pd(m_discardPile, this);
+    pd.exec();
+    this->setGraphicsEffect(nullptr);
+    m_overlay->hide();
+}
+
+
+void GamePlay::on_exhaustPileButton_clicked()
+{
+    m_overlay->show();
+    auto blur = new QGraphicsBlurEffect;
+    blur->setBlurRadius(8);
+    this->setGraphicsEffect(blur);
+    PileDialog pd(m_ExhaustPile, this);
+    pd.exec();
+    this->setGraphicsEffect(nullptr);
+    m_overlay->hide();
+}
+

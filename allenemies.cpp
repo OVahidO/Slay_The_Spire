@@ -70,10 +70,10 @@ Louse::Louse(bool isMultiplayer, QGraphicsItem *parent)
             isMultiplayer,
             parent)
 {
-    loadPic();
     m_isRed = (m_name == "Red Louse");
     m_soucePath = (m_isRed) ? ":/enemies/Pics/Enemies/enemy/normal/RedLouse.png"
                             : ":/enemies/Pics/Enemies/enemy/normal/GreenLouse.png";
+    loadPic();
     Louse::calculateNextIntent();
 }
 

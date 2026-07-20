@@ -21,6 +21,7 @@ Topbar::Topbar(Player* player, QWidget *parent)
 
     connect(m_player, &Player::hpChanged, this, &Topbar::updateHpLabel);
     connect(m_player, &Player::coinChanged, this, &Topbar::updateCoinLabel);
+    connect(m_player, &Player::takedDamage, this, &Topbar::updateHpLabel);
     updateHpLabel();
     updateCoinLabel();
 }
