@@ -14,6 +14,8 @@ class NetworkLobby : public QWidget
 public:
     explicit NetworkLobby(QWidget *parent = nullptr);
 
+    void setInputEnabled(bool enabled);
+
 public slots:
     void setStatusMessage(const QString &message);
 

@@ -87,3 +87,9 @@ void NetworkLobby::setStatusMessage(const QString &message)
 {
     m_statusLabel->setText(message);
 }
+
+void NetworkLobby::setInputEnabled(bool enabled)
+{
+    m_hostButton->setEnabled(enabled);
+    m_joinButton->setEnabled(enabled);
+}

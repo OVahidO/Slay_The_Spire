@@ -19,7 +19,7 @@ NetworkManager::NetworkManager(QObject *parent)
 
 NetworkManager::~NetworkManager()
 {
-    clearEnemySync();
+    disconnectFromGame();
 }
 
 // ==================== Connection ====================
@@ -59,6 +59,7 @@ void NetworkManager::onNewConnection()
 
     m_socket = incoming;
     setupSocket(m_socket);
+    m_hadSuccessfulConnection = true;
 
     m_server->close();
 
@@ -74,7 +75,10 @@ bool NetworkManager::joinGame(const QString &hostAddress, quint16 port)
     m_socket = new QTcpSocket(this);
     setupSocket(m_socket);
 
-    connect(m_socket, &QTcpSocket::connected, this, [this]() { emit connectedToHost(); });
+    connect(m_socket, &QTcpSocket::connected, this, [this]() {
+        m_hadSuccessfulConnection = true;
+        emit connectedToHost();
+    });
 
     m_socket->connectToHost(hostAddress, port);
     return true;
@@ -92,27 +96,40 @@ void NetworkManager::disconnectFromGame()
     clearEnemySync();
 
     if (m_socket) {
+        m_socket->disconnect(this);
         m_socket->disconnectFromHost();
         m_socket->deleteLater();
         m_socket = nullptr;
     }
     if (m_server) {
+        m_server->disconnect(this);
+
         m_server->close();
         m_server->deleteLater();
         m_server = nullptr;
     }
+
+    clearEnemySync();
+    m_hadSuccessfulConnection = false;
 }
 
 void NetworkManager::onSocketDisconnected()
 {
-    emit disconnected();
+    if (m_hadSuccessfulConnection)
+        emit disconnected();
+
+    teardownSocket();
+    m_hadSuccessfulConnection = false;
 }
 
 void NetworkManager::onSocketError(QAbstractSocket::SocketError error)
 {
     Q_UNUSED(error);
+
     if (!m_isHost)
         emit connectionFailed(m_socket ? m_socket->errorString() : QString());
+
+    teardownSocket();
 }
 
 bool NetworkManager::isConnected() const
@@ -259,7 +276,7 @@ bool NetworkManager::decodeNodeSelection(const QByteArray &payload,
 
 // ==================== Player / Enemy State Sync ====================
 
-void NetworkManager::sendPlayerStateSync(Player *player)
+void NetworkManager::sendPlayerStateSync(Player *player, bool targetIsReceiverSelf)
 {
     if (!player)
         return;
@@ -271,8 +288,8 @@ void NetworkManager::sendPlayerStateSync(Player *player)
     QByteArray payload;
     QDataStream stream(&payload, QIODevice::WriteOnly);
     stream.setVersion(kStreamVersion);
-    stream << player->currentHP() << player->maxHP() << player->block() << player->energy()
-           << buffs;
+    stream << static_cast<quint8>(targetIsReceiverSelf ? 1 : 0) << player->currentHP()
+           << player->maxHP() << player->block() << player->energy() << buffs;
 
     sendPacket(PacketType::PlayerStateSync, payload);
 }
@@ -280,9 +297,14 @@ void NetworkManager::sendPlayerStateSync(Player *player)
 NetPlayerState NetworkManager::decodePlayerStateSync(const QByteArray &payload)
 {
     NetPlayerState state;
+    quint8 targetFlag = 0;
+
     QDataStream stream(payload);
     stream.setVersion(kStreamVersion);
-    stream >> state.currentHP >> state.maxHP >> state.block >> state.energy >> state.buffs;
+    stream >> targetFlag >> state.currentHP >> state.maxHP >> state.block >> state.energy
+        >> state.buffs;
+
+    state.targetIsReceiverSelf = (targetFlag != 0);
     return state;
 }
 
@@ -428,4 +450,16 @@ bool NetworkManager::decodeCardPlayed(const QByteArray &payload, int &cardID, bo
     cardID = id;
     isUpgraded = (upgraded != 0);
     return true;
+}
+
+void NetworkManager::teardownSocket()
+{
+    if (!m_socket)
+        return;
+
+    m_socket->disconnect(this);
+    m_socket->deleteLater();
+    m_socket = nullptr;
+
+    clearEnemySync();
 }

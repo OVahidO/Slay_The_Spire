@@ -29,6 +29,7 @@ class Enemy;
 class Relic;
 class Potion;
 class Card;
+class Combatant;
 class SettingsDialog;
 class NetworkLobby;
 
@@ -194,6 +195,11 @@ private:
     bool m_pendingMultiplayerRequested = false;
     bool m_suppressNetworkNodeBroadcast = false;
     void showNetworkLobby();
+    Player *m_remotePlayerMirror = nullptr;
+    bool m_playerSyncHooked = false;
+    void ensureRemotePlayerMirror();
+    void hookLocalPlayerNetworkSync();
+    static void reconcileBuffs(Combatant *target, const QVector<QPair<quint8, int>> &remoteBuffs);
 };
 
 #endif // GAMEMANAGER_H

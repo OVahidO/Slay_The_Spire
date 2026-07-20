@@ -6,8 +6,10 @@
 #include <QStackedWidget>
 
 #include "allrelics.h"
+#include "buffdebuff.h"
 #include "campfire.h"
 #include "card.h"
+#include "combatant.h"
 #include "database.h"
 #include "enemy.h"
 #include "event.h"
@@ -27,7 +29,11 @@ GameManager::GameManager(QStackedWidget *stack, QObject *parent)
     , m_stack(stack)
 {}
 
-GameManager::~GameManager() {}
+GameManager::~GameManager()
+{
+    if (m_remotePlayerMirror)
+        delete m_remotePlayerMirror;
+}
 
 void GameManager::start()
 {
@@ -370,11 +376,18 @@ void GameManager::onRewardFinished()
             m_currentNodeIndex = 0;
             m_usedAct1EncounterTypes.clear();
             m_usedAct2EncounterTypes.clear();
-            m_mapSeed = QRandomGenerator::global()->generate();
 
-            buildNewMap();
+            if (!m_isMultiplayer || m_isLeader) {
+                m_mapSeed = QRandomGenerator::global()->generate();
+                buildNewMap();
+
+                if (m_isMultiplayer && m_networkManager)
+                    m_networkManager->sendMapSeed(m_mapSeed);
+
+                switchTo(m_map);
+            }
+
             autoSaveProgress();
-            switchTo(m_map);
         }
     } else {
         switchTo(m_map);
@@ -554,6 +567,11 @@ void GameManager::resetPlayerAndGamePlayForNewRun()
         m_stack->removeWidget(m_gamePlay);
         m_gamePlay->deleteLater();
         m_gamePlay = nullptr;
+    }
+
+    if (m_remotePlayerMirror) {
+        delete m_remotePlayerMirror;
+        m_remotePlayerMirror = nullptr;
     }
 
     if (m_player) {
@@ -876,8 +894,10 @@ void GameManager::onNetworkHostStarted(quint16 port)
 
 void GameManager::onNetworkHostFailed(const QString &error)
 {
-    if (m_networkLobby)
+    if (m_networkLobby) {
         m_networkLobby->setStatusMessage("Failed to host: " + error);
+        m_networkLobby->setInputEnabled(true);
+    }
 }
 
 void GameManager::onNetworkClientConnected()
@@ -886,8 +906,12 @@ void GameManager::onNetworkClientConnected()
     if (m_gamePlay)
         m_gamePlay->setCoopMode(true);
 
-    if (m_networkManager)
+    ensureRemotePlayerMirror();
+
+    if (m_networkManager) {
         m_networkManager->sendHandshake(m_player ? m_player->name() : QString());
+        hookLocalPlayerNetworkSync();
+    }
 
     clearTransientScreen(m_networkLobby);
     m_networkLobby = nullptr;
@@ -896,6 +920,8 @@ void GameManager::onNetworkClientConnected()
         resumeRun();
     else
         startNewRun();
+
+    switchTo(m_map);
 }
 
 void GameManager::onNetworkConnectedToHost()
@@ -904,8 +930,12 @@ void GameManager::onNetworkConnectedToHost()
     if (m_gamePlay)
         m_gamePlay->setCoopMode(true);
 
-    if (m_networkManager)
+    ensureRemotePlayerMirror();
+
+    if (m_networkManager) {
         m_networkManager->sendHandshake(m_player ? m_player->name() : QString());
+        hookLocalPlayerNetworkSync();
+    }
 
     clearTransientScreen(m_networkLobby);
     m_networkLobby = nullptr;
@@ -913,8 +943,10 @@ void GameManager::onNetworkConnectedToHost()
 
 void GameManager::onNetworkConnectionFailed(const QString &error)
 {
-    if (m_networkLobby)
+    if (m_networkLobby) {
         m_networkLobby->setStatusMessage("Connection failed: " + error);
+        m_networkLobby->setInputEnabled(true);
+    }
 }
 
 void GameManager::onNetworkDisconnected()
@@ -1011,7 +1043,7 @@ void GameManager::onCampfireReviveRequested()
     eliminatedTeammate->setEliminated(false);
 
     if (m_networkManager)
-        m_networkManager->sendPlayerStateSync(eliminatedTeammate);
+        m_networkManager->sendPlayerStateSync(eliminatedTeammate, /*targetIsReceiverSelf=*/true);
 }
 
 void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
@@ -1025,12 +1057,15 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
 
     case PacketType::MapSeed: {
         if (m_isLeader)
-            break; // Leader خودش تولیدکننده‌ی Seed است
+            break;
 
         m_mapSeed = NetworkManager::decodeMapSeed(payload);
         buildNewMap();
+
         if (m_map)
-            m_map->setLocked(true); // Client حق کلیک مستقیم ندارد
+            m_map->setLocked(true);
+
+        switchTo(m_map);
         break;
     }
 
@@ -1057,32 +1092,27 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
 
         enemy->setCurrentHPDirect(state.currentHP);
         enemy->setBlock(state.block);
-
-        for (const auto &buffPair : state.buffs) {
-            BuffDebuffType buffType = static_cast<BuffDebuffType>(buffPair.first);
-            int delta = buffPair.second - enemy->effectStacks(buffType);
-            if (delta != 0)
-                enemy->applyBuffDebuff(buffType, delta);
-        }
+        reconcileBuffs(enemy, state.buffs);
         break;
     }
 
     case PacketType::PlayerStateSync: {
-        Player *remote = m_gamePlay ? m_gamePlay->remotePlayer() : nullptr;
-        if (!remote)
+        if (!m_gamePlay)
             break;
 
         NetPlayerState state = NetworkManager::decodePlayerStateSync(payload);
-        remote->setCurrentHPDirect(state.currentHP);
-        remote->setBlock(state.block);
-        remote->setEnergy(state.energy);
 
-        for (const auto &buffPair : state.buffs) {
-            BuffDebuffType buffType = static_cast<BuffDebuffType>(buffPair.first);
-            int delta = buffPair.second - remote->effectStacks(buffType);
-            if (delta != 0)
-                remote->applyBuffDebuff(buffType, delta);
-        }
+        Player *target = state.targetIsReceiverSelf ? m_player : m_gamePlay->remotePlayer();
+        if (!target)
+            break;
+
+        target->setCurrentHPDirect(state.currentHP);
+        target->setBlock(state.block);
+        target->setEnergy(state.energy);
+        reconcileBuffs(target, state.buffs);
+
+        if (state.targetIsReceiverSelf && target->currentHP() > 0)
+            target->setEliminated(false);
         break;
     }
 
@@ -1092,7 +1122,6 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
         if (NetworkManager::decodeCardPlayed(payload, cardID, upgraded)) {
             Q_UNUSED(cardID);
             Q_UNUSED(upgraded);
-            // for showing only
         }
         break;
     }
@@ -1113,8 +1142,7 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
 
     case PacketType::GameOver: {
         bool victory = NetworkManager::decodeGameOver(payload);
-        Q_UNUSED(
-            victory); // TODO UI: نمایش پیام پایان بازی از سمت هم‌تیمی
+        Q_UNUSED(victory);
         break;
     }
 
@@ -1123,5 +1151,49 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
             m_gamePlay->markRemoteTurnEnded();
         break;
     }
+    }
+}
+
+void GameManager::ensureRemotePlayerMirror()
+{
+    if (!m_gamePlay || m_gamePlay->remotePlayer())
+        return;
+
+    m_remotePlayerMirror = new Player("Teammate", m_player ? m_player->maxHP() : 100);
+    m_gamePlay->addRemotePlayer(m_remotePlayerMirror);
+}
+
+void GameManager::hookLocalPlayerNetworkSync()
+{
+    if (m_playerSyncHooked || !m_player)
+        return;
+
+    m_playerSyncHooked = true;
+
+    connect(m_player, &Combatant::combatStateChanged, this, [this]() {
+        if (m_isMultiplayer && m_networkManager)
+            m_networkManager->sendPlayerStateSync(m_player, /*targetIsReceiverSelf=*/false);
+    });
+}
+
+void GameManager::reconcileBuffs(Combatant *target, const QVector<QPair<quint8, int>> &remoteBuffs)
+{
+    if (!target)
+        return;
+
+    QVector<BuffDebuffType> seenTypes;
+
+    for (const auto &pair : remoteBuffs) {
+        BuffDebuffType type = static_cast<BuffDebuffType>(pair.first);
+        seenTypes.append(type);
+
+        int delta = pair.second - target->effectStacks(type);
+        if (delta != 0)
+            target->applyBuffDebuff(type, delta);
+    }
+
+    for (BuffDebuff *local : target->getActiveEffects()) {
+        if (local->stacks() > 0 && !seenTypes.contains(local->type()))
+            target->applyBuffDebuff(local->type(), -local->stacks());
     }
 }

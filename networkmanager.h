@@ -32,6 +32,8 @@ enum class PacketType : quint8 {
 
 struct NetPlayerState
 {
+    bool targetIsReceiverSelf = false;
+
     int currentHP = 0;
     int maxHP = 0;
     int block = 0;
@@ -66,7 +68,7 @@ public:
     void sendHandshake(const QString &playerName);
     void sendMapSeed(quint32 seed);
     void sendNodeSelection(int levelIndex, int levelPosIndex, MapButtonType type);
-    void sendPlayerStateSync(Player *player);
+    void sendPlayerStateSync(Player *player, bool targetIsReceiverSelf = false);
     void sendLeaderChanged(bool receiverBecomesLeader);
     void sendPlayerEliminated(bool wasLeader);
     void sendGameOver(bool victory);
@@ -122,6 +124,9 @@ private:
     void processBuffer();
     void sendPacket(PacketType type, const QByteArray &payload);
     void sendEnemyStateSync(Enemy *enemy, quint8 enemyIndex);
+
+    void teardownSocket();
+    bool m_hadSuccessfulConnection = false;
 };
 
 #endif // NETWORKMANAGER_H
