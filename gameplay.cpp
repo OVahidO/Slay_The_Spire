@@ -32,6 +32,12 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     connect(m_player, &Player::hpChanged, this, &GamePlay::updateHpLabels);
     connect(m_player, &Player::energyChanged, this, &GamePlay::updateEnergyLabel);
     connect(m_player, &Player::valueChanged, this, &GamePlay::updatePlayerInformLabels);
+    connect(m_player, &Combatant::combatStateChanged, this, [this]() {
+        if (m_player && m_player->currentHP() <= 0 && !m_player->isEliminated()) {
+            m_player->setEliminated(true);
+            emit playerEliminated(m_player);
+        }
+    });
 
     updateHpLabels();
 
@@ -505,12 +511,6 @@ void GamePlay::enemiesTurn()
     m_player->triggerRelicsTurnEnd();
 
     applyBurnDamage();
-
-    for (Player *p : allPlayers())
-        if (p && p->currentHP() <= 0 && !p->isEliminated()) {
-            p->setEliminated(true);
-            emit playerEliminated(p);
-        }
 
     if (allPlayersDead()) {
         emit playerDead();
@@ -1134,9 +1134,11 @@ void GamePlay::addRemotePlayer(Player *player)
     m_remotePlayers.append(player);
     player->setIsLocalPlayer(false);
 
-    connect(player, &Player::hpChanged, this, [this, player]() {
-        if (player->currentHP() <= 0)
+    connect(player, &Combatant::combatStateChanged, this, [this, player]() {
+        if (player->currentHP() <= 0 && !player->isEliminated()) {
+            player->setEliminated(true);
             emit playerEliminated(player);
+        }
     });
 }
 
