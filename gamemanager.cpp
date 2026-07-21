@@ -175,6 +175,18 @@ void GameManager::startNewRun()
     m_usedAct1EncounterTypes.clear();
     m_usedAct2EncounterTypes.clear();
 
+    if (m_player) {
+        m_player->setCurrentHPDirect(m_player->maxHP());
+        m_player->setCoin(0);
+    }
+
+    if (m_gamePlay) {
+        m_stack->removeWidget(m_gamePlay);
+        m_gamePlay->deleteLater();
+        m_gamePlay = nullptr;
+    }
+    prepareGamePlayForPlayer();
+
     grantStarterKit();
     buildNewMap();
 
@@ -256,8 +268,12 @@ void GameManager::connectMapSignals()
 
 void GameManager::onMainMenuStart()
 {
-    if (!m_map)
-        buildNewMap();
+    if (!m_map) {
+        if (Database::hasActiveRun(m_player->id()))
+            resumeRun();
+        else
+            startNewRun();
+    }
 
     switchTo(m_map);
 }

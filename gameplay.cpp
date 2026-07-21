@@ -1,7 +1,5 @@
 #include "gameplay.h"
 
-#include "allenemies.h"
-
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
