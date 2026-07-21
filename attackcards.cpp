@@ -151,6 +151,11 @@ bool Reaper::applyEffect(GamePlay *gameplay)
     return true;
 }
 
+bool Reaper::isAoeEnemyEffect() const
+{
+    return true;
+}
+
 void Reaper::upgrade()
 {
     if (m_isUpgraded)
@@ -282,8 +287,13 @@ void Immolate::applyEffect(Player *player, Enemy *target)
 bool Immolate::applyEffect(GamePlay *gameplay)
 {
     gameplay->takeDamageToAllEnemies(m_damage);
-    // gameplay->addCardToDiscardPile(new BURN());
-    // gameplay->addCardToDiscardPile(new BURN());
+    gameplay->addCardToDiscardPile(new BURN());
+    gameplay->addCardToDiscardPile(new BURN());
+    return true;
+}
+
+bool Immolate::isAoeEnemyEffect() const
+{
     return true;
 }
 
@@ -578,6 +588,11 @@ bool Whirlwind::applyEffect(GamePlay *gameplay)
         gameplay->player()->setEnergy(0);
     }
 
+    return true;
+}
+
+bool Whirlwind::isAoeEnemyEffect() const
+{
     return true;
 }
 

@@ -70,6 +70,11 @@ void GameManager::clearTransientScreen(QWidget *screen)
     screen->deleteLater();
 }
 
+unsigned int EncounterManager::deriveCombatSeed(unsigned int mapSeed, int levelIndex, int posIndex)
+{
+    return mapSeed + static_cast<unsigned int>(levelIndex * 1000 + posIndex);
+}
+
 void GameManager::showMainMenu()
 {
     if (!m_mainMenu) {
@@ -1182,13 +1187,6 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
         if (!NetworkManager::decodeCardPlayed(payload, cardID, isUpgraded, targetEntityId))
             break;
 
-        if (targetEntityId < 0)
-            break;
-
-        Enemy *targetEnemy = findEnemyByNetworkId(targetEntityId);
-        if (!targetEnemy)
-            break;
-
         if (!Card::creators().contains(static_cast<CardID>(cardID)))
             break;
 
@@ -1199,11 +1197,19 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
         if (isUpgraded)
             tempCard->upgrade();
 
-        tempCard->applyEffect(m_gamePlay->remotePlayer(), targetEnemy);
-        delete tempCard;
-
-        if (targetEnemy->isDead())
+        if (targetEntityId < 0) {
+            tempCard->applyEffect(m_gamePlay);
             m_gamePlay->removeDeadEnemies();
+        } else {
+            Enemy *targetEnemy = findEnemyByNetworkId(targetEntityId);
+            if (targetEnemy) {
+                tempCard->applyEffect(m_gamePlay->remotePlayer(), targetEnemy);
+                if (targetEnemy->isDead())
+                    m_gamePlay->removeDeadEnemies();
+            }
+        }
+
+        delete tempCard;
         break;
     }
 

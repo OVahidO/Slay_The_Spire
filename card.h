@@ -60,6 +60,8 @@ public:
     virtual void applyEffect(Player *player, Enemy *targetEnemy) = 0;
     virtual bool applyEffect(GamePlay *gameplay);
 
+    virtual bool isAoeEnemyEffect() const;
+
     virtual Card *clone() const = 0;
 
     CardLifetime lifetime() const;

@@ -655,19 +655,31 @@ void GamePlay::noTargetCardsHandler(Card *card)
     if (m_player->cannotPlayCards())
         return;
 
-    if (isEnoughEnergy(card->energyCost())) {
-        if (card->applyEffect(this)) {
-            emit cardPlayed(card);
-            m_player->loseEnergy(card->energyCost());
+    if (!isEnoughEnergy(card->energyCost()))
+        return;
 
-            for (Relic *r : m_player->relics())
-                r->onCardPlayed(card, m_player);
+    bool deferEnemyEffectToLeader = m_coopMode && !m_isAuthoritative && card->isAoeEnemyEffect();
 
-            for (Enemy *e : m_enemys)
-                if (!e->isDead())
-                    e->onAnyCardPlayed(card->cardType(), this);
-        }
-    }
+    bool effectSucceeded = deferEnemyEffectToLeader ? true : card->applyEffect(this);
+
+    if (!effectSucceeded)
+        return;
+
+    emit cardPlayed(card);
+    m_player->loseEnergy(card->energyCost());
+
+    for (Relic *r : m_player->relics())
+        r->onCardPlayed(card, m_player);
+
+    for (Enemy *e : m_enemys)
+        if (!e->isDead())
+            e->onAnyCardPlayed(card->cardType(), this);
+
+    if (m_isAuthoritative)
+        removeDeadEnemies();
+
+    if (deferEnemyEffectToLeader)
+        emit remoteCardEnemyEffectDeferred(card->ID(), card->isUpgraded(), -1);
 }
 
 void GamePlay::playedCardHandler(Card *card)
