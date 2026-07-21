@@ -109,6 +109,19 @@ private:
     int currentCardRemovalCost() const;
 };
 
+class ShopRemoveCardGraphicsView : public QGraphicsView
+{
+    Q_OBJECT
+public:
+    explicit ShopRemoveCardGraphicsView(QGraphicsScene *scene, QWidget *parent = nullptr);
+
+signals:
+    void itemClicked(QGraphicsItem *item);
+
+protected:
+    void mousePressEvent(QMouseEvent *event) override;
+};
+
 class ShopRemoveCardDialog : public QDialog
 {
     Q_OBJECT
@@ -117,6 +130,9 @@ public:
     bool cardWasRemoved() const;
 
 private:
+    QGraphicsScene *m_scene;
+    ShopRemoveCardGraphicsView *m_view;
+
     bool m_cardWasRemoved = false;
 };
 

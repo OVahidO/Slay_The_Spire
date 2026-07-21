@@ -5,6 +5,8 @@
 #include "map.h"
 #include "ui_mainwindow.h"
 #include "topbar.h"
+#include "shop.h"
+#include "event.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -35,6 +37,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     // m_gameManager = new GameManager(ui->stackedWidget, this);
     // m_gameManager->start();
+
+    player->setCoin(600);
+    Shop* sko = new Shop(player, g, this);
+    int shopIndex = ui->stackedWidget->addWidget(sko);
+    ui->stackedWidget->setCurrentIndex(shopIndex);
+
+    // Event* eve = createRandomEvent(1,player, g, this);
+    // int eveIndex = ui->stackedWidget->addWidget(eve);
+    // ui->stackedWidget->setCurrentIndex(eveIndex);
 }
 
 MainWindow::~MainWindow()
