@@ -85,11 +85,6 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     connect(this, &GamePlay::cardPlayed, this, &GamePlay::playedCardHandler);
     connect(this, &GamePlay::valueChanged, this, &GamePlay::update);
 
-    // startCombat() دیگر اینجا صدا زده نمی‌شود.
-    // GamePlay اکنون یک نمونه‌ی پایدار در طول کل Run است (چون deck باید بین
-    // مبارزات باقی بماند) و شروع واقعیِ هر مبارزه فقط توسط GameManager،
-    // درست قبل از افزودن دشمنان به صحنه، با فراخوانی صریح startCombat() انجام می‌شود.
-
     // startCombat();
 }
 
@@ -126,6 +121,8 @@ void GamePlay::addEnemy(Enemy *enemy)
 {
     if (!enemy)
         return;
+
+    enemy->setNetworkEntityId(m_nextEnemyEntityId++);
 
     m_enemys.push_back(enemy);
     m_scene->addItem(enemy);
@@ -517,6 +514,9 @@ void GamePlay::enemiesTurn()
         return;
     }
 
+    std::mt19937 turnRng(m_combatSeed + static_cast<unsigned int>(m_turn));
+    ScopedEnemyRng scopedRng(&turnRng);
+
     if (m_isAuthoritative) {
         for (size_t i = 0; i < m_enemys.size(); ++i) {
             Enemy *enemy = m_enemys[i];
@@ -529,35 +529,26 @@ void GamePlay::enemiesTurn()
                 emit playerDead();
                 return;
             }
+
+            if (!m_coopMode) {
+                Slime *slime = dynamic_cast<Slime *>(enemy);
+                if (slime && slime->needsToSplit()) {
+                    QVector<Enemy *> children = slime->createSplitChildren(m_isMultiplayer);
+                    for (Enemy *child : children)
+                        addEnemy(child);
+
+                    slime->markSplit();
+                    m_scene->removeItem(enemy);
+                    m_enemys.erase(m_enemys.begin() + i);
+                    enemy->deleteLater();
+                    --i;
+                }
+            }
         }
-    }
-
-    for (size_t i = 0; i < m_enemys.size(); ++i) {
-        Enemy *enemy = m_enemys[i];
-        if (enemy->isDead())
-            continue;
-
-        enemy->applyEnemyIntent(this);
-
-        if (m_player->currentHP() <= 0) {
-            emit playerDead();
-            return;
-        }
-
-        // Slime *slime = dynamic_cast<Slime *>(enemy);
-        // if (slime && slime->needsToSplit()) {
-        //     QVector<Enemy *> children = slime->createSplitChildren(
-        //         m_isMultiplayer); // نکته: پارامتر ثابتِ false باید هماهنگ با حالت بازی شود؛ رجوع به بخش Multiplayer پایین
-
-        //     for (Enemy *child : children)
-        //         addEnemy(child);
-
-        //     slime->markSplit();
-        //     m_scene->removeItem(enemy);
-        //     m_enemys.erase(m_enemys.begin() + i);
-        //     enemy->deleteLater();
-        //     --i;
-        // }
+    } else {
+        for (Enemy *enemy : m_enemys)
+            if (!enemy->isDead())
+                enemy->previewNextIntent();
     }
 
     removeDeadEnemies();
@@ -1188,21 +1179,22 @@ void GamePlay::markLocalTurnEnded()
 {
     m_localEndedTurn = true;
     emit localTurnEndRequested();
-
-    if (bothPlayersEndedTurn()) {
-        resetTurnEndFlags();
-        emit playerTurnEnded();
-    }
+    tryStartEnemiesTurn();
 }
 
 void GamePlay::markRemoteTurnEnded()
 {
     m_remoteEndedTurn = true;
+    tryStartEnemiesTurn();
+}
 
-    if (bothPlayersEndedTurn()) {
-        resetTurnEndFlags();
-        emit playerTurnEnded();
-    }
+void GamePlay::tryStartEnemiesTurn()
+{
+    if (!bothPlayersEndedTurn())
+        return;
+
+    resetTurnEndFlags();
+    emit playerTurnEnded();
 }
 
 bool GamePlay::bothPlayersEndedTurn() const
@@ -1214,4 +1206,9 @@ void GamePlay::resetTurnEndFlags()
 {
     m_localEndedTurn = false;
     m_remoteEndedTurn = false;
+}
+
+void GamePlay::setCombatSeed(unsigned int seed)
+{
+    m_combatSeed = seed;
 }

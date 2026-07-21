@@ -79,7 +79,7 @@ Louse::Louse(bool isMultiplayer, QGraphicsItem *parent)
 
 int Louse::randomBiteDamage() const
 {
-    return 5 + rand() % 3;
+    return 5 + rollBounded(3);
 }
 
 void Louse::calculateNextIntent()
@@ -98,7 +98,7 @@ int Louse::takeDamage(int incomingDamage, bool isAttackDamage)
 
     if (damage > 0 && !m_defensiveReactionUsed) {
         m_defensiveReactionUsed = true;
-        addBlock(3 + rand() % 5);
+        addBlock(3 + rollBounded(5));
     }
 
     return damage;

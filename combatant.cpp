@@ -224,6 +224,20 @@ void Combatant::setCurrentHPDirect(int hp)
 
     m_currentHP = hp;
     m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
+    emit combatStateChanged();
+}
+
+void Combatant::setMaxHPDirect(int hp)
+{
+    if (hp < 1)
+        hp = 1;
+
+    m_maxHP = hp;
+    if (m_currentHP > m_maxHP)
+        m_currentHP = m_maxHP;
+
+    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
+    emit combatStateChanged();
 }
 
 HealthBarItem::HealthBarItem(QGraphicsItem *parent)

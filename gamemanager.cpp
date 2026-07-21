@@ -318,6 +318,9 @@ void GameManager::startBattle(MapButtonType type)
     for (Enemy *e : enemies)
         m_gamePlay->addEnemy(e);
 
+    m_gamePlay->setCombatSeed(
+        EncounterManager::deriveCombatSeed(m_mapSeed, m_currentFloor, m_currentNodeIndex));
+
     if (m_isMultiplayer && m_isLeader && m_networkManager)
         m_networkManager->registerEnemiesForSync(m_gamePlay->enemies());
 
@@ -520,7 +523,7 @@ void GameManager::showVictoryPage()
 void GameManager::showDefeatPage()
 {
     // Defeat UI
-    // GameManager::returnToMainMenuAfterDefeat()
+    GameManager::returnToMainMenuAfterDefeat();
     emit defeatPageRequested();
 }
 
@@ -1083,17 +1086,19 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
             break;
 
         NetEnemyState state = NetworkManager::decodeEnemyStateSync(payload);
-        auto &enemies = m_gamePlay->enemies();
-        if (state.enemyIndex >= enemies.size())
+        if (state.entityId < 0)
             break;
 
-        Enemy *enemy = enemies[state.enemyIndex];
+        Enemy *enemy = findEnemyByNetworkId(state.entityId);
         if (!enemy)
             break;
 
         enemy->setCurrentHPDirect(state.currentHP);
         enemy->setBlock(state.block);
         reconcileBuffs(enemy, state.buffs);
+
+        if (enemy->isDead())
+            m_gamePlay->removeDeadEnemies();
         break;
     }
 
@@ -1102,6 +1107,8 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
             break;
 
         NetPlayerState state = NetworkManager::decodePlayerStateSync(payload);
+        if (!state.isValid)
+            break;
 
         Player *target = state.targetIsReceiverSelf ? m_player : m_gamePlay->remotePlayer();
         if (!target)
@@ -1197,4 +1204,16 @@ void GameManager::reconcileBuffs(Combatant *target, const QVector<QPair<quint8, 
         if (local->stacks() > 0 && !seenTypes.contains(local->type()))
             target->applyBuffDebuff(local->type(), -local->stacks());
     }
+}
+
+Enemy *GameManager::findEnemyByNetworkId(int entityId) const
+{
+    if (!m_gamePlay)
+        return nullptr;
+
+    for (Enemy *enemy : m_gamePlay->enemies())
+        if (enemy && enemy->networkEntityId() == entityId)
+            return enemy;
+
+    return nullptr;
 }

@@ -200,6 +200,7 @@ private:
     void ensureRemotePlayerMirror();
     void hookLocalPlayerNetworkSync();
     static void reconcileBuffs(Combatant *target, const QVector<QPair<quint8, int>> &remoteBuffs);
+    Enemy *findEnemyByNetworkId(int entityId) const;
 };
 
 #endif // GAMEMANAGER_H

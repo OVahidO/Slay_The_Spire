@@ -61,10 +61,14 @@ public:
     QPixmap getIntentIcon(IntentType type) const;
     QPixmap picture() const;
 
+    void previewNextIntent();
+
     virtual void onAnyCardPlayed(CardType cardType, GamePlay *game) {}
 
     // === Multiplayer: RNG ===
     static void setActiveRng(std::mt19937 *rng);
+    int networkEntityId() const;
+    void setNetworkEntityId(int id);
 
 protected:
     EnemyIntent pickIntent(const QVector<QPair<int, EnemyIntent>> &options) const;
@@ -97,7 +101,17 @@ protected:
 
 private:
     static std::mt19937 *s_activeRng;
+    int m_networkEntityId = -1;
 };
 
+class ScopedEnemyRng
+{
+public:
+    explicit ScopedEnemyRng(std::mt19937 *rng) { Enemy::setActiveRng(rng); }
+    ~ScopedEnemyRng() { Enemy::setActiveRng(nullptr); }
+
+    ScopedEnemyRng(const ScopedEnemyRng &) = delete;
+    ScopedEnemyRng &operator=(const ScopedEnemyRng &) = delete;
+};
 
 #endif // ENEMY_H

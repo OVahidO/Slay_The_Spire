@@ -12,6 +12,9 @@ class ScopedEnemyRng
 public:
     explicit ScopedEnemyRng(std::mt19937 *rng) { Enemy::setActiveRng(rng); }
     ~ScopedEnemyRng() { Enemy::setActiveRng(nullptr); }
+
+    ScopedEnemyRng(const ScopedEnemyRng &) = delete;
+    ScopedEnemyRng &operator=(const ScopedEnemyRng &) = delete;
 };
 } // namespace
 
@@ -24,10 +27,7 @@ QVector<Enemy *> EncounterManager::generateEncounter(int act,
                                                      unsigned int mapSeed,
                                                      QVector<int> &usedFirstTwoIndices)
 {
-    // FIX (مسئله‌ی اصلی): هر دو بازیکن روی همین mapSeed (از طریق پکت MapSeed) و همین
-    // مختصات گره (level/pos که Leader انتخاب کرده و از طریق NodeSelection ریپلی شده)
-    // توافق دارند، پس این Seed و در نتیجه کل توالی اعداد تصادفیِ زیر، صد‌درصد یکسان است.
-    unsigned int derivedSeed = mapSeed + static_cast<unsigned int>(floor * 1000 + nodePos);
+    unsigned int derivedSeed = deriveCombatSeed(mapSeed, floor, nodePos);
     std::mt19937 localRng(derivedSeed);
     ScopedEnemyRng scopedRng(&localRng);
 

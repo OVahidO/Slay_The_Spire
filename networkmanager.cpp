@@ -1,6 +1,7 @@
 #include "networkmanager.h"
 
 #include <QDataStream>
+#include <QDebug>
 #include <QHostAddress>
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -93,7 +94,7 @@ void NetworkManager::setupSocket(QTcpSocket *socket)
 
 void NetworkManager::disconnectFromGame()
 {
-    clearEnemySync();
+    bool shouldNotify = m_hadSuccessfulConnection && isConnected();
 
     if (m_socket) {
         m_socket->disconnect(this);
@@ -101,15 +102,19 @@ void NetworkManager::disconnectFromGame()
         m_socket->deleteLater();
         m_socket = nullptr;
     }
+
     if (m_server) {
         m_server->disconnect(this);
-
         m_server->close();
         m_server->deleteLater();
         m_server = nullptr;
     }
 
     clearEnemySync();
+
+    if (shouldNotify)
+        emit disconnected();
+
     m_hadSuccessfulConnection = false;
 }
 
@@ -126,10 +131,16 @@ void NetworkManager::onSocketError(QAbstractSocket::SocketError error)
 {
     Q_UNUSED(error);
 
-    if (!m_isHost)
-        emit connectionFailed(m_socket ? m_socket->errorString() : QString());
+    if (!m_hadSuccessfulConnection) {
+        if (!m_isHost)
+            emit connectionFailed(m_socket ? m_socket->errorString() : QString());
+        teardownSocket();
+        return;
+    }
 
+    emit disconnected();
     teardownSocket();
+    m_hadSuccessfulConnection = false;
 }
 
 bool NetworkManager::isConnected() const
@@ -174,6 +185,8 @@ void NetworkManager::onSocketReadyRead()
 
 void NetworkManager::processBuffer()
 {
+    static const quint32 kMaxReasonableBodySize = 1024 * 1024;
+
     while (true) {
         if (m_recvBuffer.size() < static_cast<int>(sizeof(quint32)))
             return;
@@ -183,6 +196,13 @@ void NetworkManager::processBuffer()
 
         quint32 bodySize = 0;
         peekStream >> bodySize;
+
+        if (bodySize == 0 || bodySize > kMaxReasonableBodySize) {
+            qWarning("NetworkManager: invalid packet length (%u bytes); dropping connection.",
+                     bodySize);
+            disconnectFromGame();
+            return;
+        }
 
         int totalNeeded = static_cast<int>(sizeof(quint32) + bodySize);
         if (m_recvBuffer.size() < totalNeeded)
@@ -196,6 +216,17 @@ void NetworkManager::processBuffer()
 
         quint8 rawType = 0;
         bodyStream >> rawType;
+
+        if (bodyStream.status() != QDataStream::Ok) {
+            qWarning(
+                "NetworkManager: could not read packet type from a received frame; skipping it.");
+            continue;
+        }
+
+        if (rawType > static_cast<quint8>(PacketType::TurnEnded)) {
+            qWarning("NetworkManager: received an unknown packet type (%u); skipping it.", rawType);
+            continue;
+        }
 
         QByteArray payload = body.mid(sizeof(quint8));
 
@@ -238,6 +269,10 @@ quint32 NetworkManager::decodeMapSeed(const QByteArray &payload)
     QDataStream stream(payload);
     stream.setVersion(kStreamVersion);
     stream >> seed;
+
+    if (stream.status() != QDataStream::Ok)
+        return 0;
+
     return seed;
 }
 
@@ -304,11 +339,12 @@ NetPlayerState NetworkManager::decodePlayerStateSync(const QByteArray &payload)
     stream >> targetFlag >> state.currentHP >> state.maxHP >> state.block >> state.energy
         >> state.buffs;
 
+    state.isValid = (stream.status() == QDataStream::Ok);
     state.targetIsReceiverSelf = (targetFlag != 0);
     return state;
 }
 
-void NetworkManager::sendEnemyStateSync(Enemy *enemy, quint8 enemyIndex)
+void NetworkManager::sendEnemyStateSync(Enemy *enemy, int entityId)
 {
     if (!enemy)
         return;
@@ -320,7 +356,8 @@ void NetworkManager::sendEnemyStateSync(Enemy *enemy, quint8 enemyIndex)
     QByteArray payload;
     QDataStream stream(&payload, QIODevice::WriteOnly);
     stream.setVersion(kStreamVersion);
-    stream << enemyIndex << enemy->currentHP() << enemy->maxHP() << enemy->block() << buffs;
+    stream << static_cast<quint8>(entityId) << enemy->currentHP() << enemy->maxHP()
+           << enemy->block() << buffs;
 
     sendPacket(PacketType::EnemyStateSync, payload);
 }
@@ -328,9 +365,18 @@ void NetworkManager::sendEnemyStateSync(Enemy *enemy, quint8 enemyIndex)
 NetEnemyState NetworkManager::decodeEnemyStateSync(const QByteArray &payload)
 {
     NetEnemyState state;
+    quint8 rawId = 0;
+
     QDataStream stream(payload);
     stream.setVersion(kStreamVersion);
-    stream >> state.enemyIndex >> state.currentHP >> state.maxHP >> state.block >> state.buffs;
+    stream >> rawId >> state.currentHP >> state.maxHP >> state.block >> state.buffs;
+
+    if (stream.status() != QDataStream::Ok) {
+        state.entityId = -1;
+        return state;
+    }
+
+    state.entityId = rawId;
     return state;
 }
 
@@ -338,14 +384,13 @@ void NetworkManager::registerEnemiesForSync(const std::vector<Enemy *> &enemies)
 {
     clearEnemySync();
 
-    for (size_t i = 0; i < enemies.size(); ++i) {
-        Enemy *enemy = enemies[i];
+    for (Enemy *enemy : enemies) {
         if (!enemy)
             continue;
 
-        quint8 index = static_cast<quint8>(i);
-        connect(enemy, &Combatant::combatStateChanged, this, [this, enemy, index]() {
-            sendEnemyStateSync(enemy, index);
+        int entityId = enemy->networkEntityId();
+        connect(enemy, &Combatant::combatStateChanged, this, [this, enemy, entityId]() {
+            sendEnemyStateSync(enemy, entityId);
         });
         m_syncedEnemies.append(enemy);
     }
@@ -377,6 +422,10 @@ bool NetworkManager::decodeLeaderChanged(const QByteArray &payload)
     QDataStream stream(payload);
     stream.setVersion(kStreamVersion);
     stream >> raw;
+
+    if (stream.status() != QDataStream::Ok)
+        return false;
+
     return raw != 0;
 }
 
@@ -395,6 +444,10 @@ bool NetworkManager::decodePlayerEliminated(const QByteArray &payload)
     QDataStream stream(payload);
     stream.setVersion(kStreamVersion);
     stream >> raw;
+
+    if (stream.status() != QDataStream::Ok)
+        return false;
+
     return raw != 0;
 }
 

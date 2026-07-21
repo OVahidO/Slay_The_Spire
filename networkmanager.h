@@ -3,7 +3,6 @@
 
 #include <QAbstractSocket>
 #include <QByteArray>
-#include <QMutex>
 #include <QObject>
 #include <QPair>
 #include <QVector>
@@ -32,6 +31,7 @@ enum class PacketType : quint8 {
 
 struct NetPlayerState
 {
+    bool isValid = false;
     bool targetIsReceiverSelf = false;
 
     int currentHP = 0;
@@ -43,6 +43,8 @@ struct NetPlayerState
 
 struct NetEnemyState
 {
+    int entityId = -1;
+
     quint8 enemyIndex = 0;
     int currentHP = 0;
     int maxHP = 0;
@@ -117,13 +119,10 @@ private:
     QByteArray m_recvBuffer;
     QVector<Enemy *> m_syncedEnemies;
 
-    // Probably Not Use
-    QMutex m_networkMutex;
-
     void setupSocket(QTcpSocket *socket);
     void processBuffer();
     void sendPacket(PacketType type, const QByteArray &payload);
-    void sendEnemyStateSync(Enemy *enemy, quint8 enemyIndex);
+    void sendEnemyStateSync(Enemy *enemy, int entityId);
 
     void teardownSocket();
     bool m_hadSuccessfulConnection = false;

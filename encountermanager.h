@@ -17,6 +17,8 @@ public:
                                               bool isMultiplayer,
                                               unsigned int mapSeed,
                                               QVector<int> &usedFirstTwoIndices);
+
+    static unsigned int deriveCombatSeed(unsigned int mapSeed, int floor, int nodePos);
 };
 
 #endif // ENCOUNTERMANAGER_H

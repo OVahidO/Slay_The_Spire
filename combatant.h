@@ -63,6 +63,8 @@ public:
 
     void setCurrentHPDirect(int hp);
 
+    void setMaxHPDirect(int hp);
+
 signals:
     // === Multiplayer ===
     void combatStateChanged();

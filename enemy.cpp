@@ -290,7 +290,7 @@ EnemyIntent Enemy::pickIntent(const QVector<QPair<int, EnemyIntent>> &options) c
     if (totalWeight == 0)
         return EnemyIntent();
 
-    int roll = rand() % totalWeight;
+    int roll = rollBounded(totalWeight);
     int cumulative = 0;
     for (const auto &option : options) {
         cumulative += option.first;
@@ -372,4 +372,19 @@ int Enemy::rollBounded(int exclusiveMax)
         return static_cast<int>((*s_activeRng)() % static_cast<unsigned int>(exclusiveMax));
 
     return rand() % exclusiveMax;
+}
+
+void Enemy::previewNextIntent()
+{
+    calculateNextIntent();
+}
+
+int Enemy::networkEntityId() const
+{
+    return m_networkEntityId;
+}
+
+void Enemy::setNetworkEntityId(int id)
+{
+    m_networkEntityId = id;
 }

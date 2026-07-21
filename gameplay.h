@@ -106,6 +106,8 @@ public:
     bool bothPlayersEndedTurn() const;
     void resetTurnEndFlags();
 
+    void setCombatSeed(unsigned int seed);
+
 signals:
     void enemiesTurnEnded();
     void playerTurnEnded();
@@ -147,6 +149,9 @@ private:
     static const int HAND_MAX_SIZE = 10;
     static const int DRAW_COUNT_PER_TURN = 5;
 
+    unsigned int m_combatSeed = 0;
+    int m_nextEnemyEntityId = 0;
+
     /// for dual wield
     Card *m_selectedHandCard = nullptr;
 
@@ -174,6 +179,8 @@ private:
     bool m_isAuthoritative = true;
     bool m_localEndedTurn = false;
     bool m_remoteEndedTurn = false;
+
+    void tryStartEnemiesTurn();
 };
 
 class EndTurnButton : public QGraphicsObject {
