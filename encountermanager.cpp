@@ -6,18 +6,6 @@
 #include <QtGlobal>
 #include <random>
 
-namespace {
-class ScopedEnemyRng
-{
-public:
-    explicit ScopedEnemyRng(std::mt19937 *rng) { Enemy::setActiveRng(rng); }
-    ~ScopedEnemyRng() { Enemy::setActiveRng(nullptr); }
-
-    ScopedEnemyRng(const ScopedEnemyRng &) = delete;
-    ScopedEnemyRng &operator=(const ScopedEnemyRng &) = delete;
-};
-} // namespace
-
 QVector<Enemy *> EncounterManager::generateEncounter(int act,
                                                      int floor,
                                                      int nodePos,

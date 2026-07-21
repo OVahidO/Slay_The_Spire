@@ -43,6 +43,7 @@ public:
     void addEnemy(Enemy *enemy);
     void clearEnemies();
     bool allEnemiesDead() const;
+    void addSplitChildEnemy(Enemy *enemy);
 
     void playerReviveEnergy();
     void draw();
@@ -108,6 +109,8 @@ public:
 
     void setCombatSeed(unsigned int seed);
 
+    void addEnemyWithNetworkId(Enemy *enemy, int entityId);
+
 signals:
     void enemiesTurnEnded();
     void playerTurnEnded();
@@ -120,6 +123,11 @@ signals:
     void leaderNeedsReassignment();
 
     void localTurnEndRequested();
+
+    void remoteCardEnemyEffectDeferred(int cardID, bool isUpgraded, int targetEntityId);
+
+    void enemySpawned(Enemy *enemy);
+    void teammateStatsChanged(int currentHp, int maxHp, int block);
 
 public slots:
     void playerTurn();

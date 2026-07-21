@@ -156,14 +156,6 @@ bool AcidSlimeS::shouldSplit() const
     return false;
 }
 
-// void AcidSlimeS::executeIntent(Player *player)
-// {
-//     if (needsToSplit())
-//         return;
-
-//     Enemy::executeIntent(player);
-// }
-
 void AcidSlimeS::executeIntent(GamePlay *game)
 {
     if (needsToSplit())
@@ -203,14 +195,6 @@ bool AcidSlimeM::shouldSplit() const
 {
     return m_currentHP <= m_maxHP / 2;
 }
-
-// void AcidSlimeM::executeIntent(Player *player)
-// {
-//     if (needsToSplit())
-//         return;
-
-//     Enemy::executeIntent(player);
-// }
 
 void AcidSlimeM::executeIntent(GamePlay *game)
 {
@@ -264,14 +248,6 @@ bool AcidSlimeL::shouldSplit() const
 {
     return m_currentHP <= m_maxHP / 2;
 }
-
-// void AcidSlimeL::executeIntent(Player *player)
-// {
-//     if (needsToSplit())
-//         return;
-
-//     Enemy::executeIntent(player);
-// }
 
 void AcidSlimeL::executeIntent(GamePlay *game)
 {
@@ -586,8 +562,7 @@ void KingSlime::calculateNextIntent()
         m_currentIntent = attackIntent(35);
         break;
     case 2:
-        m_currentIntent
-            = unknownIntent(); // Goop Spray: فقط SLIME اضافه می‌کند، اثر Debuff عمومی ندارد
+        m_currentIntent = unknownIntent(); // Goop Spray
         break;
     }
 }
@@ -596,14 +571,6 @@ bool KingSlime::shouldSplit() const
 {
     return m_currentHP <= m_maxHP / 2;
 }
-
-// void KingSlime::executeIntent(Player *player)
-// {
-//     if (needsToSplit())
-//         return;
-
-//     Enemy::executeIntent(player);
-// }
 
 void KingSlime::executeIntent(GamePlay *game)
 {

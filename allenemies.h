@@ -63,7 +63,6 @@ public:
     QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
 
 protected:
-    // void executeIntent(Player *player) override;
     void executeIntent(GamePlay *game) override;
 };
 
@@ -76,7 +75,6 @@ public:
     QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
 
 protected:
-    // void executeIntent(Player *player) override;
     void executeIntent(GamePlay *game) override;
 };
 
@@ -89,7 +87,6 @@ public:
     QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
 
 protected:
-    // void executeIntent(Player *player) override;
     void executeIntent(GamePlay *game) override;
 };
 

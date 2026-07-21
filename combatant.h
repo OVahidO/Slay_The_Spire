@@ -62,7 +62,6 @@ public:
     void overrideHP(int hp);
 
     void setCurrentHPDirect(int hp);
-
     void setMaxHPDirect(int hp);
 
 signals:

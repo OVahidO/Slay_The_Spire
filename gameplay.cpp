@@ -1,5 +1,7 @@
 #include "gameplay.h"
 
+#include "allenemies.h"
+
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
@@ -128,6 +130,27 @@ void GamePlay::addEnemy(Enemy *enemy)
     m_scene->addItem(enemy);
 }
 
+void GamePlay::addSplitChildEnemy(Enemy *enemy)
+{
+    if (!enemy)
+        return;
+
+    addEnemy(enemy);
+    emit enemySpawned(enemy);
+}
+
+void GamePlay::addEnemyWithNetworkId(Enemy *enemy, int entityId)
+{
+    if (!enemy)
+        return;
+
+    enemy->setNetworkEntityId(entityId);
+    if (entityId >= m_nextEnemyEntityId)
+        m_nextEnemyEntityId = entityId + 1;
+
+    m_enemys.push_back(enemy);
+    m_scene->addItem(enemy);
+}
 void GamePlay::clearEnemies()
 {
     for (Enemy *e : m_enemys) {
@@ -530,20 +553,20 @@ void GamePlay::enemiesTurn()
                 return;
             }
 
-            if (!m_coopMode) {
-                Slime *slime = dynamic_cast<Slime *>(enemy);
-                if (slime && slime->needsToSplit()) {
-                    QVector<Enemy *> children = slime->createSplitChildren(m_isMultiplayer);
-                    for (Enemy *child : children)
-                        addEnemy(child);
+            // if (!m_coopMode) {
+            //     Slime *slime = dynamic_cast<Slime *>(enemy);
+            //     if (slime && slime->needsToSplit()) {
+            //         QVector<Enemy *> children = slime->createSplitChildren(m_isMultiplayer);
+            //         for (Enemy *child : children)
+            //             addSplitChildEnemy(child);
 
-                    slime->markSplit();
-                    m_scene->removeItem(enemy);
-                    m_enemys.erase(m_enemys.begin() + i);
-                    enemy->deleteLater();
-                    --i;
-                }
-            }
+            //         slime->markSplit();
+            //         m_scene->removeItem(enemy);
+            //         m_enemys.erase(m_enemys.begin() + i);
+            //         enemy->deleteLater();
+            //         --i;
+            //     }
+            // }
         }
     } else {
         for (Enemy *enemy : m_enemys)
@@ -599,21 +622,32 @@ void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy
     if (m_player->cannotPlayCards())
         return;
 
-    if (isEnoughEnergy(card->energyCost())) {
+    if (!isEnoughEnergy(card->energyCost()))
+        return;
+
+    bool deferEnemyEffectToLeader = m_coopMode && !m_isAuthoritative && targetEnemy;
+
+    if (!deferEnemyEffectToLeader)
         card->applyEffect(player, targetEnemy);
-        card->applyEffect(this);
-        emit cardPlayed(card);
-        m_player->loseEnergy(card->energyCost());
 
-        for (Relic *r : m_player->relics())
-            r->onCardPlayed(card, m_player);
+    card->applyEffect(this);
+    emit cardPlayed(card);
+    m_player->loseEnergy(card->energyCost());
 
-        for (Enemy *e : m_enemys)
-            if (!e->isDead())
-                e->onAnyCardPlayed(card->cardType(), this);
+    for (Relic *r : m_player->relics())
+        r->onCardPlayed(card, m_player);
 
+    for (Enemy *e : m_enemys)
+        if (!e->isDead())
+            e->onAnyCardPlayed(card->cardType(), this);
+
+    if (m_isAuthoritative)
         removeDeadEnemies();
-    }
+
+    if (deferEnemyEffectToLeader)
+        emit remoteCardEnemyEffectDeferred(card->ID(),
+                                           card->isUpgraded(),
+                                           targetEnemy->networkEntityId());
 }
 
 void GamePlay::noTargetCardsHandler(Card *card)

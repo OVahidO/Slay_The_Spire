@@ -223,7 +223,7 @@ void NetworkManager::processBuffer()
             continue;
         }
 
-        if (rawType > static_cast<quint8>(PacketType::TurnEnded)) {
+        if (rawType > static_cast<quint8>(PacketType::EnemySpawned)) {
             qWarning("NetworkManager: received an unknown packet type (%u); skipping it.", rawType);
             continue;
         }
@@ -384,16 +384,8 @@ void NetworkManager::registerEnemiesForSync(const std::vector<Enemy *> &enemies)
 {
     clearEnemySync();
 
-    for (Enemy *enemy : enemies) {
-        if (!enemy)
-            continue;
-
-        int entityId = enemy->networkEntityId();
-        connect(enemy, &Combatant::combatStateChanged, this, [this, enemy, entityId]() {
-            sendEnemyStateSync(enemy, entityId);
-        });
-        m_syncedEnemies.append(enemy);
-    }
+    for (Enemy *enemy : enemies)
+        registerSingleEnemyForSync(enemy);
 }
 
 void NetworkManager::clearEnemySync()
@@ -476,35 +468,38 @@ void NetworkManager::sendTurnEnded()
 
 // ==================== CardPlayed (Just showing) ====================
 
-void NetworkManager::sendCardPlayed(Card *card)
+void NetworkManager::sendCardPlayed(int cardID, bool isUpgraded, int targetEntityId)
 {
-    if (!card)
-        return;
-
     QByteArray payload;
     QDataStream stream(&payload, QIODevice::WriteOnly);
     stream.setVersion(kStreamVersion);
-    stream << static_cast<qint32>(card->ID()) << static_cast<quint8>(card->isUpgraded() ? 1 : 0);
+    stream << static_cast<qint32>(cardID) << static_cast<quint8>(isUpgraded ? 1 : 0)
+           << static_cast<qint32>(targetEntityId);
 
     sendPacket(PacketType::CardPlayed, payload);
 }
 
-bool NetworkManager::decodeCardPlayed(const QByteArray &payload, int &cardID, bool &isUpgraded)
+bool NetworkManager::decodeCardPlayed(const QByteArray &payload,
+                                      int &cardID,
+                                      bool &isUpgraded,
+                                      int &targetEntityId)
 {
     qint32 id = 0;
     quint8 upgraded = 0;
+    qint32 targetId = -1;
+
     QDataStream stream(payload);
     stream.setVersion(kStreamVersion);
-    stream >> id >> upgraded;
+    stream >> id >> upgraded >> targetId;
 
     if (stream.status() != QDataStream::Ok)
         return false;
 
     cardID = id;
     isUpgraded = (upgraded != 0);
+    targetEntityId = targetId;
     return true;
 }
-
 void NetworkManager::teardownSocket()
 {
     if (!m_socket)
@@ -515,4 +510,48 @@ void NetworkManager::teardownSocket()
     m_socket = nullptr;
 
     clearEnemySync();
+}
+
+void NetworkManager::sendEnemySpawned(NetSpawnKind kind, int hp, int entityId)
+{
+    QByteArray payload;
+    QDataStream stream(&payload, QIODevice::WriteOnly);
+    stream.setVersion(kStreamVersion);
+    stream << static_cast<quint8>(kind) << static_cast<qint32>(hp) << static_cast<qint32>(entityId);
+
+    sendPacket(PacketType::EnemySpawned, payload);
+}
+
+NetEnemySpawn NetworkManager::decodeEnemySpawned(const QByteArray &payload)
+{
+    NetEnemySpawn spawn;
+    quint8 rawKind = 0;
+    qint32 hp = 0;
+    qint32 entityId = -1;
+
+    QDataStream stream(payload);
+    stream.setVersion(kStreamVersion);
+    stream >> rawKind >> hp >> entityId;
+
+    if (stream.status() != QDataStream::Ok
+        || rawKind > static_cast<quint8>(NetSpawnKind::AcidSlimeL))
+        return spawn;
+
+    spawn.isValid = true;
+    spawn.kind = static_cast<NetSpawnKind>(rawKind);
+    spawn.hp = hp;
+    spawn.entityId = entityId;
+    return spawn;
+}
+
+void NetworkManager::registerSingleEnemyForSync(Enemy *enemy)
+{
+    if (!enemy || m_syncedEnemies.contains(enemy))
+        return;
+
+    int entityId = enemy->networkEntityId();
+    connect(enemy, &Combatant::combatStateChanged, this, [this, enemy, entityId]() {
+        sendEnemyStateSync(enemy, entityId);
+    });
+    m_syncedEnemies.append(enemy);
 }

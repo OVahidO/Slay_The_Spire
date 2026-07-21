@@ -5,6 +5,7 @@
 #include <QRandomGenerator>
 #include <QStackedWidget>
 
+#include "allenemies.h"
 #include "allrelics.h"
 #include "buffdebuff.h"
 #include "campfire.h"
@@ -130,9 +131,26 @@ void GameManager::prepareGamePlayForPlayer()
             m_networkManager->sendTurnEnded();
     });
 
-    connect(m_gamePlay, &GamePlay::cardPlayed, this, [this](Card *card) {
-        if (m_isMultiplayer && m_networkManager)
-            m_networkManager->sendCardPlayed(card);
+    connect(m_gamePlay,
+            &GamePlay::remoteCardEnemyEffectDeferred,
+            this,
+            [this](int cardID, bool isUpgraded, int targetEntityId) {
+                if (m_networkManager)
+                    m_networkManager->sendCardPlayed(cardID, isUpgraded, targetEntityId);
+            });
+
+    connect(m_gamePlay, &GamePlay::enemySpawned, this, [this](Enemy *enemy) { // ADD (Task 2)
+        if (!m_isMultiplayer || !m_isLeader || !m_networkManager || !enemy)
+            return;
+
+        NetSpawnKind kind = NetSpawnKind::AcidSlimeS;
+        if (dynamic_cast<AcidSlimeL *>(enemy))
+            kind = NetSpawnKind::AcidSlimeL;
+        else if (dynamic_cast<AcidSlimeM *>(enemy))
+            kind = NetSpawnKind::AcidSlimeM;
+
+        m_networkManager->sendEnemySpawned(kind, enemy->currentHP(), enemy->networkEntityId());
+        m_networkManager->registerSingleEnemyForSync(enemy);
     });
 }
 
@@ -1102,6 +1120,35 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
         break;
     }
 
+    case PacketType::EnemySpawned: {
+        if (m_isLeader || !m_gamePlay)
+            break;
+
+        NetEnemySpawn spawn = NetworkManager::decodeEnemySpawned(payload);
+        if (!spawn.isValid)
+            break;
+
+        Enemy *child = nullptr;
+        switch (spawn.kind) {
+        case NetSpawnKind::AcidSlimeS:
+            child = new AcidSlimeS(m_isMultiplayer);
+            break;
+        case NetSpawnKind::AcidSlimeM:
+            child = new AcidSlimeM(m_isMultiplayer);
+            break;
+        case NetSpawnKind::AcidSlimeL:
+            child = new AcidSlimeL(m_isMultiplayer);
+            break;
+        }
+
+        if (!child)
+            break;
+
+        child->overrideHP(spawn.hp);
+        m_gamePlay->addEnemyWithNetworkId(child, spawn.entityId);
+        break;
+    }
+
     case PacketType::PlayerStateSync: {
         if (!m_gamePlay)
             break;
@@ -1125,12 +1172,37 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
     }
 
     case PacketType::CardPlayed: {
+        if (!m_isLeader || !m_gamePlay)
+            break;
+
         int cardID = 0;
-        bool upgraded = false;
-        if (NetworkManager::decodeCardPlayed(payload, cardID, upgraded)) {
-            Q_UNUSED(cardID);
-            Q_UNUSED(upgraded);
-        }
+        bool isUpgraded = false;
+        int targetEntityId = -1;
+        if (!NetworkManager::decodeCardPlayed(payload, cardID, isUpgraded, targetEntityId))
+            break;
+
+        if (targetEntityId < 0)
+            break;
+
+        Enemy *targetEnemy = findEnemyByNetworkId(targetEntityId);
+        if (!targetEnemy)
+            break;
+
+        if (!Card::creators().contains(static_cast<CardID>(cardID)))
+            break;
+
+        Card *tempCard = Card::Creat(static_cast<CardID>(cardID));
+        if (!tempCard)
+            break;
+
+        if (isUpgraded)
+            tempCard->upgrade();
+
+        tempCard->applyEffect(m_gamePlay->remotePlayer(), targetEnemy);
+        delete tempCard;
+
+        if (targetEnemy->isDead())
+            m_gamePlay->removeDeadEnemies();
         break;
     }
 

@@ -26,7 +26,8 @@ enum class PacketType : quint8 {
     LeaderChanged,
     PlayerEliminated,
     GameOver,
-    TurnEnded
+    TurnEnded,
+    EnemySpawned
 };
 
 struct NetPlayerState
@@ -52,6 +53,16 @@ struct NetEnemyState
     QVector<QPair<quint8, int>> buffs;
 };
 
+enum class NetSpawnKind : quint8 { AcidSlimeS = 0, AcidSlimeM = 1, AcidSlimeL = 2 };
+
+struct NetEnemySpawn
+{
+    bool isValid = false;
+    NetSpawnKind kind = NetSpawnKind::AcidSlimeS;
+    int hp = 0;
+    int entityId = -1;
+};
+
 class NetworkManager : public QObject
 {
     Q_OBJECT
@@ -74,12 +85,14 @@ public:
     void sendLeaderChanged(bool receiverBecomesLeader);
     void sendPlayerEliminated(bool wasLeader);
     void sendGameOver(bool victory);
-    void sendCardPlayed(Card *card);
+    void sendCardPlayed(int cardID, bool isUpgraded, int targetEntityId);
     void sendTurnEnded();
+    void sendEnemySpawned(NetSpawnKind kind, int hp, int entityId);
 
     // --- Enemy Sync ---
     void registerEnemiesForSync(const std::vector<Enemy *> &enemies);
     void clearEnemySync();
+    void registerSingleEnemyForSync(Enemy *enemy);
 
     // --- Static Methods ---
     static quint32 decodeMapSeed(const QByteArray &payload);
@@ -93,7 +106,11 @@ public:
     static bool decodePlayerEliminated(const QByteArray &payload); // true = Leader Eliminated
     static bool decodeGameOver(const QByteArray &payload);         // true = win
     static QString decodeHandshake(const QByteArray &payload);
-    static bool decodeCardPlayed(const QByteArray &payload, int &cardID, bool &isUpgraded);
+    static bool decodeCardPlayed(const QByteArray &payload,
+                                 int &cardID,
+                                 bool &isUpgraded,
+                                 int &targetEntityId);
+    static NetEnemySpawn decodeEnemySpawned(const QByteArray &payload);
 
 signals:
     void hostStarted(quint16 port);
