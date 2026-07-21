@@ -1161,6 +1161,7 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
         if (!target)
             break;
 
+        target->setMaxHPDirect(state.maxHP);
         target->setCurrentHPDirect(state.currentHP);
         target->setBlock(state.block);
         target->setEnergy(state.energy);

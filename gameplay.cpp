@@ -1160,6 +1160,8 @@ void GamePlay::addRemotePlayer(Player *player)
     player->setIsLocalPlayer(false);
 
     connect(player, &Combatant::combatStateChanged, this, [this, player]() {
+        emit teammateStatsChanged(player->currentHP(), player->maxHP(), player->block());
+
         if (player->currentHP() <= 0 && !player->isEliminated()) {
             player->setEliminated(true);
             emit playerEliminated(player);
