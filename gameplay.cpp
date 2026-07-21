@@ -32,6 +32,12 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     connect(m_player, &Player::hpChanged, this, &GamePlay::updateHpLabels);
     connect(m_player, &Player::energyChanged, this, &GamePlay::updateEnergyLabel);
     connect(m_player, &Player::valueChanged, this, &GamePlay::updatePlayerInformLabels);
+    connect(m_player, &Combatant::combatStateChanged, this, [this]() {
+        if (m_player && m_player->currentHP() <= 0 && !m_player->isEliminated()) {
+            m_player->setEliminated(true);
+            emit playerEliminated(m_player);
+        }
+    });
 
     updateHpLabels();
 
@@ -79,11 +85,6 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     connect(this, &GamePlay::cardPlayed, this, &GamePlay::playedCardHandler);
     connect(this, &GamePlay::valueChanged, this, &GamePlay::update);
 
-    // startCombat() دیگر اینجا صدا زده نمی‌شود.
-    // GamePlay اکنون یک نمونه‌ی پایدار در طول کل Run است (چون deck باید بین
-    // مبارزات باقی بماند) و شروع واقعیِ هر مبارزه فقط توسط GameManager،
-    // درست قبل از افزودن دشمنان به صحنه، با فراخوانی صریح startCombat() انجام می‌شود.
-
     // startCombat();
 }
 
@@ -121,10 +122,33 @@ void GamePlay::addEnemy(Enemy *enemy)
     if (!enemy)
         return;
 
+    enemy->setNetworkEntityId(m_nextEnemyEntityId++);
+
     m_enemys.push_back(enemy);
     m_scene->addItem(enemy);
 }
 
+void GamePlay::addSplitChildEnemy(Enemy *enemy)
+{
+    if (!enemy)
+        return;
+
+    addEnemy(enemy);
+    emit enemySpawned(enemy);
+}
+
+void GamePlay::addEnemyWithNetworkId(Enemy *enemy, int entityId)
+{
+    if (!enemy)
+        return;
+
+    enemy->setNetworkEntityId(entityId);
+    if (entityId >= m_nextEnemyEntityId)
+        m_nextEnemyEntityId = entityId + 1;
+
+    m_enemys.push_back(enemy);
+    m_scene->addItem(enemy);
+}
 void GamePlay::clearEnemies()
 {
     for (Enemy *e : m_enemys) {
@@ -174,59 +198,55 @@ void GamePlay::draw()
 
 void GamePlay::drawCards(int count)
 {
-    int *cardsDrawn = new int(0);
-
     int availableSlots = HAND_MAX_SIZE - static_cast<int>(m_player->HandsCards().size());
     int targetCount = qMin(count, qMax(0, availableSlots));
 
-    if (targetCount <= 0) {
-        delete cardsDrawn;
+    if (targetCount <= 0)
         return;
-    }
 
+    // int *cardsDrawn = new int(0);
     QTimer *drawTimer = new QTimer(this);
-    connect(drawTimer, &QTimer::timeout, this, [this, targetCount, cardsDrawn, drawTimer]() {
-        if (*cardsDrawn >= targetCount
-            || static_cast<int>(m_player->HandsCards().size()) >= HAND_MAX_SIZE) {
-            drawTimer->stop();
-            drawTimer->deleteLater();
-            delete cardsDrawn;
-            return;
-        }
+    connect(drawTimer,
+            &QTimer::timeout,
+            this,
+            [this, targetCount, drawTimer, cardsDrawn = 0]() mutable {
+                if (cardsDrawn >= targetCount
+                    || static_cast<int>(m_player->HandsCards().size()) >= HAND_MAX_SIZE) {
+                    drawTimer->stop();
+                    drawTimer->deleteLater();
+                    return;
+                }
 
-        if (m_drawPile.empty()) {
-            if (m_discardPile.empty()) {
-                drawTimer->stop();
-                drawTimer->deleteLater();
-                delete cardsDrawn;
-                return;
-            }
-            fillingDrawPile();
-        }
+                if (m_drawPile.empty()) {
+                    if (m_discardPile.empty()) {
+                        drawTimer->stop();
+                        drawTimer->deleteLater();
+                        return;
+                    }
+                    fillingDrawPile();
+                }
 
-        if (m_drawPile.empty()) {
-            drawTimer->stop();
-            drawTimer->deleteLater();
-            delete cardsDrawn;
-            return;
-        }
+                if (m_drawPile.empty()) {
+                    drawTimer->stop();
+                    drawTimer->deleteLater();
+                    return;
+                }
 
-        Card *card = m_drawPile.back();
-        card->setPos(ui->drawPileButton->pos());
-        m_player->HandsCards().push_back(card);
-        m_scene->addItem(card);
-        connect(card, &Card::cardEnteredMouse, this, &GamePlay::updateHandsCardsLayout);
-        connect(card, &Card::cardLeavedMouse, this, &GamePlay::updateHandsCardsLayout);
-        connect(card, &Card::targetCardPlayed, this, &GamePlay::targetCardsHandler);
-        connect(card, &Card::noTargetCardPlayed, this, &GamePlay::noTargetCardsHandler);
-        m_drawPile.pop_back();
-        emit valueChanged();
+                Card *card = m_drawPile.back();
+                card->setPos(ui->drawPileButton->pos());
+                m_player->HandsCards().push_back(card);
+                m_scene->addItem(card);
+                connect(card, &Card::cardEnteredMouse, this, &GamePlay::updateHandsCardsLayout);
+                connect(card, &Card::cardLeavedMouse, this, &GamePlay::updateHandsCardsLayout);
+                connect(card, &Card::targetCardPlayed, this, &GamePlay::targetCardsHandler);
+                connect(card, &Card::noTargetCardPlayed, this, &GamePlay::noTargetCardsHandler);
+                m_drawPile.pop_back();
+                emit valueChanged();
 
-        updateHandsCardsLayout();
-        (*cardsDrawn)++;
-        connectCardVfxSignals(card);
-        
-    });
+                updateHandsCardsLayout();
+                cardsDrawn++;
+                connectCardVfxSignals(card);
+            });
 
     drawTimer->start(200);
 }
@@ -492,7 +512,7 @@ void GamePlay::drawFromDrawPile()
 
 void GamePlay::playerTurn()
 {
-    //ui->Enable
+    resetTurnEndFlags();
     addTurn();
     playerReviveEnergy();
     if (m_drawPile.empty())
@@ -510,48 +530,57 @@ void GamePlay::enemiesTurn()
 
     applyBurnDamage();
 
-    if (m_player->currentHP() <= 0) {
+    if (allPlayersDead()) {
         emit playerDead();
         return;
     }
 
-    for (size_t i = 0; i < m_enemys.size(); ++i) {
-        Enemy *enemy = m_enemys[i];
-        if (enemy->isDead())
-            continue;
+    std::mt19937 turnRng(m_combatSeed + static_cast<unsigned int>(m_turn));
+    ScopedEnemyRng scopedRng(&turnRng);
 
-        enemy->applyEnemyIntent(this);
+    if (m_isAuthoritative) {
+        for (size_t i = 0; i < m_enemys.size(); ++i) {
+            Enemy *enemy = m_enemys[i];
+            if (enemy->isDead())
+                continue;
 
-        if (m_player->currentHP() <= 0) {
-            emit playerDead();
-            return;
+            enemy->applyEnemyIntent(this);
+
+            if (allPlayersDead()) {
+                emit playerDead();
+                return;
+            }
+
+            // if (!m_coopMode) {
+            //     Slime *slime = dynamic_cast<Slime *>(enemy);
+            //     if (slime && slime->needsToSplit()) {
+            //         QVector<Enemy *> children = slime->createSplitChildren(m_isMultiplayer);
+            //         for (Enemy *child : children)
+            //             addSplitChildEnemy(child);
+
+            //         slime->markSplit();
+            //         m_scene->removeItem(enemy);
+            //         m_enemys.erase(m_enemys.begin() + i);
+            //         enemy->deleteLater();
+            //         --i;
+            //     }
+            // }
         }
-
-        // بررسی Split برای Slime‌ها (Large Slime / King Slime)
-        // Slime *slime = dynamic_cast<Slime *>(enemy);
-        // if (slime && slime->needsToSplit()) {
-        //     QVector<Enemy *> children = slime->createSplitChildren(false);
-        // Slime *Slime = dynamic_cast<class Slime *>(enemy);
-        // if (Slime && Slime->needsToSplit()) {
-        //     QVector<Enemy *> children = Slime->createSplitChildren(false);
-
-        //     for (Enemy *child : children)
-        //         addEnemy(child);
-
-        //     slime->markSplit();
-        //     m_scene->removeItem(enemy);
-        //     m_enemys.erase(m_enemys.begin() + i);
-        //     enemy->deleteLater();
-        //     --i;
-        // }
+    } else {
+        for (Enemy *enemy : m_enemys)
+            if (!enemy->isDead())
+                enemy->previewNextIntent();
     }
 
     removeDeadEnemies();
 
     m_player->tickDecayingBuffDebuff();
+    for (Player *p : m_remotePlayers)
+        p->tickDecayingBuffDebuff();
 
-    for (Enemy *enemy : m_enemys)
-        enemy->tickDecayingBuffDebuff();
+    if (m_isAuthoritative)
+        for (Enemy *enemy : m_enemys)
+            enemy->tickDecayingBuffDebuff();
 
     emit enemiesTurnEnded();
 }
@@ -578,7 +607,12 @@ void GamePlay::endTurnButtonClicked()
 {
     discardHandToDiscardPile();
 
-    emit playerTurnEnded();
+    if (!m_coopMode) {
+        emit playerTurnEnded();
+        return;
+    }
+
+    markLocalTurnEnded();
 }
 
 void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy)
@@ -586,21 +620,32 @@ void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy
     if (m_player->cannotPlayCards())
         return;
 
-    if (isEnoughEnergy(card->energyCost())) {
+    if (!isEnoughEnergy(card->energyCost()))
+        return;
+
+    bool deferEnemyEffectToLeader = m_coopMode && !m_isAuthoritative && targetEnemy;
+
+    if (!deferEnemyEffectToLeader)
         card->applyEffect(player, targetEnemy);
-        card->applyEffect(this);
-        emit cardPlayed(card);
-        m_player->loseEnergy(card->energyCost());
 
-        for (Relic *r : m_player->relics())
-            r->onCardPlayed(card, m_player);
+    card->applyEffect(this);
+    emit cardPlayed(card);
+    m_player->loseEnergy(card->energyCost());
 
-        for (Enemy *e : m_enemys)
-            if (!e->isDead())
-                e->onAnyCardPlayed(card->cardType(), this);
+    for (Relic *r : m_player->relics())
+        r->onCardPlayed(card, m_player);
 
+    for (Enemy *e : m_enemys)
+        if (!e->isDead())
+            e->onAnyCardPlayed(card->cardType(), this);
+
+    if (m_isAuthoritative)
         removeDeadEnemies();
-    }
+
+    if (deferEnemyEffectToLeader)
+        emit remoteCardEnemyEffectDeferred(card->ID(),
+                                           card->isUpgraded(),
+                                           targetEnemy->networkEntityId());
 }
 
 void GamePlay::noTargetCardsHandler(Card *card)
@@ -608,19 +653,31 @@ void GamePlay::noTargetCardsHandler(Card *card)
     if (m_player->cannotPlayCards())
         return;
 
-    if (isEnoughEnergy(card->energyCost())) {
-        if (card->applyEffect(this)) {
-            emit cardPlayed(card);
-            m_player->loseEnergy(card->energyCost());
+    if (!isEnoughEnergy(card->energyCost()))
+        return;
 
-            for (Relic *r : m_player->relics())
-                r->onCardPlayed(card, m_player);
+    bool deferEnemyEffectToLeader = m_coopMode && !m_isAuthoritative && card->isAoeEnemyEffect();
 
-            for (Enemy *e : m_enemys)
-                if (!e->isDead())
-                    e->onAnyCardPlayed(card->cardType(), this);
-        }
-    }
+    bool effectSucceeded = deferEnemyEffectToLeader ? true : card->applyEffect(this);
+
+    if (!effectSucceeded)
+        return;
+
+    emit cardPlayed(card);
+    m_player->loseEnergy(card->energyCost());
+
+    for (Relic *r : m_player->relics())
+        r->onCardPlayed(card, m_player);
+
+    for (Enemy *e : m_enemys)
+        if (!e->isDead())
+            e->onAnyCardPlayed(card->cardType(), this);
+
+    if (m_isAuthoritative)
+        removeDeadEnemies();
+
+    if (deferEnemyEffectToLeader)
+        emit remoteCardEnemyEffectDeferred(card->ID(), card->isUpgraded(), -1);
 }
 
 void GamePlay::playedCardHandler(Card *card)
@@ -1102,4 +1159,102 @@ void GamePlay::triggerScreenShake(int intensity, int durationMs)
     });
 
     shakeTimer->start(stepInterval);
+}
+
+void GamePlay::addRemotePlayer(Player *player)
+{
+    if (!player || m_remotePlayers.contains(player))
+        return;
+
+    m_remotePlayers.append(player);
+    player->setIsLocalPlayer(false);
+
+    connect(player, &Combatant::combatStateChanged, this, [this, player]() {
+        emit teammateStatsChanged(player->currentHP(), player->maxHP(), player->block());
+
+        if (player->currentHP() <= 0 && !player->isEliminated()) {
+            player->setEliminated(true);
+            emit playerEliminated(player);
+        }
+    });
+}
+
+Player *GamePlay::remotePlayer() const
+{
+    return m_remotePlayers.isEmpty() ? nullptr : m_remotePlayers.first();
+}
+
+QVector<Player *> GamePlay::allPlayers() const
+{
+    QVector<Player *> result;
+    if (m_player)
+        result.append(m_player);
+    result += m_remotePlayers;
+    return result;
+}
+
+bool GamePlay::allPlayersDead() const
+{
+    for (Player *p : allPlayers())
+        if (p && p->currentHP() > 0)
+            return false;
+    return true;
+}
+
+bool GamePlay::isCoopMode() const
+{
+    return m_coopMode;
+}
+
+void GamePlay::setCoopMode(bool enabled)
+{
+    m_coopMode = enabled;
+}
+
+void GamePlay::setAuthoritative(bool authoritative)
+{
+    m_isAuthoritative = authoritative;
+}
+
+bool GamePlay::isAuthoritative() const
+{
+    return m_isAuthoritative;
+}
+
+void GamePlay::markLocalTurnEnded()
+{
+    m_localEndedTurn = true;
+    emit localTurnEndRequested();
+    tryStartEnemiesTurn();
+}
+
+void GamePlay::markRemoteTurnEnded()
+{
+    m_remoteEndedTurn = true;
+    tryStartEnemiesTurn();
+}
+
+void GamePlay::tryStartEnemiesTurn()
+{
+    if (!bothPlayersEndedTurn())
+        return;
+
+    resetTurnEndFlags();
+    emit playerTurnEnded();
+}
+
+bool GamePlay::bothPlayersEndedTurn() const
+{
+    return m_localEndedTurn && m_remoteEndedTurn;
+}
+
+void GamePlay::resetTurnEndFlags()
+{
+    m_localEndedTurn = false;
+    m_remoteEndedTurn = false;
+}
+
+void GamePlay::setCombatSeed(unsigned int seed)
+{
+    m_combatSeed = seed;
 }

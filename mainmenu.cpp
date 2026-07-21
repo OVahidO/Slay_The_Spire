@@ -89,3 +89,8 @@ void MainMenu::on_Settingbutton_clicked()
 {
     emit settingsClicked();
 }
+
+void MainMenu::on_MultiplayerButton_clicked()
+{
+    emit multiplayerClicked();
+}

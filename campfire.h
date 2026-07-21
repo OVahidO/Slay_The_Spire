@@ -75,10 +75,13 @@ public:
 signals:
     void campfireFinished();
 
+    void reviveRequested();
+
 private slots:
     void onRestClicked();
     void onSmithClicked();
     void onLiftClicked();
+    void onReviveClicked();
 
 private:
     Player *m_player;
@@ -90,6 +93,7 @@ private:
     CampfireOptionItem *m_restOption;
     CampfireOptionItem *m_smithOption;
     CampfireOptionItem *m_liftOption;
+    CampfireOptionItem *m_reviveOption;
 
     QGraphicsTextItem *m_titleItem;
 
@@ -102,6 +106,7 @@ class UpgradeDialog : public QDialog
     Q_OBJECT
 public:
     explicit UpgradeDialog(GamePlay *gamePlay, QWidget *parent = nullptr);
+    ~UpgradeDialog();
 
     bool cardWasUpgraded() const;
 

@@ -43,6 +43,7 @@ public:
     void addEnemy(Enemy *enemy);
     void clearEnemies();
     bool allEnemiesDead() const;
+    void addSplitChildEnemy(Enemy *enemy);
 
     void playerReviveEnergy();
     void draw();
@@ -90,6 +91,26 @@ public:
 
     void triggerScreenShake(int intensity = 12, int durationMs = 300);
 
+    // ------------------------- Multiplayer (Co-op) -------------------------
+    void addRemotePlayer(Player *player);
+    Player *remotePlayer() const;
+    QVector<Player *> allPlayers() const;
+    bool allPlayersDead() const;
+    bool isCoopMode() const;
+    void setCoopMode(bool enabled);
+
+    void setAuthoritative(bool authoritative);
+    bool isAuthoritative() const;
+
+    void markLocalTurnEnded();
+    void markRemoteTurnEnded();
+    bool bothPlayersEndedTurn() const;
+    void resetTurnEndFlags();
+
+    void setCombatSeed(unsigned int seed);
+
+    void addEnemyWithNetworkId(Enemy *enemy, int entityId);
+
 signals:
     void enemiesTurnEnded();
     void playerTurnEnded();
@@ -97,6 +118,16 @@ signals:
     void combatWon();
     void cardPlayed(Card *);
     void valueChanged();
+
+    void playerEliminated(Player *player);
+    void leaderNeedsReassignment();
+
+    void localTurnEndRequested();
+
+    void remoteCardEnemyEffectDeferred(int cardID, bool isUpgraded, int targetEntityId);
+
+    void enemySpawned(Enemy *enemy);
+    void teammateStatsChanged(int currentHp, int maxHp, int block);
 
 public slots:
     void playerTurn();
@@ -125,6 +156,9 @@ private:
     static const int HAND_MAX_SIZE = 10;
     static const int DRAW_COUNT_PER_TURN = 5;
 
+    unsigned int m_combatSeed = 0;
+    int m_nextEnemyEntityId = 0;
+
     /// for dual wield
     Card *m_selectedHandCard = nullptr;
 
@@ -145,6 +179,15 @@ private:
     TargetFrame *m_targetFrame = nullptr;
 
     void connectCardVfxSignals(Card *card);
+
+    QVector<Player *> m_remotePlayers;
+    bool m_coopMode = false;
+
+    bool m_isAuthoritative = true;
+    bool m_localEndedTurn = false;
+    bool m_remoteEndedTurn = false;
+
+    void tryStartEnemiesTurn();
 };
 
 class EndTurnButton : public QGraphicsObject {

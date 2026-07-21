@@ -46,6 +46,7 @@ public:
     explicit Reaper(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
     bool applyEffect(GamePlay *gameplay) override;
+    bool isAoeEnemyEffect() const override;
     void upgrade() override;
     Card *clone() const override;
 };
@@ -69,6 +70,7 @@ public:
     explicit Immolate(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
     bool applyEffect(GamePlay *gameplay) override;
+    bool isAoeEnemyEffect() const override;
     void upgrade() override;
     Card *clone() const override;
 };
@@ -119,6 +121,7 @@ public:
     explicit Whirlwind(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
     bool applyEffect(GamePlay *gameplay) override;
+    bool isAoeEnemyEffect() const override;
     void upgrade() override;
     Card *clone() const override;
 };

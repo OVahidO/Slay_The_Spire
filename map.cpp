@@ -266,8 +266,10 @@ void Map::addMapButtons()
         for(int j=0; j<currentLevel.size(); j++)
         {
             auto currentMapButtons = currentLevel[j];
-            connect(currentMapButtons, &MapButton::onClick, this, [this](MapButton* mapButton)
-            {
+            connect(currentMapButtons, &MapButton::onClick, this, [this](MapButton *mapButton) {
+                if (m_locked)
+                    return;
+
                 auto sameLevelButtons = this->m_levels[mapButton->levelIndex()];
                 for(auto& mapButton : sameLevelButtons)
                     mapButton->setEnabled(false);
@@ -331,4 +333,21 @@ void Map::enableLevel(int levelIndex)
 unsigned int Map::seed() const
 {
     return m_seed;
+}
+
+void Map::setLocked(bool locked)
+{
+    m_locked = locked;
+}
+
+MapButton *Map::buttonAt(int level, int pos) const
+{
+    if (level < 0 || level >= m_levels.size())
+        return nullptr;
+
+    for (MapButton *button : m_levels[level])
+        if (button->levelPosIndex() == pos)
+            return button;
+
+    return nullptr;
 }

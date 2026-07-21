@@ -151,6 +151,11 @@ bool Reaper::applyEffect(GamePlay *gameplay)
     return true;
 }
 
+bool Reaper::isAoeEnemyEffect() const
+{
+    return true;
+}
+
 void Reaper::upgrade()
 {
     if (m_isUpgraded)
@@ -213,6 +218,8 @@ void Feed::upgrade()
         return;
 
     Card::upgrade();
+
+    m_name = "Feed+";
 
     m_damage += 2;
     m_increaseMaxHp += 1;
@@ -280,8 +287,13 @@ void Immolate::applyEffect(Player *player, Enemy *target)
 bool Immolate::applyEffect(GamePlay *gameplay)
 {
     gameplay->takeDamageToAllEnemies(m_damage);
-    // gameplay->addCardToDiscardPile(new BURN());
-    // gameplay->addCardToDiscardPile(new BURN());
+    gameplay->addCardToDiscardPile(new BURN());
+    gameplay->addCardToDiscardPile(new BURN());
+    return true;
+}
+
+bool Immolate::isAoeEnemyEffect() const
+{
     return true;
 }
 
@@ -579,12 +591,19 @@ bool Whirlwind::applyEffect(GamePlay *gameplay)
     return true;
 }
 
+bool Whirlwind::isAoeEnemyEffect() const
+{
+    return true;
+}
+
 void Whirlwind::upgrade()
 {
     if (m_isUpgraded)
         return;
 
     Card::upgrade();
+
+    m_name = "Whirlwind+";
 
     m_damage += 3;
     m_name = "Whrilwind+";
