@@ -1,24 +1,42 @@
 #include "encountermanager.h"
 #include "allenemies.h"
+#include "enemy.h"
 
 #include <QRandomGenerator>
 #include <QtGlobal>
+#include <random>
+
+namespace {
+class ScopedEnemyRng
+{
+public:
+    explicit ScopedEnemyRng(std::mt19937 *rng) { Enemy::setActiveRng(rng); }
+    ~ScopedEnemyRng() { Enemy::setActiveRng(nullptr); }
+};
+} // namespace
 
 QVector<Enemy *> EncounterManager::generateEncounter(int act,
                                                      int floor,
+                                                     int nodePos,
                                                      bool isElite,
                                                      bool isBoss,
                                                      bool isMultiplayer,
+                                                     unsigned int mapSeed,
                                                      QVector<int> &usedFirstTwoIndices)
 {
-    Q_UNUSED(floor);
+    // FIX (مسئله‌ی اصلی): هر دو بازیکن روی همین mapSeed (از طریق پکت MapSeed) و همین
+    // مختصات گره (level/pos که Leader انتخاب کرده و از طریق NodeSelection ریپلی شده)
+    // توافق دارند، پس این Seed و در نتیجه کل توالی اعداد تصادفیِ زیر، صد‌درصد یکسان است.
+    unsigned int derivedSeed = mapSeed + static_cast<unsigned int>(floor * 1000 + nodePos);
+    std::mt19937 localRng(derivedSeed);
+    ScopedEnemyRng scopedRng(&localRng);
 
     QVector<Enemy *> result;
 
     // ---------------- Boss ----------------
     if (isBoss) {
         if (act == 1) {
-            int r = QRandomGenerator::global()->bounded(2);
+            int r = localRng() % 2;
             if (r == 0)
                 result.append(new KingSlime(isMultiplayer));
             else
@@ -32,7 +50,7 @@ QVector<Enemy *> EncounterManager::generateEncounter(int act,
     // ---------------- Elite ----------------
     if (isElite) {
         if (act == 1) {
-            int r = QRandomGenerator::global()->bounded(2);
+            int r = localRng() % 2;
             if (r == 0) {
                 result.append(new GremlinKnob(isMultiplayer));
             } else {
@@ -41,7 +59,7 @@ QVector<Enemy *> EncounterManager::generateEncounter(int act,
                 result.append(new Sentry(false, isMultiplayer));
             }
         } else {
-            int r = QRandomGenerator::global()->bounded(2);
+            int r = localRng() % 2;
             if (r == 0) {
                 result.append(new BookOfStabbing(isMultiplayer));
             } else {
@@ -60,7 +78,7 @@ QVector<Enemy *> EncounterManager::generateEncounter(int act,
             for (int used : usedFirstTwoIndices)
                 pool.removeAll(used);
 
-            int idx = pool[QRandomGenerator::global()->bounded(pool.size())];
+            int idx = pool[localRng() % static_cast<unsigned int>(pool.size())];
             usedFirstTwoIndices.append(idx);
 
             switch (idx) {
@@ -80,7 +98,7 @@ QVector<Enemy *> EncounterManager::generateEncounter(int act,
                 break;
             }
         } else {
-            int idx = QRandomGenerator::global()->bounded(4);
+            int idx = localRng() % 4;
             switch (idx) {
             case 0:
                 result.append(new BlueSlaver(isMultiplayer));
@@ -104,7 +122,7 @@ QVector<Enemy *> EncounterManager::generateEncounter(int act,
             for (int used : usedFirstTwoIndices)
                 pool.removeAll(used);
 
-            int idx = pool[QRandomGenerator::global()->bounded(pool.size())];
+            int idx = pool[localRng() % static_cast<unsigned int>(pool.size())];
             usedFirstTwoIndices.append(idx);
 
             switch (idx) {
@@ -125,7 +143,7 @@ QVector<Enemy *> EncounterManager::generateEncounter(int act,
                 break;
             }
         } else {
-            int idx = QRandomGenerator::global()->bounded(2);
+            int idx = localRng() % 2;
             if (idx == 0) {
                 for (int i = 0; i < 3; ++i)
                     result.append(new AcidSlimeL(isMultiplayer));

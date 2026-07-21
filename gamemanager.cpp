@@ -309,11 +309,12 @@ void GameManager::startBattle(MapButtonType type)
 
     QVector<Enemy *> enemies = EncounterManager::generateEncounter(m_currentAct,
                                                                    m_currentFloor,
+                                                                   m_currentNodeIndex,
                                                                    isElite,
                                                                    isBoss,
                                                                    m_isMultiplayer,
+                                                                   m_mapSeed,
                                                                    usedPool);
-
     for (Enemy *e : enemies)
         m_gamePlay->addEnemy(e);
 

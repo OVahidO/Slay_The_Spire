@@ -63,7 +63,7 @@ void JawWorm::calculateNextIntent()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Louse::Louse(bool isMultiplayer, QGraphicsItem *parent)
-    : Enemy((rand() % 2 == 0) ? "Green Louse" : "Red Louse",
+    : Enemy((rollBounded(2) == 0) ? "Green Louse" : "Red Louse",
             10,
             15,
             enemyType::Normal,

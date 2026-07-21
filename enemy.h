@@ -3,6 +3,8 @@
 
 #include <QPair>
 #include <QPixmap>
+#include <random>
+
 #include "combatant.h"
 
 class Player;
@@ -61,6 +63,9 @@ public:
 
     virtual void onAnyCardPlayed(CardType cardType, GamePlay *game) {}
 
+    // === Multiplayer: RNG ===
+    static void setActiveRng(std::mt19937 *rng);
+
 protected:
     EnemyIntent pickIntent(const QVector<QPair<int, EnemyIntent>> &options) const;
     EnemyIntent m_currentIntent;
@@ -83,9 +88,15 @@ protected:
     EnemyIntent escapeIntent() const;
     EnemyIntent unknownIntent() const;
 
+    static int rollHP(int minHP, int maxHP);
+    static int rollBounded(int exclusiveMax);
+
     virtual void onIntentExecuted(GamePlay *game) {}
 
     Player *chooseSingleTarget(GamePlay *game) const;
+
+private:
+    static std::mt19937 *s_activeRng;
 };
 
 

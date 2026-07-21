@@ -5,9 +5,11 @@
 
 #include <QRandomGenerator>
 
+std::mt19937 *Enemy::s_activeRng = nullptr;
+
 Enemy::Enemy(
     QString name, int minHP, int maxHP, enemyType type, bool isMultiplayer, QGraphicsItem *parent)
-    : Combatant(name, minHP + rand() % (maxHP - minHP + 1), parent)
+    : Combatant(name, rollHP(minHP, maxHP), parent) // FIX: rand() مستقیم حذف شد
     , m_type(type)
 {
     if (isMultiplayer) {
@@ -342,4 +344,32 @@ QPixmap Enemy::getIntentIcon(IntentType type) const
     QPixmap icon;
     icon.load(path);
     return icon;
+}
+
+void Enemy::setActiveRng(std::mt19937 *rng)
+{
+    s_activeRng = rng;
+}
+
+int Enemy::rollHP(int minHP, int maxHP)
+{
+    if (maxHP <= minHP)
+        return minHP;
+
+    if (s_activeRng)
+        return minHP
+               + static_cast<int>((*s_activeRng)() % static_cast<unsigned int>(maxHP - minHP + 1));
+
+    return minHP + rand() % (maxHP - minHP + 1);
+}
+
+int Enemy::rollBounded(int exclusiveMax)
+{
+    if (exclusiveMax <= 1)
+        return 0;
+
+    if (s_activeRng)
+        return static_cast<int>((*s_activeRng)() % static_cast<unsigned int>(exclusiveMax));
+
+    return rand() % exclusiveMax;
 }
