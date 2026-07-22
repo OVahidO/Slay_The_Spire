@@ -30,26 +30,16 @@ public:
     //////////////////////////////////////////
 
     static bool creatPlayerTable();
-    static bool insertPlayerValue(Player* p);
+    static bool insertPlayerValue(Player* p, QString password);
     static bool updatePlayerValue(Player* p);
     static bool deletePlayerValue(Player* p);
-    static QVector<QPair<Player* , unsigned int>> selectAllPlayers();
+    static QVector<Player*> selectAllPlayers();
     static Player *loadPlayerById(int playerID);
     static bool validateLogin(const QString &username, const QString &password, int &outPlayerID);
     static bool updatePlayerScore(int playerID, int score);
     static QVector<QPair<QString, int>> topScores(int limit = 10);
 
     //////////////////////////////////////////
-
-    static bool creatPlayersDeckTable();
-    static bool insertPlayersDeckValue(Player* p);
-    static bool updatePlayersDeckValue(Player* p);
-    static bool deletePlayersDeckValue(Player* p);
-    static QVector<Card*> selectPlayersDeck(Player* p);
-
-    //////////////////////////////////////////
-
-    static bool updateMapSeedValue(int playerID, unsigned int seed);
 
     //////////////////////////////////////////
     // --- Run state: Current Act/Floor/Node, energy, map seed ---

@@ -47,7 +47,7 @@ private slots:
 
 private:
     Ui::Login_Signup *ui;
-    QVector<QPair<Player* , unsigned int>> m_players;
+    QVector<Player*> m_players;
 };
 
 #endif // LOGIN_SIGNUP_H

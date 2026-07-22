@@ -50,7 +50,7 @@ void Login_Signup::on_usernameInput_editingFinished()
     QString inputUsername = ui->usernameInput->text();
     for(auto& player : m_players)
     {
-        if(inputUsername == player.first->name())
+        if(inputUsername == player->name())
         {
             isExists = true;
             break;
@@ -124,7 +124,7 @@ void Login_Signup::on_confirimPasswordInput_editingFinished()
 void Login_Signup::on_SignupEnterButton_clicked()
 {
     Player* player = new Player(ui->usernameInput->text(), 100);
-    Database::insertPlayerValue(player);
+    Database::insertPlayerValue(player, ui->passwordInput->text());
     // Database::close() قبلاً اینجا صدا زده می‌شد که باعث می‌شد
     // GameManager دیگر نتواند به دیتابیس دسترسی داشته باشد. حذف شد.
 
