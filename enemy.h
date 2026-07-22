@@ -3,6 +3,8 @@
 
 #include <QPair>
 #include <QPixmap>
+#include <random>
+
 #include "combatant.h"
 
 class Player;
@@ -49,7 +51,8 @@ public:
                        const QStyleOptionGraphicsItem *option,
                        QWidget *widget) override;
 
-    virtual void executeIntent(Player *player);
+    // virtual void executeIntent(Player *player);
+    virtual void executeIntent(GamePlay *game);
     void applyEnemyIntent(GamePlay *game);
 
     EnemyIntent getCurrentIntent() const;
@@ -58,7 +61,14 @@ public:
     QPixmap getIntentIcon(IntentType type) const;
     QPixmap picture() const;
 
+    void previewNextIntent();
+
     virtual void onAnyCardPlayed(CardType cardType, GamePlay *game) {}
+
+    // === Multiplayer: RNG ===
+    static void setActiveRng(std::mt19937 *rng);
+    int networkEntityId() const;
+    void setNetworkEntityId(int id);
 
 signals:
     void attacked(Enemy* enemy);
@@ -85,27 +95,26 @@ protected:
     EnemyIntent escapeIntent() const;
     EnemyIntent unknownIntent() const;
 
+    static int rollHP(int minHP, int maxHP);
+    static int rollBounded(int exclusiveMax);
+
     virtual void onIntentExecuted(GamePlay *game) {}
+
+    Player *chooseSingleTarget(GamePlay *game) const;
+
+private:
+    static std::mt19937 *s_activeRng;
+    int m_networkEntityId = -1;
 };
 
-/*
-int startX = 0;
-int startY = 80;
+class ScopedEnemyRng
+{
+public:
+    explicit ScopedEnemyRng(std::mt19937 *rng) { Enemy::setActiveRng(rng); }
+    ~ScopedEnemyRng() { Enemy::setActiveRng(nullptr); }
 
-for (BuffDebuff* effect : m_activeEffects) {
-    if (effect->stacks() == 0) continue;
-
-    QRectF iconRect(startX, startY, 32, 32); 
-
-    painter->drawPixmap(iconRect.toRect(), effect->icon());
-
-    painter->setPen(Qt::white);
-    QFont font("Arial", 10, QFont::Bold);
-    painter->setFont(font);
-    painter->drawText(iconRect, Qt::AlignBottom | Qt::AlignRight, QString::number(effect->stacks()));
-
-    startX += 36; 
-}
-*/
+    ScopedEnemyRng(const ScopedEnemyRng &) = delete;
+    ScopedEnemyRng &operator=(const ScopedEnemyRng &) = delete;
+};
 
 #endif // ENEMY_H

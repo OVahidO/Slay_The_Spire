@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "gamemanager.h"
+
 class Topbar;
 class GameManager;
 

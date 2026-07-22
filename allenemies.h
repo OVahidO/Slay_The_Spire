@@ -63,7 +63,7 @@ public:
     QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
 
 protected:
-    void executeIntent(Player *player) override;
+    void executeIntent(GamePlay *game) override;
 };
 
 class AcidSlimeM : public Slime
@@ -75,7 +75,7 @@ public:
     QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
 
 protected:
-    void executeIntent(Player *player) override;
+    void executeIntent(GamePlay *game) override;
 };
 
 class AcidSlimeL : public Slime
@@ -87,7 +87,7 @@ public:
     QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
 
 protected:
-    void executeIntent(Player *player) override;
+    void executeIntent(GamePlay *game) override;
 };
 
 class Thief : public Enemy
@@ -201,7 +201,8 @@ public:
     QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
 
 protected:
-    void executeIntent(Player *player) override;
+    // void executeIntent(Player *player) override;
+    void executeIntent(GamePlay *game) override;
 
 private:
     void onIntentExecuted(GamePlay *game) override;

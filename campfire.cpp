@@ -4,12 +4,17 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QRandomGenerator>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <algorithm>
 
 #include "card.h"
+#include "cardIDeas.h"
+#include "carddialogs.h"
 #include "gameplay.h"
 #include "player.h"
+
 #include "relic.h"
 
 CampfireGraphicsView::CampfireGraphicsView(QGraphicsScene *scene, QWidget *parent)
@@ -176,22 +181,28 @@ void Campfire::setupScene()
     m_liftOption = new CampfireOptionItem("Lift",
                                           "Gain 1 permanent\nStrength (Girya)",
                                           ":/icons/Pics/Icons/relic/normal/girya.png");
+    m_reviveOption = new CampfireOptionItem("Revive",
+                                            "Burn a card to\nrevive your teammate",
+                                            ":/icons/Pics/Icons/hpIcon.png");
 
     connect(m_restOption, &CampfireOptionItem::clicked, this, &Campfire::onRestClicked);
     connect(m_smithOption, &CampfireOptionItem::clicked, this, &Campfire::onSmithClicked);
     connect(m_liftOption, &CampfireOptionItem::clicked, this, &Campfire::onLiftClicked);
+    connect(m_reviveOption, &CampfireOptionItem::clicked, this, &Campfire::onReviveClicked); // ADD
 
     qreal spacing = 260;
-    qreal startX = 1280 / 2 - (spacing * 3 / 2) + (spacing - 220) / 2;
+    qreal startX = 1280 / 2 - (spacing * 4 / 2) + (spacing - 220) / 2;
     qreal optionY = 220;
 
     m_restOption->setPos(startX, optionY);
     m_smithOption->setPos(startX + spacing, optionY);
     m_liftOption->setPos(startX + spacing * 2, optionY);
+    m_reviveOption->setPos(startX + spacing * 3, optionY);
 
     m_scene->addItem(m_restOption);
     m_scene->addItem(m_smithOption);
     m_scene->addItem(m_liftOption);
+    m_scene->addItem(m_reviveOption);
 }
 
 void Campfire::checkAvailableOptions()
@@ -219,6 +230,16 @@ void Campfire::checkAvailableOptions()
 
     bool showLift = hasGirya && giryaRelic && giryaRelic->counter() > 0;
     m_liftOption->setVisible(showLift);
+
+    bool hasEliminatedTeammate = false;
+    if (m_gamePlay && m_gamePlay->isCoopMode()) {
+        for (Player *p : m_gamePlay->allPlayers())
+            if (p && p->currentHP() <= 0) {
+                hasEliminatedTeammate = true;
+                break;
+            }
+    }
+    m_reviveOption->setVisible(hasEliminatedTeammate);
 }
 
 void Campfire::onRestClicked()
@@ -255,6 +276,48 @@ void Campfire::onLiftClicked()
             break;
         }
     }
+
+    emit campfireFinished();
+}
+
+void Campfire::onReviveClicked()
+{
+    if (!m_gamePlay)
+        return;
+
+    // نکته‌ی مهم: از CardSelectionMode::PickAny استفاده شده، نه Remove.
+    // چون در حالت Remove، دیالوگ خودش کارت را delete می‌کند و اگر بعد از dialog.exec()
+    // بخواهیم card->isRare()/card->ID() را بخوانیم، به یک Use-After-Free برمی‌خوریم.
+    // در PickAny کارت فقط انتخاب می‌شود، پاک نمی‌شود؛ خودمان دستی مدیریتش می‌کنیم.
+    CardSelectionDialog dialog(m_gamePlay,
+                               CardSelectionMode::PickAny,
+                               1,
+                               "Revive - Choose a card to burn",
+                               this);
+
+    if (dialog.exec() != QDialog::Accepted || dialog.selectedCards().isEmpty())
+        return;
+
+    Card *burnedCard = dialog.selectedCards().first();
+
+    int chance = 50;
+    if (burnedCard->isRare())
+        chance = 100;
+    else if (burnedCard->ID() == static_cast<int>(CardID::Strike)
+             || burnedCard->ID() == static_cast<int>(CardID::Defend))
+        chance = 2;
+
+    bool success = QRandomGenerator::global()->bounded(100) < chance;
+
+    auto &deck = m_gamePlay->deck();
+    auto it = std::find(deck.begin(), deck.end(), burnedCard);
+    if (it != deck.end())
+        deck.erase(it);
+
+    delete burnedCard;
+
+    if (success)
+        emit reviveRequested();
 
     emit campfireFinished();
 }
@@ -341,6 +404,13 @@ void UpgradeDialog::onSceneItemClicked(QGraphicsItem *item)
 
     QMessageBox::information(this, "Smith Successful", card->name() + " has been upgraded!");
     accept();
+}
+
+UpgradeDialog::~UpgradeDialog()
+{
+    for (Card *card : m_selectableCards)
+        if (card && m_scene && m_scene->items().contains(card))
+            m_scene->removeItem(card);
 }
 
 bool UpgradeDialog::cardWasUpgraded() const

@@ -3,9 +3,13 @@
 #include "gameplay.h"
 #include "player.h"
 
+#include <QRandomGenerator>
+
+std::mt19937 *Enemy::s_activeRng = nullptr;
+
 Enemy::Enemy(
     QString name, int minHP, int maxHP, enemyType type, bool isMultiplayer, QGraphicsItem *parent)
-    : Combatant(name, minHP + rand() % (maxHP - minHP + 1), parent)
+    : Combatant(name, rollHP(minHP, maxHP), parent) // FIX: rand() مستقیم حذف شد
     , m_type(type)
 {
     if (isMultiplayer) {
@@ -129,18 +133,92 @@ EnemyIntent Enemy::unknownIntent() const
     return {IntentType::Unknown, 0, 0, false, getIntentIcon(IntentType::Unknown)};
 }
 
-void Enemy::executeIntent(Player *player)
+// void Enemy::executeIntent(Player *player)
+// {
+//     if (!player)
+//         return;
+
+//     switch (m_currentIntent.type) {
+//     case IntentType::Attack: {
+//         int hits = m_currentIntent.secondaryValue > 0 ? m_currentIntent.secondaryValue : 1;
+
+//         for (int i = 0; i < hits; ++i)
+//             player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
+
+//         break;
+//     }
+
+//     case IntentType::Defend:
+//         addBlock(m_currentIntent.value);
+//         break;
+
+//     case IntentType::AttackDefend:
+//         player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
+//         addBlock(m_currentIntent.secondaryValue);
+//         break;
+
+//     case IntentType::AttackDebuff:
+//         player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
+//         player->applyBuffDebuff(BuffDebuffType::Vulnerable, m_currentIntent.secondaryValue);
+//         break;
+
+//     case IntentType::DefendBuff:
+//         addBlock(m_currentIntent.value);
+//         applyBuffDebuff(BuffDebuffType::Strength, m_currentIntent.secondaryValue);
+//         break;
+
+//     case IntentType::Buff:
+//         applyBuffDebuff(BuffDebuffType::Strength, m_currentIntent.value);
+//         break;
+
+//     case IntentType::Debuff:
+//         player->applyBuffDebuff(BuffDebuffType::Weak, m_currentIntent.value);
+//         break;
+
+//     case IntentType::Entangle:
+//         player->setCannotPlayAttacks(true);
+//         break;
+
+//     case IntentType::Unknown:
+//     default:
+//         break;
+//     }
+// }
+
+Player *Enemy::chooseSingleTarget(GamePlay *game) const
 {
-    if (!player)
+    if (!game)
+        return nullptr;
+
+    QVector<Player *> candidates;
+    for (Player *p : game->allPlayers())
+        if (p && p->currentHP() > 0)
+            candidates.append(p);
+
+    if (candidates.isEmpty())
+        return game->player(); // fallback ایمن
+
+    if (candidates.size() == 1)
+        return candidates.first();
+
+    int index = QRandomGenerator::global()->bounded(candidates.size());
+    return candidates.at(index);
+}
+
+void Enemy::executeIntent(GamePlay *game)
+{
+    if (!game)
+        return;
+
+    Player *target = chooseSingleTarget(game);
+    if (!target)
         return;
 
     switch (m_currentIntent.type) {
     case IntentType::Attack: {
         int hits = m_currentIntent.secondaryValue > 0 ? m_currentIntent.secondaryValue : 1;
-
         for (int i = 0; i < hits; ++i)
-            player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
-
+            target->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
         emit attacked(this);
 
         break;
@@ -151,7 +229,7 @@ void Enemy::executeIntent(Player *player)
         break;
 
     case IntentType::AttackDefend:
-        player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
+        target->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
         addBlock(m_currentIntent.secondaryValue);
 
         emit attacked(this);
@@ -159,9 +237,9 @@ void Enemy::executeIntent(Player *player)
         break;
 
     case IntentType::AttackDebuff:
-        player->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
-        player->applyBuffDebuff(BuffDebuffType::Vulnerable, m_currentIntent.secondaryValue);
 
+        target->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
+        target->applyBuffDebuff(BuffDebuffType::Vulnerable, m_currentIntent.secondaryValue);
         emit attacked(this);
 
         break;
@@ -176,11 +254,13 @@ void Enemy::executeIntent(Player *player)
         break;
 
     case IntentType::Debuff:
-        player->applyBuffDebuff(BuffDebuffType::Weak, m_currentIntent.value);
+        for (Player *p : game->allPlayers())
+            if (p && p->currentHP() > 0)
+                p->applyBuffDebuff(BuffDebuffType::Weak, m_currentIntent.value);
         break;
 
     case IntentType::Entangle:
-        player->setCannotPlayAttacks(true);
+        target->setCannotPlayAttacks(true);
         break;
 
     case IntentType::Unknown:
@@ -197,7 +277,8 @@ void Enemy::applyEnemyIntent(GamePlay *game)
     Player *player = game->player();
 
     triggerPowerEffects(PowerUseTime::StartTurn, game);
-    executeIntent(player);
+    // executeIntent(player);
+    executeIntent(game);
     onIntentExecuted(game);
     calculateNextIntent();
     triggerPowerEffects(PowerUseTime::EndTurn, game);
@@ -218,7 +299,7 @@ EnemyIntent Enemy::pickIntent(const QVector<QPair<int, EnemyIntent>> &options) c
     if (totalWeight == 0)
         return EnemyIntent();
 
-    int roll = rand() % totalWeight;
+    int roll = rollBounded(totalWeight);
     int cumulative = 0;
     for (const auto &option : options) {
         cumulative += option.first;
@@ -272,4 +353,47 @@ QPixmap Enemy::getIntentIcon(IntentType type) const
     QPixmap icon;
     icon.load(path);
     return icon;
+}
+
+void Enemy::setActiveRng(std::mt19937 *rng)
+{
+    s_activeRng = rng;
+}
+
+int Enemy::rollHP(int minHP, int maxHP)
+{
+    if (maxHP <= minHP)
+        return minHP;
+
+    if (s_activeRng)
+        return minHP
+               + static_cast<int>((*s_activeRng)() % static_cast<unsigned int>(maxHP - minHP + 1));
+
+    return minHP + rand() % (maxHP - minHP + 1);
+}
+
+int Enemy::rollBounded(int exclusiveMax)
+{
+    if (exclusiveMax <= 1)
+        return 0;
+
+    if (s_activeRng)
+        return static_cast<int>((*s_activeRng)() % static_cast<unsigned int>(exclusiveMax));
+
+    return rand() % exclusiveMax;
+}
+
+void Enemy::previewNextIntent()
+{
+    calculateNextIntent();
+}
+
+int Enemy::networkEntityId() const
+{
+    return m_networkEntityId;
+}
+
+void Enemy::setNetworkEntityId(int id)
+{
+    m_networkEntityId = id;
 }

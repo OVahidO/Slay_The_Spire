@@ -221,3 +221,23 @@ void Player::triggerRelicsTurnEnd()
     for (Relic *r : m_relics)
         r->onTurnEnd(this);
 }
+
+bool Player::isLocalPlayer() const
+{
+    return m_isLocalPlayer;
+}
+
+void Player::setIsLocalPlayer(bool isLocal)
+{
+    m_isLocalPlayer = isLocal;
+}
+
+bool Player::isEliminated() const
+{
+    return m_isEliminated;
+}
+
+void Player::setEliminated(bool eliminated)
+{
+    m_isEliminated = eliminated;
+}

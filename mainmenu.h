@@ -28,6 +28,8 @@ signals:
     void leaderboardClicked();
     void settingsClicked();
 
+    void multiplayerClicked();
+
 private slots:
     void on_SignupButton_clicked();
 
@@ -42,6 +44,8 @@ private slots:
     void on_LeaderBoardButton_clicked();
 
     void on_Settingbutton_clicked();
+
+    void on_MultiplayerButton_clicked();
 
 private:
     Ui::MainMenu *ui;

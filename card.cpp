@@ -443,3 +443,8 @@ void Card::setOwnerPlayer(Player *player)
 {
     m_ownerPlayer = player;
 }
+
+bool Card::isAoeEnemyEffect() const
+{
+    return false;
+}

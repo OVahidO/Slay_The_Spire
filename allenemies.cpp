@@ -63,7 +63,7 @@ void JawWorm::calculateNextIntent()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Louse::Louse(bool isMultiplayer, QGraphicsItem *parent)
-    : Enemy((rand() % 2 == 0) ? "Green Louse" : "Red Louse",
+    : Enemy((rollBounded(2) == 0) ? "Green Louse" : "Red Louse",
             10,
             15,
             enemyType::Normal,
@@ -79,7 +79,7 @@ Louse::Louse(bool isMultiplayer, QGraphicsItem *parent)
 
 int Louse::randomBiteDamage() const
 {
-    return 5 + rand() % 3;
+    return 5 + rollBounded(3);
 }
 
 void Louse::calculateNextIntent()
@@ -98,7 +98,7 @@ int Louse::takeDamage(int incomingDamage, bool isAttackDamage)
 
     if (damage > 0 && !m_defensiveReactionUsed) {
         m_defensiveReactionUsed = true;
-        addBlock(3 + rand() % 5);
+        addBlock(3 + rollBounded(5));
     }
 
     return damage;
@@ -156,12 +156,11 @@ bool AcidSlimeS::shouldSplit() const
     return false;
 }
 
-void AcidSlimeS::executeIntent(Player *player)
+void AcidSlimeS::executeIntent(GamePlay *game)
 {
     if (needsToSplit())
         return;
-
-    Enemy::executeIntent(player);
+    Enemy::executeIntent(game);
 }
 
 QVector<Enemy *> AcidSlimeS::createSplitChildren(bool isMultiplayer) const
@@ -197,12 +196,11 @@ bool AcidSlimeM::shouldSplit() const
     return m_currentHP <= m_maxHP / 2;
 }
 
-void AcidSlimeM::executeIntent(Player *player)
+void AcidSlimeM::executeIntent(GamePlay *game)
 {
     if (needsToSplit())
         return;
-
-    Enemy::executeIntent(player);
+    Enemy::executeIntent(game);
 }
 
 QVector<Enemy *> AcidSlimeM::createSplitChildren(bool isMultiplayer) const
@@ -251,12 +249,11 @@ bool AcidSlimeL::shouldSplit() const
     return m_currentHP <= m_maxHP / 2;
 }
 
-void AcidSlimeL::executeIntent(Player *player)
+void AcidSlimeL::executeIntent(GamePlay *game)
 {
     if (needsToSplit())
         return;
-
-    Enemy::executeIntent(player);
+    Enemy::executeIntent(game);
 }
 
 QVector<Enemy *> AcidSlimeL::createSplitChildren(bool isMultiplayer) const
@@ -565,8 +562,7 @@ void KingSlime::calculateNextIntent()
         m_currentIntent = attackIntent(35);
         break;
     case 2:
-        m_currentIntent
-            = unknownIntent(); // Goop Spray: فقط SLIME اضافه می‌کند، اثر Debuff عمومی ندارد
+        m_currentIntent = unknownIntent(); // Goop Spray
         break;
     }
 }
@@ -576,12 +572,11 @@ bool KingSlime::shouldSplit() const
     return m_currentHP <= m_maxHP / 2;
 }
 
-void KingSlime::executeIntent(Player *player)
+void KingSlime::executeIntent(GamePlay *game)
 {
     if (needsToSplit())
         return;
-
-    Enemy::executeIntent(player);
+    Enemy::executeIntent(game);
 }
 
 QVector<Enemy *> KingSlime::createSplitChildren(bool isMultiplayer) const

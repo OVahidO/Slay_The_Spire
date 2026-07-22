@@ -56,6 +56,12 @@ public:
     void triggerRelicsTurnStart();
     void triggerRelicsTurnEnd();
 
+    bool isLocalPlayer() const;
+    void setIsLocalPlayer(bool isLocal);
+
+    bool isEliminated() const;
+    void setEliminated(bool eliminated);
+
 signals:
     void hpChanged();
     void coinChanged();
@@ -82,6 +88,9 @@ private:
     QString m_resourcePath;
     QPixmap m_pix;
     void load();
+    bool m_isLocalPlayer = true;
+
+    bool m_isEliminated = false;
 };
 
 #endif // PLAYER_H

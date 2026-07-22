@@ -42,6 +42,8 @@ int Combatant::takeDamage(int incomingDamage, bool isAttackDamage)
     m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
     emit takedDamage(this, damageAfterBlock);
 
+    emit combatStateChanged();
+
     return damageAfterBlock;
 }
 
@@ -49,12 +51,14 @@ void Combatant::setBlock(int amount)
 {
     m_block = amount;
     m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
+    emit combatStateChanged();
 }
 
 void Combatant::addBlock(int amount)
 {
     m_block += amount;
     m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
+    emit combatStateChanged();
 }
 
 void Combatant::addBlockFromCard(int amount)
@@ -67,6 +71,7 @@ void Combatant::resetBlock()
     if (!m_hasBarricade)
         m_block = 0;
     m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
+    emit combatStateChanged();
 }
 
 bool Combatant::isDead() const
@@ -148,6 +153,7 @@ void Combatant::applyBuffDebuff(BuffDebuffType type, int stacks)
         m_activeEffects.append(new BuffDebuff(type, stacks));
         updateBuffUI();
     }
+    emit combatStateChanged();
 }
 
 void Combatant::tickDecayingBuffDebuff()
@@ -162,6 +168,7 @@ void Combatant::tickDecayingBuffDebuff()
     }
 
     updateBuffUI();
+    emit combatStateChanged();
 }
 
 int Combatant::calculateOutgoingDamage(int baseDamage) const
@@ -218,6 +225,20 @@ void Combatant::setCurrentHPDirect(int hp)
 
     m_currentHP = hp;
     m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
+    emit combatStateChanged();
+}
+
+void Combatant::setMaxHPDirect(int hp)
+{
+    if (hp < 1)
+        hp = 1;
+
+    m_maxHP = hp;
+    if (m_currentHP > m_maxHP)
+        m_currentHP = m_maxHP;
+
+    m_healthBar->updateStats(m_currentHP, m_maxHP, m_block);
+    emit combatStateChanged();
 }
 
 HealthBarItem::HealthBarItem(QGraphicsItem *parent)

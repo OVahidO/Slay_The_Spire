@@ -62,6 +62,11 @@ public:
     void overrideHP(int hp);
 
     void setCurrentHPDirect(int hp);
+    void setMaxHPDirect(int hp);
+
+signals:
+    // === Multiplayer ===
+    void combatStateChanged();
 
 signals:
     void takedDamage(Combatant* c, int damage);

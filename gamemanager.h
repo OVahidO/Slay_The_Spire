@@ -1,6 +1,7 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
+#include <QMutex>
 #include <QObject>
 #include <QPair>
 #include <QString>
@@ -8,8 +9,12 @@
 #include <QVector>
 
 #include "mapButton.h"
+#include "networkmanager.h"
 #include "reward.h"
 #include "settings.h"
+
+class QTcpServer;
+class QTcpSocket;
 
 class Player;
 class GamePlay;
@@ -24,7 +29,9 @@ class Enemy;
 class Relic;
 class Potion;
 class Card;
+class Combatant;
 class SettingsDialog;
+class NetworkLobby;
 
 class QStackedWidget;
 class QWidget;
@@ -44,14 +51,26 @@ public:
     void showLeaderboard();
     void showSettingsPage(SettingsMode mode);
 
+    // ---- Multiplayer ----
+    bool isMultiplayer() const;
+    void setMultiplayerMode(bool enabled);
+    bool isLeader() const;
+    void setLeader(bool leader);
+
 public slots:
     void returnToMainMenuAfterDefeat();
+
+    void onRemoteNodeSelectionReceived(int levelIndex, int levelPosIndex, MapButtonType type);
+    void reassignLeaderIfNeeded();
 
 signals:
     void runEnded();
     void victoryPageRequested();
     void defeatPageRequested();
     void leaderboardDataReady(QVector<QPair<QString, int>> scores);
+
+    void leaderChanged(bool isLeaderNow);
+    void localNodeSelectionReady(int levelIndex, int levelPosIndex, MapButtonType type);
 
 private slots:
     // Login/MainMenu
@@ -82,6 +101,23 @@ private slots:
     // Event
     void onEventFinished();
     void onEventTriggersEliteCombat();
+
+    // Multiplayer
+    void onMainMenuMultiplayerClicked();
+
+    void onNetworkLobbyHostRequested(quint16 port);
+    void onNetworkLobbyJoinRequested(const QString &address, quint16 port);
+    void onNetworkHostStarted(quint16 port);
+    void onNetworkHostFailed(const QString &error);
+    void onNetworkClientConnected();
+    void onNetworkConnectedToHost();
+    void onNetworkConnectionFailed(const QString &error);
+    void onNetworkDisconnected();
+    void onPacketReceived(PacketType type, const QByteArray &payload);
+
+    void onPlayerEliminated(Player *player);
+    void onRemotePlayerEliminated(bool remoteWasLeader);
+    void onCampfireReviveRequested();
 
 private:
     QStackedWidget *m_stack;
@@ -147,6 +183,24 @@ private:
 
     int m_masterVolume = 80;
     bool m_isMuted = false;
+
+    // --- Multiplayer ---
+    bool m_isMultiplayer = false;
+    bool m_isLeader = true;
+    QTcpServer *m_networkServer = nullptr;
+    QTcpSocket *m_networkSocket = nullptr;
+    QMutex m_networkMutex; // for thread
+    NetworkManager *m_networkManager = nullptr;
+    NetworkLobby *m_networkLobby = nullptr;
+    bool m_pendingMultiplayerRequested = false;
+    bool m_suppressNetworkNodeBroadcast = false;
+    void showNetworkLobby();
+    Player *m_remotePlayerMirror = nullptr;
+    bool m_playerSyncHooked = false;
+    void ensureRemotePlayerMirror();
+    void hookLocalPlayerNetworkSync();
+    static void reconcileBuffs(Combatant *target, const QVector<QPair<quint8, int>> &remoteBuffs);
+    Enemy *findEnemyByNetworkId(int entityId) const;
 };
 
 #endif // GAMEMANAGER_H

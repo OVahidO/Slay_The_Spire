@@ -247,7 +247,7 @@ void Impervious::upgrade()
 
     Card::upgrade();
     m_blockAmount += 10;
-    m_name = "Impervios+";
+    m_name = "Impervious+";
 }
 
 Card *Impervious::clone() const
@@ -301,8 +301,8 @@ void Power_Through::applyEffect(Player *player, Enemy *targetEnemy)
 
 bool Power_Through::applyEffect(GamePlay* gameplay)
 {
-    // gameplay->addCardToHand(new WOUND());
-    // gameplay->addCardToHand(new WOUND());
+    gameplay->addCardToHand(new WOUND());
+    gameplay->addCardToHand(new WOUND());
     return true;
 }
 
