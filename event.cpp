@@ -158,7 +158,7 @@ Event::Event(const QString &eventTitle,
         QPixmap bg(backgroundPath);
         if (!bg.isNull()) {
             m_backgroundItem = m_scene->addPixmap(
-                bg.scaled(1280, 640, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+                bg.scaled(1280, 640, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
             m_backgroundItem->setZValue(-10);
         }
     }

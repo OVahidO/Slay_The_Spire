@@ -21,4 +21,7 @@
     <qresource prefix="/Campfire">
         <file>Pics/Background/Campfire/campfire.png</file>
     </qresource>
+    <qresource prefix="/Shop">
+        <file>Pics/Background/Shop/shop.png</file>
+    </qresource>
 </RCC>

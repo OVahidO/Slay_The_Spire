@@ -86,6 +86,10 @@ void Shop::setupScene()
     m_scene = new QGraphicsScene(this);
     m_scene->setSceneRect(0, 0, 1280, 560);
 
+    QPixmap bg(":/Shop/Pics/Background/Shop/shop.png");
+    QGraphicsPixmapItem* background = m_scene->addPixmap(bg.scaled(1280, 640, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
+    background->setZValue(-1000);
+
     m_view = new ShopGraphicsView(m_scene, this);
     connect(m_view, &ShopGraphicsView::itemClicked, this, &Shop::onSceneItemClicked);
 
@@ -132,7 +136,7 @@ void Shop::generateStock()
         entry.potion = spawn.potion;
         entry.price = rollPotionPrice(spawn.potion);
 
-        entry.icon = new QGraphicsPixmapItem(QPixmap(spawn.iconPath));
+        entry.icon = new QGraphicsPixmapItem(QPixmap(spawn.iconPath).scaled(50,50,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
         m_scene->addItem(entry.icon);
 
         m_potionStock.append(entry);
@@ -402,16 +406,83 @@ void Shop::onLeaveClicked()
     emit shopFinished();
 }
 
+ShopRemoveCardGraphicsView::ShopRemoveCardGraphicsView(QGraphicsScene *scene, QWidget *parent)
+    : QGraphicsView(scene, parent)
+{
+    setRenderHint(QPainter::Antialiasing);
+    setRenderHint(QPainter::SmoothPixmapTransform);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+}
+
+void ShopRemoveCardGraphicsView::mousePressEvent(QMouseEvent *event)
+{
+    QGraphicsItem *item = itemAt(event->pos());
+    if (item)
+        emit itemClicked(item);
+
+    QGraphicsView::mousePressEvent(event);
+}
+
 ShopRemoveCardDialog::ShopRemoveCardDialog(GamePlay *gamePlay, QWidget *parent)
     : QDialog(parent)
 {
+
     setWindowTitle("Select a Card to Remove");
+    resize(900, 500);
 
-    QGridLayout *layout = new QGridLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
 
-    int row = 0;
-    int col = 0;
+    m_scene = new QGraphicsScene(this);
+    m_scene->setSceneRect(0, 0, 900, 500);
+
+    QLinearGradient bgGradient(0, 0, 0, 500);
+    bgGradient.setColorAt(0.0, QColor(35, 30, 45));
+    bgGradient.setColorAt(1.0, QColor(15, 12, 20));
+    m_scene->setBackgroundBrush(bgGradient);
+
+    m_view = new ShopRemoveCardGraphicsView(m_scene, this);
+
+    connect(m_view, &ShopRemoveCardGraphicsView::itemClicked, this, [this, gamePlay](QGraphicsItem* item) {
+                Card* card = dynamic_cast<Card*>(item);
+                auto &deck = gamePlay->deck();
+                for(auto it = deck.begin(); it != deck.end(); it++)
+                {
+                    if((*it)->ID() == card->ID())
+                    {
+                        Card* originaldCard = *it;
+                        deck.erase(it);
+                        delete originaldCard;
+                        delete card;
+                        m_cardWasRemoved = true;
+
+                        QMessageBox::information(this,
+                                                 "Card Removed",
+                                                 "The card has been removed from your deck!");
+                        this->accept();
+                        break;
+                    }
+                }
+            });
+
+    layout->addWidget(m_view);
+
+    QGraphicsTextItem *title = new QGraphicsTextItem("Select a Card to Remove");
+    QFont titleFont("Arial", 16, QFont::Bold);
+    title->setFont(titleFont);
+    title->setDefaultTextColor(Qt::white);
+    title->setPos(20, 10);
+    m_scene->addItem(title);
+
+    const int cardStartX = 40;
+    const int cardStartY = 70;
+    const int cardSpacingX = 210;
+    const int cardSpacingY = 260;
+    const int perRow = 4;
     bool hasRemovableCards = false;
+
+    int index = 0;
+    bool hasUpgradableCards = false;
 
     if (gamePlay) {
         for (Card *card : gamePlay->deck()) {
@@ -423,30 +494,18 @@ ShopRemoveCardDialog::ShopRemoveCardDialog(GamePlay *gamePlay, QWidget *parent)
 
             hasRemovableCards = true;
 
-            QPushButton *cardBtn = new QPushButton(card->name(), this);
-            cardBtn->setFixedSize(120, 160);
+            int row = index / perRow;
+            int col = index % perRow;
 
-            connect(cardBtn, &QPushButton::clicked, this, [this, gamePlay, card]() {
-                auto &deck = gamePlay->deck();
-                auto it = std::find(deck.begin(), deck.end(), card);
-                if (it != deck.end()) {
-                    deck.erase(it);
-                    delete card;
-                    m_cardWasRemoved = true;
+            Card* clone = Card::Creat(static_cast<CardID>(card->ID()));
 
-                    QMessageBox::information(this,
-                                             "Card Removed",
-                                             "The card has been removed from your deck!");
-                    this->accept();
-                }
-            });
+            clone->setFlag(QGraphicsItem::ItemIsMovable, false);
+            clone->setFlag(QGraphicsItem::ItemIsSelectable, false);
+            clone->setPos(cardStartX + col * cardSpacingX, cardStartY + row * cardSpacingY);
 
-            layout->addWidget(cardBtn, row, col);
-            col++;
-            if (col > 3) {
-                col = 0;
-                row++;
-            }
+            m_scene->addItem(clone);
+
+            index++;
         }
     }
 
