@@ -54,6 +54,7 @@ void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     // painter->setPen(Qt::NoPen);
     // painter->drawRect(hpBg);
 
+
     // qreal hpRatio = m_maxHP > 0 ? static_cast<qreal>(m_currentHP) / m_maxHP : 0;
     // QRectF hpFill(0, rect.height() + 5, rect.width() * hpRatio, barHeight);
     // painter->setBrush(QColor(200, 40, 40));
