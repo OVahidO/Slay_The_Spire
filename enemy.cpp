@@ -47,7 +47,7 @@ void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
         painter->drawText(rect, Qt::AlignCenter, m_name);
     }
 
-    // نوار HP
+    //  HP
     qreal barHeight = 10;
     QRectF hpBg(0, rect.height() + 5, rect.width(), barHeight);
     painter->setBrush(QColor(40, 40, 40));
