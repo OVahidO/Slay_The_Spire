@@ -15,6 +15,7 @@
 #include "enemy.h"
 #include "event.h"
 #include "gameplay.h"
+#include "topbar.h"
 #include "mainmenu.h"
 #include "map.h"
 #include "networklobby.h"
@@ -25,9 +26,10 @@
 #include "settings.h"
 #include "shop.h"
 
-GameManager::GameManager(QStackedWidget *stack, QObject *parent)
+GameManager::GameManager(QStackedWidget *stack, QVBoxLayout *VLayout, QObject *parent)
     : QObject(parent)
     , m_stack(stack)
+    , m_vLayout(VLayout)
 {}
 
 GameManager::~GameManager()
@@ -105,6 +107,12 @@ void GameManager::onPlayerReady(Player *player)
     m_player = player;
 
     prepareGamePlayForPlayer();
+
+    //////////////topbar//////////////
+    m_topbar = new Topbar(m_player);
+    m_vLayout->insertWidget(0, m_topbar);
+    m_topbar->hide();
+    //////////////////////////////////
 
     if (m_pendingMultiplayerRequested) {
         m_pendingMultiplayerRequested = false;
@@ -185,7 +193,20 @@ void GameManager::startNewRun()
         m_gamePlay->deleteLater();
         m_gamePlay = nullptr;
     }
+
+    if (m_topbar) {
+        m_stack->removeWidget(m_topbar);
+        m_topbar->deleteLater();
+        m_topbar = nullptr;
+    }
+
     prepareGamePlayForPlayer();
+
+    //////////////topbar//////////////
+    m_topbar = new Topbar(m_player);
+    m_vLayout->insertWidget(0, m_topbar);
+    m_topbar->hide();
+    //////////////////////////////////
 
     grantStarterKit();
     buildNewMap();
@@ -275,6 +296,7 @@ void GameManager::onMainMenuStart()
             startNewRun();
     }
 
+    m_topbar->show();
     switchTo(m_map);
 }
 

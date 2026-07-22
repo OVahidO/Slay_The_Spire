@@ -420,6 +420,8 @@ void GamePlay::startCombat()
     for (Enemy *e : m_enemys)
         e->applyBuffDebuff(BuffDebuffType::Strength, 0);
 
+    setupEnemies();
+
     playerTurn();
 }
 

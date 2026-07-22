@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setFixedSize(1280, 720);
 
-    m_gameManager = new GameManager(ui->stackedWidget, this);
+    m_gameManager = new GameManager(ui->stackedWidget, ui->verticalLayout, this);
     m_gameManager->start();
 }
 

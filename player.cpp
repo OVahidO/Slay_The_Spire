@@ -90,6 +90,7 @@ QVector<Potion *> &Player::Potions()
 void Player::setCoin(int coin)
 {
     m_coin = (coin < 0) ? 0 : coin;
+    emit coinChanged();
 }
 
 void Player::setEnergy(int energy)
@@ -151,6 +152,8 @@ void Player::heal(int n)
 
     if (m_currentHP > m_maxHP)
         m_currentHP = m_maxHP;
+
+    emit hpChanged();
 }
 
 bool Player::addPotion(Potion* potion)

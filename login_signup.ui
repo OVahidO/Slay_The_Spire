@@ -215,6 +215,17 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>LoginUsernameInput</tabstop>
+  <tabstop>LoginPasswordInput</tabstop>
+  <tabstop>LoginEnterButton</tabstop>
+  <tabstop>BackButton_2</tabstop>
+  <tabstop>usernameInput</tabstop>
+  <tabstop>passwordInput</tabstop>
+  <tabstop>confirimPasswordInput</tabstop>
+  <tabstop>SignupEnterButton</tabstop>
+  <tabstop>BackButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -7,6 +7,7 @@
 #include <QString>
 #include <QStringList>
 #include <QVector>
+#include <QVBoxLayout>
 
 #include "mapButton.h"
 #include "networkmanager.h"
@@ -21,6 +22,7 @@ class GamePlay;
 class Map;
 class MapButton;
 class MainMenu;
+class Topbar;
 class Shop;
 class Campfire;
 class Event;
@@ -40,7 +42,7 @@ class GameManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit GameManager(QStackedWidget *stack, QObject *parent = nullptr);
+    explicit GameManager(QStackedWidget *stack, QVBoxLayout* Vlayout, QObject *parent = nullptr);
     ~GameManager();
 
     void start();
@@ -121,10 +123,12 @@ private slots:
 
 private:
     QStackedWidget *m_stack;
+    QVBoxLayout *m_vLayout;
 
     // Persistent
     Player *m_player = nullptr;
     GamePlay *m_gamePlay = nullptr;
+    Topbar *m_topbar = nullptr;
     Map *m_map = nullptr;
     MainMenu *m_mainMenu = nullptr;
 
