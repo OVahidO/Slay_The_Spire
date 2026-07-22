@@ -61,8 +61,8 @@ private:
     bool m_enabled = true;
     bool m_hovered = false;
 
-    static constexpr qreal m_width = 220;
-    static constexpr qreal m_height = 260;
+    static constexpr qreal m_width = 190;
+    static constexpr qreal m_height = 175;
 };
 
 class Campfire : public QWidget
@@ -97,6 +97,8 @@ private:
 
     QGraphicsTextItem *m_titleItem;
 
+    QWidget* m_overlay;
+
     void setupScene();
     void checkAvailableOptions();
 };
@@ -109,6 +111,7 @@ public:
     ~UpgradeDialog();
 
     bool cardWasUpgraded() const;
+    int upgradedCardID() const;
 
 private slots:
     void onSceneItemClicked(QGraphicsItem *item);
@@ -120,6 +123,7 @@ private:
     QVector<Card *> m_selectableCards;
 
     bool m_cardWasUpgraded = false;
+    int m_upgradedCardID = -1;
 };
 
 #endif // CAMPFIRE_H
