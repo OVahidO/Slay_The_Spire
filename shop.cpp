@@ -394,6 +394,7 @@ void Shop::onRemoveCardClicked()
         m_player->setCoin(m_player->coin() - cost);
         s_cardRemovalUseCount++;
 
+        emit m_gamePlay->deckChanged();
         m_removeCardBtn->setText(QString("Card Removal - %1g").arg(currentCardRemovalCost()));
 
         updateGoldDisplay();

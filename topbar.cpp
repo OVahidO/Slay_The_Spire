@@ -1,14 +1,18 @@
 #include "topbar.h"
 #include "ui_topbar.h"
 #include "player.h"
+#include "gameplay.h"
 #include "potion.h"
+#include "piledialog.h"
+#include <QGraphicsBlurEffect>
 
-Topbar::Topbar(Player* player, QWidget *parent)
+Topbar::Topbar(GamePlay *gameplay, QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Topbar)
 {
     ui->setupUi(this);
-    m_player = player;
+    m_player = gameplay->player();
+    m_gameplay = gameplay;
 //
     m_isInCombat = true;
 //
@@ -23,9 +27,19 @@ Topbar::Topbar(Player* player, QWidget *parent)
     connect(m_player, &Player::coinChanged, this, &Topbar::updateCoinLabel);
     connect(m_player, &Player::takedDamage, this, &Topbar::updateHpLabel);
     connect(m_player, &Player::potionAdded, this, &Topbar::newPotionHandler);
-    ui->userNameLabel->setText(player->name());
+    connect(m_gameplay, &GamePlay::deckChanged, this, &Topbar::updateDeckSizeLabel);
+    ui->userNameLabel->setText(m_player->name());
+
     updateHpLabel();
     updateCoinLabel();
+    updateDeckSizeLabel();
+
+    ////////////////////
+    m_overlay = new QWidget(this);
+    m_overlay->setGeometry(rect());
+    m_overlay->setStyleSheet("background-color: rgba(0,0,0,120);");
+    m_overlay->hide();
+    ////////////////////
 }
 
 Topbar::~Topbar()
@@ -42,6 +56,11 @@ void Topbar::updateHpLabel()
 void Topbar::updateCoinLabel()
 {
     ui->coinLabel->setText(QString::number(m_player->coin()));
+}
+
+void Topbar::updateDeckSizeLabel()
+{
+    ui->deckButton->setText(QString::number(m_gameplay->deck().size()));
 }
 
 void Topbar::potionClicked(Potion* potion)
@@ -75,3 +94,15 @@ void Topbar::newPotionHandler(Potion* potion)
         connect(potion, &Potion::potionClicked, this, &Topbar::potionClicked);
     }
 }
+void Topbar::on_deckButton_clicked()
+{
+    m_overlay->show();
+    auto blur = new QGraphicsBlurEffect;
+    blur->setBlurRadius(8);
+    this->setGraphicsEffect(blur);
+    PileDialog pd(m_gameplay->deck(), this);
+    pd.exec();
+    this->setGraphicsEffect(nullptr);
+    m_overlay->hide();
+}
+

@@ -68,31 +68,10 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
     connect(endTurnButton, &EndTurnButton::onClick, this, &GamePlay::endTurnButtonClicked);
     connect(this, &GamePlay::enemiesTurnEnded, endTurnButton, &EndTurnButton::activeButton);
 
-
-    m_deck.push_back(new class Strike);
-    m_deck.push_back(new class Strike);
-    m_deck.push_back(new class Strike);
-    m_deck.push_back(new class Strike);
-    m_deck.push_back(new class Strike);
-    m_deck.push_back(new class Bash);
-    m_deck.push_back(new class Defend);
-    m_deck.push_back(new class Defend);
-    m_deck.push_back(new class Defend);
-    m_deck.push_back(new class Defend);
-
     for (Card *c : m_deck)
         c->setOwnerPlayer(m_player);
 
     emit valueChanged();
-
-    m_drawPile.push_back(new class Defend);
-    m_drawPile.push_back(new class Strike);
-    m_drawPile.push_back(new class Defend);
-    m_drawPile.push_back(new class Clash);
-    m_drawPile.push_back(new class Defend);
-    m_drawPile.push_back(new class Strike);
-
-    draw();
 
     connect(this, &GamePlay::playerTurnEnded, this, &GamePlay::enemiesTurn);
     connect(this, &GamePlay::enemiesTurnEnded, this, &GamePlay::playerTurn);
@@ -354,6 +333,7 @@ void GamePlay::addCardToDeck(Card *card)
 {
     m_deck.push_back(card);
     card->setOwnerPlayer(m_player);
+    emit deckChanged();
 }
 
 void GamePlay::addCardToDrawPile(Card *card, bool shuffleIn)
@@ -398,6 +378,15 @@ void GamePlay::startCombat()
 
     std::vector<Card *> innateCards;
     std::vector<Card *> normalCards;
+
+    if(m_deck.empty())
+    {
+        this->addCardToDeck(new class Strike);
+        this->addCardToDeck(new class Strike);
+        this->addCardToDeck(new class Strike);
+        this->addCardToDeck(new class Defend);
+        this->addCardToDeck(new class Defend);
+    }
 
     for (Card *card : m_deck) {
         if (card->isInnate())

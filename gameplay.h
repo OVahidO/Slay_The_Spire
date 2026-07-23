@@ -121,6 +121,7 @@ signals:
     void cardPlayed(Card *);
     void valueChanged();
     void gamePlayIsReady();
+    void deckChanged();
 
     void playerEliminated(Player *player);
     void leaderNeedsReassignment();

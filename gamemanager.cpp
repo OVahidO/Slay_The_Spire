@@ -109,7 +109,7 @@ void GameManager::onPlayerReady(Player *player)
     prepareGamePlayForPlayer();
 
     //////////////topbar//////////////
-    m_topbar = new Topbar(m_player);
+    m_topbar = new Topbar(m_gamePlay);
     m_vLayout->insertWidget(0, m_topbar);
     m_topbar->hide();
     //////////////////////////////////
@@ -203,7 +203,7 @@ void GameManager::startNewRun()
     prepareGamePlayForPlayer();
 
     //////////////topbar//////////////
-    m_topbar = new Topbar(m_player);
+    m_topbar = new Topbar(m_gamePlay);
     m_vLayout->insertWidget(0, m_topbar);
     m_topbar->hide();
     //////////////////////////////////
