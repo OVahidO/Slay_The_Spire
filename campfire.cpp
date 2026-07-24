@@ -274,10 +274,11 @@ void Campfire::onSmithClicked()
         if(upgradedCardID != -1)
         {
             for(auto& card : m_gamePlay->deck())
-                if(card->ID() == upgradedCardID)
+                if(card->ID() == upgradedCardID && !card->isUpgraded())
                 {
                     card->upgrade();
                     card->update();
+                    break;
                 }
         }
         emit campfireFinished();

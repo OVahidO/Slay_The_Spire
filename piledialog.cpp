@@ -24,7 +24,7 @@ PileDialog::PileDialog(const std::vector<Card*>& pile, QWidget *parent)
     int i=0;
     for(auto& card : pile)
     {
-        Card* clone = Card::Creat(static_cast<CardID>(card->ID()));
+        Card* clone = Card::Creat(static_cast<CardID>(card->ID()) , card->isUpgraded());
         clone->setFlag(QGraphicsItem::ItemIsMovable , false);
         clone->setFlag(QGraphicsItem::ItemIsSelectable , false);
         int XSpace = (i%4)*(clone->boundingRect().width() + 15);

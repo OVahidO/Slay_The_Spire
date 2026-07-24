@@ -241,7 +241,7 @@ void GameManager::resumeRun()
 
     for (Card *c : Database::loadRunDeck(m_player->id())) {
         c->setOwnerPlayer(m_player);
-        m_gamePlay->deck().push_back(c);
+        m_gamePlay->addCardToDeck(c);
     }
 
     for (const QString &relicName : Database::loadRunRelics(m_player->id())) {

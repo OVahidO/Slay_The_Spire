@@ -704,6 +704,7 @@ void GamePlay::playedCardHandler(Card *card)
     updateHandsCardsLayout();
 
     card->disconnect();
+    card->setSelected(false);
     card->setZValue(1000);
 
     QParallelAnimationGroup *cardToDiscardPileAnim = new QParallelAnimationGroup(this);

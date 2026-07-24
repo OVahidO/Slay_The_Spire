@@ -31,7 +31,7 @@ Card::Card(CardID ID,
         this->setFlag(QGraphicsItem::ItemIsSelectable);
     }
 
-    this->setTransformOriginPoint(85 , 120);
+    this->setTransformOriginPoint(70 , 155);
 
     m_hoverAnimation = new QVariantAnimation(this);
     m_hoverAnimation->setDuration(150);
@@ -347,9 +347,15 @@ QHash<CardID, CreatorFunc> &Card::creators()
     return creators;
 }
 
-Card* Card::Creat(CardID cardID)
+Card* Card::Creat(CardID cardID, bool isUpgraded)
 {
-    return Card::creators()[cardID]();
+    Card* c = Card::creators()[cardID]();
+    if(isUpgraded)
+    {
+        c->upgrade();
+        c->update();
+    }
+    return c;
 }
 
 ////////////////////

@@ -393,9 +393,8 @@ void RewardScreen::onSceneItemClicked(QGraphicsItem *item)
         return;
 
     m_scene->removeItem(card);
-    m_gamePlay->addCardToDeck(card);
-    m_cardChoices.removeAll(card);
-
+    card->setFlag(QGraphicsItem::ItemIsMovable, true);
+    card->setFlag(QGraphicsItem::ItemIsSelectable, true);
     m_gamePlay->addCardToDeck(card);
     m_cardChoices.removeAll(card);
 

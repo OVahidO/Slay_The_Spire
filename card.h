@@ -82,7 +82,7 @@ public:
 
     static QHash<CardID, CreatorFunc>& creators();
 
-    static Card* Creat(CardID cardID);
+    static Card* Creat(CardID cardID, bool isUpgraded = false);
 
     ///////////////////////////////////
 

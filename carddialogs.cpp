@@ -83,16 +83,17 @@ void CardSelectionDialog::layoutCards()
         if (m_mode == CardSelectionMode::Upgrade && card->isUpgraded())
             continue;
 
-        m_selectableCards.append(card);
+        Card* clone = Card::Creat(static_cast<CardID>(card->ID()));
+        m_selectableCards.append(clone);
 
         int row = index / perRow;
         int col = index % perRow;
 
-        card->setFlag(QGraphicsItem::ItemIsMovable, false);
-        card->setFlag(QGraphicsItem::ItemIsSelectable, false);
-        card->setPos(cardStartX + col * cardSpacingX, cardStartY + row * cardSpacingY);
+        clone->setFlag(QGraphicsItem::ItemIsMovable, false);
+        clone->setFlag(QGraphicsItem::ItemIsSelectable, false);
+        clone->setPos(cardStartX + col * cardSpacingX, cardStartY + row * cardSpacingY);
 
-        m_scene->addItem(card);
+        m_scene->addItem(clone);
 
         index++;
     }
@@ -131,15 +132,27 @@ void CardSelectionDialog::finalizeSelection()
 {
     if (m_mode == CardSelectionMode::Upgrade) {
         for (Card *c : m_selectedCards)
-            c->upgrade();
+            for(auto& card : m_gamePlay->deck())
+                if(card->ID() == c->ID() && !card->isUpgraded())
+                {
+                    card->upgrade();
+                    card->update();
+                    c->upgrade();
+                    break;
+                }
     } else if (m_mode == CardSelectionMode::Remove) {
         auto &deck = m_gamePlay->deck();
         for (Card *c : m_selectedCards) {
-            auto it = std::find(deck.begin(), deck.end(), c);
-            if (it != deck.end()) {
-                deck.erase(it);
-                m_scene->removeItem(c);
-                delete c;
+            for(auto it = deck.begin(); it != deck.end(); it++)
+            {
+                if ((*it)->ID() == c->ID()) {
+                    Card* originaldCard = *it;
+                    deck.erase(it);
+                    delete originaldCard;
+                    m_scene->removeItem(c);
+                    delete c;
+                    break;
+                }
             }
         }
     }
