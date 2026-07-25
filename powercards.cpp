@@ -35,6 +35,14 @@ void Inflame::applyEffect(Player *player, Enemy *target)
         player->applyBuffDebuff(BuffDebuffType::Strength, m_strengthValue);
 }
 
+bool Inflame::applyEffect(GamePlay *gameplay)
+{
+    if (gameplay && gameplay->player())
+        applyEffect(gameplay->player(), nullptr);
+
+    return true;
+}
+
 void Inflame::upgrade()
 {
     if (m_isUpgraded)
