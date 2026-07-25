@@ -222,29 +222,25 @@ void RewardScreen::grantGoldAndPotion()
 Card *RewardScreen::createRandomCard(bool rare) const
 {
     if (!rare) {
-        switch (QRandomGenerator::global()->bounded(10)) {
+        switch (QRandomGenerator::global()->bounded(8)) {
         case 0:
-            return new class Strike();
-        case 1:
             return new class Bash();
-        case 2:
+        case 1:
             return new class Clash();
-        case 3:
+        case 2:
             return new class Hemokinesis();
-        case 4:
+        case 3:
             return new class BloodForBlood();
-        case 5:
+        case 4:
             return new class Whirlwind();
-        case 6:
-            return new class Defend();
-        case 7:
+        case 5:
             return new class Entrench();
-        case 8:
+        case 6:
             return new class Bloodletting();
-        case 9:
+        case 7:
             return new class Inflame();
         default:
-            return new class Strike();
+            return new class Bash();
         }
     }
 
