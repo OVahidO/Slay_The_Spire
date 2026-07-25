@@ -264,7 +264,7 @@ void HealthBarItem::updateStats(int currentHp, int maxHp, int block)
 
 QRectF HealthBarItem::boundingRect() const
 {
-    return QRectF(0, -20, m_width, m_height + 20);
+    return QRectF(-26, -20, m_width + 26, m_height + 20);
 }
 
 int HealthBarItem::width() const
@@ -299,8 +299,17 @@ void HealthBarItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         painter->setBrush(Qt::NoBrush);
         painter->drawRect(0, 0, m_width, m_height);
 
-        painter->setPen(QColor(100, 150, 255));
-        painter->drawText(QRectF(0, -18, m_width, 15), Qt::AlignLeft, QString("[%1]").arg(m_block));
+        // Shield icon to the left of the HP bar
+        QRectF shieldRect(-24, (m_height - 20) / 2.0, 20, 20);
+        if (!m_blockIcon.isNull())
+            painter->drawPixmap(shieldRect, m_blockIcon, m_blockIcon.rect());
+
+        painter->setPen(Qt::white);
+        QFont blockFont("Arial", 9, QFont::Bold);
+        painter->setFont(blockFont);
+        painter->drawText(QRectF(-26, m_height + 2, 26, 14),
+                          Qt::AlignCenter,
+                          QString::number(m_block));
     }
 
     painter->setPen(Qt::white);
