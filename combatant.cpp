@@ -299,7 +299,6 @@ void HealthBarItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         painter->setBrush(Qt::NoBrush);
         painter->drawRect(0, 0, m_width, m_height);
 
-        // Shield icon to the left of the HP bar
         QRectF shieldRect(-24, (m_height - 20) / 2.0, 20, 20);
         if (!m_blockIcon.isNull())
             painter->drawPixmap(shieldRect, m_blockIcon, m_blockIcon.rect());
