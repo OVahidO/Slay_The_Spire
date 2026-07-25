@@ -25,6 +25,7 @@ class Inflame : public PowerCard
 public:
     explicit Inflame(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
+    bool applyEffect(GamePlay *gameplay) override;
     void upgrade() override;
     Card *clone() const override;
 

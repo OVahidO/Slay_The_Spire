@@ -1,13 +1,23 @@
 #include "mainmenu.h"
-#include "ui_mainmenu.h"
-#include "login_signup.h"
+#include <QEvent>
 #include <QGraphicsBlurEffect>
+#include <QPushButton>
+#include "login_signup.h"
+#include "ui_mainmenu.h"
 
 MainMenu::MainMenu(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainMenu)
 {
     ui->setupUi(this);
+    // ui->verticalLayout_3->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
+    // ui->verticalLayout_3->setContentsMargins(80, 0, 0, 50);
+    // ui->verticalLayout_3->setSpacing(6);
+    // for (QPushButton *btn :
+    //      {ui->StartButton, ui->LeaderBoardButton, ui->Settingbutton, ui->ExitButton_2}) {
+    //     btn->setMaximumWidth(240);
+    //     btn->setStyleSheet("text-align: left;");
+    // }
     ui->MenuKeys->setCurrentIndex(0);
     m_loginSignup = new Login_Signup(this);
     connect(m_loginSignup, &Login_Signup::back, this, [this](){this->m_loginSignup->accept();});
@@ -31,11 +41,42 @@ MainMenu::MainMenu(QWidget *parent)
 
     QPixmap logo(":/MainMenu/Pics/MainMenu/eng.png");
     ui->Logo->setPixmap(logo.scaled(ui->Logo->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+
+    //
+    const QList<QPushButton *> menuButtons = {ui->SignupButton,
+                                              ui->Loginbutton,
+                                              ui->ExitButton,
+                                              ui->StartButton,
+                                              ui->LeaderBoardButton,
+                                              ui->Settingbutton,
+                                              ui->ExitButton_2};
+
+    for (QPushButton *btn : menuButtons) {
+        if (!btn)
+            continue;
+        btn->setProperty("originalText", btn->text());
+        btn->installEventFilter(this);
+    }
+    //
 }
 
 MainMenu::~MainMenu()
 {
     delete ui;
+}
+
+bool MainMenu::eventFilter(QObject *watched, QEvent *event)
+{
+    QPushButton *btn = qobject_cast<QPushButton *>(watched);
+    if (btn) {
+        if (event->type() == QEvent::Enter) {
+            btn->setText("> " + btn->property("originalText").toString() + " <");
+        } else if (event->type() == QEvent::Leave) {
+            btn->setText(btn->property("originalText").toString());
+        }
+    }
+
+    return QWidget::eventFilter(watched, event);
 }
 
 void MainMenu::on_SignupButton_clicked()

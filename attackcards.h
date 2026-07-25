@@ -94,6 +94,7 @@ class Clash : public AttackCard
 public:
     explicit Clash(QGraphicsItem *parent = nullptr);
     void applyEffect(Player *player, Enemy *target) override;
+    bool canBePlayed(Player *player) const override;
     void upgrade() override;
     Card *clone() const override;
 };

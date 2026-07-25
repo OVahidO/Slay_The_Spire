@@ -61,6 +61,7 @@ public:
     virtual bool applyEffect(GamePlay *gameplay);
 
     virtual bool isAoeEnemyEffect() const;
+    virtual bool canBePlayed(Player *player) const;
 
     virtual Card *clone() const = 0;
 

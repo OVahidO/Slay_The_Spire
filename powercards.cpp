@@ -35,6 +35,14 @@ void Inflame::applyEffect(Player *player, Enemy *target)
         player->applyBuffDebuff(BuffDebuffType::Strength, m_strengthValue);
 }
 
+bool Inflame::applyEffect(GamePlay *gameplay)
+{
+    if (gameplay && gameplay->player())
+        applyEffect(gameplay->player(), nullptr);
+
+    return true;
+}
+
 void Inflame::upgrade()
 {
     if (m_isUpgraded)
@@ -390,7 +398,7 @@ Barricade::Barricade(QGraphicsItem *parent)
                 true,
                 parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Power/Barricade.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Power/barricade.png";
     loadPixmap();
 }
 
@@ -455,7 +463,7 @@ FeelNoPain::FeelNoPain(QGraphicsItem *parent)
                 false,
                 parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Power/FeelNoPain.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Power/feel_no_pain.png";
     loadPixmap();
 }
 
