@@ -21,8 +21,8 @@ Enemy::Enemy(
 //temperory
 QRectF Enemy::boundingRect() const
 {
-    // if (!m_enemyPic.isNull())
-    //     return QRectF(0, 0, m_enemyPic.width(), m_enemyPic.height());
+    if (!m_enemyPic.isNull())
+        return QRectF(0, 0, m_enemyPic.width(), m_enemyPic.height());
 
     return QRectF(0, 0, 110, 100);
 }

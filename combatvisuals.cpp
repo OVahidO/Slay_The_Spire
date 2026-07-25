@@ -152,6 +152,10 @@ void FloatingDamageText::play()
     moveAnim->setEndValue(endPos);
     moveAnim->setEasingCurve(QEasingCurve::OutCubic);
 
+    connect(moveAnim, &QPropertyAnimation::valueChanged, this, [this](const QVariant &value){
+        this->scene()->update();
+    });
+
     QPropertyAnimation *fadeAnim = new QPropertyAnimation(m_opacityEffect, "opacity");
     fadeAnim->setDuration(900);
     fadeAnim->setKeyValueAt(0.0, 1.0);

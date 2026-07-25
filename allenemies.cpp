@@ -34,6 +34,10 @@ void Cultist::calculateNextIntent()
     }
 }
 
+void Cultist::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(160,180,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 JawWorm::JawWorm(bool isMultiplayer, QGraphicsItem *parent)
@@ -60,6 +64,10 @@ void JawWorm::calculateNextIntent()
     m_currentIntent = pickIntent(options);
 }
 
+void JawWorm::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(200,110,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Louse::Louse(bool isMultiplayer, QGraphicsItem *parent)
@@ -104,6 +112,10 @@ int Louse::takeDamage(int incomingDamage, bool isAttackDamage)
     return damage;
 }
 
+void Louse::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(150,100,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Slime::Slime(
@@ -132,6 +144,10 @@ QVector<Enemy *> Slime::createSplitChildren(bool isMultiplayer) const
     return {};
 }
 
+void Slime::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(160,180,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 AcidSlimeS::AcidSlimeS(bool isMultiplayer, QGraphicsItem *parent)
@@ -170,6 +186,10 @@ QVector<Enemy *> AcidSlimeS::createSplitChildren(bool isMultiplayer) const
     return children;
 }
 
+void AcidSlimeS::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(90,90,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 AcidSlimeM::AcidSlimeM(bool isMultiplayer, QGraphicsItem *parent)
@@ -216,6 +236,11 @@ QVector<Enemy *> AcidSlimeM::createSplitChildren(bool isMultiplayer) const
     }
 
     return children;
+}
+
+void AcidSlimeM::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(110,110,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -280,6 +305,11 @@ QVector<Enemy *> AcidSlimeL::createSplitChildren(bool isMultiplayer) const
     return children;
 }
 
+void AcidSlimeL::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(120,120,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Thief::Thief(
@@ -321,6 +351,11 @@ void Thief::calculateNextIntent()
     m_hasEscaped = true;
 }
 
+void Thief::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(160,180,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Looter::Looter(bool isMultiplayer, QGraphicsItem *parent)
@@ -359,6 +394,11 @@ void BlueSlaver::calculateNextIntent()
     m_currentIntent = pickIntent(options);
 }
 
+void BlueSlaver::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(160,180,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 RedSlaver::RedSlaver(bool isMultiplayer, QGraphicsItem *parent)
@@ -392,6 +432,11 @@ void RedSlaver::calculateNextIntent()
         m_usedEntangle = true;
 }
 
+void RedSlaver::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(160,180,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 SphericGuardian::SphericGuardian(bool isMultiplayer, QGraphicsItem *parent)
@@ -416,6 +461,11 @@ void SphericGuardian::calculateNextIntent()
                                                 {50, EnemyIntent{IntentType::Attack, 10, 2, false}}};
 
     m_currentIntent = pickIntent(options);
+}
+
+void SphericGuardian::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(160,180,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -449,6 +499,11 @@ void GremlinKnob::onAnyCardPlayed(CardType cardType, GamePlay *game)
 
     if (m_enrageStacks > 0 && cardType == CardType::Skill)
         applyBuffDebuff(BuffDebuffType::Strength, 2);
+}
+
+void GremlinKnob::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(160,180,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -485,6 +540,11 @@ void Sentry::onIntentExecuted(GamePlay *game)
     }
 }
 
+void Sentry::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(120,170,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 BookOfStabbing::BookOfStabbing(bool isMultiplayer, QGraphicsItem *parent)
@@ -509,6 +569,11 @@ void BookOfStabbing::calculateNextIntent()
         m_multiStabUsedCount++;
 }
 
+void BookOfStabbing::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(160,180,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Taskmaster::Taskmaster(bool isMultiplayer, QGraphicsItem *parent)
@@ -531,6 +596,11 @@ void Taskmaster::onIntentExecuted(GamePlay *game)
         return;
 
     game->addCardToDiscardPile(new WOUND());
+}
+
+void Taskmaster::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(160,180,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -604,6 +674,11 @@ void KingSlime::onIntentExecuted(GamePlay *game)
     }
 }
 
+void KingSlime::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(200,200,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 HexaGhost::HexaGhost(bool isMultiplayer, QGraphicsItem *parent)
@@ -674,6 +749,11 @@ void HexaGhost::onIntentExecuted(GamePlay *game)
     }
 }
 
+void HexaGhost::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(200,200,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 TheChamp::TheChamp(bool isMultiplayer, QGraphicsItem *parent)
@@ -699,4 +779,9 @@ void TheChamp::calculateNextIntent()
                                                 {45, EnemyIntent{IntentType::Attack, 8, 2, false}}};
 
     m_currentIntent = pickIntent(options);
+}
+
+void TheChamp::loadPic()
+{
+    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(200,220,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 }

@@ -9,6 +9,7 @@ class Cultist : public Enemy
 public:
     explicit Cultist(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+    void loadPic() override;
 
 private:
     bool m_hasIncantation = false;
@@ -19,6 +20,7 @@ class JawWorm : public Enemy
 public:
     explicit JawWorm(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+    void loadPic() override;
 };
 
 class Louse : public Enemy
@@ -26,6 +28,7 @@ class Louse : public Enemy
 public:
     explicit Louse(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+    void loadPic() override;
     int takeDamage(int incomingDamage, bool isAttackDamage = true) override;
 
 private:
@@ -47,6 +50,7 @@ public:
 
     bool needsToSplit() const;
     void markSplit();
+    void loadPic() override;
     virtual QVector<Enemy *> createSplitChildren(bool isMultiplayer) const;
 
 protected:
@@ -60,6 +64,7 @@ public:
     explicit AcidSlimeS(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
     bool shouldSplit() const override;
+    void loadPic() override;
     QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
 
 protected:
@@ -72,6 +77,7 @@ public:
     explicit AcidSlimeM(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
     bool shouldSplit() const override;
+    void loadPic() override;
     QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
 
 protected:
@@ -84,6 +90,7 @@ public:
     explicit AcidSlimeL(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
     bool shouldSplit() const override;
+    void loadPic() override;
     QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
 
 protected:
@@ -101,6 +108,7 @@ public:
           QGraphicsItem *parent = nullptr);
 
     void calculateNextIntent() override;
+    void loadPic() override;
     bool hasEscaped() const;
     int stolenGold() const;
 
@@ -127,6 +135,7 @@ class BlueSlaver : public Enemy
 public:
     explicit BlueSlaver(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+    void loadPic() override;
 };
 
 class RedSlaver : public Enemy
@@ -134,6 +143,7 @@ class RedSlaver : public Enemy
 public:
     explicit RedSlaver(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+    void loadPic() override;
 
 private:
     bool m_usedEntangle = false;
@@ -144,6 +154,7 @@ class SphericGuardian : public Enemy
 public:
     explicit SphericGuardian(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+    void loadPic() override;
 };
 
 class GremlinKnob : public Enemy
@@ -152,6 +163,7 @@ public:
     explicit GremlinKnob(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
     void onAnyCardPlayed(CardType cardType, GamePlay *game) override;
+    void loadPic() override;
 
 private:
     int m_enrageStacks = 0;
@@ -165,6 +177,7 @@ public:
                     QGraphicsItem *parent = nullptr);
 
     void calculateNextIntent() override;
+    void loadPic() override;
 
 private:
     bool m_startsWithBeam;
@@ -177,6 +190,7 @@ class BookOfStabbing : public Enemy
 public:
     explicit BookOfStabbing(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+    void loadPic() override;
 
 private:
     int m_multiStabUsedCount = 0;
@@ -187,6 +201,7 @@ class Taskmaster : public Enemy
 public:
     explicit Taskmaster(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+    void loadPic() override;
 
 private:
     void onIntentExecuted(GamePlay *game) override;
@@ -199,6 +214,7 @@ public:
     void calculateNextIntent() override;
     bool shouldSplit() const override;
     QVector<Enemy *> createSplitChildren(bool isMultiplayer) const override;
+    void loadPic() override;
 
 protected:
     // void executeIntent(Player *player) override;
@@ -213,6 +229,7 @@ class HexaGhost : public Enemy
 public:
     explicit HexaGhost(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+    void loadPic() override;
 
 private:
     int m_lastCycleIndex = -1;
@@ -224,6 +241,7 @@ class TheChamp : public Enemy
 public:
     explicit TheChamp(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
+    void loadPic() override;
 };
 
 #endif // ALLENEMIES_H

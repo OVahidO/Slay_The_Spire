@@ -15,6 +15,9 @@ MapButton::MapButton(MapButtonType buttonType, int levelIndex, int levelPosIndex
     case MapButtonType::ELITE:
         m_resourcePath = ":/Map/Pics/Map/elite.png";
         break;
+    case MapButtonType::BOSS:
+        m_resourcePath = ":/Map/Pics/Map/elite.png";
+        break;
     case MapButtonType::EVENT:
         m_resourcePath = ":/Map/Pics/Map/event.png";
         break;

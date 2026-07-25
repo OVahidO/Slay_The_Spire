@@ -1091,7 +1091,7 @@ void GamePlay::setupEnemies()
     int i = 0 , j=0;
     for(auto& enemy : m_enemys)
     {
-        enemy->setPos(this->width()-225-(i), this->height()-280-(j));
+        enemy->setPos(this->width()-250-(i), this->height()-300-(j));
         connect(enemy, &Enemy::attacked, this, [this](Enemy* enemy){this->playAttackJolt(enemy, false);});
         connect(enemy, &Enemy::takedDamage, this, [this](Combatant* c, int damage){this->showFloatingDamage(c, damage);});
         m_scene->addItem(enemy);

@@ -81,7 +81,7 @@ protected:
     QPixmap m_enemyPic;
     enemyType m_type;
 
-    void loadPic();
+    virtual void loadPic();
 
     EnemyIntent attackIntent(int damage) const;
     EnemyIntent defendIntent(int block) const;
