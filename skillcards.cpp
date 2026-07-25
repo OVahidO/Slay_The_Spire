@@ -395,7 +395,7 @@ static inline bool BloodlettingRegistered = []()
 Entrench::Entrench(QGraphicsItem *parent)
     : SkillCard(CardID::Entrench, "Entrench", 2, "Double your Block", false, false, false, parent)
 {
-    m_sourcePath = "";
+    m_sourcePath = ":/card-art/Pics/Cards/Skill/entrench.png";
     loadPixmap();
 }
 
