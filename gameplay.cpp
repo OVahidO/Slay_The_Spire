@@ -670,6 +670,9 @@ void GamePlay::noTargetCardsHandler(Card *card)
     if (!isEnoughEnergy(card->energyCost()))
         return;
 
+    if (card->cardType() == CardType::Attack)
+        this->playAttackJolt(m_player, true);
+
     bool deferEnemyEffectToLeader = m_coopMode && !m_isAuthoritative && card->isAoeEnemyEffect();
 
     bool effectSucceeded = deferEnemyEffectToLeader ? true : card->applyEffect(this);
