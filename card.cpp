@@ -103,22 +103,28 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     QColor typeColor = colorForCardType(m_type);
 
+    bool showEnergyCost = ((m_type != CardType::Status && m_name != "Slime")
+                           && m_type != CardType::Curse);
 
-    QRectF energyBadge(rect.left() + 10, rect.top() + 10, 34, 34);
+    if (showEnergyCost) {
+        QRectF energyBadge(rect.left() + 10, rect.top() + 10, 34, 34);
 
-    if (!m_energyPixmap.isNull())
-        painter->drawPixmap(energyBadge, m_energyPixmap, m_energyPixmap.rect());
+        if (!m_energyPixmap.isNull())
+            painter->drawPixmap(energyBadge, m_energyPixmap, m_energyPixmap.rect());
 
-    QColor energyTextColor = (m_energyCost < m_baseEnergyCost) ? QColor(110, 255, 140) : Qt::white;
+        QColor energyTextColor = (m_energyCost < m_baseEnergyCost) ? QColor(110, 255, 140)
+                                                                   : Qt::white;
 
-    QFont font("Oxanium");
-    font.setBold(true);
-    font.setPixelSize(18);
+        QFont font("Oxanium");
+        font.setBold(true);
+        font.setPixelSize(18);
 
-    painter->setFont(font);
-    painter->setPen(energyTextColor);
+        painter->setFont(font);
+        painter->setPen(energyTextColor);
 
-    painter->drawText(energyBadge, Qt::AlignCenter, QString::number(m_energyCost));
+        QString energyDisplayText = (m_energyCost < 0) ? "X" : QString::number(m_energyCost);
+        painter->drawText(energyBadge, Qt::AlignCenter, energyDisplayText);
+    }
 
     QRectF textRect(rect.x() + 14, fadeRect.y() + 8, rect.width() - 28, fadeRect.height() - 16);
 
@@ -127,7 +133,7 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->drawPixmap(nameIconRect, m_typeIcon, m_typeIcon.rect());
 
     QColor nameColor = m_isUpgraded ? QColor(90, 230, 110) : Qt::white;
-    QFont nameFont("Cinzel", 15, QFont::Bold);
+    QFont nameFont("Cinzel", 13, QFont::Bold);
     painter->setFont(nameFont);
     painter->setPen(nameColor);
     QRectF nameTextRect = textRect.adjusted(24, 0, 0, 0);
@@ -135,7 +141,7 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     QRectF descRect = textRect.adjusted(0, 26, 0, 0);
     QTextDocument doc;
-    doc.setDefaultFont(QFont("Rajdhani", 10));
+    doc.setDefaultFont(QFont("Rajdhani", 8));
     doc.setTextWidth(descRect.width());
     QString dynamicText = getDynamicDescription(m_ownerPlayer, m_hoveredEnemy);
     doc.setHtml(QString("<div style='color:#dcdcdc;'>%1</div>").arg(highlightKeywords(dynamicText)));
