@@ -245,6 +245,7 @@ HealthBarItem::HealthBarItem(QGraphicsItem *parent)
     : QGraphicsObject(parent)
 {
     setAcceptHoverEvents(true);
+    m_blockIcon.load(":/icons/Pics/Icons/icons8-shield-50.png");
 }
 
 void HealthBarItem::updateStats(int currentHp, int maxHp, int block)
@@ -290,6 +291,10 @@ void HealthBarItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->setBrush(QColor(50, 50, 50));
     painter->setPen(Qt::black);
     painter->drawRect(0, 0, m_width, m_height);
+    if (!m_blockIcon.isNull())
+        painter->drawPixmap(QRectF(-22, (m_height - 16) / 2.0, 16, 16),
+                            m_blockIcon,
+                            m_blockIcon.rect());
 
     painter->setBrush(QColor(200, 50, 50));
     painter->drawRect(0, 0, m_width * hpPercentage, m_height);
