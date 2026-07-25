@@ -10,6 +10,14 @@ MainMenu::MainMenu(QWidget *parent)
     , ui(new Ui::MainMenu)
 {
     ui->setupUi(this);
+    // ui->verticalLayout_3->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
+    // ui->verticalLayout_3->setContentsMargins(80, 0, 0, 50);
+    // ui->verticalLayout_3->setSpacing(6);
+    // for (QPushButton *btn :
+    //      {ui->StartButton, ui->LeaderBoardButton, ui->Settingbutton, ui->ExitButton_2}) {
+    //     btn->setMaximumWidth(240);
+    //     btn->setStyleSheet("text-align: left;");
+    // }
     ui->MenuKeys->setCurrentIndex(0);
     m_loginSignup = new Login_Signup(this);
     connect(m_loginSignup, &Login_Signup::back, this, [this](){this->m_loginSignup->accept();});

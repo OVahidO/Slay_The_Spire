@@ -115,7 +115,7 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         QColor energyTextColor = (m_energyCost < m_baseEnergyCost) ? QColor(110, 255, 140)
                                                                    : Qt::white;
 
-        QFont font("Oxanium");
+        QFont font("Kreon");
         font.setBold(true);
         font.setPixelSize(18);
 
@@ -133,7 +133,7 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->drawPixmap(nameIconRect, m_typeIcon, m_typeIcon.rect());
 
     QColor nameColor = m_isUpgraded ? QColor(90, 230, 110) : Qt::white;
-    QFont nameFont("Cinzel", 13, QFont::Bold);
+    QFont nameFont("Kreon", 15, QFont::Bold);
     painter->setFont(nameFont);
     painter->setPen(nameColor);
     QRectF nameTextRect = textRect.adjusted(24, 0, 0, 0);
@@ -141,7 +141,7 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     QRectF descRect = textRect.adjusted(0, 26, 0, 0);
     QTextDocument doc;
-    doc.setDefaultFont(QFont("Rajdhani", 8));
+    doc.setDefaultFont(QFont("Kreon", 8));
     doc.setTextWidth(descRect.width());
     QString dynamicText = getDynamicDescription(m_ownerPlayer, m_hoveredEnemy);
     doc.setHtml(QString("<div style='color:#dcdcdc;'>%1</div>").arg(highlightKeywords(dynamicText)));
