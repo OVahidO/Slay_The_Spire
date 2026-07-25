@@ -425,6 +425,18 @@ void Clash::applyEffect(Player *player, Enemy *target)
     }
 }
 
+bool Clash::canBePlayed(Player *player) const
+{
+    if (!player)
+        return false;
+
+    for (Card *card : player->HandsCards())
+        if (card->cardType() != CardType::Attack)
+            return false;
+
+    return true;
+}
+
 void Clash::upgrade()
 {
     if (m_isUpgraded)

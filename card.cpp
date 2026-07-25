@@ -460,3 +460,8 @@ bool Card::isAoeEnemyEffect() const
 {
     return false;
 }
+
+bool Card::canBePlayed(Player *player) const
+{
+    return true;
+}

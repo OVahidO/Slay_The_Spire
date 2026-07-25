@@ -631,8 +631,10 @@ void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy
     if (!isEnoughEnergy(card->energyCost()))
         return;
 
-    if(card->cardType() == CardType::Attack)
-    {
+    if (!card->canBePlayed(m_player))
+        return;
+
+    if (card->cardType() == CardType::Attack) {
         player = m_player;
         this->playAttackJolt(m_player, true);
     }
