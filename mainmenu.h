@@ -6,6 +6,7 @@
 /////////////
 class Player;
 class Login_Signup;
+class LeaderBoard;
 /////////////
 
 namespace Ui {
@@ -53,6 +54,7 @@ private slots:
 private:
     Ui::MainMenu *ui;
     Login_Signup* m_loginSignup;
+    LeaderBoard* m_leaderBoard;
     QWidget* m_overlay;
 };
 

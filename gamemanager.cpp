@@ -87,10 +87,10 @@ void GameManager::showMainMenu()
         connect(m_mainMenu, &MainMenu::playerIsReady, this, &GameManager::onPlayerReady);
         connect(m_mainMenu, &MainMenu::exit, qApp, &QCoreApplication::quit);
         connect(m_mainMenu, &MainMenu::startGameClicked, this, &GameManager::onMainMenuStart);
-        connect(m_mainMenu,
-                &MainMenu::leaderboardClicked,
-                this,
-                &GameManager::onMainMenuLeaderboard);
+        // connect(m_mainMenu,
+        //         &MainMenu::leaderboardClicked,
+        //         this,
+        //         &GameManager::onMainMenuLeaderboard);
         connect(m_mainMenu, &MainMenu::settingsClicked, this, &GameManager::onMainMenuSettings);
         connect(m_mainMenu,
                 &MainMenu::multiplayerClicked,
@@ -317,10 +317,10 @@ void GameManager::onMainMenuStart()
     switchTo(m_map);
 }
 
-void GameManager::onMainMenuLeaderboard()
-{
-    showLeaderboard();
-}
+// void GameManager::onMainMenuLeaderboard()
+// {
+//     showLeaderboard();
+// }
 
 void GameManager::onMainMenuSettings()
 {
@@ -624,12 +624,12 @@ void GameManager::returnToMainMenuAfterDefeat()
     showMainMenu();
 }
 
-void GameManager::showLeaderboard()
-{
-    // Leaderboard UI
-    // leaderboardDataReady UI
-    emit leaderboardDataReady(Database::topScores());
-}
+// void GameManager::showLeaderboard()
+// {
+//     // Leaderboard UI
+//     // leaderboardDataReady UI
+//     emit leaderboardDataReady(Database::topScores());
+// }
 
 void GameManager::resetRunState()
 {

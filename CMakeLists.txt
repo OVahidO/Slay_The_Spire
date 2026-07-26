@@ -61,6 +61,7 @@ qt_add_executable(Slay_The_Spire
     networklobby.h networklobby.cpp
     relicbar.h relicbar.cpp relicbar.ui
     fonts.qrc
+    leaderBoard.h leaderBoard.cpp leaderboard.ui
     #
 )
 
