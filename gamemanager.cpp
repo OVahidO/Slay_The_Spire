@@ -26,6 +26,7 @@
 #include "reward.h"
 #include "settings.h"
 #include "shop.h"
+#include "relicbar.h"
 
 GameManager::GameManager(QStackedWidget *stack, QVBoxLayout *VLayout, QObject *parent)
     : QObject(parent)
@@ -111,9 +112,16 @@ void GameManager::onPlayerReady(Player *player)
 
     //////////////topbar//////////////
     m_topbar = new Topbar(m_gamePlay);
+    connect(m_topbar, &Topbar::potionUsed, m_gamePlay, &GamePlay::usedPotionHandler);
     m_vLayout->insertWidget(0, m_topbar);
     m_topbar->hide();
     //////////////////////////////////
+    //////////////////////
+    m_relicbar = new RelicBar(m_vLayout->parentWidget());
+    m_relicbar->move(0,m_topbar->height());
+    m_relicbar->hide();
+    connect(m_player, &Player::relicAdded, m_relicbar, &RelicBar::addRelic);
+    /////////////////////
 
     if (m_pendingMultiplayerRequested) {
         m_pendingMultiplayerRequested = false;
@@ -133,6 +141,7 @@ void GameManager::prepareGamePlayForPlayer()
         return;
 
     m_gamePlay = new GamePlay(m_player);
+
     m_stack->addWidget(m_gamePlay);
 
     connect(m_gamePlay, &GamePlay::combatWon, this, &GameManager::onCombatWon);
@@ -206,8 +215,15 @@ void GameManager::startNewRun()
     //////////////topbar//////////////
     m_topbar = new Topbar(m_gamePlay);
     m_vLayout->insertWidget(0, m_topbar);
+    connect(m_topbar, &Topbar::potionUsed, m_gamePlay, &GamePlay::usedPotionHandler);
     m_topbar->hide();
     //////////////////////////////////
+    /////////////////////////
+    m_relicbar = new RelicBar(m_vLayout->parentWidget());
+    m_relicbar->move(0,m_topbar->height());
+    m_relicbar->hide();
+    connect(m_player, &Player::relicAdded, m_relicbar, &RelicBar::addRelic);
+    /////////////////////
 
     grantStarterKit();
     buildNewMap();
@@ -298,6 +314,7 @@ void GameManager::onMainMenuStart()
     }
 
     m_topbar->show();
+    m_relicbar->show();
     switchTo(m_map);
 }
 
@@ -445,6 +462,7 @@ void GameManager::onRewardFinished()
 
             if (!m_isMultiplayer || m_isLeader) {
                 m_mapSeed = QRandomGenerator::global()->generate();
+                MapButton::setPrevButton(nullptr);
                 buildNewMap();
 
                 if (m_isMultiplayer && m_networkManager)

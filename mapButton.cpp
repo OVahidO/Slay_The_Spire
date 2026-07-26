@@ -2,6 +2,8 @@
 #include <QPainter>
 #include <QCursor>
 
+MapButton* MapButton::m_prev = nullptr;
+
 MapButton::MapButton(MapButtonType buttonType, int levelIndex, int levelPosIndex, QGraphicsItem *parent)
     : QGraphicsObject{parent}
     , m_levelIndex(levelIndex)
@@ -120,4 +122,14 @@ MapButtonType MapButton::buttonType() const
 QVector<MapButton*>& MapButton::nextButtons()
 {
     return m_nextButtons;
+}
+
+MapButton* MapButton::prevButton()
+{
+    return MapButton::m_prev;
+}
+
+void MapButton::setPrevButton(MapButton* prev)
+{
+    MapButton::m_prev = prev;
 }

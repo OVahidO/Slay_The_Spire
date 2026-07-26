@@ -211,7 +211,10 @@ QVector<Relic *> &Player::relics()
 void Player::addRelic(Relic *relic)
 {
     if (relic)
+    {
         m_relics.append(relic);
+        emit relicAdded(relic);
+    }
 }
 
 void Player::triggerRelicsCombatStart(GamePlay *game)

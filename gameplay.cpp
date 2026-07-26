@@ -771,7 +771,11 @@ void GamePlay::usedPotionHandler(Potion *potion)
             potion->applyEffect(enemy);
 
         removeDeadEnemies();
-    } else {
+    }
+    else if (dynamic_cast<SwiftPotion *>(potion)) {
+        this->drawCards(3);
+    }
+    else {
         if (m_player)
             potion->applyEffect(m_player);
     }

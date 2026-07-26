@@ -41,7 +41,6 @@ Map::Map(unsigned int seed, QWidget *parent)
             for(int j = 0; j<(rand(0, 1, m_randRange)+2); j++)
             {
                 MapButton* b = new MapButton(MapButtonType::ENEMY, i, j);
-                b->setEnabled(true);
                 level.append(b);
             }
         }
@@ -273,6 +272,32 @@ void Map::addMapButtons()
                 auto sameLevelButtons = this->m_levels[mapButton->levelIndex()];
                 for(auto& mapButton : sameLevelButtons)
                     mapButton->setEnabled(false);
+                if(MapButton::prevButton())
+                {
+                    qreal currentCenterX = MapButton::prevButton()->pos().x() + (MapButton::prevButton()->boundingRect().width() / 2);
+                    qreal currentCenterY = MapButton::prevButton()->pos().y() + (MapButton::prevButton()->boundingRect().height() / 2) - 20;
+                    qreal nextCenterX = mapButton->pos().x() + (mapButton->boundingRect().width() / 2);
+                    qreal nextCenterY = mapButton->pos().y() + (mapButton->boundingRect().height() / 2) + 20;
+
+
+                    QGraphicsLineItem* road = new QGraphicsLineItem(
+                        currentCenterX, currentCenterY,
+                        nextCenterX, nextCenterY
+                        );
+
+                    QPen pen(QColor(153, 76, 0));
+                    pen.setWidth(3);
+                    pen.setStyle(Qt::DashLine);
+                    pen.setCapStyle(Qt::RoundCap);
+                    road->setPen(pen);
+
+                    road->setZValue(-1);
+
+                    m_scene->addItem(road);
+                }
+
+                MapButton::setPrevButton(mapButton);
+
             });
             connect(currentMapButtons, &MapButton::onClick, this, &Map::nodeSelected);
 
@@ -314,7 +339,7 @@ void Map::addRoads()
                 pen.setCapStyle(Qt::RoundCap);
                 road->setPen(pen);
 
-                road->setZValue(-1);
+                road->setZValue(-2);
 
                 m_scene->addItem(road);
                 }

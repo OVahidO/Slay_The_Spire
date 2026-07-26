@@ -11,7 +11,14 @@ Relic::Relic(QString name, QString description, relicType type, QWidget *parent)
     , ui(new Ui::Relic)
 {
     ui->setupUi(this);
-    setFixedSize(64, 64);
+    setFixedSize(60, 60);
+
+    ui->relicIcon->setFixedSize(50,50);
+    ui->relicIcon->setScaledContents(false);
+    ui->relicIcon->setAlignment(Qt::AlignCenter);
+    ui->relicIcon->setCursor(Qt::PointingHandCursor);
+
+    ui->relicIcon->setToolTip(m_description);
 
     ui->counterLabel->hide();
 }
@@ -50,7 +57,7 @@ void Relic::setCounter(int value)
 void Relic::loadIcon()
 {
     QPixmap pix(m_soucePath);
-    ui->relicIcon->setPixmap(pix.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->relicIcon->setPixmap(pix.scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 Relic *Relic::createRandomNormalRelic()

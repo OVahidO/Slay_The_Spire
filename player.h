@@ -67,6 +67,7 @@ signals:
     void coinChanged();
     void energyChanged();
     void potionAdded(Potion* potion);
+    void relicAdded(Relic* relic);
     void valueChanged();
 
 private:
