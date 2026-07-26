@@ -153,3 +153,8 @@ void MainMenu::on_MultiplayerButton_clicked()
 {
     emit multiplayerClicked();
 }
+
+void MainMenu::resetToLoginScreen()
+{
+    ui->MenuKeys->setCurrentIndex(0);
+}

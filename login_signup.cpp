@@ -3,26 +3,28 @@
 #include "player.h"
 #include "database.h"
 
+#include <QCheckBox>
 #include <QSettings>
-
 Login_Signup::Login_Signup(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Login_Signup)
 {
     ui->setupUi(this);
     this->setGeometry(525,300,500,500);
-    // Database توسط GameManager یک‌بار در ابتدای برنامه باز و آماده می‌شود؛
     m_players = Database::selectAllPlayers();
 
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
 
     setAttribute(Qt::WA_TranslucentBackground);
 
+    m_rememberMeCheckBox = new QCheckBox("Remember Me", this);
+    m_rememberMeCheckBox->setStyleSheet("color: white; font-weight: bold;");
+    ui->verticalLayout_4->insertWidget(ui->verticalLayout_4->count() - 1, m_rememberMeCheckBox);
     QSettings settings("SlayTheSpireClone", "Auth");
     if (settings.value("rememberMe", false).toBool()) {
         ui->LoginUsernameInput->setText(settings.value("rememberedUsername").toString());
         ui->LoginPasswordInput->setText(settings.value("rememberedPassword").toString());
-        // ui->rememberMeCheckBox->setChecked(true);
+        m_rememberMeCheckBox->setChecked(true);
     }
 }
 
@@ -162,15 +164,15 @@ void Login_Signup::on_LoginEnterButton_clicked()
         Player *player = Database::loadPlayerById(playerID);
         if (player) {
             QSettings settings("SlayTheSpireClone", "Auth");
-            // if (ui->rememberMeCheckBox->isChecked()) {
-            //     settings.setValue("rememberMe", true);
-            //     settings.setValue("rememberedUsername", ui->LoginUsernameInput->text());
-            //     settings.setValue("rememberedPassword", ui->LoginPasswordInput->text());
-            // } else {
-            //     settings.setValue("rememberMe", false);
-            //     settings.remove("rememberedUsername");
-            //     settings.remove("rememberedPassword");
-            // }
+            if (m_rememberMeCheckBox && m_rememberMeCheckBox->isChecked()) {
+                settings.setValue("rememberMe", true);
+                settings.setValue("rememberedUsername", ui->LoginUsernameInput->text());
+                settings.setValue("rememberedPassword", ui->LoginPasswordInput->text());
+            } else {
+                settings.setValue("rememberMe", false);
+                settings.remove("rememberedUsername");
+                settings.remove("rememberedPassword");
+            }
 
             emit playerIsReady(player);
             this->accept();

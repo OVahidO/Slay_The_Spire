@@ -6,6 +6,8 @@
 
 //////////////////
 class Player;
+
+class QCheckBox;
 /////////////////
 
 namespace Ui {
@@ -48,6 +50,7 @@ private slots:
 private:
     Ui::Login_Signup *ui;
     QVector<Player*> m_players;
+    QCheckBox *m_rememberMeCheckBox = nullptr;
 };
 
 #endif // LOGIN_SIGNUP_H

@@ -1370,8 +1370,8 @@ void GameManager::onSettingsLogoutRequested()
 
     m_screenBeforeSettings = nullptr;
 
-    // if (m_mainMenu)
-    //     m_mainMenu->resetToLoginScreen();
+    if (m_mainMenu)
+        m_mainMenu->resetToLoginScreen();
 
     showMainMenu();
 }

@@ -47,6 +47,8 @@
         <file>Pics/Icons/icons8-shield-50.png</file>
         <file>Pics/Icons/cursor_default.png</file>
         <file>Pics/Icons/cursor_tilted.png</file>
+        <file>Pics/Icons/checkbox_ticked.png</file>
+        <file>Pics/Icons/checkbox_unticked.png</file>
     </qresource>
     <qresource prefix="/card-art">
         <file>Pics/Cards/Attack/bash.png</file>
