@@ -171,6 +171,14 @@ void Combatant::tickDecayingBuffDebuff()
     emit combatStateChanged();
 }
 
+void Combatant::clearActiveEffects()
+{
+    qDeleteAll(m_activeEffects);
+    m_activeEffects.clear();
+    m_powerEffects.clear();
+    updateBuffUI();
+}
+
 int Combatant::calculateOutgoingDamage(int baseDamage) const
 {
     int modified = baseDamage + effectStacks(BuffDebuffType::Strength);

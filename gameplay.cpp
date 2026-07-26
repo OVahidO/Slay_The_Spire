@@ -465,6 +465,7 @@ void GamePlay::endCombat()
 
     m_player->setBlock(0);
     m_player->setBarricade(false);
+    m_player->clearActiveEffects();
 
     for (Card *card : m_player->HandsCards()) {
         if (card->lifetime() == CardLifetime::Permanent)
