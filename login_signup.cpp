@@ -3,6 +3,8 @@
 #include "player.h"
 #include "database.h"
 
+#include <QSettings>
+
 Login_Signup::Login_Signup(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Login_Signup)
@@ -15,6 +17,13 @@ Login_Signup::Login_Signup(QWidget *parent)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
 
     setAttribute(Qt::WA_TranslucentBackground);
+
+    QSettings settings("SlayTheSpireClone", "Auth");
+    if (settings.value("rememberMe", false).toBool()) {
+        ui->LoginUsernameInput->setText(settings.value("rememberedUsername").toString());
+        ui->LoginPasswordInput->setText(settings.value("rememberedPassword").toString());
+        // ui->rememberMeCheckBox->setChecked(true);
+    }
 }
 
 Login_Signup::~Login_Signup()
@@ -152,12 +161,22 @@ void Login_Signup::on_LoginEnterButton_clicked()
                                 playerID)) {
         Player *player = Database::loadPlayerById(playerID);
         if (player) {
+            QSettings settings("SlayTheSpireClone", "Auth");
+            // if (ui->rememberMeCheckBox->isChecked()) {
+            //     settings.setValue("rememberMe", true);
+            //     settings.setValue("rememberedUsername", ui->LoginUsernameInput->text());
+            //     settings.setValue("rememberedPassword", ui->LoginPasswordInput->text());
+            // } else {
+            //     settings.setValue("rememberMe", false);
+            //     settings.remove("rememberedUsername");
+            //     settings.remove("rememberedPassword");
+            // }
+
             emit playerIsReady(player);
             this->accept();
             return;
         }
     }
-
     // for(auto& player : m_players)
     // {
     //     if(ui->LoginUsernameInput->text() == player.first->name())

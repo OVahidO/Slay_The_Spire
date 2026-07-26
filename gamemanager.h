@@ -87,6 +87,7 @@ private slots:
     void onSettingsVolumeChanged(int volume);
     void onSettingsMuteToggled(bool muted);
     void onSettingsCredentialsSaveRequested(const QString &username, const QString &password);
+    void onSettingsLogoutRequested();
 
     // Map
     void onMapNodeSelected(MapButton *button);
