@@ -13,6 +13,8 @@
     <qresource prefix="/MainMenu">
         <file>Pics/MainMenu/eng.png</file>
         <file>Pics/MainMenu/main_menu_bg.png</file>
+        <file>Pics/MainMenu/login_signup_Bg.png</file>
+        <file>Pics/MainMenu/LineEditBg.png</file>
     </qresource>
     <qresource prefix="/Combat">
         <file>Pics/Background/Combat/basement.png</file>

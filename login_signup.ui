@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>400</height>
+    <width>437</width>
+    <height>515</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,25 +18,43 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>500</width>
-    <height>400</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>500</width>
-    <height>400</height>
+    <width>1500</width>
+    <height>1500</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">QLineEdit{
+	
+	border-image: url(:/MainMenu/Pics/MainMenu/LineEditBg.png) 15 15 15 15 stretch stretch;
+	background: transparent;
+	color: white;
+	padding: 0px 10px;
+}</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <property name="leftMargin">
-    <number>11</number>
+    <number>25</number>
+   </property>
+   <property name="topMargin">
+    <number>25</number>
+   </property>
+   <property name="rightMargin">
+    <number>25</number>
+   </property>
+   <property name="bottomMargin">
+    <number>25</number>
    </property>
    <item>
     <widget class="QStackedWidget" name="Login_Signup_Stack">
@@ -55,14 +73,23 @@
 }</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="Login">
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <widget class="QLabel" name="loginTitleLabel">
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Login</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
        </item>
@@ -74,7 +101,20 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="LoginUsernameInput"/>
+        <widget class="QLineEdit" name="LoginUsernameInput">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>70</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>1000</height>
+          </size>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="LoginPasswordLabel">
@@ -84,10 +124,32 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="LoginPasswordInput"/>
+        <widget class="QLineEdit" name="LoginPasswordInput">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>72</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>1000</height>
+          </size>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="LoginErrorLabel">
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(74, 89, 93);</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -138,6 +200,9 @@
          <property name="text">
           <string>Signup</string>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
         </widget>
        </item>
        <item>
@@ -148,10 +213,33 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="usernameInput"/>
+        <widget class="QLineEdit" name="usernameInput">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>65</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>1000000</height>
+          </size>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="usernameErrorLabel">
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(74, 89, 93);
+</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -165,7 +253,20 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="passwordInput"/>
+        <widget class="QLineEdit" name="passwordInput">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>70</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>100000</height>
+          </size>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="confirimPasswordLabel">
@@ -175,10 +276,32 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="confirimPasswordInput"/>
+        <widget class="QLineEdit" name="confirimPasswordInput">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>72</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>1000000</height>
+          </size>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="passwordErrorLabel">
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(74, 89, 93);</string>
+         </property>
          <property name="text">
           <string/>
          </property>

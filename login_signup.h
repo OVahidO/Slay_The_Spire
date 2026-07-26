@@ -48,6 +48,8 @@ private slots:
 private:
     Ui::Login_Signup *ui;
     QVector<Player*> m_players;
+
+    void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // LOGIN_SIGNUP_H

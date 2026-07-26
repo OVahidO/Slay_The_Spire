@@ -8,19 +8,34 @@ Login_Signup::Login_Signup(QWidget *parent)
     , ui(new Ui::Login_Signup)
 {
     ui->setupUi(this);
-    this->setGeometry(525,300,500,500);
+    this->setGeometry(525,175,500,500);
     // Database توسط GameManager یک‌بار در ابتدای برنامه باز و آماده می‌شود؛
     m_players = Database::selectAllPlayers();
 
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
 
     setAttribute(Qt::WA_TranslucentBackground);
+
+    // QPalette palette = this->palette();
+    // QPixmap background(":/MainMenu/Pics/MainMenu/login_signup_Bg.png");
+    // palette.setBrush(QPalette::Window, QBrush(background.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
+    // this->setPalette(palette);
 }
 
 Login_Signup::~Login_Signup()
 {
     Database::close();
     delete ui;
+}
+
+void Login_Signup::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+
+    QPixmap background(":/MainMenu/Pics/MainMenu/login_signup_Bg.png");
+    painter.drawPixmap(this->rect(), background);
 }
 
 void Login_Signup::signupButton_clicked()
