@@ -111,14 +111,12 @@ bool Database::updatePlayerValue(Player* p)
 {
     QSqlQuery query(db);
 
-    if(!query.prepare("UPDATE Player SET "
-                  "username=?,"
-                  "current_Hp=?,"
-                  "max_Hp=?,"
-                  "coin=?,"
-                  "score=?,"
-                  "WHERE id=?"))
-    {
+    if (!query.prepare("UPDATE Player SET "
+                       "username=?,"
+                       "current_Hp=?,"
+                       "max_Hp=?,"
+                       "coin=? "
+                       "WHERE id=?")) {
         qDebug() << db.lastError().text();
         return false;
     }
@@ -127,11 +125,9 @@ bool Database::updatePlayerValue(Player* p)
     query.addBindValue(p->currentHP());
     query.addBindValue(p->maxHP());
     query.addBindValue(p->coin());
-    query.addBindValue(0);
     query.addBindValue(p->id());
 
-    if(!query.exec())
-    {
+    if (!query.exec()) {
         qDebug() << db.lastError().text();
         return false;
     }

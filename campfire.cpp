@@ -434,9 +434,13 @@ void UpgradeDialog::onSceneItemClicked(QGraphicsItem *item)
 
 UpgradeDialog::~UpgradeDialog()
 {
-    for (Card *card : m_selectableCards)
-        if (card && m_scene && m_scene->items().contains(card))
+    for (Card *card : m_selectableCards) {
+        if (!card)
+            continue;
+        if (m_scene && m_scene->items().contains(card))
             m_scene->removeItem(card);
+        delete card;
+    }
 }
 
 bool UpgradeDialog::cardWasUpgraded() const
