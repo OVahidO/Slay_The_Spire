@@ -45,6 +45,8 @@
         <file>Pics/Icons/campfire/sleep.png</file>
         <file>Pics/Icons/campfire/smith.png</file>
         <file>Pics/Icons/icons8-shield-50.png</file>
+        <file>Pics/Icons/cursor_default.png</file>
+        <file>Pics/Icons/cursor_tilted.png</file>
     </qresource>
     <qresource prefix="/card-art">
         <file>Pics/Cards/Attack/bash.png</file>
