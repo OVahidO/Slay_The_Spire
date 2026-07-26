@@ -22,6 +22,8 @@ public:
     explicit Login_Signup(QWidget *parent = nullptr);
     ~Login_Signup();
 
+    Player *attemptAutoLogin();
+
 public slots:
     void signupButton_clicked();
 

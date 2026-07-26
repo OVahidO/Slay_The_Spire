@@ -25,11 +25,15 @@ MainMenu::MainMenu(QWidget *parent)
     ui->MenuKeys->setCurrentIndex(0);
     m_loginSignup = new Login_Signup(this);
     connect(m_loginSignup, &Login_Signup::back, this, [this](){this->m_loginSignup->accept();});
-    connect(m_loginSignup, &Login_Signup::playerIsReady, this, [this](Player* player)
-    {
+    connect(m_loginSignup, &Login_Signup::playerIsReady, this, [this](Player *player) {
         ui->MenuKeys->setCurrentIndex(1);
         this->playerIsReady(player);
     });
+
+    if (Player *autoPlayer = m_loginSignup->attemptAutoLogin()) {
+        ui->MenuKeys->setCurrentIndex(1);
+        emit playerIsReady(autoPlayer);
+    }
 
     m_overlay = new QWidget(this);
     m_overlay->setGeometry(rect());

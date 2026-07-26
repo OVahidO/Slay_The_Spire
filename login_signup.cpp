@@ -34,6 +34,21 @@ Login_Signup::~Login_Signup()
     delete ui;
 }
 
+Player *Login_Signup::attemptAutoLogin()
+{
+    QSettings settings("SlayTheSpireClone", "Auth");
+    if (!settings.value("rememberMe", false).toBool())
+        return nullptr;
+
+    int playerID = -1;
+    if (!Database::validateLogin(settings.value("rememberedUsername").toString(),
+                                 settings.value("rememberedPassword").toString(),
+                                 playerID))
+        return nullptr;
+
+    return Database::loadPlayerById(playerID);
+}
+
 void Login_Signup::signupButton_clicked()
 {
     ui->SignupEnterButton->setDisabled(true);
