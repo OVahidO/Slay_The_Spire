@@ -17,6 +17,9 @@ public:
     int levelIndex() const;
     int levelPosIndex() const;
     MapButtonType buttonType() const;
+    static MapButton* prevButton();
+
+    static void setPrevButton(MapButton* prev);
 
     QVector<MapButton*>& nextButtons();
 
@@ -40,6 +43,8 @@ private:
     MapButtonType m_buttonType;
     QString m_resourcePath;
     QPixmap m_pixmap;
+
+    static MapButton *m_prev;
 
     QVector<MapButton*> m_nextButtons;
 };

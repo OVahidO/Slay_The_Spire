@@ -461,6 +461,7 @@ void GameManager::onRewardFinished()
 
             if (!m_isMultiplayer || m_isLeader) {
                 m_mapSeed = QRandomGenerator::global()->generate();
+                MapButton::setPrevButton(nullptr);
                 buildNewMap();
 
                 if (m_isMultiplayer && m_networkManager)
