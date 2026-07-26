@@ -13,6 +13,7 @@ Potion::Potion(int value,QString resourcePath, QWidget *parent)
     ui->potionIcon->setFixedSize(30, 30);
     ui->potionIcon->setScaledContents(false);
     ui->potionIcon->setAlignment(Qt::AlignCenter);
+    ui->potionIcon->setCursor(Qt::PointingHandCursor);
     m_resourcePath = resourcePath;
     QPixmap pix(m_resourcePath);
     ui->potionIcon->setPixmap(pix.scaled(30,30,Qt::KeepAspectRatio, Qt::SmoothTransformation));

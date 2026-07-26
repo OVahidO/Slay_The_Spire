@@ -58,6 +58,7 @@ qt_add_executable(Slay_The_Spire
     piledialog.h piledialog.cpp piledialog.ui
     networkmanager.h networkmanager.cpp
     networklobby.h networklobby.cpp
+    relicbar.h relicbar.cpp relicbar.ui
     #
 )
 

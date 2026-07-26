@@ -29,6 +29,7 @@ class Event;
 class RewardScreen;
 class Enemy;
 class Relic;
+class RelicBar;
 class Potion;
 class Card;
 class Combatant;
@@ -129,6 +130,7 @@ private:
     Player *m_player = nullptr;
     GamePlay *m_gamePlay = nullptr;
     Topbar *m_topbar = nullptr;
+    RelicBar *m_relicbar = nullptr;
     Map *m_map = nullptr;
     MainMenu *m_mainMenu = nullptr;
 
