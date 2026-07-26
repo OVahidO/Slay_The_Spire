@@ -6,6 +6,9 @@
 /////////////
 class Player;
 class Login_Signup;
+
+class QMediaPlayer;
+class QVideoWidget;
 /////////////
 
 namespace Ui {
@@ -19,6 +22,8 @@ class MainMenu : public QWidget
 public:
     explicit MainMenu(QWidget *parent = nullptr);
     ~MainMenu();
+
+    void resetToLoginScreen();
 
 signals:
     void playerIsReady(Player* player);
@@ -54,6 +59,9 @@ private:
     Ui::MainMenu *ui;
     Login_Signup* m_loginSignup;
     QWidget* m_overlay;
+
+    QMediaPlayer *m_mediaPlayer = nullptr;
+    QVideoWidget *m_videoBackground = nullptr;
 };
 
 #endif // MAINMENU_H

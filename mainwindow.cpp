@@ -1,12 +1,27 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QApplication>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setFixedSize(1280, 720);
+
+    QPixmap normalPix(":/icons/Pics/Icons/cursor_default.png");
+    QPixmap clickedPix(":/icons/Pics/Icons/cursor_tilted.png");
+
+    m_normalCursor = QCursor(normalPix.scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                             0,
+                             0);
+    m_clickedCursor
+        = QCursor(clickedPix.scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation), 0, 0);
+
+    qApp->setOverrideCursor(m_normalCursor);
+
+    qApp->installEventFilter(this);
 
     m_gameManager = new GameManager(ui->stackedWidget, ui->verticalLayout, this);
     m_gameManager->start();
@@ -15,4 +30,15 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress) {
+        qApp->changeOverrideCursor(m_clickedCursor);
+    } else if (event->type() == QEvent::MouseButtonRelease) {
+        qApp->changeOverrideCursor(m_normalCursor);
+    }
+
+    return QMainWindow::eventFilter(obj, event);
 }

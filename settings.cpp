@@ -98,6 +98,10 @@ void SettingsDialog::setupUi()
         m_saveAccountBtn = new QPushButton("Save Account Changes", accountBox);
         connect(m_saveAccountBtn, &QPushButton::clicked, this, &SettingsDialog::onSaveAccountClicked);
 
+        m_logoutBtn = new QPushButton("Logout", accountBox);
+        connect(m_logoutBtn, &QPushButton::clicked, this, &SettingsDialog::onLogoutClicked);
+        accountLayout->addWidget(m_logoutBtn);
+
         m_accountStatusLabel = new QLabel(accountBox);
         m_accountStatusLabel->setStyleSheet("color: #2ecc71;");
 
@@ -207,4 +211,13 @@ void SettingsDialog::onAbandonRunClicked()
 void SettingsDialog::onCloseClicked()
 {
     emit closeRequested();
+}
+
+void SettingsDialog::onLogoutClicked()
+{
+    QMessageBox::StandardButton confirm
+        = QMessageBox::question(this, "Logout", "Are you sure you want to log out?");
+
+    if (confirm == QMessageBox::Yes)
+        emit logoutRequested();
 }

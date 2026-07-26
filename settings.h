@@ -33,6 +33,7 @@ signals:
 
     // Account
     void credentialsSaveRequested(const QString &username, const QString &password);
+    void logoutRequested();
 
     // Game flow (InGame mode only)
     void returnRequested();
@@ -50,6 +51,7 @@ private slots:
     void onSaveAndQuitClicked();
     void onAbandonRunClicked();
     void onCloseClicked();
+    void onLogoutClicked();
 
 private:
     Player *m_player;
@@ -64,6 +66,7 @@ private:
     QLineEdit *m_passwordInput;
     QPushButton *m_saveAccountBtn;
     QLabel *m_accountStatusLabel;
+    QPushButton *m_logoutBtn;
 
     // Game flow (InGame only)
     QPushButton *m_returnBtn;

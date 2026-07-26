@@ -78,7 +78,7 @@ void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
             painter->setFont(valFont);
             painter->drawText(QRectF(rect.width() / 2 - 20, -18, 40, 20),
                               Qt::AlignCenter,
-                              QString::number(m_currentIntent.value));
+                              QString::number(calculateDisplayedIntentDamage()));
         }
     }
 }
@@ -197,7 +197,7 @@ Player *Enemy::chooseSingleTarget(GamePlay *game) const
             candidates.append(p);
 
     if (candidates.isEmpty())
-        return game->player(); // fallback ایمن
+        return game->player();
 
     if (candidates.size() == 1)
         return candidates.first();
@@ -310,6 +310,27 @@ EnemyIntent Enemy::pickIntent(const QVector<QPair<int, EnemyIntent>> &options) c
     }
 
     return EnemyIntent();
+}
+
+void Enemy::setDisplayPlayer(Player *player)
+{
+    if (m_displayPlayer == player)
+        return;
+
+    m_displayPlayer = player;
+
+    if (m_displayPlayer)
+        connect(m_displayPlayer, &Combatant::combatStateChanged, this, [this]() { update(); });
+}
+
+int Enemy::calculateDisplayedIntentDamage() const
+{
+    int displayValue = calculateOutgoingDamage(m_currentIntent.value);
+
+    if (m_displayPlayer && m_displayPlayer->effectStacks(BuffDebuffType::Vulnerable) > 0)
+        displayValue = static_cast<int>(displayValue * 1.5);
+
+    return displayValue;
 }
 
 void Enemy::loadPic()

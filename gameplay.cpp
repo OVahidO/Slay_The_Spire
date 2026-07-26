@@ -127,6 +127,8 @@ void GamePlay::addEnemy(Enemy *enemy)
 
     enemy->setNetworkEntityId(m_nextEnemyEntityId++);
 
+    enemy->setDisplayPlayer(m_player);
+
     m_enemys.push_back(enemy);
     m_scene->addItem(enemy);
 }
@@ -146,6 +148,7 @@ void GamePlay::addEnemyWithNetworkId(Enemy *enemy, int entityId)
         return;
 
     enemy->setNetworkEntityId(entityId);
+    enemy->setDisplayPlayer(m_player);
     if (entityId >= m_nextEnemyEntityId)
         m_nextEnemyEntityId = entityId + 1;
 
@@ -1096,6 +1099,7 @@ void GamePlay::setupEnemies()
     int i = 0 , j=0;
     for(auto& enemy : m_enemys)
     {
+        enemy->setDisplayPlayer(m_player);
         enemy->setPos(this->width()-250-(i), this->height()-300-(j));
         connect(enemy, &Enemy::attacked, this, [this](Enemy* enemy){this->playAttackJolt(enemy, false);});
         connect(enemy, &Enemy::takedDamage, this, [this](Combatant* c, int damage){this->showFloatingDamage(c, damage);});
