@@ -130,9 +130,22 @@ void Player::addEnergy(int n)
     emit energyChanged();
 }
 
+// void Player::loseHp(int n)
+// {
+//     takeDamage(n + m_block);
+// }
+
 void Player::loseHp(int n)
 {
-    takeDamage(n + m_block);
+    if (n < 0)
+        return;
+
+    m_currentHP -= n;
+    if (m_currentHP < 0)
+        m_currentHP = 0;
+
+    emit hpChanged();
+    emit combatStateChanged();
 }
 
 void Player::loseEnergy(int n)

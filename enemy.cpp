@@ -277,6 +277,7 @@ void Enemy::applyEnemyIntent(GamePlay *game)
 
     Player *player = game->player();
 
+    resetBlock();
     triggerPowerEffects(PowerUseTime::StartTurn, game);
     // executeIntent(player);
     executeIntent(game);

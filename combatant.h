@@ -107,6 +107,8 @@ private:
 
     int m_width = 120;
     int m_height = 15;
+
+    QPixmap m_blockIcon;
 };
 
 class BuffItem : public QGraphicsObject

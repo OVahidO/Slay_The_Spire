@@ -425,6 +425,18 @@ void Clash::applyEffect(Player *player, Enemy *target)
     }
 }
 
+bool Clash::canBePlayed(Player *player) const
+{
+    if (!player)
+        return false;
+
+    for (Card *card : player->HandsCards())
+        if (card->cardType() != CardType::Attack)
+            return false;
+
+    return true;
+}
+
 void Clash::upgrade()
 {
     if (m_isUpgraded)
@@ -514,7 +526,7 @@ BloodForBlood::BloodForBlood(QGraphicsItem *parent)
                  false,
                  parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Attack/BloodForBlood.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Attack/Red-BloodforBlood-Art.png";
     loadPixmap();
 }
 
@@ -569,7 +581,7 @@ Whirlwind::Whirlwind(QGraphicsItem *parent)
                  false,
                  parent)
 {
-    m_sourcePath = ":/cards/Pics/Cards/Attack/Whirlwind.png";
+    m_sourcePath = ":/card-art/Pics/Cards/Attack/whirlwind.png";
     loadPixmap();
 }
 

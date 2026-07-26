@@ -589,6 +589,9 @@ void GameManager::finishRunAsVictory()
         Database::deleteRunState(m_player->id());
     }
 
+    resetRunState();
+    resetPlayerAndGamePlayForNewRun();
+
     showVictoryPage();
 }
 
