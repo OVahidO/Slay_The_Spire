@@ -532,6 +532,7 @@ void GamePlay::playerTurn()
 {
     resetTurnEndFlags();
     addTurn();
+    m_player->resetBlock();
     playerReviveEnergy();
     if (m_drawPile.empty())
         fillingDrawPile();
