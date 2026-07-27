@@ -2,4 +2,20 @@
     <qresource prefix="/soundeffects">
         <file>Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3</file>
     </qresource>
+    <qresource prefix="/soundtracks">
+        <file>Sounds-Musics/soundtracks/Clark Aboud - After Image.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - Battle Trance.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - Battle With the Champ.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - Exordium Slain.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - Exordium.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - Facing the Elite.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - Meet the Merchant.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - Slay the Spire.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - The Beyond.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - The City Slain.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - The City.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - The Elite Slain.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - The Ending.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - The Guardian Emerges.mp3</file>
+    </qresource>
 </RCC>

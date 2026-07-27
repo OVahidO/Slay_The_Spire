@@ -145,10 +145,10 @@ void Combatant::applyBuffDebuff(BuffDebuffType type, int stacks)
             }
 
             updateBuffUI();
+            emit combatStateChanged();
             return;
         }
     }
-
     if (stacks != 0) {
         m_activeEffects.append(new BuffDebuff(type, stacks));
         updateBuffUI();

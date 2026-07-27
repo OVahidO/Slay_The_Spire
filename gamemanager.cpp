@@ -8,6 +8,8 @@
 
 #include "allenemies.h"
 #include "allrelics.h"
+#include "attackcards.h"
+#include "audiomanager.h"
 #include "buffdebuff.h"
 #include "campfire.h"
 #include "card.h"
@@ -16,17 +18,18 @@
 #include "enemy.h"
 #include "event.h"
 #include "gameplay.h"
-#include "topbar.h"
 #include "mainmenu.h"
 #include "map.h"
 #include "networklobby.h"
 #include "player.h"
 #include "potion.h"
 #include "relic.h"
+#include "relicbar.h"
 #include "reward.h"
 #include "settings.h"
 #include "shop.h"
-#include "relicbar.h"
+#include "skillcards.h"
+#include "topbar.h"
 
 GameManager::GameManager(QStackedWidget *stack, QVBoxLayout *VLayout, QObject *parent)
     : QObject(parent)
@@ -99,6 +102,7 @@ void GameManager::showMainMenu()
                 &GameManager::onMainMenuMultiplayerClicked);
     }
 
+    AudioManager::playMusic(MusicTrack::MainMenu);
     switchTo(m_mainMenu);
 }
 
@@ -128,11 +132,6 @@ void GameManager::onPlayerReady(Player *player)
         showNetworkLobby();
         return;
     }
-
-    if (Database::hasActiveRun(m_player->id()))
-        resumeRun();
-    else
-        startNewRun();
 }
 
 void GameManager::prepareGamePlayForPlayer()
@@ -182,6 +181,21 @@ void GameManager::grantStarterKit()
     if (!m_player || !m_gamePlay)
         return;
 
+    for (Card *c : m_gamePlay->deck())
+        delete c;
+    m_gamePlay->deck().clear();
+
+    m_gamePlay->addCardToDeck(new class Strike());
+    m_gamePlay->addCardToDeck(new class Strike());
+    m_gamePlay->addCardToDeck(new class Strike());
+    m_gamePlay->addCardToDeck(new class Strike());
+
+    m_gamePlay->addCardToDeck(new class Defend());
+    m_gamePlay->addCardToDeck(new class Defend());
+    m_gamePlay->addCardToDeck(new class Defend());
+
+    m_gamePlay->addCardToDeck(new class Bash());
+
     m_gamePlay->grantRelicToPlayer(new BurningBlood());
 }
 
@@ -205,7 +219,7 @@ void GameManager::startNewRun()
     }
 
     if (m_topbar) {
-        m_stack->removeWidget(m_topbar);
+        m_vLayout->removeWidget(m_topbar);
         m_topbar->deleteLater();
         m_topbar = nullptr;
     }
@@ -313,8 +327,11 @@ void GameManager::onMainMenuStart()
             startNewRun();
     }
 
+    playMapMusicForCurrentAct();
     m_topbar->show();
     m_relicbar->show();
+
+    playMapMusicForCurrentAct();
     switchTo(m_map);
 }
 
@@ -382,6 +399,11 @@ void GameManager::startBattle(MapButtonType type)
 
     bool isElite = (type == MapButtonType::ELITE);
     bool isBoss = (type == MapButtonType::BOSS);
+
+    AudioManager::playMusic(isBoss    ? MusicTrack::CombatBoss
+                            : isElite ? MusicTrack::CombatElite
+                                      : (m_currentAct == 1 ? MusicTrack::CombatNormalAct1
+                                                           : MusicTrack::CombatNormalAct2));
 
     QVector<int> &usedPool = (m_currentAct == 1) ? m_usedAct1EncounterTypes
                                                  : m_usedAct2EncounterTypes;
@@ -468,12 +490,14 @@ void GameManager::onRewardFinished()
                 if (m_isMultiplayer && m_networkManager)
                     m_networkManager->sendMapSeed(m_mapSeed);
 
+                playMapMusicForCurrentAct();
                 switchTo(m_map);
             }
 
             autoSaveProgress();
         }
     } else {
+        playMapMusicForCurrentAct();
         switchTo(m_map);
     }
 }
@@ -485,11 +509,15 @@ void GameManager::showEventScreen()
     if (m_event)
         clearTransientScreen(m_event);
 
+    AudioManager::playMusic(MusicTrack::Event);
+
     m_event = createRandomEvent(m_currentAct, m_player, m_gamePlay, nullptr);
 
     if (!m_event) {
         //
         autoSaveProgress();
+
+        playMapMusicForCurrentAct();
         switchTo(m_map);
         return;
     }
@@ -518,6 +546,8 @@ void GameManager::onEventFinished()
     }
 
     autoSaveProgress();
+
+    playMapMusicForCurrentAct();
     switchTo(m_map);
 }
 
@@ -525,6 +555,8 @@ void GameManager::showShopScreen()
 {
     if (m_shop)
         clearTransientScreen(m_shop);
+
+    AudioManager::playMusic(MusicTrack::Shop);
 
     m_shop = new Shop(m_player, m_gamePlay);
     connect(m_shop, &Shop::shopFinished, this, &GameManager::onShopFinished);
@@ -539,6 +571,8 @@ void GameManager::onShopFinished()
     m_shop = nullptr;
 
     autoSaveProgress();
+
+    playMapMusicForCurrentAct();
     switchTo(m_map);
 }
 
@@ -546,6 +580,8 @@ void GameManager::showCampfireScreen()
 {
     if (m_campfire)
         clearTransientScreen(m_campfire);
+
+    AudioManager::playMusic(MusicTrack::Campfire);
 
     m_campfire = new Campfire(m_player, m_gamePlay);
     connect(m_campfire, &Campfire::campfireFinished, this, &GameManager::onCampfireFinished);
@@ -561,12 +597,18 @@ void GameManager::onCampfireFinished()
     m_campfire = nullptr;
 
     autoSaveProgress();
+
+    playMapMusicForCurrentAct();
     switchTo(m_map);
 }
 
 void GameManager::handleTreasureNode()
 {
     // UI Treasure
+
+    AudioManager::playSfx(SfxId::TreasureOpen);
+    AudioManager::playMusic(MusicTrack::Treasure);
+
     if (m_player && m_gamePlay) {
         Relic *relic = Relic::createRandomNormalRelic();
         m_gamePlay->grantRelicToPlayer(relic);
@@ -576,6 +618,8 @@ void GameManager::handleTreasureNode()
     }
 
     autoSaveProgress();
+
+    playMapMusicForCurrentAct();
     switchTo(m_map);
 }
 
@@ -599,6 +643,7 @@ void GameManager::finishRunAsVictory()
 void GameManager::showVictoryPage()
 {
     // Victory UI
+    AudioManager::playMusic(MusicTrack::Victory);
     emit victoryPageRequested();
     emit runEnded();
 }
@@ -606,6 +651,7 @@ void GameManager::showVictoryPage()
 void GameManager::showDefeatPage()
 {
     // Defeat UI
+    AudioManager::playMusic(MusicTrack::Defeat);
     GameManager::returnToMainMenuAfterDefeat();
     emit defeatPageRequested();
 }
@@ -864,11 +910,13 @@ void GameManager::onSettingsAbandonRun()
 void GameManager::onSettingsVolumeChanged(int volume)
 {
     m_masterVolume = volume;
+    AudioManager::setMasterVolume(volume);
 }
 
 void GameManager::onSettingsMuteToggled(bool muted)
 {
     m_isMuted = muted;
+    AudioManager::setMuted(muted);
 }
 
 void GameManager::onSettingsCredentialsSaveRequested(const QString &username,
@@ -1012,6 +1060,7 @@ void GameManager::onNetworkClientConnected()
     else
         startNewRun();
 
+    playMapMusicForCurrentAct();
     switchTo(m_map);
 }
 
@@ -1156,6 +1205,7 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
         if (m_map)
             m_map->setLocked(true);
 
+        playMapMusicForCurrentAct();
         switchTo(m_map);
         break;
     }
@@ -1374,4 +1424,9 @@ void GameManager::onSettingsLogoutRequested()
         m_mainMenu->resetToLoginScreen();
 
     showMainMenu();
+}
+
+void GameManager::playMapMusicForCurrentAct()
+{
+    AudioManager::playMusic(m_currentAct == 1 ? MusicTrack::MapAct1 : MusicTrack::MapAct2);
 }

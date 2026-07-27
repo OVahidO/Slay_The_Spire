@@ -9,7 +9,9 @@ StatusCard::StatusCard(CardID ID,
                        bool requiresTarget,
                        QGraphicsItem *parent)
     : Card(ID, name, CardType::Status, energyCost, description, isRare, isExhaust, requiresTarget, parent)
-{}
+{
+    setLifetime(CardLifetime::EndOfCombat);
+}
 
 StatusCard::~StatusCard() {}
 

@@ -233,14 +233,28 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="saveButton">
-        <property name="cursor">
-         <cursorShape>PointingHandCursor</cursorShape>
+       <layout class="QHBoxLayout" name="accountButtonLayout">
+        <property name="topMargin">
+         <number>0</number>
         </property>
-        <property name="text">
-         <string>Save Account Changes</string>
-        </property>
-       </widget>
+        <item>
+         <widget class="QPushButton" name="pushButton">
+          <property name="text">
+           <string>Logout</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="saveButton">
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="text">
+           <string>Save Account Changes</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="QLabel" name="accountStatusLabel">
