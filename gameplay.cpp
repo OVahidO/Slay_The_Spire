@@ -126,8 +126,12 @@ void GamePlay::addEnemy(Enemy *enemy)
         return;
 
     enemy->setNetworkEntityId(m_nextEnemyEntityId++);
-
     enemy->setDisplayPlayer(m_player);
+
+    connect(enemy, &Enemy::attacked, this, [this](Enemy *e) { this->playAttackJolt(e, false); });
+    connect(enemy, &Enemy::takedDamage, this, [this](Combatant *c, int damage) {
+        this->showFloatingDamage(c, damage);
+    });
 
     m_enemys.push_back(enemy);
     m_scene->addItem(enemy);
@@ -151,6 +155,11 @@ void GamePlay::addEnemyWithNetworkId(Enemy *enemy, int entityId)
     enemy->setDisplayPlayer(m_player);
     if (entityId >= m_nextEnemyEntityId)
         m_nextEnemyEntityId = entityId + 1;
+
+    connect(enemy, &Enemy::attacked, this, [this](Enemy *e) { this->playAttackJolt(e, false); });
+    connect(enemy, &Enemy::takedDamage, this, [this](Combatant *c, int damage) {
+        this->showFloatingDamage(c, damage);
+    });
 
     m_enemys.push_back(enemy);
     m_scene->addItem(enemy);
@@ -1125,19 +1134,34 @@ void GamePlay::setupBackground(const QString &imagePath)
 
 void GamePlay::setupEnemies()
 {
+    // int enemyCount = m_enemys.size();
+    // if(enemyCount == 0)
+    //     return;
+
+    // int i = 0 , j=0;
+    // for(auto& enemy : m_enemys)
+    // {
+    //     enemy->setDisplayPlayer(m_player);
+    //     enemy->setPos(this->width()-250-(i), this->height()-300-(j));
+    //     connect(enemy, &Enemy::attacked, this, [this](Enemy* enemy){this->playAttackJolt(enemy, false);});
+    //     connect(enemy, &Enemy::takedDamage, this, [this](Combatant* c, int damage){this->showFloatingDamage(c, damage);});
+    //     m_scene->addItem(enemy);
+    //     i+=150; j+=25;
+    // }
+
     int enemyCount = m_enemys.size();
-    if(enemyCount == 0)
+    if (enemyCount == 0)
         return;
 
-    int i = 0 , j=0;
-    for(auto& enemy : m_enemys)
-    {
+    int i = 0;
+    const int groundY = this->height() - 220;
+
+    for (auto &enemy : m_enemys) {
         enemy->setDisplayPlayer(m_player);
-        enemy->setPos(this->width()-250-(i), this->height()-300-(j));
-        connect(enemy, &Enemy::attacked, this, [this](Enemy* enemy){this->playAttackJolt(enemy, false);});
-        connect(enemy, &Enemy::takedDamage, this, [this](Combatant* c, int damage){this->showFloatingDamage(c, damage);});
+        qreal enemyHeight = enemy->boundingRect().height();
+        enemy->setPos(this->width() - 250 - i, groundY - enemyHeight);
         m_scene->addItem(enemy);
-        i+=150; j+=25;
+        i += 150;
     }
 }
 
