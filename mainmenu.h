@@ -7,6 +7,8 @@
 class Player;
 class Login_Signup;
 
+class QLabel;
+
 class QMediaPlayer;
 class QVideoWidget;
 /////////////
@@ -24,6 +26,7 @@ public:
     ~MainMenu();
 
     void resetToLoginScreen();
+    void setUsername(const QString &username);
 
 signals:
     void playerIsReady(Player* player);
@@ -59,6 +62,7 @@ private:
     Ui::MainMenu *ui;
     Login_Signup* m_loginSignup;
     QWidget* m_overlay;
+    QLabel *m_usernameLabel = nullptr;
 
     QMediaPlayer *m_mediaPlayer = nullptr;
     QVideoWidget *m_videoBackground = nullptr;

@@ -1,12 +1,14 @@
 #include "mainmenu.h"
 #include <QEvent>
 #include <QGraphicsBlurEffect>
+#include <QLabel>
 #include <QMediaPlayer>
 #include <QPushButton>
 #include <QUrl>
 #include <QVideoWidget>
 
 #include "login_signup.h"
+#include "player.h"
 #include "ui_mainmenu.h"
 
 MainMenu::MainMenu(QWidget *parent)
@@ -27,6 +29,7 @@ MainMenu::MainMenu(QWidget *parent)
     connect(m_loginSignup, &Login_Signup::back, this, [this](){this->m_loginSignup->accept();});
     connect(m_loginSignup, &Login_Signup::playerIsReady, this, [this](Player *player) {
         ui->MenuKeys->setCurrentIndex(1);
+        setUsername(player->name());
         this->playerIsReady(player);
     });
 
@@ -34,6 +37,13 @@ MainMenu::MainMenu(QWidget *parent)
         ui->MenuKeys->setCurrentIndex(1);
         emit playerIsReady(autoPlayer);
     }
+
+    m_usernameLabel = new QLabel(this);
+    m_usernameLabel->setStyleSheet(
+        "color: white; font-weight: bold; font-size: 16px; background: transparent;");
+    m_usernameLabel->move(15, 15);
+    m_usernameLabel->raise();
+    m_usernameLabel->hide();
 
     m_overlay = new QWidget(this);
     m_overlay->setGeometry(rect());
@@ -85,6 +95,16 @@ MainMenu::MainMenu(QWidget *parent)
 MainMenu::~MainMenu()
 {
     delete ui;
+}
+
+void MainMenu::setUsername(const QString &username)
+{
+    if (!m_usernameLabel)
+        return;
+
+    m_usernameLabel->setText(username);
+    m_usernameLabel->adjustSize();
+    m_usernameLabel->show();
 }
 
 bool MainMenu::eventFilter(QObject *watched, QEvent *event)
@@ -161,4 +181,6 @@ void MainMenu::on_MultiplayerButton_clicked()
 void MainMenu::resetToLoginScreen()
 {
     ui->MenuKeys->setCurrentIndex(0);
+    if (m_usernameLabel)
+        m_usernameLabel->hide();
 }
