@@ -227,12 +227,10 @@ QVector<Enemy *> AcidSlimeM::createSplitChildren(bool isMultiplayer) const
 {
     QVector<Enemy *> children;
 
-    if (m_currentHP <= 12) {
-        for (int i = 0; i < 2; ++i) {
-            AcidSlimeS *child = new AcidSlimeS(isMultiplayer);
-            child->overrideHP(m_currentHP);
-            children.append(child);
-        }
+    for (int i = 0; i < 2; ++i) {
+        AcidSlimeS *child = new AcidSlimeS(isMultiplayer);
+        child->overrideHP(m_currentHP);
+        children.append(child);
     }
 
     return children;
@@ -285,21 +283,10 @@ QVector<Enemy *> AcidSlimeL::createSplitChildren(bool isMultiplayer) const
 {
     QVector<Enemy *> children;
 
-    if (m_currentHP <= 12) {
-        for (int i = 0; i < 2; ++i) {
-            AcidSlimeS *child = new AcidSlimeS(isMultiplayer);
-            child->overrideHP(m_currentHP);
-            children.append(child);
-            return children;
-        }
-    }
-
-    else if (m_currentHP <= 32) {
-        for (int i = 0; i < 2; ++i) {
-            AcidSlimeM *child = new AcidSlimeM(isMultiplayer);
-            child->overrideHP(m_currentHP);
-            children.append(child);
-        }
+    for (int i = 0; i < 2; ++i) {
+        AcidSlimeM *child = new AcidSlimeM(isMultiplayer);
+        child->overrideHP(m_currentHP);
+        children.append(child);
     }
 
     return children;

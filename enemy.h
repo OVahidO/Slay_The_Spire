@@ -65,6 +65,8 @@ public:
 
     virtual void onAnyCardPlayed(CardType cardType, GamePlay *game) {}
 
+    void setDisplayPlayer(Player *player);
+
     // === Multiplayer: RNG ===
     static void setActiveRng(std::mt19937 *rng);
     int networkEntityId() const;
@@ -102,9 +104,12 @@ protected:
 
     Player *chooseSingleTarget(GamePlay *game) const;
 
+    int calculateDisplayedIntentDamage() const;
+
 private:
     static std::mt19937 *s_activeRng;
     int m_networkEntityId = -1;
+    Player *m_displayPlayer = nullptr;
 };
 
 class ScopedEnemyRng

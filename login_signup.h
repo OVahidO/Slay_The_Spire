@@ -6,6 +6,8 @@
 
 //////////////////
 class Player;
+
+class QCheckBox;
 /////////////////
 
 namespace Ui {
@@ -19,6 +21,8 @@ class Login_Signup : public QDialog
 public:
     explicit Login_Signup(QWidget *parent = nullptr);
     ~Login_Signup();
+
+    Player *attemptAutoLogin();
 
 public slots:
     void signupButton_clicked();
@@ -48,8 +52,8 @@ private slots:
 private:
     Ui::Login_Signup *ui;
     QVector<Player*> m_players;
-
     void paintEvent(QPaintEvent *event) override;
+    QCheckBox *m_rememberMeCheckBox = nullptr;
 };
 
 #endif // LOGIN_SIGNUP_H

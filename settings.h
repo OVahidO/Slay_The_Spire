@@ -40,6 +40,7 @@ signals:
 
     // Account
     void credentialsSaveRequested(const QString &username, const QString &password);
+    void logoutRequested();
 
     // Game flow (InGame mode only)
     void returnRequested();
@@ -57,6 +58,7 @@ private slots:
     void on_horizontalSlider_valueChanged(int value);
     void on_muteCheckBox_toggled(bool checked);
     void on_saveButton_clicked();
+    void onLogoutClicked();
 
 private:
     Ui::settings *ui;
@@ -64,6 +66,7 @@ private:
 
     Player *m_player;
     SettingsMode m_mode;
+    QPushButton *m_logoutBtn;
 
     // Game flow (InGame only)
     QPushButton *m_returnBtn;

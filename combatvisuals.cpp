@@ -48,6 +48,7 @@ void TargetFrame::attachToTarget(QGraphicsItem *target)
 
 void TargetFrame::hideFrame()
 {
+    m_targetRect = QRectF();
     hide();
 }
 
@@ -83,21 +84,30 @@ void TargetFrame::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
                            m_cornerSize,
                            m_cornerSize);
 
-    auto drawCorner = [&](const QPixmap &pix, const QRectF &rect) {
+    auto drawCorner = [&](const QPixmap &pix, const QRectF &rect, qreal rotationDegrees) {
+        painter->save();
+        painter->translate(rect.center());
+        painter->rotate(rotationDegrees);
+
+        QRectF localRect(-rect.width() / 2.0, -rect.height() / 2.0, rect.width(), rect.height());
+
         if (!pix.isNull()) {
-            painter->drawPixmap(rect, pix, pix.rect());
+            painter->drawPixmap(localRect, pix, pix.rect());
         } else {
-            // Fallback موقت تا وقتی عکس‌های واقعی گوشه ست نشده‌اند
             painter->setPen(QPen(QColor(255, 60, 60), 3));
-            painter->drawLine(rect.topLeft(), rect.topLeft() + QPointF(rect.width() * 0.6, 0));
-            painter->drawLine(rect.topLeft(), rect.topLeft() + QPointF(0, rect.height() * 0.6));
+            painter->drawLine(localRect.topLeft(),
+                              localRect.topLeft() + QPointF(rect.width() * 0.6, 0));
+            painter->drawLine(localRect.topLeft(),
+                              localRect.topLeft() + QPointF(0, rect.height() * 0.6));
         }
+
+        painter->restore();
     };
 
-    drawCorner(m_topLeft, topLeftRect);
-    drawCorner(m_topRight, topRightRect);
-    drawCorner(m_bottomLeft, bottomLeftRect);
-    drawCorner(m_bottomRight, bottomRightRect);
+    drawCorner(m_topLeft, topLeftRect, 0);
+    drawCorner(m_topRight, topRightRect, 90);
+    drawCorner(m_bottomLeft, bottomLeftRect, 270);
+    drawCorner(m_bottomRight, bottomRightRect, 180);
 }
 
 // =========================== FloatingDamageText =============================

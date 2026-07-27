@@ -55,9 +55,13 @@ CardSelectionDialog::CardSelectionDialog(GamePlay *gamePlay,
 
 CardSelectionDialog::~CardSelectionDialog()
 {
-    for (Card *card : m_selectableCards)
-        if (card && m_scene && m_scene->items().contains(card))
+    for (Card *card : m_selectableCards) {
+        if (!card)
+            continue;
+        if (m_scene && m_scene->items().contains(card))
             m_scene->removeItem(card);
+        delete card;
+    }
 }
 
 void CardSelectionDialog::layoutCards()
@@ -143,14 +147,18 @@ void CardSelectionDialog::finalizeSelection()
     } else if (m_mode == CardSelectionMode::Remove) {
         auto &deck = m_gamePlay->deck();
         for (Card *c : m_selectedCards) {
-            for(auto it = deck.begin(); it != deck.end(); it++)
-            {
+            for (auto it = deck.begin(); it != deck.end(); it++) {
                 if ((*it)->ID() == c->ID()) {
-                    Card* originaldCard = *it;
+                    Card *originaldCard = *it;
                     deck.erase(it);
                     delete originaldCard;
                     m_scene->removeItem(c);
                     delete c;
+
+                    int idx = m_selectableCards.indexOf(c);
+                    if (idx != -1)
+                        m_selectableCards[idx] = nullptr;
+
                     break;
                 }
             }
@@ -160,11 +168,11 @@ void CardSelectionDialog::finalizeSelection()
     for (Card *c : m_selectableCards) {
         if (!c)
             continue;
-        if (m_mode == CardSelectionMode::Remove && m_selectedCards.contains(c))
-            continue; // قبلاً حذف و delete شده
         if (m_scene->items().contains(c))
             m_scene->removeItem(c);
+        delete c;
     }
+    m_selectableCards.clear();
 
     accept();
 }

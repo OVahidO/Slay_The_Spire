@@ -52,6 +52,7 @@ public:
     QVector<BuffDebuff *> getActiveEffects() const;
     void applyBuffDebuff(BuffDebuffType type, int stacks);
     void tickDecayingBuffDebuff();
+    void clearActiveEffects();
 
     int calculateOutgoingDamage(int baseDamage) const;
     int calculateBlock(int baseAmount) const;

@@ -593,14 +593,17 @@ void Whirlwind::applyEffect(Player *player, Enemy *target)
 
 bool Whirlwind::applyEffect(GamePlay *gameplay)
 {
-    if (gameplay && gameplay->player()) {
-        int xCount = gameplay->player()->energy();
+    if (!gameplay || !gameplay->player())
+        return true;
 
-        for (int i = 0; i < xCount; ++i)
-            gameplay->takeDamageToAllEnemies(m_damage);
+    Player *player = gameplay->player();
+    int xCount = player->energy();
+    int scaledDamage = player->calculateOutgoingDamage(m_damage);
 
-        gameplay->player()->setEnergy(0);
-    }
+    for (int i = 0; i < xCount; ++i)
+        gameplay->takeDamageToAllEnemies(scaledDamage);
+
+    player->setEnergy(0);
 
     return true;
 }

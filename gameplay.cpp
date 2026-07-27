@@ -127,6 +127,8 @@ void GamePlay::addEnemy(Enemy *enemy)
 
     enemy->setNetworkEntityId(m_nextEnemyEntityId++);
 
+    enemy->setDisplayPlayer(m_player);
+
     m_enemys.push_back(enemy);
     m_scene->addItem(enemy);
 }
@@ -146,6 +148,7 @@ void GamePlay::addEnemyWithNetworkId(Enemy *enemy, int entityId)
         return;
 
     enemy->setNetworkEntityId(entityId);
+    enemy->setDisplayPlayer(m_player);
     if (entityId >= m_nextEnemyEntityId)
         m_nextEnemyEntityId = entityId + 1;
 
@@ -462,6 +465,7 @@ void GamePlay::endCombat()
 
     m_player->setBlock(0);
     m_player->setBarricade(false);
+    m_player->clearActiveEffects();
 
     for (Card *card : m_player->HandsCards()) {
         if (card->lifetime() == CardLifetime::Permanent)
@@ -529,6 +533,7 @@ void GamePlay::playerTurn()
 {
     resetTurnEndFlags();
     addTurn();
+    m_player->resetBlock();
     playerReviveEnergy();
     if (m_drawPile.empty())
         fillingDrawPile();
@@ -555,10 +560,7 @@ void GamePlay::enemiesTurn()
 
     if (m_isAuthoritative) {
         for (size_t i = 0; i < m_enemys.size(); ++i) {
-            Enemy *enemy = m_enemys[i];
-            if (enemy->isDead())
-                continue;
-
+            auto enemy = m_enemys[i];
             enemy->applyEnemyIntent(this);
             m_scene->update();
 
@@ -567,20 +569,50 @@ void GamePlay::enemiesTurn()
                 return;
             }
 
-            // if (!m_coopMode) {
-            //     Slime *slime = dynamic_cast<Slime *>(enemy);
-            //     if (slime && slime->needsToSplit()) {
-            //         QVector<Enemy *> children = slime->createSplitChildren(m_isMultiplayer);
-            //         for (Enemy *child : children)
-            //             addSplitChildEnemy(child);
+            KingSlime *slime0 = dynamic_cast<KingSlime *>(enemy);
+            if (slime0 && slime0->needsToSplit()) {
+                QVector<Enemy *> children = slime0->createSplitChildren(m_coopMode);
+                for (Enemy *child : children) {
+                    child->setPos(enemy->pos());
+                    addSplitChildEnemy(child);
+                }
 
-            //         slime->markSplit();
-            //         m_scene->removeItem(enemy);
-            //         m_enemys.erase(m_enemys.begin() + i);
-            //         enemy->deleteLater();
-            //         --i;
-            //     }
-            // }
+                slime0->markSplit();
+                m_scene->removeItem(enemy);
+                m_enemys.erase(m_enemys.begin() + i);
+                enemy->deleteLater();
+                --i;
+            }
+
+            AcidSlimeL *slime1 = dynamic_cast<AcidSlimeL *>(enemy);
+            if (slime1 && slime1->needsToSplit()) {
+                QVector<Enemy *> children = slime1->createSplitChildren(m_coopMode);
+                for (Enemy *child : children) {
+                    child->setPos(enemy->pos());
+                    addSplitChildEnemy(child);
+                }
+
+                slime1->markSplit();
+                m_scene->removeItem(enemy);
+                m_enemys.erase(m_enemys.begin() + i);
+                enemy->deleteLater();
+                --i;
+            }
+
+            AcidSlimeM *slime2 = dynamic_cast<AcidSlimeM *>(enemy);
+            if (slime2 && slime2->needsToSplit()) {
+                QVector<Enemy *> children = slime2->createSplitChildren(m_coopMode);
+                for (Enemy *child : children) {
+                    child->setPos(enemy->pos());
+                    addSplitChildEnemy(child);
+                }
+
+                slime2->markSplit();
+                m_scene->removeItem(enemy);
+                m_enemys.erase(m_enemys.begin() + i);
+                enemy->deleteLater();
+                --i;
+            }
         }
     } else {
         for (Enemy *enemy : m_enemys)
@@ -1100,6 +1132,7 @@ void GamePlay::setupEnemies()
     int i = 0 , j=0;
     for(auto& enemy : m_enemys)
     {
+        enemy->setDisplayPlayer(m_player);
         enemy->setPos(this->width()-250-(i), this->height()-300-(j));
         connect(enemy, &Enemy::attacked, this, [this](Enemy* enemy){this->playAttackJolt(enemy, false);});
         connect(enemy, &Enemy::takedDamage, this, [this](Combatant* c, int damage){this->showFloatingDamage(c, damage);});

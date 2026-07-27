@@ -3,6 +3,7 @@
 
 #include <QCoreApplication>
 #include <QRandomGenerator>
+#include <QSettings>
 #include <QStackedWidget>
 
 #include "allenemies.h"
@@ -811,6 +812,10 @@ void GameManager::showSettingsPage(SettingsMode mode)
                 &SettingsDialog::abandonRunRequested,
                 this,
                 &GameManager::onSettingsAbandonRun);
+        connect(m_settings,
+                &SettingsDialog::logoutRequested,
+                this,
+                &GameManager::onSettingsLogoutRequested);
     } else {
         m_settings->setMode(mode);
     }
@@ -1354,4 +1359,19 @@ Enemy *GameManager::findEnemyByNetworkId(int entityId) const
             return enemy;
 
     return nullptr;
+}
+
+void GameManager::onSettingsLogoutRequested()
+{
+    QSettings settings("SlayTheSpireClone", "Auth");
+    settings.remove("rememberedUsername");
+    settings.remove("rememberedPassword");
+    settings.setValue("rememberMe", false);
+
+    m_screenBeforeSettings = nullptr;
+
+    if (m_mainMenu)
+        m_mainMenu->resetToLoginScreen();
+
+    showMainMenu();
 }

@@ -112,8 +112,11 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         if (!m_energyPixmap.isNull())
             painter->drawPixmap(energyBadge, m_energyPixmap, m_energyPixmap.rect());
 
-        QColor energyTextColor = (m_energyCost < m_baseEnergyCost) ? QColor(110, 255, 140)
-                                                                   : Qt::white;
+        QColor energyTextColor = Qt::white;
+        if (m_ownerPlayer && m_energyCost >= 0 && m_ownerPlayer->energy() < m_energyCost)
+            energyTextColor = QColor(220, 60, 60);
+        else if (m_energyCost < m_baseEnergyCost)
+            energyTextColor = QColor(110, 255, 140);
 
         QFont font("Kreon");
         font.setBold(true);

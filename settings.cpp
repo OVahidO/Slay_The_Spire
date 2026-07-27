@@ -184,3 +184,11 @@ void SettingsDialog::on_saveButton_clicked()
     ui->passwordInput->clear();
 }
 
+void SettingsDialog::onLogoutClicked()
+{
+    QMessageBox::StandardButton confirm
+        = QMessageBox::question(this, "Logout", "Are you sure you want to log out?");
+
+    if (confirm == QMessageBox::Yes)
+        emit logoutRequested();
+}

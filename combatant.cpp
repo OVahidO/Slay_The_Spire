@@ -171,6 +171,14 @@ void Combatant::tickDecayingBuffDebuff()
     emit combatStateChanged();
 }
 
+void Combatant::clearActiveEffects()
+{
+    qDeleteAll(m_activeEffects);
+    m_activeEffects.clear();
+    m_powerEffects.clear();
+    updateBuffUI();
+}
+
 int Combatant::calculateOutgoingDamage(int baseDamage) const
 {
     int modified = baseDamage + effectStacks(BuffDebuffType::Strength);
@@ -291,12 +299,9 @@ void HealthBarItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->setBrush(QColor(50, 50, 50));
     painter->setPen(Qt::black);
     painter->drawRect(0, 0, m_width, m_height);
-    if (!m_blockIcon.isNull())
-        painter->drawPixmap(QRectF(-22, (m_height - 16) / 2.0, 16, 16),
-                            m_blockIcon,
-                            m_blockIcon.rect());
 
-    painter->setBrush(QColor(200, 50, 50));
+    QColor hpColor = (m_block > 0) ? QColor(60, 130, 220) : QColor(200, 50, 50);
+    painter->setBrush(hpColor);
     painter->drawRect(0, 0, m_width * hpPercentage, m_height);
 
     if (m_block > 0) {

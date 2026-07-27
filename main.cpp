@@ -17,7 +17,21 @@ int main(int argc, char *argv[])
             a.setFont(QFont(families.first()));
     }
 
+    QString globalStyle = R"(
+        QCheckBox::indicator {
+            width: 24px;
+            height: 24px;
+        }
+        QCheckBox::indicator:unchecked {
+            image: url(:/icons/Pics/Icons/checkbox_unticked.png);
+        }
+        QCheckBox::indicator:checked {
+            image: url(:/icons/Pics/Icons/checkbox_ticked.png);
+        }
+    )";
     //
+
+    a.setStyleSheet(globalStyle);
 
     MainWindow w;
     w.show();

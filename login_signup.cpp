@@ -3,23 +3,30 @@
 #include "player.h"
 #include "database.h"
 
+#include <QCheckBox>
+#include <QSettings>
 Login_Signup::Login_Signup(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Login_Signup)
 {
     ui->setupUi(this);
     this->setGeometry(525,175,500,500);
-    // Database توسط GameManager یک‌بار در ابتدای برنامه باز و آماده می‌شود؛
     m_players = Database::selectAllPlayers();
 
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
 
     setAttribute(Qt::WA_TranslucentBackground);
 
-    // QPalette palette = this->palette();
-    // QPixmap background(":/MainMenu/Pics/MainMenu/login_signup_Bg.png");
-    // palette.setBrush(QPalette::Window, QBrush(background.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
-    // this->setPalette(palette);
+
+    m_rememberMeCheckBox = new QCheckBox("Remember Me", this);
+    m_rememberMeCheckBox->setStyleSheet("color: white; font-weight: bold;");
+    ui->verticalLayout_4->insertWidget(ui->verticalLayout_4->count() - 1, m_rememberMeCheckBox);
+    QSettings settings("SlayTheSpireClone", "Auth");
+    if (settings.value("rememberMe", false).toBool()) {
+        ui->LoginUsernameInput->setText(settings.value("rememberedUsername").toString());
+        ui->LoginPasswordInput->setText(settings.value("rememberedPassword").toString());
+        m_rememberMeCheckBox->setChecked(true);
+    }
 }
 
 Login_Signup::~Login_Signup()
@@ -36,6 +43,21 @@ void Login_Signup::paintEvent(QPaintEvent *event)
 
     QPixmap background(":/MainMenu/Pics/MainMenu/login_signup_Bg.png");
     painter.drawPixmap(this->rect(), background);
+}
+
+Player *Login_Signup::attemptAutoLogin()
+{
+    QSettings settings("SlayTheSpireClone", "Auth");
+    if (!settings.value("rememberMe", false).toBool())
+        return nullptr;
+
+    int playerID = -1;
+    if (!Database::validateLogin(settings.value("rememberedUsername").toString(),
+                                 settings.value("rememberedPassword").toString(),
+                                 playerID))
+        return nullptr;
+
+    return Database::loadPlayerById(playerID);
 }
 
 void Login_Signup::signupButton_clicked()
@@ -167,12 +189,22 @@ void Login_Signup::on_LoginEnterButton_clicked()
                                 playerID)) {
         Player *player = Database::loadPlayerById(playerID);
         if (player) {
+            QSettings settings("SlayTheSpireClone", "Auth");
+            if (m_rememberMeCheckBox && m_rememberMeCheckBox->isChecked()) {
+                settings.setValue("rememberMe", true);
+                settings.setValue("rememberedUsername", ui->LoginUsernameInput->text());
+                settings.setValue("rememberedPassword", ui->LoginPasswordInput->text());
+            } else {
+                settings.setValue("rememberMe", false);
+                settings.remove("rememberedUsername");
+                settings.remove("rememberedPassword");
+            }
+
             emit playerIsReady(player);
             this->accept();
             return;
         }
     }
-
     // for(auto& player : m_players)
     // {
     //     if(ui->LoginUsernameInput->text() == player.first->name())

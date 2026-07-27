@@ -1,7 +1,11 @@
 #include "mainmenu.h"
 #include <QEvent>
 #include <QGraphicsBlurEffect>
+#include <QMediaPlayer>
 #include <QPushButton>
+#include <QUrl>
+#include <QVideoWidget>
+
 #include "login_signup.h"
 #include "ui_mainmenu.h"
 
@@ -21,11 +25,15 @@ MainMenu::MainMenu(QWidget *parent)
     ui->MenuKeys->setCurrentIndex(0);
     m_loginSignup = new Login_Signup(this);
     connect(m_loginSignup, &Login_Signup::back, this, [this](){this->m_loginSignup->accept();});
-    connect(m_loginSignup, &Login_Signup::playerIsReady, this, [this](Player* player)
-    {
+    connect(m_loginSignup, &Login_Signup::playerIsReady, this, [this](Player *player) {
         ui->MenuKeys->setCurrentIndex(1);
         this->playerIsReady(player);
     });
+
+    if (Player *autoPlayer = m_loginSignup->attemptAutoLogin()) {
+        ui->MenuKeys->setCurrentIndex(1);
+        emit playerIsReady(autoPlayer);
+    }
 
     m_overlay = new QWidget(this);
     m_overlay->setGeometry(rect());
@@ -36,8 +44,22 @@ MainMenu::MainMenu(QWidget *parent)
 
     QPalette palette = this->palette();
     QPixmap background(":/MainMenu/Pics/MainMenu/main_menu_bg.png");
-    palette.setBrush(QPalette::Window, QBrush(background.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
+    palette.setBrush(QPalette::Window,
+                     QBrush(background.scaled(this->size(),
+                                              Qt::IgnoreAspectRatio,
+                                              Qt::SmoothTransformation)));
     this->setPalette(palette);
+
+    // m_videoBackground = new QVideoWidget(this);
+    // m_videoBackground->setGeometry(this->rect());
+    // m_videoBackground->setAspectRatioMode(Qt::IgnoreAspectRatio);
+    // m_videoBackground->lower();
+
+    // m_mediaPlayer = new QMediaPlayer(this);
+    // m_mediaPlayer->setVideoOutput(m_videoBackground);
+    // m_mediaPlayer->setSource(QUrl("qrc:/MainMenu/Pics/MainMenu/main_menu_bg.mp4"));
+    // m_mediaPlayer->setLoops(QMediaPlayer::Infinite);
+    // m_mediaPlayer->play();
 
     QPixmap logo(":/MainMenu/Pics/MainMenu/eng.png");
     ui->Logo->setPixmap(logo.scaled(ui->Logo->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
@@ -134,4 +156,9 @@ void MainMenu::on_Settingbutton_clicked()
 void MainMenu::on_MultiplayerButton_clicked()
 {
     emit multiplayerClicked();
+}
+
+void MainMenu::resetToLoginScreen()
+{
+    ui->MenuKeys->setCurrentIndex(0);
 }
