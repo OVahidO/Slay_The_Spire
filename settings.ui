@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>528</width>
-    <height>469</height>
+    <width>543</width>
+    <height>623</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -28,6 +28,11 @@
 	padding: 0px 10px;
 }
 
+QGroupBox{
+	
+	border-color: rgb(13, 24, 26);
+}
+
 #settings{
 	
 	background-image: url(:/Settings/Pics/Settings/settingsBg.png);
@@ -35,7 +40,7 @@
   </property>
   <layout class="QVBoxLayout" name="mainLayout">
    <property name="spacing">
-    <number>0</number>
+    <number>10</number>
    </property>
    <property name="leftMargin">
     <number>25</number>
@@ -265,6 +270,13 @@
       </item>
      </layout>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="settingsButtonLayout">
+     <property name="spacing">
+      <number>5</number>
+     </property>
+    </layout>
    </item>
   </layout>
  </widget>

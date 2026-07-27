@@ -18,9 +18,8 @@ Login_Signup::Login_Signup(QWidget *parent)
     setAttribute(Qt::WA_TranslucentBackground);
 
 
-    m_rememberMeCheckBox = new QCheckBox("Remember Me", this);
+    m_rememberMeCheckBox = ui->rememberMeCheckBox;
     m_rememberMeCheckBox->setStyleSheet("color: white; font-weight: bold;");
-    ui->verticalLayout_4->insertWidget(ui->verticalLayout_4->count() - 1, m_rememberMeCheckBox);
     QSettings settings("SlayTheSpireClone", "Auth");
     if (settings.value("rememberMe", false).toBool()) {
         ui->LoginUsernameInput->setText(settings.value("rememberedUsername").toString());

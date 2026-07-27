@@ -114,18 +114,18 @@ void GameManager::onPlayerReady(Player *player)
 
     prepareGamePlayForPlayer();
 
-    //////////////topbar//////////////
-    m_topbar = new Topbar(m_gamePlay);
-    connect(m_topbar, &Topbar::potionUsed, m_gamePlay, &GamePlay::usedPotionHandler);
-    m_vLayout->insertWidget(0, m_topbar);
-    m_topbar->hide();
-    //////////////////////////////////
-    //////////////////////
-    m_relicbar = new RelicBar(m_vLayout->parentWidget());
-    m_relicbar->move(0,m_topbar->height());
-    m_relicbar->hide();
-    connect(m_player, &Player::relicAdded, m_relicbar, &RelicBar::addRelic);
-    /////////////////////
+    // //////////////topbar//////////////
+    // m_topbar = new Topbar(m_gamePlay);
+    // connect(m_topbar, &Topbar::potionUsed, m_gamePlay, &GamePlay::usedPotionHandler);
+    // m_vLayout->insertWidget(0, m_topbar);
+    // m_topbar->hide();
+    // //////////////////////////////////
+    // //////////////////////
+    // m_relicbar = new RelicBar(m_vLayout->parentWidget());
+    // m_relicbar->move(0,m_topbar->height());
+    // m_relicbar->hide();
+    // connect(m_player, &Player::relicAdded, m_relicbar, &RelicBar::addRelic);
+    // /////////////////////
 
     if (m_pendingMultiplayerRequested) {
         m_pendingMultiplayerRequested = false;
@@ -224,12 +224,19 @@ void GameManager::startNewRun()
         m_topbar = nullptr;
     }
 
+    if (m_relicbar) {
+        m_vLayout->removeWidget(m_relicbar);
+        m_relicbar->deleteLater();
+        m_relicbar = nullptr;
+    }
+
     prepareGamePlayForPlayer();
 
     //////////////topbar//////////////
     m_topbar = new Topbar(m_gamePlay);
     m_vLayout->insertWidget(0, m_topbar);
     connect(m_topbar, &Topbar::potionUsed, m_gamePlay, &GamePlay::usedPotionHandler);
+    connect(m_topbar, &Topbar::settingButton_clicked, this, [this](){this->showSettingsPage(SettingsMode::InGame);});
     m_topbar->hide();
     //////////////////////////////////
     /////////////////////////
@@ -702,6 +709,16 @@ void GameManager::resetPlayerAndGamePlayForNewRun()
         m_gamePlay = nullptr;
     }
 
+    if (m_topbar) {
+        m_topbar->deleteLater();
+        m_topbar = nullptr;
+    }
+
+    if (m_relicbar) {
+        m_relicbar->deleteLater();
+        m_relicbar = nullptr;
+    }
+
     if (m_remotePlayerMirror) {
         delete m_remotePlayerMirror;
         m_remotePlayerMirror = nullptr;
@@ -871,10 +888,10 @@ void GameManager::showSettingsPage(SettingsMode mode)
 void GameManager::onSettingsReturn()
 {
     m_settings->accept();
-    if (m_screenBeforeSettings)
-        switchTo(m_screenBeforeSettings);
-    else
-        switchTo(m_gamePlay);
+    // if (m_screenBeforeSettings)
+    //     switchTo(m_screenBeforeSettings);
+    // else
+    //     switchTo(m_map);
 
     m_screenBeforeSettings = nullptr;
 }

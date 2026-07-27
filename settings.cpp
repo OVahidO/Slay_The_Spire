@@ -21,7 +21,7 @@ SettingsDialog::SettingsDialog(Player *player, SettingsMode mode, QWidget *paren
 {
     ui->setupUi(this);
     setupUi();
-    this->setGeometry(525,125,500,600);
+    this->setGeometry(525,100,500,625);
 
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
 
@@ -87,18 +87,26 @@ void SettingsDialog::setupUi()
         ui->accountStatusLabel->setStyleSheet("color: #2ecc71;");
 
         // ---------------- Bottom buttons ----------------
-        QHBoxLayout *bottomLayout = new QHBoxLayout();
+        QHBoxLayout *bottomLayout = ui->settingsButtonLayout;
 
         m_closeBtn = new QPushButton("Close", this);
+        m_closeBtn->setStyleSheet("border: 2px solid #4d8b8a;");
+        m_closeBtn->setFixedWidth(100);
         connect(m_closeBtn, &QPushButton::clicked, this, &SettingsDialog::onCloseClicked);
 
         m_returnBtn = new QPushButton("Return", this);
+        m_returnBtn->setStyleSheet("border: 2px solid #4d8b8a;");
+        m_returnBtn->setFixedWidth(100);
         connect(m_returnBtn, &QPushButton::clicked, this, &SettingsDialog::onReturnClicked);
 
         m_saveAndQuitBtn = new QPushButton("Save & Quit", this);
+        m_saveAndQuitBtn->setStyleSheet("border: 2px solid #4d8b8a;");
+        m_saveAndQuitBtn->setFixedWidth(100);
         connect(m_saveAndQuitBtn, &QPushButton::clicked, this, &SettingsDialog::onSaveAndQuitClicked);
 
         m_abandonRunBtn = new QPushButton("Abandon Run", this);
+        m_abandonRunBtn->setStyleSheet("border: 2px solid #4d8b8a;");
+        m_abandonRunBtn->setFixedWidth(100);
         connect(m_abandonRunBtn, &QPushButton::clicked, this, &SettingsDialog::onAbandonRunClicked);
 
         bottomLayout->addWidget(m_closeBtn);

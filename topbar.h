@@ -30,8 +30,12 @@ public slots:
 signals:
     void potionUsed(Potion* potion);
 
+    void settingButton_clicked();
+
 private slots:
     void on_deckButton_clicked();
+
+    void on_settingButton_clicked();
 
 private:
     Ui::Topbar *ui;

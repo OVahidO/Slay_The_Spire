@@ -106,3 +106,9 @@ void Topbar::on_deckButton_clicked()
     m_overlay->hide();
 }
 
+
+void Topbar::on_settingButton_clicked()
+{
+    emit settingButton_clicked();
+}
+

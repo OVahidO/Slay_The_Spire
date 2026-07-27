@@ -20,6 +20,11 @@ PileDialog::PileDialog(const std::vector<Card*>& pile, QWidget *parent)
     QGraphicsScene* scene = new QGraphicsScene(this);
     scene->setSceneRect(0, 0, width(), height());
 
+    QLinearGradient bgGradient(0, 0, 0, 500);
+    bgGradient.setColorAt(0.0, QColor(35, 30, 45));
+    bgGradient.setColorAt(1.0, QColor(15, 12, 20));
+    scene->setBackgroundBrush(bgGradient);
+
     view->setScene(scene);
     int i=0;
     for(auto& card : pile)

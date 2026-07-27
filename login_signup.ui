@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>437</width>
-    <height>515</height>
+    <height>517</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -105,7 +105,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>70</height>
+           <height>71</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -128,7 +128,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>72</height>
+           <height>70</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -136,6 +136,16 @@
            <width>16777215</width>
            <height>1000</height>
           </size>
+         </property>
+         <property name="echoMode">
+          <enum>QLineEdit::EchoMode::Password</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="rememberMeCheckBox">
+         <property name="text">
+          <string>Remember Me</string>
          </property>
         </widget>
        </item>
@@ -266,6 +276,9 @@
            <height>100000</height>
           </size>
          </property>
+         <property name="echoMode">
+          <enum>QLineEdit::EchoMode::PasswordEchoOnEdit</enum>
+         </property>
         </widget>
        </item>
        <item>
@@ -288,6 +301,9 @@
            <width>16777215</width>
            <height>1000000</height>
           </size>
+         </property>
+         <property name="echoMode">
+          <enum>QLineEdit::EchoMode::PasswordEchoOnEdit</enum>
          </property>
         </widget>
        </item>
