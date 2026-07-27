@@ -23,6 +23,7 @@ private slots:
 
 private:
     Ui::LeaderBoard *ui;
+    void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // LEADERBOARD_H

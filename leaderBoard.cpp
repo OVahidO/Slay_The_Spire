@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QLayoutItem>
+#include <QPainter>
 
 LeaderBoard::LeaderBoard(QWidget *parent)
     : QDialog(parent)
@@ -21,6 +22,17 @@ LeaderBoard::~LeaderBoard()
 {
     delete ui;
 }
+
+void LeaderBoard::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+
+    QPixmap background(":/MainMenu/Pics/MainMenu/LeaderBoardBg.png");
+    painter.drawPixmap(this->rect(), background);
+}
+
 
 void LeaderBoard::refreshLeaderBoard()
 {
