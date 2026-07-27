@@ -132,11 +132,6 @@ void GameManager::onPlayerReady(Player *player)
         showNetworkLobby();
         return;
     }
-
-    if (Database::hasActiveRun(m_player->id()))
-        resumeRun();
-    else
-        startNewRun();
 }
 
 void GameManager::prepareGamePlayForPlayer()
@@ -224,7 +219,7 @@ void GameManager::startNewRun()
     }
 
     if (m_topbar) {
-        m_stack->removeWidget(m_topbar);
+        m_vLayout->removeWidget(m_topbar);
         m_topbar->deleteLater();
         m_topbar = nullptr;
     }
