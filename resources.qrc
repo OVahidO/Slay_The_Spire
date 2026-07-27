@@ -220,4 +220,7 @@
     <qresource prefix="/Characters">
         <file>Pics/Characters/Ironclad.png</file>
     </qresource>
+    <qresource prefix="/Settings">
+        <file>Pics/Settings/settingsBg.png</file>
+    </qresource>
 </RCC>

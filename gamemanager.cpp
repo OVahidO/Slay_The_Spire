@@ -785,7 +785,6 @@ void GameManager::showSettingsPage(SettingsMode mode)
 {
     if (!m_settings) {
         m_settings = new SettingsDialog(m_player, mode);
-        m_stack->addWidget(m_settings);
 
         m_settings->setVolume(m_masterVolume);
         m_settings->setMuted(m_isMuted);
@@ -815,14 +814,12 @@ void GameManager::showSettingsPage(SettingsMode mode)
     } else {
         m_settings->setMode(mode);
     }
-
-    m_screenBeforeSettings = m_stack->currentWidget();
-
-    switchTo(m_settings);
+    m_settings->exec();
 }
 
 void GameManager::onSettingsReturn()
 {
+    m_settings->accept();
     if (m_screenBeforeSettings)
         switchTo(m_screenBeforeSettings);
     else
@@ -833,6 +830,7 @@ void GameManager::onSettingsReturn()
 
 void GameManager::onSettingsCloseFromMenu()
 {
+    m_settings->accept();
     if (m_screenBeforeSettings)
         switchTo(m_screenBeforeSettings);
     else
@@ -843,6 +841,7 @@ void GameManager::onSettingsCloseFromMenu()
 
 void GameManager::onSettingsSaveAndQuit()
 {
+    m_settings->accept();
     autoSaveProgress();
 
     m_screenBeforeSettings = nullptr;
@@ -851,6 +850,7 @@ void GameManager::onSettingsSaveAndQuit()
 
 void GameManager::onSettingsAbandonRun()
 {
+    m_settings->accept();
     returnToMainMenuAfterDefeat();
 
     m_screenBeforeSettings = nullptr;

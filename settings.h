@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QDialog>
 
 class Player;
 class QSlider;
@@ -11,9 +12,15 @@ class QLineEdit;
 class QPushButton;
 class QLabel;
 
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class settings;
+}
+QT_END_NAMESPACE
+
 enum class SettingsMode { MainMenu, InGame };
 
-class SettingsDialog : public QWidget
+class SettingsDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -43,27 +50,20 @@ signals:
     void closeRequested();
 
 private slots:
-    void onVolumeSliderChanged(int value);
-    void onMuteToggled(bool checked);
-    void onSaveAccountClicked();
     void onReturnClicked();
     void onSaveAndQuitClicked();
     void onAbandonRunClicked();
     void onCloseClicked();
+    void on_horizontalSlider_valueChanged(int value);
+    void on_muteCheckBox_toggled(bool checked);
+    void on_saveButton_clicked();
 
 private:
+    Ui::settings *ui;
+    void paintEvent(QPaintEvent *event) override;
+
     Player *m_player;
     SettingsMode m_mode;
-
-    // Audio
-    QSlider *m_volumeSlider;
-    QCheckBox *m_muteCheckBox;
-
-    // Account
-    QLineEdit *m_usernameInput;
-    QLineEdit *m_passwordInput;
-    QPushButton *m_saveAccountBtn;
-    QLabel *m_accountStatusLabel;
 
     // Game flow (InGame only)
     QPushButton *m_returnBtn;

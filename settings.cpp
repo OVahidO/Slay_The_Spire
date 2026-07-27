@@ -1,4 +1,5 @@
 #include "settings.h"
+#include "ui_settings.h"
 #include "player.h"
 
 #include <QCheckBox>
@@ -13,16 +14,37 @@
 #include <QVBoxLayout>
 
 SettingsDialog::SettingsDialog(Player *player, SettingsMode mode, QWidget *parent)
-    : QWidget(parent)
+    : QDialog(parent)
     , m_player(player)
     , m_mode(mode)
+    , ui(new Ui::settings)
 {
-    setFixedSize(1280, 640);
+    ui->setupUi(this);
     setupUi();
+    this->setGeometry(525,125,500,600);
+
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
+
+    setAttribute(Qt::WA_TranslucentBackground);
+
     applyModeVisibility();
+
 }
 
-SettingsDialog::~SettingsDialog() {}
+SettingsDialog::~SettingsDialog()
+{
+    delete ui;
+}
+
+void SettingsDialog::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+
+    QPixmap background(":/Settings/Pics/Settings/settingsBg.png");
+    painter.drawPixmap(this->rect(), background);
+}
 
 SettingsMode SettingsDialog::mode() const
 {
@@ -37,80 +59,32 @@ void SettingsDialog::setMode(SettingsMode mode)
 
 void SettingsDialog::setVolume(int volume)
 {
-    m_volumeSlider->blockSignals(true);
-    m_volumeSlider->setValue(qBound(0, volume, 100));
-    m_volumeSlider->blockSignals(false);
+    ui->horizontalSlider->blockSignals(true);
+    ui->horizontalSlider->setValue(qBound(0, volume, 100));
+    ui->horizontalSlider->blockSignals(false);
 }
 
 void SettingsDialog::setMuted(bool muted)
 {
-    m_muteCheckBox->blockSignals(true);
-    m_muteCheckBox->setChecked(muted);
-    m_volumeSlider->setEnabled(!muted);
-    m_muteCheckBox->blockSignals(false);
+    ui->muteCheckBox->blockSignals(true);
+    ui->muteCheckBox->setChecked(muted);
+    ui->horizontalSlider->setEnabled(!muted);
+    ui->muteCheckBox->blockSignals(false);
 }
 
 void SettingsDialog::setupUi()
 {
-        QVBoxLayout *mainLayout = new QVBoxLayout(this);
-        mainLayout->setContentsMargins(40, 30, 40, 30);
-        mainLayout->setSpacing(20);
+        QVBoxLayout *mainLayout = ui->mainLayout;
 
-        QLabel *title = new QLabel("Settings", this);
+        QLabel *title = ui->title;
         QFont titleFont("Arial", 22, QFont::Bold);
         title->setFont(titleFont);
-        mainLayout->addWidget(title);
-
-        // ---------------- Audio settings ----------------
-        QGroupBox *audioBox = new QGroupBox("Audio", this);
-        QVBoxLayout *audioLayout = new QVBoxLayout(audioBox);
-
-        QHBoxLayout *volumeRow = new QHBoxLayout();
-        QLabel *volumeLabel = new QLabel("Volume", audioBox);
-        m_volumeSlider = new QSlider(Qt::Horizontal, audioBox);
-        m_volumeSlider->setRange(0, 100);
-        m_volumeSlider->setValue(80);
-        volumeRow->addWidget(volumeLabel);
-        volumeRow->addWidget(m_volumeSlider);
-        audioLayout->addLayout(volumeRow);
-
-        m_muteCheckBox = new QCheckBox("Mute", audioBox);
-        audioLayout->addWidget(m_muteCheckBox);
-
-        connect(m_volumeSlider, &QSlider::valueChanged, this, &SettingsDialog::onVolumeSliderChanged);
-        connect(m_muteCheckBox, &QCheckBox::toggled, this, &SettingsDialog::onMuteToggled);
-
-        mainLayout->addWidget(audioBox);
 
         // ---------------- Account settings ----------------
-        QGroupBox *accountBox = new QGroupBox("Account", this);
-        QVBoxLayout *accountLayout = new QVBoxLayout(accountBox);
-
-        m_usernameInput = new QLineEdit(accountBox);
-        m_usernameInput->setPlaceholderText("New username");
         if (m_player)
-            m_usernameInput->setText(m_player->name());
+            ui->usernameInput->setText(m_player->name());
 
-        m_passwordInput = new QLineEdit(accountBox);
-        m_passwordInput->setPlaceholderText("New password");
-        m_passwordInput->setEchoMode(QLineEdit::Password);
-
-        m_saveAccountBtn = new QPushButton("Save Account Changes", accountBox);
-        connect(m_saveAccountBtn, &QPushButton::clicked, this, &SettingsDialog::onSaveAccountClicked);
-
-        m_accountStatusLabel = new QLabel(accountBox);
-        m_accountStatusLabel->setStyleSheet("color: #2ecc71;");
-
-        accountLayout->addWidget(new QLabel("Username", accountBox));
-        accountLayout->addWidget(m_usernameInput);
-        accountLayout->addWidget(new QLabel("Password", accountBox));
-        accountLayout->addWidget(m_passwordInput);
-        accountLayout->addWidget(m_saveAccountBtn);
-        accountLayout->addWidget(m_accountStatusLabel);
-
-        mainLayout->addWidget(accountBox);
-
-        mainLayout->addStretch();
+        ui->accountStatusLabel->setStyleSheet("color: #2ecc71;");
 
         // ---------------- Bottom buttons ----------------
         QHBoxLayout *bottomLayout = new QHBoxLayout();
@@ -147,35 +121,6 @@ void SettingsDialog::applyModeVisibility()
     m_closeBtn->setVisible(!inGame);
 }
 
-void SettingsDialog::onVolumeSliderChanged(int value)
-{
-    emit volumeChanged(value);
-}
-
-void SettingsDialog::onMuteToggled(bool checked)
-{
-    m_volumeSlider->setEnabled(!checked);
-    emit muteToggled(checked);
-}
-
-void SettingsDialog::onSaveAccountClicked()
-{
-    const QString username = m_usernameInput->text().trimmed();
-    const QString password = m_passwordInput->text();
-
-    if (username.isEmpty()) {
-        m_accountStatusLabel->setStyleSheet("color: #e74c3c;");
-        m_accountStatusLabel->setText("Username cannot be empty.");
-        return;
-    }
-
-    emit credentialsSaveRequested(username, password);
-
-    m_accountStatusLabel->setStyleSheet("color: #2ecc71;");
-    m_accountStatusLabel->setText("Account changes saved.");
-    m_passwordInput->clear();
-}
-
 void SettingsDialog::onReturnClicked()
 {
     emit returnRequested();
@@ -208,3 +153,34 @@ void SettingsDialog::onCloseClicked()
 {
     emit closeRequested();
 }
+
+void SettingsDialog::on_horizontalSlider_valueChanged(int value)
+{
+    emit volumeChanged(value);
+}
+
+void SettingsDialog::on_muteCheckBox_toggled(bool checked)
+{
+    ui->horizontalSlider->setEnabled(!checked);
+    emit muteToggled(checked);
+}
+
+
+void SettingsDialog::on_saveButton_clicked()
+{
+    const QString username = ui->usernameInput->text().trimmed();
+    const QString password = ui->passwordInput->text();
+
+    if (username.isEmpty()) {
+        ui->accountStatusLabel->setStyleSheet("color: #e74c3c;");
+        ui->accountStatusLabel->setText("Username cannot be empty.");
+        return;
+    }
+
+    emit credentialsSaveRequested(username, password);
+
+    ui->accountStatusLabel->setStyleSheet("color: #2ecc71;");
+    ui->accountStatusLabel->setText("Account changes saved.");
+    ui->passwordInput->clear();
+}
+
