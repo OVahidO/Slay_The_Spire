@@ -490,7 +490,8 @@ void GremlinKnob::onAnyCardPlayed(CardType cardType, GamePlay *game)
 
 void GremlinKnob::loadPic()
 {
-    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(160,180,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+    this->m_enemyPic = QPixmap(this->m_soucePath)
+                           .scaled(240, 270, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -529,7 +530,8 @@ void Sentry::onIntentExecuted(GamePlay *game)
 
 void Sentry::loadPic()
 {
-    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(120,170,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+    this->m_enemyPic = QPixmap(this->m_soucePath)
+                           .scaled(170, 240, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -558,7 +560,8 @@ void BookOfStabbing::calculateNextIntent()
 
 void BookOfStabbing::loadPic()
 {
-    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(160,180,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+    this->m_enemyPic = QPixmap(this->m_soucePath)
+                           .scaled(240, 270, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -587,7 +590,8 @@ void Taskmaster::onIntentExecuted(GamePlay *game)
 
 void Taskmaster::loadPic()
 {
-    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(160,180,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+    this->m_enemyPic = QPixmap(this->m_soucePath)
+                           .scaled(220, 250, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -663,7 +667,8 @@ void KingSlime::onIntentExecuted(GamePlay *game)
 
 void KingSlime::loadPic()
 {
-    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(200,200,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+    this->m_enemyPic = QPixmap(this->m_soucePath)
+                           .scaled(260, 260, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -738,7 +743,8 @@ void HexaGhost::onIntentExecuted(GamePlay *game)
 
 void HexaGhost::loadPic()
 {
-    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(200,200,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+    this->m_enemyPic = QPixmap(this->m_soucePath)
+                           .scaled(270, 270, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -770,5 +776,6 @@ void TheChamp::calculateNextIntent()
 
 void TheChamp::loadPic()
 {
-    this->m_enemyPic = QPixmap(this->m_soucePath).scaled(200,220,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+    this->m_enemyPic = QPixmap(this->m_soucePath)
+                           .scaled(260, 290, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
