@@ -8,6 +8,7 @@
 
 #include "allenemies.h"
 #include "allrelics.h"
+#include "attackcards.h"
 #include "buffdebuff.h"
 #include "campfire.h"
 #include "card.h"
@@ -16,17 +17,18 @@
 #include "enemy.h"
 #include "event.h"
 #include "gameplay.h"
-#include "topbar.h"
 #include "mainmenu.h"
 #include "map.h"
 #include "networklobby.h"
 #include "player.h"
 #include "potion.h"
 #include "relic.h"
+#include "relicbar.h"
 #include "reward.h"
 #include "settings.h"
 #include "shop.h"
-#include "relicbar.h"
+#include "skillcards.h"
+#include "topbar.h"
 
 GameManager::GameManager(QStackedWidget *stack, QVBoxLayout *VLayout, QObject *parent)
     : QObject(parent)
@@ -181,6 +183,21 @@ void GameManager::grantStarterKit()
 {
     if (!m_player || !m_gamePlay)
         return;
+
+    for (Card *c : m_gamePlay->deck())
+        delete c;
+    m_gamePlay->deck().clear();
+
+    m_gamePlay->addCardToDeck(new class Strike());
+    m_gamePlay->addCardToDeck(new class Strike());
+    m_gamePlay->addCardToDeck(new class Strike());
+    m_gamePlay->addCardToDeck(new class Strike());
+
+    m_gamePlay->addCardToDeck(new class Defend());
+    m_gamePlay->addCardToDeck(new class Defend());
+    m_gamePlay->addCardToDeck(new class Defend());
+
+    m_gamePlay->addCardToDeck(new class Bash());
 
     m_gamePlay->grantRelicToPlayer(new BurningBlood());
 }
