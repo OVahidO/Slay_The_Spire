@@ -1,7 +1,9 @@
 #include "mainwindow.h"
+#include "audiomanager.h"
 #include "ui_mainwindow.h"
 
 #include <QApplication>
+#include <QPushButton>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -36,8 +38,13 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress) {
         qApp->changeOverrideCursor(m_clickedCursor);
+        if (qobject_cast<QPushButton *>(obj))
+            AudioManager::playSfx(SfxId::UiClick);
     } else if (event->type() == QEvent::MouseButtonRelease) {
         qApp->changeOverrideCursor(m_normalCursor);
+    } else if (event->type() == QEvent::Enter) {
+        if (qobject_cast<QPushButton *>(obj))
+            AudioManager::playSfx(SfxId::UiHover);
     }
 
     return QMainWindow::eventFilter(obj, event);

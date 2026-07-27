@@ -12,15 +12,16 @@
 
 #include "allenemies.h"
 #include "attackcards.h"
+#include "audiomanager.h"
 #include "combatvisuals.h"
 #include "enemy.h"
+#include "piledialog.h"
 #include "player.h"
 #include "potion.h"
 #include "relic.h"
 #include "skillcards.h"
 #include "statuscards.h"
 #include "ui_gameplay.h"
-#include "piledialog.h"
 
 GamePlay::GamePlay(Player *player, QWidget *parent)
     : QWidget(parent)
@@ -1057,6 +1058,7 @@ void EndTurnButton::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 void EndTurnButton::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
+        AudioManager::playSfx(SfxId::EndTurnClick);
         this->setAcceptHoverEvents(false);
         if (m_buttonPicture) {
             m_buttonPicture->setAcceptHoverEvents(false);

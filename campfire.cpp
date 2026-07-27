@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 #include <algorithm>
 
+#include "audiomanager.h"
 #include "card.h"
 #include "cardIDeas.h"
 #include "carddialogs.h"
@@ -250,6 +251,8 @@ void Campfire::onRestClicked()
     if (!m_player)
         return;
 
+    AudioManager::playSfx(SfxId::CampfireRest);
+
     int healAmount = qRound(m_player->maxHP() * 0.20);
     m_player->heal(healAmount);
 
@@ -270,6 +273,8 @@ void Campfire::onSmithClicked()
 
     if (dialog.exec() == QDialog::Accepted && dialog.cardWasUpgraded())
     {
+        AudioManager::playSfx(SfxId::CampfireUpgrade);
+
         int upgradedCardID = dialog.upgradedCardID();
         if(upgradedCardID != -1)
         {

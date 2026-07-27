@@ -11,6 +11,7 @@
 #include "potion.h"
 
 #include "attackcards.h"
+#include "audiomanager.h"
 #include "powercards.h"
 #include "skillcards.h"
 
@@ -343,6 +344,8 @@ void Shop::buyCard(int index)
     if (m_player->coin() < entry.price)
         return;
 
+    AudioManager::playSfx(SfxId::ShopBuy);
+
     m_player->setCoin(m_player->coin() - entry.price);
     entry.purchased = true;
 
@@ -366,6 +369,8 @@ void Shop::buyPotion(int index)
 
     if (!m_player->addPotion(entry.potion))
         return;
+
+    AudioManager::playSfx(SfxId::ShopBuy);
 
     m_player->setCoin(m_player->coin() - entry.price);
     entry.purchased = true;

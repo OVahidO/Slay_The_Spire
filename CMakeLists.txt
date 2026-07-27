@@ -61,7 +61,7 @@ qt_add_executable(Slay_The_Spire
     networklobby.h networklobby.cpp
     relicbar.h relicbar.cpp relicbar.ui
     fonts.qrc
-    soundmanager.h soundmanager.cpp
+    audiomanager.h audiomanager.cpp
     #
 )
 

@@ -127,6 +127,8 @@ private:
     QStackedWidget *m_stack;
     QVBoxLayout *m_vLayout;
 
+    void playMapMusicForCurrentAct();
+
     // Persistent
     Player *m_player = nullptr;
     GamePlay *m_gamePlay = nullptr;
