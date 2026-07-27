@@ -339,7 +339,7 @@ void Card::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void Card::setHoveredEnemy(Enemy *enemy)
 {
-    if (m_hoveredEnemy == enemy)
+    if (m_hoveredEnemy == enemy && enemy != nullptr)
         return;
 
     m_hoveredEnemy = enemy;

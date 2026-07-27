@@ -288,7 +288,7 @@ void RewardScreen::setupCardChoices()
 {
     m_cardChoiceLabel->setPlainText("Choose a card to add to your deck (or Skip)");
     qreal labelY = (m_combatType == RewardCombatType::Boss) ? 340 : 200;
-    m_cardChoiceLabel->setPos(1280 / 2 - m_cardChoiceLabel->boundingRect().width() / 2, labelY);
+    m_cardChoiceLabel->setPos(1280 / 2 - m_cardChoiceLabel->boundingRect().width() / 2, labelY-25);
 
     const qreal spacing = 220;
     const qreal cardY = labelY + 40;

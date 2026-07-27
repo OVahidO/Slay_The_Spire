@@ -146,6 +146,7 @@ void Player::loseHp(int n)
 
     emit hpChanged();
     emit combatStateChanged();
+    emit takeDamage(n);
 }
 
 void Player::loseEnergy(int n)

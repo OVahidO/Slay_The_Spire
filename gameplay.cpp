@@ -44,6 +44,10 @@ GamePlay::GamePlay(Player *player, QWidget *parent)
             emit playerEliminated(m_player);
         }
     });
+    //
+    connect(m_player, &Combatant::combatStateChanged, this, [this]() {
+        this->m_scene->update();
+    });
 
     updateHpLabels();
 
@@ -704,6 +708,8 @@ void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy
         emit remoteCardEnemyEffectDeferred(card->ID(),
                                            card->isUpgraded(),
                                            targetEnemy->networkEntityId());
+
+    hideTargetingFrame();
 }
 
 void GamePlay::noTargetCardsHandler(Card *card)
@@ -739,6 +745,8 @@ void GamePlay::noTargetCardsHandler(Card *card)
 
     if (deferEnemyEffectToLeader)
         emit remoteCardEnemyEffectDeferred(card->ID(), card->isUpgraded(), -1);
+
+    hideTargetingFrame();
 }
 
 void GamePlay::playedCardHandler(Card *card)
@@ -1188,7 +1196,10 @@ void GamePlay::showTargetingFrame(Enemy *enemy)
 void GamePlay::hideTargetingFrame()
 {
     if (m_targetFrame)
+    {
         m_targetFrame->hideFrame();
+        this->m_scene->update();
+    }
 }
 
 void GamePlay::playAttackJolt(Combatant *attacker, bool attackerIsPlayer)
