@@ -100,6 +100,8 @@ void GameManager::showMainMenu()
                 &MainMenu::multiplayerClicked,
                 this,
                 &GameManager::onMainMenuMultiplayerClicked);
+
+        m_mainMenu->tryAutoLogin();
     }
 
     AudioManager::playMusic(MusicTrack::MainMenu);
@@ -867,6 +869,7 @@ void GameManager::showSettingsPage(SettingsMode mode)
                 &GameManager::onSettingsLogoutRequested);
     } else {
         m_settings->setMode(mode);
+        m_settings->setPlayer(m_player);
     }
     m_settings->exec();
 }
@@ -1421,12 +1424,64 @@ void GameManager::onSettingsLogoutRequested()
     settings.remove("rememberedPassword");
     settings.setValue("rememberMe", false);
 
+    m_settings->accept();
+
+    resetForLogout();
+
     m_screenBeforeSettings = nullptr;
 
     if (m_mainMenu)
         m_mainMenu->resetToLoginScreen();
 
     showMainMenu();
+}
+
+void GameManager::resetForLogout()
+{
+    if (m_networkManager)
+        m_networkManager->disconnectFromGame();
+
+    if (m_gamePlay) {
+        m_stack->removeWidget(m_gamePlay);
+        m_gamePlay->deleteLater();
+        m_gamePlay = nullptr;
+    }
+
+    if (m_topbar) {
+        m_vLayout->removeWidget(m_topbar);
+        m_topbar->deleteLater();
+        m_topbar = nullptr;
+    }
+
+    if (m_relicbar) {
+        m_relicbar->deleteLater();
+        m_relicbar = nullptr;
+    }
+
+    if (m_map) {
+        m_stack->removeWidget(m_map);
+        m_map->deleteLater();
+        m_map = nullptr;
+    }
+
+    if (m_remotePlayerMirror) {
+        delete m_remotePlayerMirror;
+        m_remotePlayerMirror = nullptr;
+    }
+
+    m_player = nullptr;
+
+    m_playerSyncHooked = false;
+    m_isMultiplayer = false;
+    m_isLeader = true;
+    m_pendingMultiplayerRequested = false;
+
+    m_currentAct = 1;
+    m_currentFloor = 0;
+    m_currentNodeIndex = 0;
+    m_mapSeed = 0;
+    m_usedAct1EncounterTypes.clear();
+    m_usedAct2EncounterTypes.clear();
 }
 
 void GameManager::playMapMusicForCurrentAct()

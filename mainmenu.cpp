@@ -27,11 +27,11 @@ MainMenu::MainMenu(QWidget *parent)
     ui->MenuKeys->setCurrentIndex(0);
     m_loginSignup = new Login_Signup(this);
     connect(m_loginSignup, &Login_Signup::back, this, [this](){this->m_loginSignup->accept();});
-    connect(m_loginSignup, &Login_Signup::playerIsReady, this, [this](Player *player) {
-        ui->MenuKeys->setCurrentIndex(1);
-        setUsername(player->name());
-        this->playerIsReady(player);
-    });
+    // connect(m_loginSignup, &Login_Signup::playerIsReady, this, [this](Player *player) {
+    //     ui->MenuKeys->setCurrentIndex(1);
+    //     setUsername(player->name());
+    //     this->playerIsReady(player);
+    // });
 
     if (Player *autoPlayer = m_loginSignup->attemptAutoLogin()) {
         ui->MenuKeys->setCurrentIndex(1);
@@ -119,6 +119,15 @@ bool MainMenu::eventFilter(QObject *watched, QEvent *event)
     }
 
     return QWidget::eventFilter(watched, event);
+}
+
+void MainMenu::tryAutoLogin()
+{
+    if (Player *autoPlayer = m_loginSignup->attemptAutoLogin()) {
+        ui->MenuKeys->setCurrentIndex(1);
+        setUsername(autoPlayer->name());
+        emit playerIsReady(autoPlayer);
+    }
 }
 
 void MainMenu::on_SignupButton_clicked()

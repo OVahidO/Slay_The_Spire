@@ -72,6 +72,16 @@ void SettingsDialog::setMuted(bool muted)
     ui->muteCheckBox->blockSignals(false);
 }
 
+void SettingsDialog::setPlayer(Player *player)
+{
+    m_player = player;
+
+    if (m_player)
+        ui->usernameInput->setText(m_player->name());
+    else
+        ui->usernameInput->clear();
+}
+
 void SettingsDialog::setupUi()
 {
         QVBoxLayout *mainLayout = ui->mainLayout;
@@ -92,6 +102,9 @@ void SettingsDialog::setupUi()
         m_closeBtn = new QPushButton("Close", this);
         connect(m_closeBtn, &QPushButton::clicked, this, &SettingsDialog::onCloseClicked);
 
+        m_logoutBtn = new QPushButton("Logout", this);
+        connect(m_logoutBtn, &QPushButton::clicked, this, &SettingsDialog::onLogoutClicked);
+
         m_returnBtn = new QPushButton("Return", this);
         connect(m_returnBtn, &QPushButton::clicked, this, &SettingsDialog::onReturnClicked);
 
@@ -102,6 +115,7 @@ void SettingsDialog::setupUi()
         connect(m_abandonRunBtn, &QPushButton::clicked, this, &SettingsDialog::onAbandonRunClicked);
 
         bottomLayout->addWidget(m_closeBtn);
+        bottomLayout->addWidget(m_logoutBtn);
         bottomLayout->addStretch();
         bottomLayout->addWidget(m_returnBtn);
         bottomLayout->addWidget(m_saveAndQuitBtn);
@@ -119,6 +133,7 @@ void SettingsDialog::applyModeVisibility()
     m_abandonRunBtn->setVisible(inGame);
 
     m_closeBtn->setVisible(!inGame);
+    m_logoutBtn->setVisible(!inGame);
 }
 
 void SettingsDialog::onReturnClicked()
