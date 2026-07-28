@@ -36,7 +36,7 @@ class WarpedTongs : public Relic
 {
 public:
     explicit WarpedTongs(QWidget *parent = nullptr);
-    void onCombatStart(GamePlay *game) override;
+    void onCombatStartAfterDraw(GamePlay *game) override;
 };
 
 class CallingBell : public Relic

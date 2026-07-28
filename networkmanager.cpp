@@ -231,13 +231,7 @@ void NetworkManager::processBuffer()
             continue;
         }
 
-        if (rawType > static_cast<quint8>(PacketType::EnemySpawned)) {
-            qWarning("NetworkManager: received an unknown packet type (%u); skipping it.", rawType);
-            continue;
-        }
-
         QByteArray payload = body.mid(sizeof(quint8));
-
         emit packetReceived(static_cast<PacketType>(rawType), payload);
     }
 }

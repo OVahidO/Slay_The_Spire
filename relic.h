@@ -22,6 +22,7 @@ public:
     virtual ~Relic();
 
     virtual void onCombatStart(GamePlay *game) {}
+    virtual void onCombatStartAfterDraw(GamePlay *game) {}
     virtual void onCombatEnd(Player *player) {}
     virtual void onTurnStart(Player *player) {}
     virtual void onTurnEnd(Player *player) {}

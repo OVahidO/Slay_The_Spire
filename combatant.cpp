@@ -458,3 +458,8 @@ BuffDebuffType BuffItem::Btype() const
 {
     return m_type;
 }
+
+void Combatant::repositionHealthBar()
+{
+    m_healthBar->setPos(0, this->boundingRect().height() + 10);
+}
