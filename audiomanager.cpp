@@ -1,4 +1,5 @@
 #include "audiomanager.h"
+#include <QDebug>
 
 AudioManager &AudioManager::instance()
 {
@@ -52,7 +53,7 @@ AudioManager::AudioManager()
         {SfxId::UiClick,
          "qrc:/soundeffects/Sounds-Musics/soundeffects/UI/mixkit-fast-sword-whoosh-2792.wav"},
         {SfxId::EmptySpaceClick, "qrc:/soundeffects/Sounds-Musics/soundeffects/UI/bong_001.ogg"},
-        {SfxId::InvalidClick, "qrc:/soundeffects/Sounds-Musics/soundeffects/ui/invalid_click.wav"},
+        {SfxId::InvalidClick, "qrc:/soundeffects/Sounds-Musics/soundeffects/UI/invalid_click.wav"},
         {SfxId::CardSelect, "qrc:/soundeffects/Sounds-Musics/soundeffects/UI/draw.wav"},
         {SfxId::CardPlay, "qrc:/soundeffects/Sounds-Musics/soundeffects/UI/card-slide-2.ogg"},
         {SfxId::CardShuffle, "qrc:/soundeffects/Sounds-Musics/soundeffects/UI/card-fan-1.ogg"},
