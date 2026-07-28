@@ -592,6 +592,7 @@ void GamePlay::enemiesTurn()
                 }
 
                 slime0->markSplit();
+                emit enemyDespawned(enemy->networkEntityId());
                 m_scene->removeItem(enemy);
                 m_enemys.erase(m_enemys.begin() + i);
                 enemy->deleteLater();
@@ -607,6 +608,7 @@ void GamePlay::enemiesTurn()
                 }
 
                 slime1->markSplit();
+                emit enemyDespawned(enemy->networkEntityId());
                 m_scene->removeItem(enemy);
                 m_enemys.erase(m_enemys.begin() + i);
                 enemy->deleteLater();
@@ -622,6 +624,7 @@ void GamePlay::enemiesTurn()
                 }
 
                 slime2->markSplit();
+                emit enemyDespawned(enemy->networkEntityId());
                 m_scene->removeItem(enemy);
                 m_enemys.erase(m_enemys.begin() + i);
                 enemy->deleteLater();
@@ -959,8 +962,7 @@ void GamePlay::creatEnergyUI()
 
     QGraphicsTextItem *energyLabel = new QGraphicsTextItem(energyBackground);
     energyLabel->setPlainText("0 / 3");
-    QFont font("Belwe Bd BT", 14, QFont::Bold);
-
+    QFont font("Kreon", 14, QFont::Bold);
     energyLabel->setFont(font);
     energyLabel->setDefaultTextColor(Qt::white);
 
@@ -1022,7 +1024,7 @@ void EndTurnButton::setButtonText(QString plainText)
 {
     if (m_plainText) {
         m_plainText->setPlainText(plainText);
-        m_plainText->setFont(QFont("Arial", 14, QFont::Bold));
+        m_plainText->setFont(QFont("Kreon", 14, QFont::Bold));
         qreal textX = (this->boundingRect().width() - m_plainText->boundingRect().width()) / 2.0;
         qreal textY = (this->boundingRect().height() - m_plainText->boundingRect().height()) / 2.0;
         m_plainText->setPos(textX, textY);

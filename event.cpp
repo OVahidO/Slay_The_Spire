@@ -82,13 +82,13 @@ void SelectableOptionItem::paint(QPainter *painter,
 
     QColor textColor = m_enabled ? QColor(229, 212, 179) : QColor(120, 120, 120);
 
-    QFont titleFont("Arial", 15, QFont::Bold);
+    QFont titleFont("Kreon", 15, QFont::Bold);
     painter->setFont(titleFont);
     painter->setPen(textColor);
     QRectF titleRect(10, 115, rect.width() - 20, 40);
     painter->drawText(titleRect, Qt::AlignCenter | Qt::TextWordWrap, m_title);
 
-    QFont subFont("Arial", 10);
+    QFont subFont("Kreon", 10);
     painter->setFont(subFont);
     painter->setPen(m_enabled ? QColor(190, 170, 140) : QColor(100, 100, 100));
     QRectF subRect(10, 160, rect.width() - 20, 90);
@@ -176,14 +176,14 @@ Event::Event(const QString &eventTitle,
     });
 
     m_titleItem = new QGraphicsTextItem(m_eventTitle);
-    QFont titleFont("Arial", 22, QFont::Bold);
+    QFont titleFont("Kreon", 22, QFont::Bold);
     m_titleItem->setFont(titleFont);
     m_titleItem->setDefaultTextColor(QColor(250, 180, 90));
     m_titleItem->setPos(1280 / 2 - m_titleItem->boundingRect().width() / 2, 40);
     m_scene->addItem(m_titleItem);
 
     m_descriptionItem = new QGraphicsTextItem();
-    QFont descFont("Arial", 12);
+    QFont descFont("Kreon", 12);
     m_descriptionItem->setFont(descFont);
     m_descriptionItem->setDefaultTextColor(QColor(220, 210, 200));
     m_descriptionItem->setTextWidth(900);

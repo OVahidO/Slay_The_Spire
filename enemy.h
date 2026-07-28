@@ -22,6 +22,7 @@ enum class IntentType {
     DefendBuff,
     AttackDefend,
     Entangle,
+    Split,
     Unknown
 };
 
@@ -95,6 +96,7 @@ protected:
     EnemyIntent attackDebuffIntent(int damage, int value) const;
     EnemyIntent defendBuffIntent(int block, int value) const;
     EnemyIntent escapeIntent() const;
+    EnemyIntent splitIntent() const;
     EnemyIntent unknownIntent() const;
 
     static int rollHP(int minHP, int maxHP);

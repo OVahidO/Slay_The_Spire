@@ -27,6 +27,7 @@ public:
 
     void resetToLoginScreen();
     void setUsername(const QString &username);
+    void tryAutoLogin();
 
 signals:
     void playerIsReady(Player* player);

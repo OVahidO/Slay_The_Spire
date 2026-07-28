@@ -133,13 +133,12 @@ void FloatingDamageText::paint(QPainter *painter,
 
     painter->setRenderHint(QPainter::Antialiasing);
 
-    QFont font("Arial", 22, QFont::Black);
+    QFont font("Kreon", 22, QFont::Black);
     painter->setFont(font);
 
     QColor textColor = m_isHeal ? QColor(90, 230, 110) : QColor(230, 40, 40);
     QString text = (m_isHeal ? QString("+") : QString("-")) + QString::number(qAbs(m_amount));
 
-    // سایه برای خوانایی بهتر روی هر پس‌زمینه‌ای
     painter->setPen(QColor(0, 0, 0, 200));
     painter->drawText(boundingRect().translated(2, 2), Qt::AlignCenter, text);
 
@@ -220,6 +219,7 @@ void triggerAttackJolt(QGraphicsObject *attacker, qreal offsetX, qreal offsetY, 
 // =========================================================================
 // متن شناور دمیج
 // =========================================================================
+
 void showFloatingDamageText(
     QGraphicsScene *scene, QPointF scenePos, int amount, bool isHeal, bool isBlocked)
 {
@@ -232,7 +232,7 @@ void showFloatingDamageText(
 
     auto *text = new QGraphicsTextItem(displayText);
 
-    QFont font("Arial", isBlocked ? 15 : 26, QFont::Black);
+    QFont font("Kreon", isBlocked ? 15 : 26, QFont::Black);
     text->setFont(font);
 
     QColor color = isHeal      ? QColor(90, 230, 110)

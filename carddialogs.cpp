@@ -39,7 +39,7 @@ CardSelectionDialog::CardSelectionDialog(GamePlay *gamePlay,
     layout->addWidget(m_view);
 
     QGraphicsTextItem *title = new QGraphicsTextItem(dialogTitle);
-    QFont titleFont("Arial", 16, QFont::Bold);
+    QFont titleFont("Kreon", 16, QFont::Bold);
     title->setFont(titleFont);
     title->setDefaultTextColor(Qt::white);
     title->setPos(20, 10);

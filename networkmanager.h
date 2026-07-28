@@ -27,7 +27,8 @@ enum class PacketType : quint8 {
     PlayerEliminated,
     GameOver,
     TurnEnded,
-    EnemySpawned
+    EnemySpawned,
+    EnemyDespawned
 };
 
 struct NetPlayerState
@@ -88,6 +89,7 @@ public:
     void sendCardPlayed(int cardID, bool isUpgraded, int targetEntityId);
     void sendTurnEnded();
     void sendEnemySpawned(NetSpawnKind kind, int hp, int entityId);
+    void sendEnemyDespawned(int entityId);
 
     // --- Enemy Sync ---
     void registerEnemiesForSync(const std::vector<Enemy *> &enemies);
@@ -111,6 +113,7 @@ public:
                                  bool &isUpgraded,
                                  int &targetEntityId);
     static NetEnemySpawn decodeEnemySpawned(const QByteArray &payload);
+    static int decodeEnemyDespawned(const QByteArray &payload);
 
 signals:
     void hostStarted(quint16 port);

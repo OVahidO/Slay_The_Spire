@@ -228,6 +228,11 @@ void NetworkManager::processBuffer()
             continue;
         }
 
+        if (rawType > static_cast<quint8>(PacketType::EnemyDespawned)) {
+            qWarning("NetworkManager: received an unknown packet type (%u); skipping it.", rawType);
+            continue;
+        }
+
         QByteArray payload = body.mid(sizeof(quint8));
 
         emit packetReceived(static_cast<PacketType>(rawType), payload);
@@ -356,7 +361,7 @@ void NetworkManager::sendEnemyStateSync(Enemy *enemy, int entityId)
     QByteArray payload;
     QDataStream stream(&payload, QIODevice::WriteOnly);
     stream.setVersion(kStreamVersion);
-    stream << static_cast<quint8>(entityId) << enemy->currentHP() << enemy->maxHP()
+    stream << static_cast<qint32>(entityId) << enemy->currentHP() << enemy->maxHP()
            << enemy->block() << buffs;
 
     sendPacket(PacketType::EnemyStateSync, payload);
@@ -365,7 +370,7 @@ void NetworkManager::sendEnemyStateSync(Enemy *enemy, int entityId)
 NetEnemyState NetworkManager::decodeEnemyStateSync(const QByteArray &payload)
 {
     NetEnemyState state;
-    quint8 rawId = 0;
+    qint32 rawId = -1;
 
     QDataStream stream(payload);
     stream.setVersion(kStreamVersion);
@@ -522,6 +527,16 @@ void NetworkManager::sendEnemySpawned(NetSpawnKind kind, int hp, int entityId)
     sendPacket(PacketType::EnemySpawned, payload);
 }
 
+void NetworkManager::sendEnemyDespawned(int entityId)
+{
+    QByteArray payload;
+    QDataStream stream(&payload, QIODevice::WriteOnly);
+    stream.setVersion(kStreamVersion);
+    stream << static_cast<qint32>(entityId);
+
+    sendPacket(PacketType::EnemyDespawned, payload);
+}
+
 NetEnemySpawn NetworkManager::decodeEnemySpawned(const QByteArray &payload)
 {
     NetEnemySpawn spawn;
@@ -542,6 +557,19 @@ NetEnemySpawn NetworkManager::decodeEnemySpawned(const QByteArray &payload)
     spawn.hp = hp;
     spawn.entityId = entityId;
     return spawn;
+}
+
+int NetworkManager::decodeEnemyDespawned(const QByteArray &payload)
+{
+    qint32 entityId = -1;
+    QDataStream stream(payload);
+    stream.setVersion(kStreamVersion);
+    stream >> entityId;
+
+    if (stream.status() != QDataStream::Ok)
+        return -1;
+
+    return entityId;
 }
 
 void NetworkManager::registerSingleEnemyForSync(Enemy *enemy)
