@@ -176,6 +176,13 @@ void GameManager::prepareGamePlayForPlayer()
         m_networkManager->sendEnemySpawned(kind, enemy->currentHP(), enemy->networkEntityId());
         m_networkManager->registerSingleEnemyForSync(enemy);
     });
+
+    connect(m_gamePlay, &GamePlay::enemyDespawned, this, [this](int entityId) {
+        if (!m_isMultiplayer || !m_isLeader || !m_networkManager)
+            return;
+
+        m_networkManager->sendEnemyDespawned(entityId);
+    });
 }
 
 void GameManager::grantStarterKit()
@@ -1271,6 +1278,22 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
 
         child->overrideHP(spawn.hp);
         m_gamePlay->addEnemyWithNetworkId(child, spawn.entityId);
+        break;
+    }
+
+    case PacketType::EnemyDespawned: {
+        if (m_isLeader || !m_gamePlay)
+            break;
+
+        int entityId = NetworkManager::decodeEnemyDespawned(payload);
+        if (entityId < 0)
+            break;
+
+        Enemy *enemy = findEnemyByNetworkId(entityId);
+        if (enemy) {
+            enemy->setCurrentHPDirect(0);
+            m_gamePlay->removeDeadEnemies();
+        }
         break;
     }
 

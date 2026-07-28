@@ -588,6 +588,7 @@ void GamePlay::enemiesTurn()
                 }
 
                 slime0->markSplit();
+                emit enemyDespawned(enemy->networkEntityId());
                 m_scene->removeItem(enemy);
                 m_enemys.erase(m_enemys.begin() + i);
                 enemy->deleteLater();
@@ -603,6 +604,7 @@ void GamePlay::enemiesTurn()
                 }
 
                 slime1->markSplit();
+                emit enemyDespawned(enemy->networkEntityId());
                 m_scene->removeItem(enemy);
                 m_enemys.erase(m_enemys.begin() + i);
                 enemy->deleteLater();
@@ -618,6 +620,7 @@ void GamePlay::enemiesTurn()
                 }
 
                 slime2->markSplit();
+                emit enemyDespawned(enemy->networkEntityId());
                 m_scene->removeItem(enemy);
                 m_enemys.erase(m_enemys.begin() + i);
                 enemy->deleteLater();
