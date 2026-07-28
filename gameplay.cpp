@@ -117,6 +117,10 @@ Player *&GamePlay::player()
 {
     return m_player;
 }
+QWidget *GamePlay::overlay()
+{
+    return m_overlay;
+}
 
 // ---------------- Enemies management ----------------
 

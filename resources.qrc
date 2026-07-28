@@ -232,5 +232,6 @@
         <file>Pics/EndCombatPages/buttonBg.png</file>
         <file>Pics/EndCombatPages/dead.png</file>
         <file>Pics/EndCombatPages/victory.png</file>
+        <file>Pics/EndCombatPages/Bg2.png</file>
     </qresource>
 </RCC>

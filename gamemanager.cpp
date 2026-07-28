@@ -696,11 +696,15 @@ void GameManager::showDefeatPage()
 
     auto blur = new QGraphicsBlurEffect;
     blur->setBlurRadius(8);
-    m_gamePlay->setGraphicsEffect(blur);
+    m_gamePlay->overlay()->show();
+    m_gamePlay->overlay()->setGraphicsEffect(blur);
     m_topbar->setGraphicsEffect(blur);
+    m_relicbar->setGraphicsEffect(blur);
     endPage.exec();
     m_topbar->setGraphicsEffect(nullptr);
-    m_gamePlay->setGraphicsEffect(nullptr);
+    m_relicbar->setGraphicsEffect(nullptr);
+    m_gamePlay->overlay()->hide();
+    m_gamePlay->overlay()->setGraphicsEffect(nullptr);
 
     AudioManager::playMusic(MusicTrack::Defeat);
     GameManager::returnToMainMenuAfterDefeat();

@@ -7,6 +7,13 @@ endCombatPages::endCombatPages(endMod endMod, QWidget *parent)
     , ui(new Ui::endCombatPages)
 {
     ui->setupUi(this);
+
+    this->setGeometry(525,100,500,625);
+
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
+
+    setAttribute(Qt::WA_TranslucentBackground);
+
     if(endMod == endMod::Victory)
     {
         ui->endPageLabel->setText("Victory");
@@ -28,7 +35,7 @@ void endCombatPages::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
-    QPixmap background(":/EndCombatPages/Pics/EndCombatPages/Bg.png");
+    QPixmap background(":/EndCombatPages/Pics/EndCombatPages/Bg2.png");
     painter.drawPixmap(this->rect(), background);
 }
 

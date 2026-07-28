@@ -37,6 +37,7 @@ public:
     void setTurn(int turn);
     void addTurn(int n = 1);
     Player *&player();
+    QWidget* overlay();
 
     // --- Enemies management ---
     std::vector<Enemy *> &enemies();
