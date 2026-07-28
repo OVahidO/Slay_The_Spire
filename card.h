@@ -57,6 +57,9 @@ public:
     bool isUpgraded() const;
     virtual void upgrade();
 
+    bool isEthereal() const;
+    void setEthereal(bool value);
+
     virtual void applyEffect(Player *player, Enemy *targetEnemy) = 0;
     virtual bool applyEffect(GamePlay *gameplay);
 
@@ -107,6 +110,7 @@ protected:
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     int m_ID;
     QString m_name;
@@ -117,10 +121,11 @@ protected:
     bool m_needTarget;
     bool m_isExhaust;
     bool m_isUpgraded = false;
+    bool m_isInnate = false;
+    bool m_isEthereal = false;
 
     CardLifetime m_lifetime = CardLifetime::Permanent;
 
-    bool m_isInnate = false;
     QColor colorForCardType(CardType type) const;
     QString highlightKeywords(const QString &text) const;
     void drawTypeGem(QPainter *painter, const QRectF &rect) const;

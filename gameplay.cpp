@@ -256,6 +256,7 @@ void GamePlay::drawCards(int count)
                 card->setPos(ui->drawPileButton->pos());
                 m_player->HandsCards().push_back(card);
                 m_scene->addItem(card);
+                AudioManager::playSfx(SfxId::CardDraw);
                 connect(card, &Card::cardEnteredMouse, this, &GamePlay::updateHandsCardsLayout);
                 connect(card, &Card::cardLeavedMouse, this, &GamePlay::updateHandsCardsLayout);
                 connect(card, &Card::targetCardPlayed, this, &GamePlay::targetCardsHandler);
@@ -280,6 +281,8 @@ void GamePlay::fillingDrawPile()
     std::mt19937 g(rd());
 
     std::shuffle(m_discardPile.begin(), m_discardPile.end(), g);
+
+    AudioManager::playSfx(SfxId::CardShuffle);
 
     m_drawPile.insert(m_drawPile.end(), m_discardPile.begin(), m_discardPile.end());
 
@@ -380,6 +383,13 @@ void GamePlay::grantRelicToPlayer(Relic *relic)
     if (!relic || !m_player)
         return;
 
+    for (Relic *existing : m_player->relics()) {
+        if (existing && existing->name() == relic->name()) {
+            delete relic;
+            return;
+        }
+    }
+
     relic->onEquip(this);
     m_player->addRelic(relic);
 }
@@ -388,6 +398,8 @@ void GamePlay::grantRelicToPlayer(Relic *relic)
 
 void GamePlay::startCombat()
 {
+    hideTargetingFrame();
+
     m_drawPile.clear();
     m_discardPile.clear();
     m_ExhaustPile.clear();
@@ -655,6 +667,21 @@ void GamePlay::discardHandToDiscardPile()
     auto handCopy = m_player->HandsCards();
 
     for (Card *card : handCopy) {
+        if (card->isEthereal()) {
+            auto &hand = m_player->HandsCards();
+            auto it = std::find(hand.begin(), hand.end(), card);
+            if (it != hand.end())
+                hand.erase(it);
+
+            updateHandsCardsLayout();
+            card->disconnect();
+            m_scene->removeItem(card);
+            m_ExhaustPile.push_back(card);
+            emit valueChanged();
+            m_player->triggerPowerEffects(PowerUseTime::OnExhaust, this);
+            continue;
+        }
+
         card->disconnect();
         emit cardPlayed(card);
     }
@@ -682,6 +709,8 @@ void GamePlay::targetCardsHandler(Card *card, Player *player, Enemy *targetEnemy
 
     if (!card->canBePlayed(m_player))
         return;
+
+    AudioManager::playSfx(SfxId::CardPlay);
 
     if (card->cardType() == CardType::Attack) {
         player = m_player;
@@ -732,6 +761,8 @@ void GamePlay::noTargetCardsHandler(Card *card)
 
     if (!effectSucceeded)
         return;
+
+    AudioManager::playSfx(SfxId::CardPlay);
 
     emit cardPlayed(card);
     m_player->loseEnergy(card->energyCost());

@@ -58,6 +58,7 @@ void NetworkManager::onNewConnection()
         return;
     }
 
+    m_recvBuffer.clear();
     m_socket = incoming;
     setupSocket(m_socket);
     m_hadSuccessfulConnection = true;
@@ -73,6 +74,7 @@ bool NetworkManager::joinGame(const QString &hostAddress, quint16 port)
         return false;
 
     m_isHost = false;
+    m_recvBuffer.clear();
     m_socket = new QTcpSocket(this);
     setupSocket(m_socket);
 
@@ -110,6 +112,7 @@ void NetworkManager::disconnectFromGame()
         m_server = nullptr;
     }
 
+    m_recvBuffer.clear();
     clearEnemySync();
 
     if (shouldNotify)
@@ -223,12 +226,12 @@ void NetworkManager::processBuffer()
             continue;
         }
 
-        if (rawType > static_cast<quint8>(PacketType::EnemySpawned)) {
+        if (rawType > static_cast<quint8>(PacketType::EnemyDespawned)) {
             qWarning("NetworkManager: received an unknown packet type (%u); skipping it.", rawType);
             continue;
         }
 
-        if (rawType > static_cast<quint8>(PacketType::EnemyDespawned)) {
+        if (rawType > static_cast<quint8>(PacketType::EnemySpawned)) {
             qWarning("NetworkManager: received an unknown packet type (%u); skipping it.", rawType);
             continue;
         }
@@ -514,6 +517,7 @@ void NetworkManager::teardownSocket()
     m_socket->deleteLater();
     m_socket = nullptr;
 
+    m_recvBuffer.clear();
     clearEnemySync();
 }
 

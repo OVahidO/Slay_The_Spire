@@ -10,8 +10,10 @@ Login_Signup::Login_Signup(QWidget *parent)
     , ui(new Ui::Login_Signup)
 {
     ui->setupUi(this);
-    this->setGeometry(525,175,500,500);
-    m_players = Database::selectAllPlayers();
+    this->setGeometry(525, 175, 500, 500);
+
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
+    // m_players = Database::selectAllPlayers();
 
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
 
@@ -81,35 +83,23 @@ void Login_Signup::loginButton_clicked()
 
 void Login_Signup::on_usernameInput_editingFinished()
 {
-    bool isExists = false;
     QString inputUsername = ui->usernameInput->text();
-    for(auto& player : m_players)
-    {
-        if(inputUsername == player->name())
-        {
-            isExists = true;
-            break;
-        }
-    }
+    bool isExists = !inputUsername.isEmpty() && Database::usernameExists(inputUsername);
 
-    if(isExists || inputUsername.isEmpty())
-    {
-        if(isExists)
+    if (isExists || inputUsername.isEmpty()) {
+        if (isExists)
             ui->usernameErrorLabel->setText("Error: this username is exists!");
-        if(inputUsername.isEmpty())
+        if (inputUsername.isEmpty())
             ui->usernameErrorLabel->setText("Error: is empty!");
         ui->passwordInput->setDisabled(true);
         ui->confirimPasswordInput->setDisabled(true);
         ui->SignupEnterButton->setDisabled(true);
-    }
-    else
-    {
+    } else {
         ui->usernameErrorLabel->setText("");
         ui->passwordInput->setDisabled(false);
         ui->confirimPasswordInput->setDisabled(false);
     }
 }
-
 
 void Login_Signup::on_passwordInput_editingFinished()
 {

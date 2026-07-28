@@ -51,7 +51,7 @@ private slots:
 
 private:
     Ui::Login_Signup *ui;
-    QVector<Player*> m_players;
+    // QVector<Player*> m_players;
     void paintEvent(QPaintEvent *event) override;
     QCheckBox *m_rememberMeCheckBox = nullptr;
 };

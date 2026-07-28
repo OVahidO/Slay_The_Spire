@@ -145,8 +145,12 @@ void GameManager::prepareGamePlayForPlayer()
 
     m_stack->addWidget(m_gamePlay);
 
-    connect(m_gamePlay, &GamePlay::combatWon, this, &GameManager::onCombatWon);
-    connect(m_gamePlay, &GamePlay::playerDead, this, &GameManager::onPlayerDead);
+    connect(m_gamePlay, &GamePlay::combatWon, this, &GameManager::onCombatWon, Qt::QueuedConnection);
+    connect(m_gamePlay,
+            &GamePlay::playerDead,
+            this,
+            &GameManager::onPlayerDead,
+            Qt::QueuedConnection);
 
     connect(m_gamePlay, &GamePlay::playerEliminated, this, &GameManager::onPlayerEliminated);
 
@@ -307,6 +311,9 @@ void GameManager::resumeRun()
     m_usedAct2EncounterTypes.clear();
 
     buildNewMap();
+
+    if (m_isMultiplayer && m_isLeader && m_networkManager)
+        m_networkManager->sendMapSeed(m_mapSeed);
 }
 
 void GameManager::buildNewMap()
@@ -416,11 +423,6 @@ void GameManager::startBattle(MapButtonType type)
     bool isElite = (type == MapButtonType::ELITE);
     bool isBoss = (type == MapButtonType::BOSS);
 
-    AudioManager::playMusic(isBoss    ? MusicTrack::CombatBoss
-                            : isElite ? MusicTrack::CombatElite
-                                      : (m_currentAct == 1 ? MusicTrack::CombatNormalAct1
-                                                           : MusicTrack::CombatNormalAct2));
-
     QVector<int> &usedPool = (m_currentAct == 1) ? m_usedAct1EncounterTypes
                                                  : m_usedAct2EncounterTypes;
 
@@ -432,6 +434,25 @@ void GameManager::startBattle(MapButtonType type)
                                                                    m_isMultiplayer,
                                                                    m_mapSeed,
                                                                    usedPool);
+
+    if (isBoss) {
+        MusicTrack bossTrack = MusicTrack::CombatBossTheChamp;
+        if (!enemies.isEmpty()) {
+            if (dynamic_cast<KingSlime *>(enemies.first()))
+                bossTrack = MusicTrack::CombatBossKingSlime;
+            else if (dynamic_cast<HexaGhost *>(enemies.first()))
+                bossTrack = MusicTrack::CombatBossHexaGhost;
+            else if (dynamic_cast<TheChamp *>(enemies.first()))
+                bossTrack = MusicTrack::CombatBossTheChamp;
+        }
+        AudioManager::playMusic(bossTrack);
+    } else if (isElite) {
+        AudioManager::playMusic(MusicTrack::CombatElite);
+    } else {
+        AudioManager::playMusic(m_currentAct == 1 ? MusicTrack::CombatNormalAct1
+                                                  : MusicTrack::CombatNormalAct2);
+    }
+
     for (Enemy *e : enemies)
         m_gamePlay->addEnemy(e);
 
@@ -1378,6 +1399,9 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
         setLeader(becomeLeader);
         if (m_map)
             m_map->setLocked(!becomeLeader);
+
+        if (becomeLeader && m_isMultiplayer && m_gamePlay && m_networkManager)
+            m_networkManager->registerEnemiesForSync(m_gamePlay->enemies());
         break;
     }
 

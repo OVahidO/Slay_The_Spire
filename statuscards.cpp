@@ -19,6 +19,7 @@ DAZE::DAZE(QGraphicsItem *parent)
     : StatusCard(CardID::Daze, "DAZE", 0, "", false, false, false, parent)
 {
     m_sourcePath = ":/card-art/Pics/Cards/Status/dazed.png";
+    setEthereal(true);
     loadPixmap();
 }
 

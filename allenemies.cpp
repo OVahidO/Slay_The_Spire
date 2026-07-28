@@ -549,7 +549,7 @@ void Sentry::onIntentExecuted(GamePlay *game)
 void Sentry::loadPic()
 {
     this->m_enemyPic = QPixmap(this->m_soucePath)
-                           .scaled(170, 240, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                           .scaled(170, 240, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////

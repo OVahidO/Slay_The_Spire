@@ -59,7 +59,7 @@ private slots:
     void on_horizontalSlider_valueChanged(int value);
     void on_muteCheckBox_toggled(bool checked);
     void on_saveButton_clicked();
-
+    void onLogoutClicked();
     void on_pushButton_clicked();
 
 private:

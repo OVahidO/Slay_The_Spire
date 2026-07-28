@@ -32,6 +32,8 @@ void CampfireGraphicsView::mousePressEvent(QMouseEvent *event)
     QGraphicsItem *item = itemAt(event->pos());
     if (item)
         emit itemClicked(item);
+    else
+        AudioManager::playSfx(SfxId::EmptySpaceClick);
 
     QGraphicsView::mousePressEvent(event);
 }
