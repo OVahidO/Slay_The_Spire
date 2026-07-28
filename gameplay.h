@@ -30,7 +30,7 @@ class GamePlay : public QWidget
     Q_OBJECT
 
 public:
-    explicit GamePlay(Player *player, QWidget *parent = nullptr);
+    explicit GamePlay(Player *player, QString ResourcePath, QWidget *parent = nullptr);
     ~GamePlay();
 
     int turn() const;
@@ -173,6 +173,7 @@ private:
     std::vector<Enemy *> m_enemys;
     int m_turn;
     QParallelAnimationGroup *m_animGroup = new QParallelAnimationGroup(this);
+    QString m_resourcePath;
 
     static const int HAND_MAX_SIZE = 10;
     static const int DRAW_COUNT_PER_TURN = 5;

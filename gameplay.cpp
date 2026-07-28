@@ -23,8 +23,9 @@
 #include "statuscards.h"
 #include "ui_gameplay.h"
 
-GamePlay::GamePlay(Player *player, QWidget *parent)
+GamePlay::GamePlay(Player *player, QString ResourcePath, QWidget *parent)
     : QWidget(parent)
+    , m_resourcePath(ResourcePath)
     , ui(new Ui::GamePlay)
 {
     ui->setupUi(this);
@@ -1005,7 +1006,7 @@ void GamePlay::update()
 
 void GamePlay::refreshGamePlay() //struct room info
 {
-    setupBackground(":/Combat/Pics/Background/Combat/basement.png");//room.background//
+    setupBackground(m_resourcePath);//room.background//
     //m_enemys = room.enmies;
     setupEnemies();
 }
@@ -1186,7 +1187,7 @@ void GamePlay::setupBackground(const QString &imagePath)
         m_backgroundItem = nullptr;
     }
 
-    QPixmap bg(imagePath); // Placeholder: مسیر واقعی رو خودت جایگزین کن
+    QPixmap bg(imagePath);
     if (bg.isNull())
         return;
 

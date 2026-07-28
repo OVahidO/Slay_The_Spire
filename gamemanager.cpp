@@ -131,7 +131,10 @@ void GameManager::prepareGamePlayForPlayer()
     if (m_gamePlay)
         return;
 
-    m_gamePlay = new GamePlay(m_player);
+    if(m_currentAct == 1)
+        m_gamePlay = new GamePlay(m_player, ":/Combat/Pics/Background/Combat/basement.png");
+    else if(m_currentAct == 2)
+        m_gamePlay = new GamePlay(m_player, ":/Combat/Pics/Background/Combat/city.png");
 
     m_stack->addWidget(m_gamePlay);
 
