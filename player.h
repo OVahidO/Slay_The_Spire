@@ -10,7 +10,7 @@ class Relic;
 
 struct ScoreDetails
 {
-    double damage;
+    long int damage;
     int nElit;
     int nBoss;
     int floor;

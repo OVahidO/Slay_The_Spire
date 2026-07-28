@@ -698,7 +698,7 @@ void GameManager::finishRunAsVictory()
 
 void GameManager::showVictoryPage()
 {
-    endCombatPages endPage(endMod::Victory, m_gamePlay);
+    endCombatPages endPage(m_player, endMod::Victory, m_gamePlay);
 
     auto blur = new QGraphicsBlurEffect;
     blur->setBlurRadius(8);
@@ -719,7 +719,7 @@ void GameManager::showVictoryPage()
 
 void GameManager::showDefeatPage()
 {
-    endCombatPages endPage(endMod::Defate, m_gamePlay);
+    endCombatPages endPage(m_player, endMod::Defate, m_gamePlay);
 
     auto blur = new QGraphicsBlurEffect;
     blur->setBlurRadius(8);
@@ -845,7 +845,7 @@ void GameManager::autoSaveProgress()
             potionTags << potionTypeTag(p);
     Database::saveRunPotions(m_player->id(), potionTags);
 
-    m_player->scoreDetails().floor = m_currentFloor;
+    m_player->scoreDetails().floor = m_currentFloor+1;
     Database::saveScoreDetails(m_player->id(), m_player->scoreDetails());
 }
 

@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QDialog>
 
+class Player;
+
 enum class endMod {Victory , Defate};
 
 namespace Ui {
@@ -15,7 +17,7 @@ class endCombatPages : public QDialog
     Q_OBJECT
 
 public:
-    explicit endCombatPages(endMod endMod, QWidget *parent = nullptr);
+    explicit endCombatPages(Player* player, endMod endMod, QWidget *parent = nullptr);
     ~endCombatPages();
 
 private slots:
@@ -24,6 +26,8 @@ private slots:
 private:
     Ui::endCombatPages *ui;
     void paintEvent(QPaintEvent *event) override;
+
+    Player* m_player;
 };
 
 #endif // ENDCOMBATPAGES_H

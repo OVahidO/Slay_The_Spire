@@ -540,7 +540,7 @@ bool Database::saveScoreDetails(int playerID, const ScoreDetails &scoreDetails)
     QSqlQuery query(db);
     query.prepare("INSERT INTO ScoreDetails (playerID, damage, nElite, nBoss) VALUES (?,?,?,?)");
     query.addBindValue(playerID);
-    query.addBindValue(scoreDetails.damage);
+    query.addBindValue(static_cast<qulonglong>(scoreDetails.damage));
     query.addBindValue(scoreDetails.nElit);
     query.addBindValue(scoreDetails.nBoss);
     query.exec();
@@ -559,7 +559,7 @@ ScoreDetails Database::loadScoreDetails(int playerID)
     if (query.exec())
         while (query.next())
         {
-            result.damage = query.value(0).toDouble();
+            result.damage = static_cast<unsigned int>(query.value(0).toULongLong());
             result.nElit = query.value(1).toInt();
             result.nBoss = query.value(2).toInt();
         }

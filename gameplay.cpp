@@ -168,6 +168,7 @@ void GamePlay::addEnemyWithNetworkId(Enemy *enemy, int entityId)
     connect(enemy, &Enemy::attacked, this, [this](Enemy *e) { this->playAttackJolt(e, false); });
     connect(enemy, &Enemy::takedDamage, this, [this](Combatant *c, int damage) {
         this->showFloatingDamage(c, damage);
+        this->m_player->scoreDetails().damage = 100;
     });
 
     m_enemys.push_back(enemy);
