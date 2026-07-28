@@ -10,6 +10,7 @@ qt_standard_project_setup()
 qt_add_resources(RESOURCES resources.qrc)
 qt_add_resources(RESOURCES backgrounds.qrc)
 qt_add_resources(RESOURCES fonts.qrc)
+qt_add_resources(RESOURCES sounds.qrc)
 
 qt_add_executable(Slay_The_Spire
     WIN32 MACOSX_BUNDLE
