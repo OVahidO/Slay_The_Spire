@@ -314,7 +314,7 @@ void HealthBarItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
             painter->drawPixmap(shieldRect, m_blockIcon, m_blockIcon.rect());
 
         painter->setPen(Qt::white);
-        QFont blockFont("Arial", 9, QFont::Bold);
+        QFont blockFont("Kreon", 9, QFont::Bold);
         painter->setFont(blockFont);
         painter->drawText(QRectF(-26, m_height + 2, 26, 14),
                           Qt::AlignCenter,
@@ -430,7 +430,7 @@ void BuffItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     }
 
     painter->setPen(Qt::white);
-    painter->setFont(QFont("Arial", 10, QFont::Bold));
+    QFont valFont("Kreon", 11, QFont::Bold);
     painter->drawText(boundingRect(), Qt::AlignBottom | Qt::AlignRight, QString::number(m_stacks));
 }
 

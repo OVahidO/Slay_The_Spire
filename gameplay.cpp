@@ -951,8 +951,7 @@ void GamePlay::creatEnergyUI()
 
     QGraphicsTextItem *energyLabel = new QGraphicsTextItem(energyBackground);
     energyLabel->setPlainText("0 / 3");
-    QFont font("Belwe Bd BT", 14, QFont::Bold);
-
+    QFont font("Kreon", 14, QFont::Bold);
     energyLabel->setFont(font);
     energyLabel->setDefaultTextColor(Qt::white);
 
@@ -1014,7 +1013,7 @@ void EndTurnButton::setButtonText(QString plainText)
 {
     if (m_plainText) {
         m_plainText->setPlainText(plainText);
-        m_plainText->setFont(QFont("Arial", 14, QFont::Bold));
+        m_plainText->setFont(QFont("Kreon", 14, QFont::Bold));
         qreal textX = (this->boundingRect().width() - m_plainText->boundingRect().width()) / 2.0;
         qreal textY = (this->boundingRect().height() - m_plainText->boundingRect().height()) / 2.0;
         m_plainText->setPos(textX, textY);

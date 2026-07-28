@@ -135,14 +135,13 @@ void RewardScreen::setupScene()
     }
 
     m_titleItem = new QGraphicsTextItem(titleText);
-    QFont titleFont("Arial", 20, QFont::Bold);
+    QFont titleFont("Kreon", 20, QFont::Bold);
     m_titleItem->setFont(titleFont);
     m_titleItem->setDefaultTextColor(QColor(250, 180, 90));
     m_titleItem->setPos(1280 / 2 - m_titleItem->boundingRect().width() / 2, 15);
     m_scene->addItem(m_titleItem);
 
-    QFont rewardFont("Arial", 13, QFont::Bold);
-
+    QFont rewardFont("Kreon", 13, QFont::Bold);
     m_goldItem = new QGraphicsTextItem();
     m_goldItem->setFont(rewardFont);
     m_goldItem->setDefaultTextColor(QColor(250, 210, 60));

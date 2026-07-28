@@ -77,7 +77,7 @@ void SettingsDialog::setupUi()
         QVBoxLayout *mainLayout = ui->mainLayout;
 
         QLabel *title = ui->title;
-        QFont titleFont("Arial", 22, QFont::Bold);
+        QFont titleFont("Kreon", 22, QFont::Bold);
         title->setFont(titleFont);
 
         // ---------------- Account settings ----------------
