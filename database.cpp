@@ -73,7 +73,7 @@ bool Database::insertPlayerValue(Player* p, QString password)
     query.addBindValue(p->currentHP());
     query.addBindValue(p->maxHP());
     query.addBindValue(p->coin());
-    query.addBindValue(0);
+    query.addBindValue(p->score());
 
     if(!query.exec())
     {
@@ -127,7 +127,7 @@ bool Database::updatePlayerValue(Player* p)
     query.addBindValue(p->currentHP());
     query.addBindValue(p->maxHP());
     query.addBindValue(p->coin());
-    query.addBindValue(0);
+    query.addBindValue(p->score());
     query.addBindValue(p->id());
 
     if(!query.exec())
@@ -163,7 +163,7 @@ QVector<Player*> Database::selectAllPlayers()
 Player *Database::loadPlayerById(int playerID)
 {
     QSqlQuery query(db);
-    query.prepare("SELECT id, username, current_Hp, max_Hp, coin FROM Player WHERE id=?");
+    query.prepare("SELECT id, username, current_Hp, max_Hp, coin, score FROM Player WHERE id=?");
     query.addBindValue(playerID);
 
     if (!query.exec() || !query.next())
@@ -173,6 +173,7 @@ Player *Database::loadPlayerById(int playerID)
     player->setId(query.value(0).toInt());
     player->setCurrentHPDirect(query.value(2).toInt());
     player->setCoin(query.value(4).toInt());
+    player->setScore(query.value(5).toInt());
 
     return player;
 }

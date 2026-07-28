@@ -420,6 +420,13 @@ void GameManager::onCombatWon()
     if (m_networkManager)
         m_networkManager->clearEnemySync();
 
+    if (m_player) {
+        m_player->setScore(m_currentAct * 500 + m_currentFloor * 50 + m_player->score());
+
+        Database::updatePlayerScore(m_player->id(), m_player->score());
+        Database::deleteRunState(m_player->id());
+    }
+
     m_reward = new RewardScreen(m_player, m_gamePlay, m_pendingRewardType);
     connect(m_reward, &RewardScreen::rewardFinished, this, &GameManager::onRewardFinished);
 
@@ -582,10 +589,14 @@ void GameManager::handleTreasureNode()
 
 void GameManager::finishRunAsVictory()
 {
-    if (m_player) {
-        int score = m_player->coin() + m_currentAct * 500 + m_currentFloor * 50;
+    // if (m_player) {
+    //     int score = m_player->coin() + m_currentAct * 500 + m_currentFloor * 50;
 
-        Database::updatePlayerScore(m_player->id(), score);
+    //     Database::updatePlayerScore(m_player->id(), score);
+    //     Database::deleteRunState(m_player->id());
+    // }
+
+    if (m_player) {
         Database::deleteRunState(m_player->id());
     }
 

@@ -72,6 +72,11 @@ int Player::handSize() const
     return m_handSize;
 }
 
+int Player::score() const
+{
+    return m_score;
+}
+
 QVector<Card *> &Player::Deck()
 {
     return m_Deck;
@@ -108,6 +113,11 @@ void Player::setMaxEnergy(int maxEnergy)
 void Player::setHandSize(int handSize)
 {
     m_handSize = (handSize < 0) ? 0 : handSize;
+}
+
+void Player::setScore(int score)
+{
+    m_score = (score < 0) ? 0 : score;
 }
 
 void Player::addMaxHp(int n)
