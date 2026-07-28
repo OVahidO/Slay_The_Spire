@@ -167,6 +167,7 @@ void Player::heal(int n)
         m_currentHP = m_maxHP;
 
     emit hpChanged();
+    emit combatStateChanged();
 }
 
 bool Player::addPotion(Potion* potion)

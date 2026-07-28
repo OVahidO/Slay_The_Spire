@@ -134,6 +134,11 @@ EnemyIntent Enemy::unknownIntent() const
     return {IntentType::Unknown, 0, 0, false, getIntentIcon(IntentType::Unknown)};
 }
 
+EnemyIntent Enemy::splitIntent() const
+{
+    return {IntentType::Split, 0, 0, false, getIntentIcon(IntentType::Split)};
+}
+
 // void Enemy::executeIntent(Player *player)
 // {
 //     if (!player)
@@ -367,6 +372,10 @@ QPixmap Enemy::getIntentIcon(IntentType type) const
     case IntentType::Entangle:
         path = ":/buffdebuff-intent/Pics/Enemies/intents/Debuffing/Intent_DebuffStrong.png";
         break;
+    case IntentType::Split:
+        path = ":/buffdebuff-intent/Pics/Enemies/intents/Miscellaneous/Intent_Unknown.png";
+        break;
+
     case IntentType::Unknown:
     default:
         path = ":/buffdebuff-intent/Pics/Enemies/intents/Miscellaneous/Intent_Unknown.png";

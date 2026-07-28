@@ -476,6 +476,9 @@ void GameManager::onRewardFinished()
         if (m_currentAct >= 2) {
             finishRunAsVictory();
         } else {
+            if (m_player)
+                m_player->heal(m_player->maxHP());
+
             m_currentAct++;
             m_currentFloor = 0;
             m_currentNodeIndex = 0;

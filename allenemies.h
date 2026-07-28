@@ -52,6 +52,7 @@ public:
     void markSplit();
     void loadPic() override;
     virtual QVector<Enemy *> createSplitChildren(bool isMultiplayer) const;
+    int takeDamage(int incomingDamage, bool isAttackDamage = true) override;
 
 protected:
     bool m_hasSplit = false;

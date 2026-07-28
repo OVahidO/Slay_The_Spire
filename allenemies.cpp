@@ -144,10 +144,23 @@ QVector<Enemy *> Slime::createSplitChildren(bool isMultiplayer) const
     return {};
 }
 
+int Slime::takeDamage(int incomingDamage, bool isAttackDamage)
+{
+    int dealt = Enemy::takeDamage(incomingDamage, isAttackDamage);
+
+    if (needsToSplit() && m_currentIntent.type != IntentType::Split) {
+        m_currentIntent = splitIntent();
+        update();
+    }
+
+    return dealt;
+}
+
 void Slime::loadPic()
 {
     this->m_enemyPic = QPixmap(this->m_soucePath).scaled(160,180,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 AcidSlimeS::AcidSlimeS(bool isMultiplayer, QGraphicsItem *parent)
@@ -204,6 +217,11 @@ void AcidSlimeM::calculateNextIntent()
 {
     m_turnCount++;
 
+    if (needsToSplit()) {
+        m_currentIntent = splitIntent();
+        return;
+    }
+
     QVector<QPair<int, EnemyIntent>> options = {{30, attackDebuffIntent(7, 1)},
                                                 {40, attackIntent(10)},
                                                 {30, debuffIntent(1)}};
@@ -256,7 +274,7 @@ void AcidSlimeL::calculateNextIntent()
     m_turnCount++;
 
     if (needsToSplit()) {
-        m_currentIntent = unknownIntent();
+        m_currentIntent = splitIntent();
         return;
     }
 
@@ -609,7 +627,7 @@ void KingSlime::calculateNextIntent()
     m_turnCount++;
 
     if (needsToSplit()) {
-        m_currentIntent = unknownIntent();
+        m_currentIntent = splitIntent();
         return;
     }
 
