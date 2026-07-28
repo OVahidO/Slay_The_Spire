@@ -1,6 +1,21 @@
 <RCC>
     <qresource prefix="/soundeffects">
         <file>Sounds-Musics/soundeffects/enemies/cultist-cacaw-slaythespire.mp3</file>
+        <file>Sounds-Musics/soundeffects/UI/bong_001.ogg</file>
+        <file>Sounds-Musics/soundeffects/UI/card-fan-1.ogg</file>
+        <file>Sounds-Musics/soundeffects/UI/card-place-3.ogg</file>
+        <file>Sounds-Musics/soundeffects/UI/card-shove-1.ogg</file>
+        <file>Sounds-Musics/soundeffects/UI/card-shuffle.ogg</file>
+        <file>Sounds-Musics/soundeffects/UI/card-slide-2.ogg</file>
+        <file>Sounds-Musics/soundeffects/UI/checkbox.ogg</file>
+        <file>Sounds-Musics/soundeffects/UI/chest.mp3</file>
+        <file>Sounds-Musics/soundeffects/UI/clinking-coins-1993.wav</file>
+        <file>Sounds-Musics/soundeffects/UI/draw.wav</file>
+        <file>Sounds-Musics/soundeffects/UI/fire-swoosh-burning-1328.wav</file>
+        <file>Sounds-Musics/soundeffects/UI/mixkit-fast-sword-whoosh-2792.wav</file>
+        <file>Sounds-Musics/soundeffects/UI/mixkit-sword-strikes-armor-2765.wav</file>
+        <file>Sounds-Musics/soundeffects/UI/playcard.wav</file>
+        <file>Sounds-Musics/soundeffects/UI/sword-slice-2-393845.mp3</file>
     </qresource>
     <qresource prefix="/soundtracks">
         <file>Sounds-Musics/soundtracks/Clark Aboud - After Image.mp3</file>
@@ -17,5 +32,16 @@
         <file>Sounds-Musics/soundtracks/Clark Aboud - The Elite Slain.mp3</file>
         <file>Sounds-Musics/soundtracks/Clark Aboud - The Ending.mp3</file>
         <file>Sounds-Musics/soundtracks/Clark Aboud - The Guardian Emerges.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - Bonus (Launch Trailer).mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - Bonus (Trailer).mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - Dramatic Entrance.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - Escape Plan.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - Mind Bloom.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - The Awakened One.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - The Beyond Slain.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - The Credits.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - The Heart.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - The Spire Slain.mp3</file>
+        <file>Sounds-Musics/soundtracks/Clark Aboud - The Unknown.mp3</file>
     </qresource>
 </RCC>
