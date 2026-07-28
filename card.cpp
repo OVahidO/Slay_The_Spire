@@ -1,6 +1,8 @@
 #include "card.h"
-#include "player.h"
+#include "audiomanager.h"
+#include "card.h"
 #include "enemy.h"
+#include "player.h"
 
 Card::Card(CardID ID,
            QString name,
@@ -287,37 +289,37 @@ void Card::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 
 void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    Player* player = nullptr;
-    Enemy* target = nullptr;
+    Player *player = nullptr;
+    Enemy *target = nullptr;
 
     qreal maxArea = 0.0;
 
     QRectF cardRect = this->sceneBoundingRect();
 
-    for(auto& item : collidingItems())
-    {
+    for (auto &item : collidingItems()) {
         QRectF itemReact = item->sceneBoundingRect();
         QRectF intersected = cardRect.intersected(itemReact);
         qreal Area = intersected.width() * intersected.height();
-        if(Area > maxArea)
-        {
-            Player* p = dynamic_cast<Player*>(item);
-            Enemy* e = dynamic_cast<Enemy*>(item);
-            if(p || e)
-            {
+        if (Area > maxArea) {
+            Player *p = dynamic_cast<Player *>(item);
+            Enemy *e = dynamic_cast<Enemy *>(item);
+            if (p || e) {
                 maxArea = Area;
                 player = p;
                 target = e;
             }
         }
     }
-    if(this->m_needTarget && (player || target))
-    {
-        if((this->cardType() == CardType::Attack && target) || (this->cardType() != CardType::Attack && player))
+    if (this->m_needTarget && (player || target)) {
+        if ((this->cardType() == CardType::Attack && target)
+            || (this->cardType() != CardType::Attack && player))
             emit this->targetCardPlayed(this, player, target);
-    }
-    else if(!this->m_needTarget)
+        else
+            AudioManager::playSfx(SfxId::InvalidClick);
+    } else if (!this->m_needTarget)
         emit this->noTargetCardPlayed(this);
+    else
+        AudioManager::playSfx(SfxId::InvalidClick);
 
     this->setHoveredEnemy(nullptr);
 
@@ -356,6 +358,12 @@ void Card::setHoveredEnemy(Enemy *enemy)
 
     m_hoveredEnemy = enemy;
     emit enemyHoverChanged(enemy);
+}
+
+void Card::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    AudioManager::playSfx(SfxId::CardSelect);
+    QGraphicsItem::mousePressEvent(event);
 }
 
 ////////////////////
@@ -424,6 +432,16 @@ bool Card::needTarget() const
 bool Card::isExhaust() const
 {
     return m_isExhaust;
+}
+
+bool Card::isEthereal() const
+{
+    return m_isEthereal;
+}
+
+void Card::setEthereal(bool value)
+{
+    m_isEthereal = value;
 }
 
 bool Card::applyEffect(GamePlay *gameplay)

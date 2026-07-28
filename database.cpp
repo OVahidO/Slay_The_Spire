@@ -191,6 +191,24 @@ bool Database::validateLogin(const QString &username, const QString &password, i
     return true;
 }
 
+bool Database::usernameExists(const QString &username)
+{
+    QSqlQuery query(db);
+    if (!query.prepare("SELECT id FROM Player WHERE username = ?")) {
+        qDebug() << db.lastError().text();
+        return false;
+    }
+
+    query.addBindValue(username);
+
+    if (!query.exec()) {
+        qDebug() << db.lastError().text();
+        return false;
+    }
+
+    return query.next();
+}
+
 bool Database::updatePlayerScore(int playerID, int score)
 {
     QSqlQuery query(db);

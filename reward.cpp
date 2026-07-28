@@ -69,8 +69,9 @@ RewardScreen::RewardScreen(Player *player,
         for (int i = 0; i < relicCount; ++i) {
             Relic *relic = createRandomNormalRelicForElite();
             if (relic) {
+                QString relicName = relic->name();
                 m_gamePlay->grantRelicToPlayer(relic);
-                grantedNames << relic->name();
+                grantedNames << relicName;
             }
         }
 
@@ -287,7 +288,7 @@ void RewardScreen::setupCardChoices()
 {
     m_cardChoiceLabel->setPlainText("Choose a card to add to your deck (or Skip)");
     qreal labelY = (m_combatType == RewardCombatType::Boss) ? 340 : 200;
-    m_cardChoiceLabel->setPos(1280 / 2 - m_cardChoiceLabel->boundingRect().width() / 2, labelY-25);
+    m_cardChoiceLabel->setPos(1280 / 2 - m_cardChoiceLabel->boundingRect().width() / 2, labelY - 25);
 
     const qreal spacing = 220;
     const qreal cardY = labelY + 40;
@@ -360,8 +361,9 @@ void RewardScreen::setupBossRelicChoices()
                 return;
 
             Relic *relic = m_bossRelicFactories[i]();
+            QString relicName = relic->name();
             m_gamePlay->grantRelicToPlayer(relic);
-            m_relicGrantedItem->setPlainText("Relic obtained: " + relic->name());
+            m_relicGrantedItem->setPlainText("Relic obtained: " + relicName);
 
             for (SelectableOptionItem *option : m_bossRelicItems) {
                 m_scene->removeItem(option);

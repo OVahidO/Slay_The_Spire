@@ -600,7 +600,7 @@ bool Whirlwind::applyEffect(GamePlay *gameplay)
     int xCount = player->energy();
     int scaledDamage = player->calculateOutgoingDamage(m_damage);
 
-    for (int i = 0; i < xCount; ++i)
+    for (int i = 0; i < xCount && !gameplay->allEnemiesDead(); ++i)
         gameplay->takeDamageToAllEnemies(scaledDamage);
 
     player->setEnergy(0);

@@ -36,6 +36,7 @@ public:
     static QVector<Player*> selectAllPlayers();
     static Player *loadPlayerById(int playerID);
     static bool validateLogin(const QString &username, const QString &password, int &outPlayerID);
+    static bool usernameExists(const QString &username);
     static bool updatePlayerScore(int playerID, int score);
     static QVector<QPair<QString, int>> topScores(int limit = 10);
 

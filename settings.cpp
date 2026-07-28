@@ -219,3 +219,7 @@ void SettingsDialog::on_pushButton_clicked()
     }
 }
 
+void SettingsDialog::onLogoutClicked()
+{
+    emit logoutRequested();
+}

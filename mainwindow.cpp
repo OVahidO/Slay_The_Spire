@@ -1,8 +1,10 @@
 #include "mainwindow.h"
 #include "audiomanager.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include <QApplication>
+#include <QCheckBox>
 #include <QPushButton>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -45,6 +47,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     } else if (event->type() == QEvent::Enter) {
         if (qobject_cast<QPushButton *>(obj))
             AudioManager::playSfx(SfxId::UiHover);
+        else if (qobject_cast<QCheckBox *>(obj))
+            AudioManager::playSfx(SfxId::CheckboxHover);
     }
 
     return QMainWindow::eventFilter(obj, event);

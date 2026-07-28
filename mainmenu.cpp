@@ -24,19 +24,15 @@ MainMenu::MainMenu(QWidget *parent)
     //     btn->setMaximumWidth(240);
     //     btn->setStyleSheet("text-align: left;");
     // }
+
     ui->MenuKeys->setCurrentIndex(0);
     m_loginSignup = new Login_Signup(this);
-    connect(m_loginSignup, &Login_Signup::back, this, [this](){this->m_loginSignup->accept();});
-    // connect(m_loginSignup, &Login_Signup::playerIsReady, this, [this](Player *player) {
-    //     ui->MenuKeys->setCurrentIndex(1);
-    //     setUsername(player->name());
-    //     this->playerIsReady(player);
-    // });
-
-    if (Player *autoPlayer = m_loginSignup->attemptAutoLogin()) {
+    connect(m_loginSignup, &Login_Signup::back, this, [this]() { this->m_loginSignup->accept(); });
+    connect(m_loginSignup, &Login_Signup::playerIsReady, this, [this](Player *player) {
         ui->MenuKeys->setCurrentIndex(1);
-        emit playerIsReady(autoPlayer);
-    }
+        setUsername(player->name());
+        emit playerIsReady(player);
+    });
 
     m_usernameLabel = new QLabel(this);
     m_usernameLabel->setStyleSheet(
@@ -129,7 +125,6 @@ void MainMenu::tryAutoLogin()
         emit playerIsReady(autoPlayer);
     }
 }
-
 void MainMenu::on_SignupButton_clicked()
 {
     m_loginSignup->signupButton_clicked();

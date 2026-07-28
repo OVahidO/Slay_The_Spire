@@ -1,5 +1,7 @@
 #include "event.h"
 #include "allevents.h"
+#include "audiomanager.h"
+#include "event.h"
 
 #include <QCursor>
 #include <QFont>
@@ -27,6 +29,8 @@ void EventGraphicsView::mousePressEvent(QMouseEvent *event)
     QGraphicsItem *item = itemAt(event->pos());
     if (item)
         emit itemClicked(item);
+    else
+        AudioManager::playSfx(SfxId::EmptySpaceClick);
 
     QGraphicsView::mousePressEvent(event);
 }
