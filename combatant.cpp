@@ -461,5 +461,8 @@ BuffDebuffType BuffItem::Btype() const
 
 void Combatant::repositionHealthBar()
 {
-    m_healthBar->setPos(0, this->boundingRect().height() + 10);
+    QRectF selfRect = this->boundingRect();
+    qreal barX = (selfRect.width() - m_healthBar->width()) / 2.0;
+    qreal barY = selfRect.height() + 10;
+    m_healthBar->setPos(barX, barY);
 }

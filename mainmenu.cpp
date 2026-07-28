@@ -188,4 +188,7 @@ void MainMenu::resetToLoginScreen()
 
     if (m_usernameLabel)
         m_usernameLabel->hide();
+
+    if (m_loginSignup)
+        m_loginSignup->clearLoginFields();
 }

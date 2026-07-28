@@ -59,7 +59,7 @@ private slots:
     void on_horizontalSlider_valueChanged(int value);
     void on_muteCheckBox_toggled(bool checked);
     void on_saveButton_clicked();
-    void onLogoutClicked();
+    // void onLogoutClicked();
     void on_pushButton_clicked();
 
 private:
@@ -68,7 +68,7 @@ private:
 
     Player *m_player;
     SettingsMode m_mode;
-    QPushButton *m_logoutBtn;
+    // QPushButton *m_logoutBtn;
 
     // Game flow (InGame only)
     QPushButton *m_returnBtn;
