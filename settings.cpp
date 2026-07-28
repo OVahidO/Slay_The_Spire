@@ -104,8 +104,8 @@ void SettingsDialog::setupUi()
         m_closeBtn->setFixedWidth(100);
         connect(m_closeBtn, &QPushButton::clicked, this, &SettingsDialog::onCloseClicked);
 
-        m_logoutBtn = new QPushButton("Logout", this);
-        connect(m_logoutBtn, &QPushButton::clicked, this, &SettingsDialog::onLogoutClicked);
+        // m_logoutBtn = new QPushButton("Logout", this);
+        // connect(m_logoutBtn, &QPushButton::clicked, this, &SettingsDialog::onLogoutClicked);
 
         m_returnBtn = new QPushButton("Return", this);
         m_returnBtn->setStyleSheet("border: 2px solid #4d8b8a;");

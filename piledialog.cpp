@@ -18,7 +18,7 @@ PileDialog::PileDialog(const std::vector<Card*>& pile, QWidget *parent)
     QGraphicsView* view = ui->graphicsView;
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     QGraphicsScene* scene = new QGraphicsScene(this);
-    scene->setSceneRect(0, 0, width(), height());
+    //scene->setSceneRect(0, 0, width(), height());
 
     QLinearGradient bgGradient(0, 0, 0, 500);
     bgGradient.setColorAt(0.0, QColor(35, 30, 45));

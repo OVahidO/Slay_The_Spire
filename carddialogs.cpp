@@ -27,7 +27,7 @@ CardSelectionDialog::CardSelectionDialog(GamePlay *gamePlay,
     layout->setContentsMargins(0, 0, 0, 0);
 
     m_scene = new QGraphicsScene(this);
-    m_scene->setSceneRect(0, 0, 900, 500);
+    //m_scene->setSceneRect(0, 0, 900, 500);
 
     QLinearGradient bgGradient(0, 0, 0, 500);
     bgGradient.setColorAt(0.0, QColor(35, 30, 45));

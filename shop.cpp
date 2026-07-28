@@ -47,7 +47,7 @@ Shop::Shop(Player *player, GamePlay *gamePlay, QWidget *parent)
     setupScene();
     generateStock();
     layoutStockOnScene();
-    updateGoldDisplay();
+    //updateGoldDisplay();
     updateAffordability();
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -288,10 +288,10 @@ void Shop::layoutStockOnScene()
     }
 }
 
-void Shop::updateGoldDisplay()
-{
-    m_goldItem->setPlainText(QString("Gold: %1").arg(m_player->coin()));
-}
+// void Shop::updateGoldDisplay()
+// {
+//     m_goldItem->setPlainText(QString("Gold: %1").arg(m_player->coin()));
+// }
 
 void Shop::updateAffordability()
 {
@@ -358,7 +358,7 @@ void Shop::buyCard(int index)
 
     m_gamePlay->addCardToDeck(entry.card);
 
-    updateGoldDisplay();
+    //updateGoldDisplay();
     updateAffordability();
 }
 
@@ -384,7 +384,7 @@ void Shop::buyPotion(int index)
     entry.icon = nullptr;
     entry.priceTag = nullptr;
 
-    updateGoldDisplay();
+    //updateGoldDisplay();
     updateAffordability();
 }
 
@@ -404,7 +404,7 @@ void Shop::onRemoveCardClicked()
         emit m_gamePlay->deckChanged();
         m_removeCardBtn->setText(QString("Card Removal - %1g").arg(currentCardRemovalCost()));
 
-        updateGoldDisplay();
+        //updateGoldDisplay();
         updateAffordability();
     }
 }
@@ -444,7 +444,7 @@ ShopRemoveCardDialog::ShopRemoveCardDialog(GamePlay *gamePlay, QWidget *parent)
     layout->setContentsMargins(0, 0, 0, 0);
 
     m_scene = new QGraphicsScene(this);
-    m_scene->setSceneRect(0, 0, 900, 500);
+    //m_scene->setSceneRect(0, 0, 900, 500);
 
     QLinearGradient bgGradient(0, 0, 0, 500);
     bgGradient.setColorAt(0.0, QColor(35, 30, 45));

@@ -440,6 +440,8 @@ void GamePlay::startCombat()
 
     setupEnemies();
 
+    emit combatStarted();
+
     playerTurn();
 }
 
@@ -504,6 +506,8 @@ void GamePlay::endCombat()
     m_player->HandsCards().clear();
 
     clearEnemies();
+
+    emit combatEnded();
 }
 
 std::vector<Card *> &GamePlay::deck()
@@ -642,6 +646,8 @@ void GamePlay::enemiesTurn()
                 enemy->deleteLater();
                 --i;
             }
+
+            this->setupEnemies();
         }
     } else {
         for (Enemy *enemy : m_enemys)
@@ -977,9 +983,6 @@ void GamePlay::refreshGamePlay()//struct room info//
 {
     setupBackground(":/Combat/Pics/Background/Combat/basement.png");//room.background//
     //m_enemys = room.enmies;
-    m_enemys.push_back(new AcidSlimeS);
-    m_enemys.push_back(new TheChamp);
-    m_enemys.push_back(new Mugger);
     setupEnemies();
 }
 

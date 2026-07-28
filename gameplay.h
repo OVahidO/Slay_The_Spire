@@ -135,6 +135,9 @@ signals:
 
     void teammateStatsChanged(int currentHp, int maxHp, int block);
 
+    void combatStarted();
+    void combatEnded();
+
 public slots:
     void playerTurn();
     void enemiesTurn();

@@ -20,7 +20,8 @@ Relic::Relic(QString name, QString description, relicType type, QWidget *parent)
 
     ui->relicIcon->setToolTip(m_description);
 
-    ui->counterLabel->hide();
+    m_counterLabel = new QLabel("", ui->relicIcon);
+    m_counterLabel->hide();
 }
 
 Relic::~Relic()
@@ -47,10 +48,10 @@ void Relic::setCounter(int value)
 {
     m_counter = value;
     if (m_counter >= 0) {
-        ui->counterLabel->setText(QString::number(m_counter));
-        ui->counterLabel->show();
+        m_counterLabel->setText(QString::number(m_counter));
+        m_counterLabel->show();
     } else {
-        ui->counterLabel->hide();
+        m_counterLabel->hide();
     }
 }
 
