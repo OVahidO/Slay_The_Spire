@@ -94,12 +94,12 @@ void Shop::setupScene()
     m_view = new ShopGraphicsView(m_scene, this);
     connect(m_view, &ShopGraphicsView::itemClicked, this, &Shop::onSceneItemClicked);
 
-    // m_goldItem = new QGraphicsTextItem();
-    // QFont goldFont("Arial", 16, QFont::Bold);
-    // m_goldItem->setFont(goldFont);
-    // m_goldItem->setDefaultTextColor(QColor(250, 210, 60));
-    // m_goldItem->setPos(20, 15);
-    // m_scene->addItem(m_goldItem);
+    m_goldItem = new QGraphicsTextItem();
+    QFont goldFont("Kreon", 16, QFont::Bold);
+    m_goldItem->setFont(goldFont);
+    m_goldItem->setDefaultTextColor(QColor(250, 210, 60));
+    m_goldItem->setPos(20, 15);
+    m_scene->addItem(m_goldItem);
 }
 
 void Shop::generateStock()
@@ -261,7 +261,7 @@ void Shop::layoutStockOnScene()
 
         entry.priceTag = new QGraphicsTextItem(label);
         entry.priceTag->setDefaultTextColor(entry.isOnSale ? QColor(80, 220, 100) : Qt::white);
-        QFont priceFont("Arial", 11, QFont::Bold);
+        QFont priceFont("Kreon", 11, QFont::Bold);
         entry.priceTag->setFont(priceFont);
         entry.priceTag->setPos(cardStartX + i * cardSpacingX + 10, cardY + 245);
         m_scene->addItem(entry.priceTag);
@@ -474,7 +474,7 @@ ShopRemoveCardDialog::ShopRemoveCardDialog(GamePlay *gamePlay, QWidget *parent)
     layout->addWidget(m_view);
 
     QGraphicsTextItem *title = new QGraphicsTextItem("Select a Card to Remove");
-    QFont titleFont("Arial", 16, QFont::Bold);
+    QFont titleFont("Kreon", 16, QFont::Bold);
     title->setFont(titleFont);
     title->setDefaultTextColor(Qt::white);
     title->setPos(20, 10);

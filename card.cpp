@@ -136,7 +136,7 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->drawPixmap(nameIconRect, m_typeIcon, m_typeIcon.rect());
 
     QColor nameColor = m_isUpgraded ? QColor(90, 230, 110) : Qt::white;
-    QFont nameFont("Kreon", 15, QFont::Bold);
+    QFont nameFont("Kreon", 11, QFont::Bold);
     painter->setFont(nameFont);
     painter->setPen(nameColor);
     QRectF nameTextRect = textRect.adjusted(24, 0, 0, 0);
@@ -144,10 +144,22 @@ void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     QRectF descRect = textRect.adjusted(0, 26, 0, 0);
     QTextDocument doc;
-    doc.setDefaultFont(QFont("Kreon", 8));
+    doc.setDocumentMargin(0);
     doc.setTextWidth(descRect.width());
+
     QString dynamicText = getDynamicDescription(m_ownerPlayer, m_hoveredEnemy);
-    doc.setHtml(QString("<div style='color:#dcdcdc;'>%1</div>").arg(highlightKeywords(dynamicText)));
+    QString descHtml = QString("<div style='color:#dcdcdc;'>%1</div>")
+                           .arg(highlightKeywords(dynamicText));
+
+    qreal descFontSize = 7.0;
+    doc.setDefaultFont(QFont("Kreon", descFontSize));
+    doc.setHtml(descHtml);
+
+    if (doc.size().height() > descRect.height()) {
+        descFontSize = 6.0;
+        doc.setDefaultFont(QFont("Kreon", descFontSize));
+    }
+
     painter->save();
     painter->translate(descRect.topLeft());
     doc.drawContents(painter, QRectF(0, 0, descRect.width(), descRect.height()));

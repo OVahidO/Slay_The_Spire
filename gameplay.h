@@ -131,6 +131,8 @@ signals:
     void remoteCardEnemyEffectDeferred(int cardID, bool isUpgraded, int targetEntityId);
 
     void enemySpawned(Enemy *enemy);
+    void enemyDespawned(int entityId);
+
     void teammateStatsChanged(int currentHp, int maxHp, int block);
 
     void combatStarted();

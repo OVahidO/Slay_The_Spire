@@ -170,6 +170,7 @@ private:
     void resetRunState();
     void resetPlayerAndGamePlayForNewRun();
     void finishRunAsVictory();
+    void resetForLogout();
 
     // --- Node handling ---
     void startBattle(MapButtonType type);

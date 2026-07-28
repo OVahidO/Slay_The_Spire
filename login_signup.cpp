@@ -30,7 +30,6 @@ Login_Signup::Login_Signup(QWidget *parent)
 
 Login_Signup::~Login_Signup()
 {
-    Database::close();
     delete ui;
 }
 

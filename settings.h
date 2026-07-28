@@ -32,6 +32,7 @@ public:
 
     void setVolume(int volume);
     void setMuted(bool muted);
+    void setPlayer(Player *player);
 
 signals:
     // Audio

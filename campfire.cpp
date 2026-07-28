@@ -85,13 +85,13 @@ void CampfireOptionItem::paint(QPainter *painter,
 
     QColor textColor = m_enabled ? QColor(229, 212, 179) : QColor(120, 120, 120);
 
-    QFont titleFont("Arial", 15, QFont::Bold);
+    QFont titleFont("Kreon", 15, QFont::Bold);
     painter->setFont(titleFont);
     painter->setPen(textColor);
     QRectF titleRect(10, 115, rect.width() - 20, 40);
     painter->drawText(titleRect, Qt::AlignCenter | Qt::TextWordWrap, m_title);
 
-    QFont subFont("Arial", 10);
+    QFont subFont("Kreon", 10);
     painter->setFont(subFont);
     painter->setPen(m_enabled ? QColor(190, 170, 140) : QColor(100, 100, 100));
     QRectF subRect(10, 160, rect.width() - 20, 90);
@@ -176,7 +176,7 @@ void Campfire::setupScene()
     m_view = new CampfireGraphicsView(m_scene, this);
 
     m_titleItem = new QGraphicsTextItem("Campfire - Choose one option");
-    QFont titleFont("Arial", 20, QFont::Bold);
+    QFont titleFont("Kreon", 20, QFont::Bold);
     m_titleItem->setFont(titleFont);
     m_titleItem->setDefaultTextColor(QColor(250, 180, 90));
     m_titleItem->setPos(1280 / 2 - 220, 60);
@@ -375,7 +375,7 @@ UpgradeDialog::UpgradeDialog(GamePlay *gamePlay, QWidget *parent)
     layout->addWidget(m_view);
 
     QGraphicsTextItem *title = new QGraphicsTextItem("Choose a card to upgrade");
-    QFont titleFont("Arial", 16, QFont::Bold);
+    QFont titleFont("Kreon", 16, QFont::Bold);
     title->setFont(titleFont);
     title->setDefaultTextColor(Qt::white);
     title->setPos(20, 10);

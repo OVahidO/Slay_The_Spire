@@ -72,12 +72,22 @@ void SettingsDialog::setMuted(bool muted)
     ui->muteCheckBox->blockSignals(false);
 }
 
+void SettingsDialog::setPlayer(Player *player)
+{
+    m_player = player;
+
+    if (m_player)
+        ui->usernameInput->setText(m_player->name());
+    else
+        ui->usernameInput->clear();
+}
+
 void SettingsDialog::setupUi()
 {
         QVBoxLayout *mainLayout = ui->mainLayout;
 
         QLabel *title = ui->title;
-        QFont titleFont("Arial", 22, QFont::Bold);
+        QFont titleFont("Kreon", 22, QFont::Bold);
         title->setFont(titleFont);
 
         // ---------------- Account settings ----------------
@@ -93,6 +103,9 @@ void SettingsDialog::setupUi()
         m_closeBtn->setStyleSheet("border: 2px solid #4d8b8a;");
         m_closeBtn->setFixedWidth(100);
         connect(m_closeBtn, &QPushButton::clicked, this, &SettingsDialog::onCloseClicked);
+
+        // m_logoutBtn = new QPushButton("Logout", this);
+        // connect(m_logoutBtn, &QPushButton::clicked, this, &SettingsDialog::onLogoutClicked);
 
         m_returnBtn = new QPushButton("Return", this);
         m_returnBtn->setStyleSheet("border: 2px solid #4d8b8a;");
@@ -110,6 +123,7 @@ void SettingsDialog::setupUi()
         connect(m_abandonRunBtn, &QPushButton::clicked, this, &SettingsDialog::onAbandonRunClicked);
 
         bottomLayout->addWidget(m_closeBtn);
+        bottomLayout->addWidget(m_logoutBtn);
         bottomLayout->addStretch();
         bottomLayout->addWidget(m_returnBtn);
         bottomLayout->addWidget(m_saveAndQuitBtn);
@@ -127,6 +141,7 @@ void SettingsDialog::applyModeVisibility()
     m_abandonRunBtn->setVisible(inGame);
 
     m_closeBtn->setVisible(!inGame);
+    m_logoutBtn->setVisible(!inGame);
 }
 
 void SettingsDialog::onReturnClicked()
