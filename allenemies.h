@@ -243,6 +243,10 @@ public:
     explicit TheChamp(bool isMultiplayer = false, QGraphicsItem *parent = nullptr);
     void calculateNextIntent() override;
     void loadPic() override;
+
+private:
+    bool m_defensiveStanceQueued = false;
+    void onIntentExecuted(GamePlay *game) override;
 };
 
 #endif // ALLENEMIES_H
