@@ -2,6 +2,7 @@
 #define RELIC_H
 
 #include <QWidget>
+#include <QLabel>
 
 class GamePlay;
 class Player;
@@ -44,6 +45,7 @@ protected:
     QString m_soucePath;
     QPixmap m_icon;
     relicType m_type;
+    QLabel *m_counterLabel = nullptr;
     int m_counter = -1;
 
     void loadIcon();

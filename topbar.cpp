@@ -8,14 +8,17 @@
 
 Topbar::Topbar(GamePlay *gameplay, QWidget *parent)
     : QWidget(parent)
+    , m_gameplay(gameplay)
+    , m_player(gameplay->player())
     , ui(new Ui::Topbar)
 {
     ui->setupUi(this);
-    m_player = gameplay->player();
-    m_gameplay = gameplay;
+
 //
-    m_isInCombat = true;
+    connect(m_gameplay, &GamePlay::combatStarted, this, [this](){this->m_isInCombat = true;});
+    connect(m_gameplay, &GamePlay::combatEnded, this, [this](){this->m_isInCombat = false;});
 //
+
     for(int i=0; i<m_emptyBottles.size(); i++)
     {
         m_emptyBottles[i] = (new emptyBottle(this));

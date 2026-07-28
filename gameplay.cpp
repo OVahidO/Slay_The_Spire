@@ -428,6 +428,8 @@ void GamePlay::startCombat()
 
     setupEnemies();
 
+    emit combatStarted();
+
     playerTurn();
 }
 
@@ -492,6 +494,8 @@ void GamePlay::endCombat()
     m_player->HandsCards().clear();
 
     clearEnemies();
+
+    emit combatEnded();
 }
 
 std::vector<Card *> &GamePlay::deck()

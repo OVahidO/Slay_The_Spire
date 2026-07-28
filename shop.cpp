@@ -45,7 +45,7 @@ Shop::Shop(Player *player, GamePlay *gamePlay, QWidget *parent)
     setupScene();
     generateStock();
     layoutStockOnScene();
-    updateGoldDisplay();
+    //updateGoldDisplay();
     updateAffordability();
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -94,12 +94,12 @@ void Shop::setupScene()
     m_view = new ShopGraphicsView(m_scene, this);
     connect(m_view, &ShopGraphicsView::itemClicked, this, &Shop::onSceneItemClicked);
 
-    m_goldItem = new QGraphicsTextItem();
-    QFont goldFont("Arial", 16, QFont::Bold);
-    m_goldItem->setFont(goldFont);
-    m_goldItem->setDefaultTextColor(QColor(250, 210, 60));
-    m_goldItem->setPos(20, 15);
-    m_scene->addItem(m_goldItem);
+    // m_goldItem = new QGraphicsTextItem();
+    // QFont goldFont("Arial", 16, QFont::Bold);
+    // m_goldItem->setFont(goldFont);
+    // m_goldItem->setDefaultTextColor(QColor(250, 210, 60));
+    // m_goldItem->setPos(20, 15);
+    // m_scene->addItem(m_goldItem);
 }
 
 void Shop::generateStock()
@@ -286,10 +286,10 @@ void Shop::layoutStockOnScene()
     }
 }
 
-void Shop::updateGoldDisplay()
-{
-    m_goldItem->setPlainText(QString("Gold: %1").arg(m_player->coin()));
-}
+// void Shop::updateGoldDisplay()
+// {
+//     m_goldItem->setPlainText(QString("Gold: %1").arg(m_player->coin()));
+// }
 
 void Shop::updateAffordability()
 {
@@ -356,7 +356,7 @@ void Shop::buyCard(int index)
 
     m_gamePlay->addCardToDeck(entry.card);
 
-    updateGoldDisplay();
+    //updateGoldDisplay();
     updateAffordability();
 }
 
@@ -382,7 +382,7 @@ void Shop::buyPotion(int index)
     entry.icon = nullptr;
     entry.priceTag = nullptr;
 
-    updateGoldDisplay();
+    //updateGoldDisplay();
     updateAffordability();
 }
 
@@ -402,7 +402,7 @@ void Shop::onRemoveCardClicked()
         emit m_gamePlay->deckChanged();
         m_removeCardBtn->setText(QString("Card Removal - %1g").arg(currentCardRemovalCost()));
 
-        updateGoldDisplay();
+        //updateGoldDisplay();
         updateAffordability();
     }
 }
@@ -440,7 +440,7 @@ ShopRemoveCardDialog::ShopRemoveCardDialog(GamePlay *gamePlay, QWidget *parent)
     layout->setContentsMargins(0, 0, 0, 0);
 
     m_scene = new QGraphicsScene(this);
-    m_scene->setSceneRect(0, 0, 900, 500);
+    //m_scene->setSceneRect(0, 0, 900, 500);
 
     QLinearGradient bgGradient(0, 0, 0, 500);
     bgGradient.setColorAt(0.0, QColor(35, 30, 45));

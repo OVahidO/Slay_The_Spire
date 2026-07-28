@@ -361,7 +361,7 @@ UpgradeDialog::UpgradeDialog(GamePlay *gamePlay, QWidget *parent)
     layout->setContentsMargins(0, 0, 0, 0);
 
     m_scene = new QGraphicsScene(this);
-    m_scene->setSceneRect(0, 0, 900, 500);
+    //m_scene->setSceneRect(0, 0, 900, 500);
 
     QLinearGradient bgGradient(0, 0, 0, 500);
     bgGradient.setColorAt(0.0, QColor(35, 30, 45));
@@ -369,6 +369,7 @@ UpgradeDialog::UpgradeDialog(GamePlay *gamePlay, QWidget *parent)
     m_scene->setBackgroundBrush(bgGradient);
 
     m_view = new CampfireGraphicsView(m_scene, this);
+    m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     connect(m_view, &CampfireGraphicsView::itemClicked, this, &UpgradeDialog::onSceneItemClicked);
 
     layout->addWidget(m_view);
