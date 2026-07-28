@@ -8,6 +8,14 @@ class Potion;
 class Player;
 class Relic;
 
+struct ScoreDetails
+{
+    double damage;
+    int nElit;
+    int nBoss;
+    int floor;
+};
+
 class Player : public Combatant
 {
     Q_OBJECT
@@ -27,6 +35,8 @@ public:
     int maxEnergy() const;
     int handSize() const;
     int score() const;
+
+    ScoreDetails& scoreDetails();
 
     QVector<Card *> &Deck();
     QVector<Card *> &HandsCards();
@@ -83,6 +93,8 @@ private:
     int m_maxEnergy = 3;
     int m_handSize = 5;
     int m_score = 0;
+
+    ScoreDetails m_scoreDetails;
 
     QVector<Card *> m_Deck;
     QVector<Card *> m_HandsCards;

@@ -7,6 +7,10 @@ Player::Player(QString name, int maxHP, QGraphicsItem *parent)
 {
     m_resourcePath = ":/Characters/Pics/Characters/Ironclad.png";
     load();
+    m_scoreDetails.damage = 0;
+    m_scoreDetails.floor = 0;
+    m_scoreDetails.nBoss = 0;
+    m_scoreDetails.nElit = 0;
 }
 
 QRectF Player::boundingRect() const
@@ -75,6 +79,11 @@ int Player::handSize() const
 int Player::score() const
 {
     return m_score;
+}
+
+ScoreDetails& Player::scoreDetails()
+{
+    return m_scoreDetails;
 }
 
 QVector<Card *> &Player::Deck()

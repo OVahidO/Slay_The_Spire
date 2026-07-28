@@ -47,6 +47,7 @@ void GameManager::start()
     Database::creatRunDeckTable();
     Database::creatRunRelicsTable();
     Database::creatRunPotionsTable();
+    Database::creatScoreDetailsTable();
 
     showMainMenu();
 }
@@ -272,6 +273,8 @@ void GameManager::resumeRun()
             m_player->addPotion(potion);
     }
 
+    m_player->scoreDetails() = Database::loadScoreDetails(m_player->id());
+
     m_usedAct1EncounterTypes.clear();
     m_usedAct2EncounterTypes.clear();
 
@@ -420,12 +423,12 @@ void GameManager::onCombatWon()
     if (m_networkManager)
         m_networkManager->clearEnemySync();
 
-    if (m_player) {
-        m_player->setScore(m_currentAct * 500 + m_currentFloor * 50 + m_player->score());
+    // if (m_player) {
+    //     m_player->setScore(m_currentAct * 500 + m_currentFloor * 50 + m_player->score());
 
-        Database::updatePlayerScore(m_player->id(), m_player->score());
-        Database::deleteRunState(m_player->id());
-    }
+    //     Database::updatePlayerScore(m_player->id(), m_player->score());
+    //     Database::deleteRunState(m_player->id());
+    // }
 
     m_reward = new RewardScreen(m_player, m_gamePlay, m_pendingRewardType);
     connect(m_reward, &RewardScreen::rewardFinished, this, &GameManager::onRewardFinished);
@@ -716,6 +719,9 @@ void GameManager::autoSaveProgress()
         if (p)
             potionTags << potionTypeTag(p);
     Database::saveRunPotions(m_player->id(), potionTags);
+
+    m_player->scoreDetails().floor = m_currentFloor;
+    Database::saveScoreDetails(m_player->id(), m_player->scoreDetails());
 }
 
 // ==================== Factories ====================

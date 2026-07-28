@@ -1102,7 +1102,10 @@ void GamePlay::setupEnemies()
     {
         enemy->setPos(this->width()-250-(i), this->height()-300-(j));
         connect(enemy, &Enemy::attacked, this, [this](Enemy* enemy){this->playAttackJolt(enemy, false);});
-        connect(enemy, &Enemy::takedDamage, this, [this](Combatant* c, int damage){this->showFloatingDamage(c, damage);});
+        connect(enemy, &Enemy::takedDamage, this, [this](Combatant* c, int damage){
+            this->showFloatingDamage(c, damage);
+            this->m_player->scoreDetails().damage+=damage;
+        });
         m_scene->addItem(enemy);
         i+=150; j+=25;
     }
