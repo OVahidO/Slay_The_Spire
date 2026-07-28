@@ -15,7 +15,7 @@ AudioManager::AudioManager()
 
     m_musicUrls = {
         {MusicTrack::MainMenu,
-         QUrl(":/soundtracks/Sounds-Musics/soundtracks/Clark Aboud - Slay the Spire.mp3")},
+         QUrl("qrc:/soundtracks/Sounds-Musics/soundtracks/Clark Aboud - Slay the Spire.mp3")},
         {MusicTrack::MapAct1,
          QUrl("qrc:/soundtracks/Sounds-Musics/soundtracks/Clark Aboud - Exordium.mp3")},
         {MusicTrack::MapAct2,

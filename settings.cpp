@@ -104,9 +104,6 @@ void SettingsDialog::setupUi()
         m_closeBtn->setFixedWidth(100);
         connect(m_closeBtn, &QPushButton::clicked, this, &SettingsDialog::onCloseClicked);
 
-        // m_logoutBtn = new QPushButton("Logout", this);
-        // connect(m_logoutBtn, &QPushButton::clicked, this, &SettingsDialog::onLogoutClicked);
-
         m_returnBtn = new QPushButton("Return", this);
         m_returnBtn->setStyleSheet("border: 2px solid #4d8b8a;");
         m_returnBtn->setFixedWidth(100);
@@ -123,7 +120,6 @@ void SettingsDialog::setupUi()
         connect(m_abandonRunBtn, &QPushButton::clicked, this, &SettingsDialog::onAbandonRunClicked);
 
         bottomLayout->addWidget(m_closeBtn);
-        bottomLayout->addWidget(m_logoutBtn);
         bottomLayout->addStretch();
         bottomLayout->addWidget(m_returnBtn);
         bottomLayout->addWidget(m_saveAndQuitBtn);
@@ -141,7 +137,6 @@ void SettingsDialog::applyModeVisibility()
     m_abandonRunBtn->setVisible(inGame);
 
     m_closeBtn->setVisible(!inGame);
-    m_logoutBtn->setVisible(!inGame);
 }
 
 void SettingsDialog::onReturnClicked()
@@ -217,9 +212,4 @@ void SettingsDialog::on_pushButton_clicked()
         this->accept();
         emit logoutRequested();
     }
-}
-
-void SettingsDialog::onLogoutClicked()
-{
-    emit logoutRequested();
 }

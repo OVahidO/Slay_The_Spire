@@ -56,7 +56,7 @@ private slots:
 
     void on_Settingbutton_clicked();
 
-    void on_MultiplayerButton_clicked();
+    void on_MultiButton_clicked();
 
 private:
     Ui::MainMenu *ui;

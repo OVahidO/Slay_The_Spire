@@ -23,6 +23,7 @@ public:
     ~Login_Signup();
 
     Player *attemptAutoLogin();
+    void clearLoginFields();
 
 public slots:
     void signupButton_clicked();

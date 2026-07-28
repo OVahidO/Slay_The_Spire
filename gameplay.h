@@ -37,7 +37,10 @@ public:
     void setTurn(int turn);
     void addTurn(int n = 1);
     Player *&player();
+
     QWidget* overlay();
+    Player *actingCaster() const;
+    void setActingCaster(Player *player);
 
     // --- Enemies management ---
     std::vector<Enemy *> &enemies();
@@ -166,6 +169,7 @@ private slots:
 private:
     Ui::GamePlay *ui;
     Player *m_player;
+    Player *m_actingCaster = nullptr;
     std::vector<Enemy *> m_enemys;
     int m_turn;
     QParallelAnimationGroup *m_animGroup = new QParallelAnimationGroup(this);

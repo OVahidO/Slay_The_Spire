@@ -35,6 +35,16 @@ Login_Signup::~Login_Signup()
     delete ui;
 }
 
+void Login_Signup::clearLoginFields()
+{
+    ui->LoginUsernameInput->clear();
+    ui->LoginPasswordInput->clear();
+    ui->LoginErrorLabel->clear();
+
+    if (m_rememberMeCheckBox)
+        m_rememberMeCheckBox->setChecked(false);
+}
+
 void Login_Signup::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);

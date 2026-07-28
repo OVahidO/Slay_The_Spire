@@ -188,15 +188,19 @@ void MainMenu::on_Settingbutton_clicked()
     emit settingsClicked();
 }
 
-void MainMenu::on_MultiplayerButton_clicked()
-{
-    emit multiplayerClicked();
-}
-
 void MainMenu::resetToLoginScreen()
 {
     ui->MenuKeys->setCurrentIndex(0);
 
     if (m_usernameLabel)
         m_usernameLabel->hide();
+
+    if (m_loginSignup)
+        m_loginSignup->clearLoginFields();
 }
+
+void MainMenu::on_MultiButton_clicked()
+{
+   emit multiplayerClicked();
+}
+
