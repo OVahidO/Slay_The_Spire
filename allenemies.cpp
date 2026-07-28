@@ -488,8 +488,8 @@ void GremlinKnob::calculateNextIntent()
     m_turnCount++;
 
     if (m_turnCount == 1) {
-        m_currentIntent = buffIntent(99);
-        m_enrageStacks = 99;
+        m_currentIntent = buffIntent(0);
+        m_enrageStacks = 0;
         return;
     }
 
