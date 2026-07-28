@@ -66,6 +66,11 @@ void Topbar::updateDeckSizeLabel()
     ui->deckButton->setText(QString::number(m_gameplay->deck().size()));
 }
 
+void Topbar::updateLevelLabel(int level)
+{
+    ui->levelLabel->setText(QString::number(level+1));
+}
+
 void Topbar::potionClicked(Potion* potion)
 {
     if(m_isInCombat)

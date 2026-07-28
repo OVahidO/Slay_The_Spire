@@ -23,6 +23,7 @@ public:
 public slots:
     void updateHpLabel();
     void updateCoinLabel();
+    void updateLevelLabel(int level);
     void updateDeckSizeLabel();
     void potionClicked(Potion* potion);
     void newPotionHandler(Potion* potion);

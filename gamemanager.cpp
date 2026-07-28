@@ -212,6 +212,7 @@ void GameManager::startNewRun()
     m_currentNodeIndex = 0;
     m_usedAct1EncounterTypes.clear();
     m_usedAct2EncounterTypes.clear();
+    emit floorChanged(m_currentFloor);
 
     if (m_player) {
         m_player->setCurrentHPDirect(m_player->maxHP());
@@ -267,6 +268,7 @@ void GameManager::resumeRun()
     m_player->setMaxEnergy(maxEnergy);
     m_player->setEnergy(energy);
     m_mapSeed = seed;
+    emit floorChanged(m_currentFloor);
 
     for (Card *c : m_gamePlay->deck())
         delete c;
@@ -360,6 +362,7 @@ void GameManager::setupTopbarAndRelicBar()
     m_topbar = new Topbar(m_gamePlay);
     m_vLayout->insertWidget(0, m_topbar);
     connect(m_topbar, &Topbar::potionUsed, m_gamePlay, &GamePlay::usedPotionHandler);
+    connect(this, &GameManager::floorChanged, m_topbar, &Topbar::updateLevelLabel);
     connect(m_topbar, &Topbar::settingButton_clicked, this, [this]() {
         this->showSettingsPage(SettingsMode::InGame);
     });
@@ -383,6 +386,8 @@ void GameManager::onMapNodeSelected(MapButton *button)
 
     m_currentFloor = button->levelIndex();
     m_currentNodeIndex = button->levelPosIndex();
+
+    emit floorChanged(m_currentFloor);
 
     if (m_isMultiplayer && !m_suppressNetworkNodeBroadcast && m_networkManager)
         m_networkManager->sendNodeSelection(m_currentFloor,
@@ -531,6 +536,8 @@ void GameManager::onRewardFinished()
             m_currentNodeIndex = 0;
             m_usedAct1EncounterTypes.clear();
             m_usedAct2EncounterTypes.clear();
+
+            emit floorChanged(m_currentFloor);
 
             if (!m_isMultiplayer || m_isLeader) {
                 m_mapSeed = QRandomGenerator::global()->generate();

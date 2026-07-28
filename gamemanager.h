@@ -75,6 +75,8 @@ signals:
     void leaderChanged(bool isLeaderNow);
     void localNodeSelectionReady(int levelIndex, int levelPosIndex, MapButtonType type);
 
+    void floorChanged(int floor);
+
 private slots:
     // Login/MainMenu
     void onPlayerReady(Player *player);
