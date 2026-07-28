@@ -221,24 +221,28 @@ void GamePlay::draw()
     drawCards(DRAW_COUNT_PER_TURN);
 }
 
-void GamePlay::drawCards(int count)
+void GamePlay::drawCards(int count, std::function<void()> onComplete)
 {
     int availableSlots = HAND_MAX_SIZE - static_cast<int>(m_player->HandsCards().size());
     int targetCount = qMin(count, qMax(0, availableSlots));
 
-    if (targetCount <= 0)
+    if (targetCount <= 0) {
+        if (onComplete)
+            onComplete();
         return;
+    }
 
-    // int *cardsDrawn = new int(0);
     QTimer *drawTimer = new QTimer(this);
     connect(drawTimer,
             &QTimer::timeout,
             this,
-            [this, targetCount, drawTimer, cardsDrawn = 0]() mutable {
+            [this, targetCount, drawTimer, onComplete, cardsDrawn = 0]() mutable {
                 if (cardsDrawn >= targetCount
                     || static_cast<int>(m_player->HandsCards().size()) >= HAND_MAX_SIZE) {
                     drawTimer->stop();
                     drawTimer->deleteLater();
+                    if (onComplete)
+                        onComplete();
                     return;
                 }
 
@@ -246,6 +250,8 @@ void GamePlay::drawCards(int count)
                     if (m_discardPile.empty()) {
                         drawTimer->stop();
                         drawTimer->deleteLater();
+                        if (onComplete)
+                            onComplete();
                         return;
                     }
                     fillingDrawPile();
@@ -254,6 +260,8 @@ void GamePlay::drawCards(int count)
                 if (m_drawPile.empty()) {
                     drawTimer->stop();
                     drawTimer->deleteLater();
+                    if (onComplete)
+                        onComplete();
                     return;
                 }
 
@@ -570,9 +578,17 @@ void GamePlay::playerTurn()
     addTurn();
     m_player->resetBlock();
     playerReviveEnergy();
+    m_player->triggerRelicsTurnStart();
+
     if (m_drawPile.empty())
         fillingDrawPile();
-    draw();
+
+    if (m_turn == 1)
+        drawCards(DRAW_COUNT_PER_TURN,
+                  [this]() { m_player->triggerRelicsCombatStartAfterDraw(this); });
+    else
+        draw();
+
     update();
 }
 
@@ -661,8 +677,10 @@ void GamePlay::enemiesTurn()
     }
 
     removeDeadEnemies();
+    setupEnemies();
 
     m_player->tickDecayingBuffDebuff();
+
     for (Player *p : m_remotePlayers)
         p->tickDecayingBuffDebuff();
 

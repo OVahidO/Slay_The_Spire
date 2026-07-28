@@ -48,7 +48,7 @@ public:
 
     void playerReviveEnergy();
     void draw();
-    void drawCards(int count);
+    void drawCards(int count, std::function<void()> onComplete = nullptr);
     void fillingDrawPile();
     bool isEnoughEnergy(int cardEnergyCost);
     int takeDamageToAllEnemies(int damage);

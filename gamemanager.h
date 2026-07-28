@@ -167,6 +167,7 @@ private:
     void buildNewMap();
     void connectMapSignals();
     void grantStarterKit();
+    void setupTopbarAndRelicBar();
     void resetRunState();
     void resetPlayerAndGamePlayForNewRun();
     void finishRunAsVictory();

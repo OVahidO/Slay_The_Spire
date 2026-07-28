@@ -23,6 +23,8 @@ void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
+    repositionHealthBar();
+
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
 
@@ -242,6 +244,12 @@ void Player::triggerRelicsCombatStart(GamePlay *game)
 {
     for (Relic *r : m_relics)
         r->onCombatStart(game);
+}
+
+void Player::triggerRelicsCombatStartAfterDraw(GamePlay *game)
+{
+    for (Relic *r : m_relics)
+        r->onCombatStartAfterDraw(game);
 }
 
 void Player::triggerRelicsCombatEnd()

@@ -85,6 +85,7 @@ protected:
 
     QVector<BuffItem *> m_buffItems;
     void updateBuffUI();
+    void repositionHealthBar();
 };
 
 class HealthBarItem : public QGraphicsObject

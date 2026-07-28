@@ -64,6 +64,7 @@ public:
     QVector<Relic *> &relics();
     void addRelic(Relic *relic);
     void triggerRelicsCombatStart(GamePlay *game);
+    void triggerRelicsCombatStartAfterDraw(GamePlay *game);
     void triggerRelicsCombatEnd();
     void triggerRelicsTurnStart();
     void triggerRelicsTurnEnd();

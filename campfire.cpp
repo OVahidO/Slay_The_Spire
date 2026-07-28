@@ -303,7 +303,6 @@ void Campfire::onLiftClicked()
     for (Relic *r : m_player->relics()) {
         if (r->name() == "Girya" && r->counter() > 0) {
             r->setCounter(r->counter() - 1);
-            m_player->applyBuffDebuff(BuffDebuffType::Strength, 1);
             break;
         }
     }
