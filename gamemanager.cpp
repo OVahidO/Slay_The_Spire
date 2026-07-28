@@ -244,20 +244,7 @@ void GameManager::startNewRun()
     }
 
     prepareGamePlayForPlayer();
-
-    //////////////topbar//////////////
-    m_topbar = new Topbar(m_gamePlay);
-    m_vLayout->insertWidget(0, m_topbar);
-    connect(m_topbar, &Topbar::potionUsed, m_gamePlay, &GamePlay::usedPotionHandler);
-    connect(m_topbar, &Topbar::settingButton_clicked, this, [this](){this->showSettingsPage(SettingsMode::InGame);});
-    m_topbar->hide();
-    //////////////////////////////////
-    /////////////////////////
-    m_relicbar = new RelicBar(m_vLayout->parentWidget());
-    m_relicbar->move(0,m_topbar->height());
-    m_relicbar->hide();
-    connect(m_player, &Player::relicAdded, m_relicbar, &RelicBar::addRelic);
-    /////////////////////
+    setupTopbarAndRelicBar();
 
     grantStarterKit();
     buildNewMap();
@@ -270,6 +257,8 @@ void GameManager::startNewRun()
 
 void GameManager::resumeRun()
 {
+    setupTopbarAndRelicBar();
+
     int energy = 3;
     int maxEnergy = 3;
     unsigned int seed = 0;
@@ -366,6 +355,25 @@ void GameManager::onMainMenuLeaderboard()
 void GameManager::onMainMenuSettings()
 {
     showSettingsPage(SettingsMode::MainMenu);
+}
+
+void GameManager::setupTopbarAndRelicBar()
+{
+    if (m_topbar || m_relicbar || !m_gamePlay)
+        return;
+
+    m_topbar = new Topbar(m_gamePlay);
+    m_vLayout->insertWidget(0, m_topbar);
+    connect(m_topbar, &Topbar::potionUsed, m_gamePlay, &GamePlay::usedPotionHandler);
+    connect(m_topbar, &Topbar::settingButton_clicked, this, [this]() {
+        this->showSettingsPage(SettingsMode::InGame);
+    });
+    m_topbar->hide();
+
+    m_relicbar = new RelicBar(m_vLayout->parentWidget());
+    m_relicbar->move(0, m_topbar->height());
+    m_relicbar->hide();
+    connect(m_player, &Player::relicAdded, m_relicbar, &RelicBar::addRelic);
 }
 
 // ==================== Map ====================
@@ -1112,6 +1120,8 @@ void GameManager::onNetworkClientConnected()
         startNewRun();
 
     playMapMusicForCurrentAct();
+    m_topbar->show();
+    m_relicbar->show();
     switchTo(m_map);
 }
 
@@ -1247,16 +1257,23 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
     }
 
     case PacketType::MapSeed: {
-        if (m_isLeader)
+        if (m_isLeader || !m_gamePlay)
             break;
 
         m_mapSeed = NetworkManager::decodeMapSeed(payload);
+
+        setupTopbarAndRelicBar();
+        if (m_gamePlay->deck().empty())
+            grantStarterKit();
+
         buildNewMap();
 
         if (m_map)
             m_map->setLocked(true);
 
         playMapMusicForCurrentAct();
+        m_topbar->show();
+        m_relicbar->show();
         switchTo(m_map);
         break;
     }

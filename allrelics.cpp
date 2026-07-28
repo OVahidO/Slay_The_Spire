@@ -85,7 +85,7 @@ WarpedTongs::WarpedTongs(QWidget *parent)
     loadIcon();
 }
 
-void WarpedTongs::onCombatStart(GamePlay *game)
+void WarpedTongs::onCombatStartAfterDraw(GamePlay *game)
 {
     if (!game || !game->player())
         return;
