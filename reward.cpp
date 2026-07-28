@@ -76,12 +76,17 @@ RewardScreen::RewardScreen(Player *player,
         }
 
         m_relicGrantedItem->setPlainText("Relic obtained: " + grantedNames.join(", "));
+
+        m_player->scoreDetails().nElit++;
     }
 
     m_relicStageResolved = (m_combatType != RewardCombatType::Boss);
 
     if (m_combatType == RewardCombatType::Boss)
+    {
+        m_player->scoreDetails().nBoss++;
         setupBossRelicChoices();
+    }
 
     setupCardChoices();
 

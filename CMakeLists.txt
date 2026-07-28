@@ -64,6 +64,7 @@ qt_add_executable(Slay_The_Spire
     settings.ui
     audiomanager.h audiomanager.cpp
     endcombatpages.h endcombatpages.cpp endcombatpages.ui
+    leaderBoard.h leaderBoard.cpp leaderboard.ui
     #
 )
 

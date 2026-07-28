@@ -51,7 +51,7 @@ public:
     // ---- Hook (Victory/Defeat/Leaderboard UI) ----
     void showVictoryPage();
     void showDefeatPage();
-    void showLeaderboard();
+    //void showLeaderboard();
     void showSettingsPage(SettingsMode mode);
 
     // ---- Multiplayer ----
@@ -79,7 +79,7 @@ private slots:
     // Login/MainMenu
     void onPlayerReady(Player *player);
     void onMainMenuStart();
-    void onMainMenuLeaderboard();
+    //void onMainMenuLeaderboard();
     void onMainMenuSettings();
     void onSettingsReturn();
     void onSettingsCloseFromMenu();

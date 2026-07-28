@@ -10,6 +10,7 @@
 /////////////
 class Player;
 class Card;
+struct ScoreDetails;
 /////////////
 
 class Database : public QObject
@@ -79,6 +80,13 @@ public:
     static bool creatRunPotionsTable();
     static bool saveRunPotions(int playerID, const QStringList &potionTags);
     static QStringList loadRunPotions(int playerID);
+    //////////////////////////////////////////
+
+    ///////////////////////////////////////////
+    // --- Score Details ---
+    static bool creatScoreDetailsTable();
+    static bool saveScoreDetails(int playerID, const ScoreDetails &scoreDetails);
+    static ScoreDetails loadScoreDetails(int playerID);
     //////////////////////////////////////////
 
     static void close();

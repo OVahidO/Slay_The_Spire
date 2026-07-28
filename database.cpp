@@ -73,7 +73,7 @@ bool Database::insertPlayerValue(Player* p, QString password)
     query.addBindValue(p->currentHP());
     query.addBindValue(p->maxHP());
     query.addBindValue(p->coin());
-    query.addBindValue(0);
+    query.addBindValue(p->score());
 
     if(!query.exec())
     {
@@ -125,6 +125,7 @@ bool Database::updatePlayerValue(Player* p)
     query.addBindValue(p->currentHP());
     query.addBindValue(p->maxHP());
     query.addBindValue(p->coin());
+    query.addBindValue(p->score());
     query.addBindValue(p->id());
 
     if (!query.exec()) {
@@ -159,7 +160,7 @@ QVector<Player*> Database::selectAllPlayers()
 Player *Database::loadPlayerById(int playerID)
 {
     QSqlQuery query(db);
-    query.prepare("SELECT id, username, current_Hp, max_Hp, coin FROM Player WHERE id=?");
+    query.prepare("SELECT id, username, current_Hp, max_Hp, coin, score FROM Player WHERE id=?");
     query.addBindValue(playerID);
 
     if (!query.exec() || !query.next())
@@ -169,6 +170,7 @@ Player *Database::loadPlayerById(int playerID)
     player->setId(query.value(0).toInt());
     player->setCurrentHPDirect(query.value(2).toInt());
     player->setCoin(query.value(4).toInt());
+    player->setScore(query.value(5).toInt());
 
     return player;
 }
@@ -510,4 +512,57 @@ bool Database::updateCredentials(int playerID, const QString &username, const QS
     }
 
     return true;
+}
+
+bool Database::creatScoreDetailsTable()
+{
+    QSqlQuery query(db);
+    if (!query.exec("CREATE TABLE IF NOT EXISTS ScoreDetails ("
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    "playerID INTEGER,"
+                    "damage INTEGER,"
+                    "nElite INTEGER,"
+                    "nBoss INTEGER"
+                    ")")) {
+        qDebug() << db.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+bool Database::saveScoreDetails(int playerID, const ScoreDetails &scoreDetails)
+{
+    QSqlQuery clearQuery(db);
+    clearQuery.prepare("DELETE FROM ScoreDetails WHERE playerID=?");
+    clearQuery.addBindValue(playerID);
+    clearQuery.exec();
+
+    QSqlQuery query(db);
+    query.prepare("INSERT INTO ScoreDetails (playerID, damage, nElite, nBoss) VALUES (?,?,?,?)");
+    query.addBindValue(playerID);
+    query.addBindValue(scoreDetails.damage);
+    query.addBindValue(scoreDetails.nElit);
+    query.addBindValue(scoreDetails.nBoss);
+    query.exec();
+
+    return true;
+}
+
+ScoreDetails Database::loadScoreDetails(int playerID)
+{
+    ScoreDetails result;
+
+    QSqlQuery query(db);
+    query.prepare("SELECT damage, nElite, nBoss FROM RunPotions WHERE playerID=?");
+    query.addBindValue(playerID);
+
+    if (query.exec())
+        while (query.next())
+        {
+            result.damage = query.value(0).toDouble();
+            result.nElit = query.value(1).toInt();
+            result.nBoss = query.value(2).toInt();
+        }
+
+    return result;
 }

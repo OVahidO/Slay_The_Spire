@@ -53,6 +53,7 @@ void GameManager::start()
     Database::creatRunDeckTable();
     Database::creatRunRelicsTable();
     Database::creatRunPotionsTable();
+    Database::creatScoreDetailsTable();
 
     showMainMenu();
 }
@@ -93,10 +94,10 @@ void GameManager::showMainMenu()
         connect(m_mainMenu, &MainMenu::playerIsReady, this, &GameManager::onPlayerReady);
         connect(m_mainMenu, &MainMenu::exit, qApp, &QCoreApplication::quit);
         connect(m_mainMenu, &MainMenu::startGameClicked, this, &GameManager::onMainMenuStart);
-        connect(m_mainMenu,
-                &MainMenu::leaderboardClicked,
-                this,
-                &GameManager::onMainMenuLeaderboard);
+        // connect(m_mainMenu,
+        //         &MainMenu::leaderboardClicked,
+        //         this,
+        //         &GameManager::onMainMenuLeaderboard);
         connect(m_mainMenu, &MainMenu::settingsClicked, this, &GameManager::onMainMenuSettings);
         connect(m_mainMenu,
                 &MainMenu::multiplayerClicked,
@@ -309,6 +310,8 @@ void GameManager::resumeRun()
             m_player->addPotion(potion);
     }
 
+    m_player->scoreDetails() = Database::loadScoreDetails(m_player->id());
+
     m_usedAct1EncounterTypes.clear();
     m_usedAct2EncounterTypes.clear();
 
@@ -360,10 +363,10 @@ void GameManager::onMainMenuStart()
     switchTo(m_map);
 }
 
-void GameManager::onMainMenuLeaderboard()
-{
-    showLeaderboard();
-}
+// void GameManager::onMainMenuLeaderboard()
+// {
+//     showLeaderboard();
+// }
 
 void GameManager::onMainMenuSettings()
 {
@@ -481,6 +484,13 @@ void GameManager::onCombatWon()
 
     if (m_networkManager)
         m_networkManager->clearEnemySync();
+
+    // if (m_player) {
+    //     m_player->setScore(m_currentAct * 500 + m_currentFloor * 50 + m_player->score());
+
+    //     Database::updatePlayerScore(m_player->id(), m_player->score());
+    //     Database::deleteRunState(m_player->id());
+    // }
 
     m_reward = new RewardScreen(m_player, m_gamePlay, m_pendingRewardType);
     connect(m_reward, &RewardScreen::rewardFinished, this, &GameManager::onRewardFinished);
@@ -669,10 +679,14 @@ void GameManager::handleTreasureNode()
 
 void GameManager::finishRunAsVictory()
 {
-    if (m_player) {
-        int score = m_player->coin() + m_currentAct * 500 + m_currentFloor * 50;
+    // if (m_player) {
+    //     int score = m_player->coin() + m_currentAct * 500 + m_currentFloor * 50;
 
-        Database::updatePlayerScore(m_player->id(), score);
+    //     Database::updatePlayerScore(m_player->id(), score);
+    //     Database::deleteRunState(m_player->id());
+    // }
+
+    if (m_player) {
         Database::deleteRunState(m_player->id());
     }
 
@@ -684,7 +698,20 @@ void GameManager::finishRunAsVictory()
 
 void GameManager::showVictoryPage()
 {
-    // Victory UI
+    endCombatPages endPage(endMod::Victory, m_gamePlay);
+
+    auto blur = new QGraphicsBlurEffect;
+    blur->setBlurRadius(8);
+    m_gamePlay->overlay()->show();
+    m_gamePlay->overlay()->setGraphicsEffect(blur);
+    m_topbar->setGraphicsEffect(blur);
+    m_relicbar->setGraphicsEffect(blur);
+    endPage.exec();
+    m_topbar->setGraphicsEffect(nullptr);
+    m_relicbar->setGraphicsEffect(nullptr);
+    m_gamePlay->overlay()->hide();
+    m_gamePlay->overlay()->setGraphicsEffect(nullptr);
+
     AudioManager::playMusic(MusicTrack::Victory);
     emit victoryPageRequested();
     emit runEnded();
@@ -726,12 +753,12 @@ void GameManager::returnToMainMenuAfterDefeat()
     showMainMenu();
 }
 
-void GameManager::showLeaderboard()
-{
-    // Leaderboard UI
-    // leaderboardDataReady UI
-    emit leaderboardDataReady(Database::topScores());
-}
+// void GameManager::showLeaderboard()
+// {
+//     // Leaderboard UI
+//     // leaderboardDataReady UI
+//     emit leaderboardDataReady(Database::topScores());
+// }
 
 void GameManager::resetRunState()
 {
@@ -817,6 +844,9 @@ void GameManager::autoSaveProgress()
         if (p)
             potionTags << potionTypeTag(p);
     Database::saveRunPotions(m_player->id(), potionTags);
+
+    m_player->scoreDetails().floor = m_currentFloor;
+    Database::saveScoreDetails(m_player->id(), m_player->scoreDetails());
 }
 
 // ==================== Factories ====================

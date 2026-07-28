@@ -17,6 +17,7 @@
         <file>Pics/MainMenu/LineEditBg.png</file>
         <file>Pics/MainMenu/networkLobyBg.png</file>
         <file>Pics/MainMenu/networkInputBg.png</file>
+        <file>Pics/MainMenu/LeaderBoardBg.png</file>
     </qresource>
     <qresource prefix="/Combat">
         <file>Pics/Background/Combat/basement.png</file>

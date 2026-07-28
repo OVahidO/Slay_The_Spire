@@ -9,6 +9,7 @@
 
 #include "login_signup.h"
 #include "player.h"
+#include "leaderBoard.h"
 #include "ui_mainmenu.h"
 
 MainMenu::MainMenu(QWidget *parent)
@@ -40,6 +41,8 @@ MainMenu::MainMenu(QWidget *parent)
     m_usernameLabel->move(15, 15);
     m_usernameLabel->raise();
     m_usernameLabel->hide();
+
+    m_leaderBoard = new LeaderBoard(this);
 
     m_overlay = new QWidget(this);
     m_overlay->setGeometry(rect());
@@ -169,7 +172,15 @@ void MainMenu::on_StartButton_clicked()
 
 void MainMenu::on_LeaderBoardButton_clicked()
 {
-    emit leaderboardClicked();
+    m_overlay->show();
+    auto blur = new QGraphicsBlurEffect;
+    blur->setBlurRadius(8);
+    this->setGraphicsEffect(blur);
+    m_leaderBoard->refreshLeaderBoard();
+    m_leaderBoard->exec();
+    this->setGraphicsEffect(nullptr);
+    m_overlay->hide();
+    // emit leaderboardClicked();
 }
 
 void MainMenu::on_Settingbutton_clicked()

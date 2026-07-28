@@ -1210,6 +1210,7 @@ void GamePlay::setupEnemies()
         enemy->setDisplayPlayer(m_player);
         qreal enemyHeight = enemy->boundingRect().height();
         enemy->setPos(this->width() - 250 - i, groundY - enemyHeight);
+
         m_scene->addItem(enemy);
         i += 150;
     }
