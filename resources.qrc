@@ -227,4 +227,10 @@
     <qresource prefix="/Settings">
         <file>Pics/Settings/settingsBg.png</file>
     </qresource>
+    <qresource prefix="/EndCombatPages">
+        <file>Pics/EndCombatPages/Bg.png</file>
+        <file>Pics/EndCombatPages/buttonBg.png</file>
+        <file>Pics/EndCombatPages/dead.png</file>
+        <file>Pics/EndCombatPages/victory.png</file>
+    </qresource>
 </RCC>

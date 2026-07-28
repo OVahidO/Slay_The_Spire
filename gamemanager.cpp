@@ -5,6 +5,7 @@
 #include <QRandomGenerator>
 #include <QSettings>
 #include <QStackedWidget>
+#include <QGraphicsBlurEffect>
 
 #include "allenemies.h"
 #include "allrelics.h"
@@ -30,6 +31,7 @@
 #include "shop.h"
 #include "skillcards.h"
 #include "topbar.h"
+#include "endcombatpages.h"
 
 GameManager::GameManager(QStackedWidget *stack, QVBoxLayout *VLayout, QObject *parent)
     : QObject(parent)
@@ -669,7 +671,16 @@ void GameManager::showVictoryPage()
 
 void GameManager::showDefeatPage()
 {
-    // Defeat UI
+    endCombatPages endPage(endMod::Defate, m_gamePlay);
+
+    auto blur = new QGraphicsBlurEffect;
+    blur->setBlurRadius(8);
+    m_gamePlay->setGraphicsEffect(blur);
+    m_topbar->setGraphicsEffect(blur);
+    endPage.exec();
+    m_topbar->setGraphicsEffect(nullptr);
+    m_gamePlay->setGraphicsEffect(nullptr);
+
     AudioManager::playMusic(MusicTrack::Defeat);
     GameManager::returnToMainMenuAfterDefeat();
     emit defeatPageRequested();
