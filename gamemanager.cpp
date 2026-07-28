@@ -119,19 +119,6 @@ void GameManager::onPlayerReady(Player *player)
 
     prepareGamePlayForPlayer();
 
-    // //////////////topbar//////////////
-    // m_topbar = new Topbar(m_gamePlay);
-    // connect(m_topbar, &Topbar::potionUsed, m_gamePlay, &GamePlay::usedPotionHandler);
-    // m_vLayout->insertWidget(0, m_topbar);
-    // m_topbar->hide();
-    // //////////////////////////////////
-    // //////////////////////
-    // m_relicbar = new RelicBar(m_vLayout->parentWidget());
-    // m_relicbar->move(0,m_topbar->height());
-    // m_relicbar->hide();
-    // connect(m_player, &Player::relicAdded, m_relicbar, &RelicBar::addRelic);
-    // /////////////////////
-
     if (m_pendingMultiplayerRequested) {
         m_pendingMultiplayerRequested = false;
         showNetworkLobby();
@@ -933,6 +920,8 @@ Potion *GameManager::createPotionFromTag(const QString &tag) const
 
 void GameManager::showSettingsPage(SettingsMode mode)
 {
+    m_screenBeforeSettings = m_stack->currentWidget();
+
     if (!m_settings) {
         m_settings = new SettingsDialog(m_player, mode);
 
@@ -975,10 +964,6 @@ void GameManager::showSettingsPage(SettingsMode mode)
 void GameManager::onSettingsReturn()
 {
     m_settings->accept();
-    // if (m_screenBeforeSettings)
-    //     switchTo(m_screenBeforeSettings);
-    // else
-    //     switchTo(m_map);
 
     m_screenBeforeSettings = nullptr;
 }
@@ -998,6 +983,11 @@ void GameManager::onSettingsSaveAndQuit()
 {
     m_settings->accept();
     autoSaveProgress();
+
+    if (m_topbar)
+        m_topbar->hide();
+    if (m_relicbar)
+        m_relicbar->hide();
 
     m_screenBeforeSettings = nullptr;
     showMainMenu();
@@ -1061,43 +1051,46 @@ void GameManager::setLeader(bool leader)
 
 void GameManager::onMainMenuMultiplayerClicked()
 {
-    m_pendingMultiplayerRequested = true;
+    if (!m_player) {
+        m_pendingMultiplayerRequested = true;
+        return;
+    }
+
+    showNetworkLobby();
 }
 
 void GameManager::showNetworkLobby()
 {
+    if (m_networkManager) {
+        m_networkManager->disconnectFromGame();
+        m_networkManager->deleteLater();
+    }
+
+    m_networkManager = new NetworkManager(this);
+    connect(m_networkManager,
+            &NetworkManager::hostStarted,
+            this,
+            &GameManager::onNetworkHostStarted);
+    connect(m_networkManager, &NetworkManager::hostFailed, this, &GameManager::onNetworkHostFailed);
+    connect(m_networkManager,
+            &NetworkManager::clientConnected,
+            this,
+            &GameManager::onNetworkClientConnected);
+    connect(m_networkManager,
+            &NetworkManager::connectedToHost,
+            this,
+            &GameManager::onNetworkConnectedToHost);
+    connect(m_networkManager,
+            &NetworkManager::connectionFailed,
+            this,
+            &GameManager::onNetworkConnectionFailed);
+    connect(m_networkManager,
+            &NetworkManager::disconnected,
+            this,
+            &GameManager::onNetworkDisconnected);
+    connect(m_networkManager, &NetworkManager::packetReceived, this, &GameManager::onPacketReceived);
+
     if (!m_networkLobby) {
-        m_networkManager = new NetworkManager(this);
-
-        connect(m_networkManager,
-                &NetworkManager::hostStarted,
-                this,
-                &GameManager::onNetworkHostStarted);
-        connect(m_networkManager,
-                &NetworkManager::hostFailed,
-                this,
-                &GameManager::onNetworkHostFailed);
-        connect(m_networkManager,
-                &NetworkManager::clientConnected,
-                this,
-                &GameManager::onNetworkClientConnected);
-        connect(m_networkManager,
-                &NetworkManager::connectedToHost,
-                this,
-                &GameManager::onNetworkConnectedToHost);
-        connect(m_networkManager,
-                &NetworkManager::connectionFailed,
-                this,
-                &GameManager::onNetworkConnectionFailed);
-        connect(m_networkManager,
-                &NetworkManager::disconnected,
-                this,
-                &GameManager::onNetworkDisconnected);
-        connect(m_networkManager,
-                &NetworkManager::packetReceived,
-                this,
-                &GameManager::onPacketReceived);
-
         m_networkLobby = new NetworkLobby();
         m_stack->addWidget(m_networkLobby);
 
@@ -1109,6 +1102,9 @@ void GameManager::showNetworkLobby()
                 &NetworkLobby::joinRequested,
                 this,
                 &GameManager::onNetworkLobbyJoinRequested);
+    } else {
+        m_networkLobby->setInputEnabled(true);
+        m_networkLobby->setStatusMessage("");
     }
 
     switchTo(m_networkLobby);
@@ -1441,7 +1437,9 @@ void GameManager::onPacketReceived(PacketType type, const QByteArray &payload)
             tempCard->upgrade();
 
         if (targetEntityId < 0) {
+            m_gamePlay->setActingCaster(m_gamePlay->remotePlayer());
             tempCard->applyEffect(m_gamePlay);
+            m_gamePlay->setActingCaster(nullptr);
             m_gamePlay->removeDeadEnemies();
         } else {
             Enemy *targetEnemy = findEnemyByNetworkId(targetEntityId);
@@ -1552,8 +1550,10 @@ void GameManager::onSettingsLogoutRequested()
 
     m_settings->accept();
 
-    resetForLogout();
+    if (m_gamePlay)
+        autoSaveProgress();
 
+    resetForLogout();
     m_screenBeforeSettings = nullptr;
 
     if (m_mainMenu)

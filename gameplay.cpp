@@ -791,8 +791,9 @@ void GamePlay::noTargetCardsHandler(Card *card)
     if (!effectSucceeded)
         return;
 
-    AudioManager::playSfx(SfxId::CardPlay);
+    card->applyEffect(m_player, nullptr);
 
+    AudioManager::playSfx(SfxId::CardPlay);
     emit cardPlayed(card);
     m_player->loseEnergy(card->energyCost());
 
@@ -1002,7 +1003,7 @@ void GamePlay::update()
     ui->exhaustPileButton->setText(QString::number(m_ExhaustPile.size()));
 }
 
-void GamePlay::refreshGamePlay()//struct room info//
+void GamePlay::refreshGamePlay() //struct room info
 {
     setupBackground(":/Combat/Pics/Background/Combat/basement.png");//room.background//
     //m_enemys = room.enmies;
@@ -1476,4 +1477,14 @@ void GamePlay::resetTurnEndFlags()
 void GamePlay::setCombatSeed(unsigned int seed)
 {
     m_combatSeed = seed;
+}
+
+Player *GamePlay::actingCaster() const
+{
+    return m_actingCaster ? m_actingCaster : m_player;
+}
+
+void GamePlay::setActingCaster(Player *player)
+{
+    m_actingCaster = player;
 }

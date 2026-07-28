@@ -14,7 +14,7 @@ AudioManager::AudioManager()
 
     m_musicUrls = {
         {MusicTrack::MainMenu,
-         QUrl(":/soundtracks/Sounds-Musics/soundtracks/Clark Aboud - Slay the Spire.mp3")},
+         QUrl("qrc:/soundtracks/Sounds-Musics/soundtracks/Clark Aboud - Slay the Spire.mp3")},
         {MusicTrack::MapAct1,
          QUrl("qrc:/soundtracks/Sounds-Musics/soundtracks/Clark Aboud - Exordium.mp3")},
         {MusicTrack::MapAct2,
@@ -52,7 +52,7 @@ AudioManager::AudioManager()
         {SfxId::UiClick,
          "qrc:/soundeffects/Sounds-Musics/soundeffects/UI/mixkit-fast-sword-whoosh-2792.wav"},
         {SfxId::EmptySpaceClick, "qrc:/soundeffects/Sounds-Musics/soundeffects/UI/bong_001.ogg"},
-        {SfxId::InvalidClick, "qrc:/soundeffects/Sounds-Musics/soundeffects/ui/invalid_click.wav"},
+        {SfxId::InvalidClick, "qrc:/soundeffects/Sounds-Musics/soundeffects/UI/bong_001.ogg"},
         {SfxId::CardSelect, "qrc:/soundeffects/Sounds-Musics/soundeffects/UI/draw.wav"},
         {SfxId::CardPlay, "qrc:/soundeffects/Sounds-Musics/soundeffects/UI/card-slide-2.ogg"},
         {SfxId::CardShuffle, "qrc:/soundeffects/Sounds-Musics/soundeffects/UI/card-fan-1.ogg"},

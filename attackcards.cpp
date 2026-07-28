@@ -149,7 +149,9 @@ void Reaper::applyEffect(Player *player, Enemy *target)
 
 bool Reaper::applyEffect(GamePlay *gameplay)
 {
-    gameplay->player()->heal(gameplay->takeDamageToAllEnemies(m_damage));
+    Player *caster = gameplay->actingCaster();
+    int scaledDamage = caster->calculateOutgoingDamage(m_damage);
+    caster->heal(gameplay->takeDamageToAllEnemies(scaledDamage));
     return true;
 }
 
@@ -288,7 +290,8 @@ void Immolate::applyEffect(Player *player, Enemy *target)
 
 bool Immolate::applyEffect(GamePlay *gameplay)
 {
-    gameplay->takeDamageToAllEnemies(m_damage);
+    int scaledDamage = gameplay->actingCaster()->calculateOutgoingDamage(m_damage);
+    gameplay->takeDamageToAllEnemies(scaledDamage);
     gameplay->addCardToDiscardPile(new BURN());
     gameplay->addCardToDiscardPile(new BURN());
     return true;
@@ -587,23 +590,26 @@ Whirlwind::Whirlwind(QGraphicsItem *parent)
 
 void Whirlwind::applyEffect(Player *player, Enemy *target)
 {
-    Q_UNUSED(player);
     Q_UNUSED(target);
+
+    if (player)
+        player->setEnergy(0);
 }
 
 bool Whirlwind::applyEffect(GamePlay *gameplay)
 {
-    if (!gameplay || !gameplay->player())
+    if (!gameplay)
         return true;
 
-    Player *player = gameplay->player();
+    Player *player = gameplay->actingCaster();
+    if (!player)
+        return true;
+
     int xCount = player->energy();
     int scaledDamage = player->calculateOutgoingDamage(m_damage);
 
     for (int i = 0; i < xCount && !gameplay->allEnemiesDead(); ++i)
         gameplay->takeDamageToAllEnemies(scaledDamage);
-
-    player->setEnergy(0);
 
     return true;
 }
