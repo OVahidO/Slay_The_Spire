@@ -205,8 +205,10 @@ void GamePlay::removeDeadEnemies()
         }
     }
 
-    if (m_enemys.empty())
+    if (m_enemys.empty() && !m_combatWonEmitted) {
+        m_combatWonEmitted = true;
         emit combatWon();
+    }
 }
 
 // ---------------- Energy / Draw ----------------
@@ -417,6 +419,7 @@ void GamePlay::startCombat()
     m_discardPile.clear();
     m_ExhaustPile.clear();
     setTurn(0);
+    m_combatWonEmitted = false;
 
     std::vector<Card *> innateCards;
     std::vector<Card *> normalCards;

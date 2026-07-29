@@ -16,7 +16,7 @@ void Cultist::calculateNextIntent()
     m_turnCount++;
 
     if (m_turnCount == 1) {
-        m_currentIntent = buffIntent(3);
+        m_currentIntent = buffIntent(0);
     } else {
         m_currentIntent = attackIntent(6);
 
@@ -459,6 +459,7 @@ void SphericGuardian::calculateNextIntent()
 
     if (m_turnCount == 1) {
         m_currentIntent = attackDebuffIntent(10, 5);
+        m_currentIntent.debuffType = BuffDebuffType::Frail;
         return;
     }
 
@@ -489,7 +490,7 @@ void GremlinKnob::calculateNextIntent()
 
     if (m_turnCount == 1) {
         m_currentIntent = buffIntent(0);
-        m_enrageStacks = 0;
+        m_enrageStacks = 99;
         return;
     }
 
@@ -532,7 +533,7 @@ void Sentry::calculateNextIntent()
     if (useBeam)
         m_currentIntent = attackIntent(9);
     else
-        m_currentIntent = debuffIntent(2);
+        m_currentIntent = debuffIntent(0);
 }
 
 void Sentry::onIntentExecuted(GamePlay *game)
@@ -710,7 +711,8 @@ void HexaGhost::calculateNextIntent()
     }
 
     if (m_turnCount == 2) {
-        int dividerDamage = 1;
+        Player *target = displayPlayer();
+        int dividerDamage = (target ? target->currentHP() / 12 : 0) + 1;
         m_currentIntent = EnemyIntent{IntentType::Attack, dividerDamage, 6, false};
         m_lastCycleIndex = -1;
         return;
@@ -784,16 +786,36 @@ void TheChamp::calculateNextIntent()
         return;
     }
 
-    QVector<QPair<int, EnemyIntent>> options = {{15, defendBuffIntent(15, 5)},
+    EnemyIntent defensiveStance = defendBuffIntent(15, 5);
+    defensiveStance.buffType = BuffDebuffType::Metallicize;
+
+    QVector<QPair<int, EnemyIntent>> options = {{15, defensiveStance},
                                                 {15, buffIntent(2)},
                                                 {25, attackDebuffIntent(12, 2)},
                                                 {45, EnemyIntent{IntentType::Attack, 8, 2, false}}};
 
     m_currentIntent = pickIntent(options);
+    m_defensiveStanceQueued = (m_currentIntent.type == IntentType::DefendBuff);
 }
 
 void TheChamp::loadPic()
 {
     this->m_enemyPic = QPixmap(this->m_soucePath)
                            .scaled(260, 290, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+}
+
+void TheChamp::onIntentExecuted(GamePlay *game)
+{
+    Q_UNUSED(game);
+
+    if (!m_defensiveStanceQueued)
+        return;
+
+    m_defensiveStanceQueued = false;
+
+    powerEffects().append(
+        PowerEffect{":/buffdebuff-intent/Pics/Buff-Debuff/Buffs/Icon_Metallicize.png",
+                    5,
+                    [](Combatant *self, int value, GamePlay *) { self->addBlock(value); },
+                    PowerUseTime::EndTurn});
 }

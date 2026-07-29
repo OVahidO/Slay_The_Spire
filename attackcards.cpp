@@ -414,18 +414,19 @@ Clash::Clash(QGraphicsItem *parent)
 
 void Clash::applyEffect(Player *player, Enemy *target)
 {
+    if (!player || !target)
+        return;
+
     bool isAllHandsCardsAttack = true;
 
     for (Card *card : player->HandsCards())
-        if (card->cardType() != (CardType::Attack)) {
+        if (card->cardType() != CardType::Attack) {
             isAllHandsCardsAttack = false;
             break;
         }
 
-    if (isAllHandsCardsAttack) {
-        if (target && player)
-            target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
-    }
+    if (isAllHandsCardsAttack)
+        target->takeDamage(player->calculateOutgoingDamage(this->m_damage));
 }
 
 bool Clash::canBePlayed(Player *player) const

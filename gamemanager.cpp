@@ -475,10 +475,10 @@ void GameManager::onCombatWon()
     if (!m_gamePlay)
         return;
 
-    m_gamePlay->endCombat();
-
     if (m_networkManager)
         m_networkManager->clearEnemySync();
+
+    m_gamePlay->endCombat();
 
     // if (m_player) {
     //     m_player->setScore(m_currentAct * 500 + m_currentFloor * 50 + m_player->score());
@@ -773,6 +773,11 @@ void GameManager::resetRunState()
 
 void GameManager::resetPlayerAndGamePlayForNewRun()
 {
+    if (m_remotePlayerMirror) {
+        delete m_remotePlayerMirror;
+        m_remotePlayerMirror = nullptr;
+    }
+
     if (m_gamePlay) {
         m_stack->removeWidget(m_gamePlay);
         m_gamePlay->deleteLater();
@@ -787,11 +792,6 @@ void GameManager::resetPlayerAndGamePlayForNewRun()
     if (m_relicbar) {
         m_relicbar->deleteLater();
         m_relicbar = nullptr;
-    }
-
-    if (m_remotePlayerMirror) {
-        delete m_remotePlayerMirror;
-        m_remotePlayerMirror = nullptr;
     }
 
     if (m_player) {
@@ -1142,15 +1142,9 @@ void GameManager::onNetworkHostFailed(const QString &error)
 void GameManager::onNetworkClientConnected()
 {
     setLeader(true);
-    if (m_gamePlay)
-        m_gamePlay->setCoopMode(true);
 
-    ensureRemotePlayerMirror();
-
-    if (m_networkManager) {
+    if (m_networkManager)
         m_networkManager->sendHandshake(m_player ? m_player->name() : QString());
-        hookLocalPlayerNetworkSync();
-    }
 
     clearTransientScreen(m_networkLobby);
     m_networkLobby = nullptr;
@@ -1159,6 +1153,11 @@ void GameManager::onNetworkClientConnected()
         resumeRun();
     else
         startNewRun();
+
+    m_gamePlay->setCoopMode(true);
+    m_gamePlay->setAuthoritative(true);
+    ensureRemotePlayerMirror();
+    hookLocalPlayerNetworkSync();
 
     playMapMusicForCurrentAct();
     m_topbar->show();
@@ -1567,6 +1566,11 @@ void GameManager::resetForLogout()
     if (m_networkManager)
         m_networkManager->disconnectFromGame();
 
+    if (m_remotePlayerMirror) {
+        delete m_remotePlayerMirror;
+        m_remotePlayerMirror = nullptr;
+    }
+
     if (m_gamePlay) {
         m_stack->removeWidget(m_gamePlay);
         m_gamePlay->deleteLater();
@@ -1589,12 +1593,6 @@ void GameManager::resetForLogout()
         m_map->deleteLater();
         m_map = nullptr;
     }
-
-    if (m_remotePlayerMirror) {
-        delete m_remotePlayerMirror;
-        m_remotePlayerMirror = nullptr;
-    }
-
     m_player = nullptr;
 
     m_playerSyncHooked = false;

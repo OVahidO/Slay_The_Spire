@@ -179,6 +179,7 @@ private:
 
     unsigned int m_combatSeed = 0;
     int m_nextEnemyEntityId = 0;
+    bool m_combatWonEmitted = false;
 
     /// for dual wield
     Card *m_selectedHandCard = nullptr;

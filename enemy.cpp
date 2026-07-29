@@ -247,14 +247,13 @@ void Enemy::executeIntent(GamePlay *game)
     case IntentType::AttackDebuff:
 
         target->takeDamage(calculateOutgoingDamage(m_currentIntent.value));
-        target->applyBuffDebuff(BuffDebuffType::Vulnerable, m_currentIntent.secondaryValue);
+        target->applyBuffDebuff(m_currentIntent.debuffType, m_currentIntent.secondaryValue);
         emit attacked(this);
 
         break;
-
     case IntentType::DefendBuff:
         addBlock(m_currentIntent.value);
-        applyBuffDebuff(BuffDebuffType::Strength, m_currentIntent.secondaryValue);
+        applyBuffDebuff(m_currentIntent.buffType, m_currentIntent.secondaryValue);
         break;
 
     case IntentType::Buff:
@@ -263,8 +262,11 @@ void Enemy::executeIntent(GamePlay *game)
 
     case IntentType::Debuff:
         for (Player *p : game->allPlayers())
-            if (p && p->currentHP() > 0)
+            if (p && p->currentHP() > 0) {
                 p->applyBuffDebuff(BuffDebuffType::Weak, m_currentIntent.value);
+                if (m_currentIntent.secondaryValue != 0)
+                    p->applyBuffDebuff(BuffDebuffType::Vulnerable, m_currentIntent.secondaryValue);
+            }
         break;
 
     case IntentType::Entangle:
@@ -430,4 +432,9 @@ int Enemy::networkEntityId() const
 void Enemy::setNetworkEntityId(int id)
 {
     m_networkEntityId = id;
+}
+
+Player *Enemy::displayPlayer() const
+{
+    return m_displayPlayer;
 }

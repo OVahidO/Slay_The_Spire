@@ -33,6 +33,9 @@ struct EnemyIntent
     int secondaryValue = 0;
     bool isHidden = false;
     QPixmap icon;
+
+    BuffDebuffType debuffType = BuffDebuffType::Vulnerable;
+    BuffDebuffType buffType = BuffDebuffType::Strength;
 };
 
 class Enemy : public Combatant
@@ -107,6 +110,7 @@ protected:
     Player *chooseSingleTarget(GamePlay *game) const;
 
     int calculateDisplayedIntentDamage() const;
+    Player *displayPlayer() const;
 
 private:
     static std::mt19937 *s_activeRng;
